@@ -1,0 +1,2 @@
+usuario: root
+pass: ceia2025
