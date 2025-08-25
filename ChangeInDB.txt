@@ -1,0 +1,1038 @@
+CREATE DATABASE saatdevtest;
+
+use saatdevtest;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+# Primera tabla, hace referencia a los alumnos
+CREATE TABLE `alum` (
+  idalum int NOT NULL AUTO_INCREMENT,
+  run int NOT NULL,
+  digv varchar(5) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  nombres varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  apaterno varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  amaterno varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  fnac date NOT NULL,
+  celular varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  telefono varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  email varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  direcc varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  comuna varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  codcomuna varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  genero varchar(1) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  fincorpora date NOT NULL,
+  fretiro date DEFAULT NULL,
+  codetnia int DEFAULT NULL,
+  rbd int DEFAULT NULL,
+  anio year DEFAULT NULL,
+  n_lista int DEFAULT NULL,
+  codtipoense int DEFAULT NULL,
+  codgrado int DEFAULT NULL,
+  descgrado varchar(300) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  letracurso varchar(1) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  foto varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  sectorestudiante varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  asistencia int DEFAULT NULL,
+  promedio decimal(7,1) DEFAULT NULL,
+  estado_civil varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  nivelciclo varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  tipoensenanza varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  georreferencia varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  especialidad varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  nacionalidad varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  matricula int DEFAULT NULL,
+  trabaja varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`idalum`,`run`),
+  UNIQUE KEY `run_UNIQUE` (`run`)
+) ENGINE=InnoDB AUTO_INCREMENT=204 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_spanish2_ci;
+select * from alum;
+
+
+INSERT INTO alum (
+  run, digv, nombres, apaterno, amaterno, fnac, celular, telefono, email, 
+  direcc, comuna, codcomuna, genero, fincorpora, fretiro, codetnia, rbd, anio, 
+  n_lista, codtipoense, codgrado, descgrado, letracurso, foto, sectorestudiante, 
+  asistencia, promedio, estado_civil, nivelciclo, tipoensenanza, georreferencia, 
+  especialidad, nacionalidad, matricula, trabaja
+) VALUES
+(12345678, '9', 'Juan Pablo', 'González', 'Muñoz', '2005-04-12', '987654321', '222334455', 'juanpablo.g@gmail.com',
+ 'Av. Siempre Viva 123', 'Santiago', 'STGO01', 'M', '2020-03-01', NULL, 1, 101, 2024,
+ 5, 1, 2, '2° Medio', 'A', NULL, 'Urbano', 95, 6.2, 'Soltero', 'Media', 'Científico-Humanista', NULL,
+ NULL, 'Chilena', 2020123, 'No'),
+(98765432, 'K', 'María José', 'Rojas', 'Fernández', '2006-09-30', '912345678', '223344556', 'mariaj.rojas@hotmail.com',
+ 'Calle Falsa 456', 'Puente Alto', 'PTA02', 'F', '2021-03-05', NULL, 2, 102, 2024,
+ 12, 1, 1, '1° Medio', 'B', NULL, 'Rural', 88, 5.8, 'Soltera', 'Media', 'Científico-Humanista', NULL,
+ NULL, 'Chilena', 2020456, 'No'),
+(19283746, '3', 'Pedro', 'Soto', 'Valdés', '2004-01-25', '976543210', '224455667', 'pedrosv@gmail.com',
+ 'Los Álamos 789', 'La Florida', 'LF03', 'M', '2019-03-01', NULL, 3, 103, 2024,
+ 20, 2, 4, '4° Medio', 'C', NULL, 'Urbano', 92, 6.5, 'Soltero', 'Media', 'Técnico Profesional', NULL,
+ 'Electricidad', 'Chilena', 2020789, 'Sí');
+
+select * from alum;
+
+# Fin alumnos
+
+
+#Refiere a la asistencia
+  CREATE TABLE alum_asiste (
+  idasistencia int NOT NULL AUTO_INCREMENT,
+  run_alum_asiste int NOT NULL,
+  estado varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  fecha date NOT NULL,
+  usuario varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  asignatura varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  codtipoense varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  codgrado varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  dia varchar(2) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  PRIMARY KEY (`idasistencia`)
+  );
+INSERT INTO `alum_asiste` (idasistencia, run_alum_asiste, estado, fecha, usuario, asignatura, codtipoense, codgrado, dia) VALUES
+(1, 22111684, 'A', '2024-03-06', NULL, NULL, '563', '4', 'mi'),
+(2, 22111684, 'A', '2024-03-07', NULL, NULL, '563', '4', 'ju'),
+(3, 22111684, 'A', '2024-03-08', NULL, NULL, '563', '4', 'vi'),
+(4, 22111684, 'A', '2024-03-11', NULL, NULL, '563', '4', 'lu'),
+(5, 22111684, 'P', '2024-03-12', NULL, NULL, '563', '4', 'ma'),
+(6, 22111684, 'A', '2024-03-13', NULL, NULL, '563', '4', 'mi'),
+(7, 22111684, 'A', '2024-03-14', NULL, NULL, '563', '4', 'ju'),
+(8, 22111684, 'P', '2024-03-15', NULL, NULL, '563', '4', 'vi'),
+(9, 22111684, 'P', '2024-03-18', NULL, NULL, '563', '4', 'lu'),
+(10, 22111684, 'A', '2024-03-19', NULL, NULL, '563', '4', 'ma'),
+(11, 22111684, 'A', '2024-03-20', NULL, NULL, '563', '4', 'mi'),
+(12, 22111684, 'P', '2024-03-21', NULL, NULL, '563', '4', 'ju'),
+(13, 22111684, 'P', '2024-03-22', NULL, NULL, '563', '4', 'vi'),
+(14, 22111684, 'P', '2024-03-25', NULL, NULL, '563', '4', 'lu'),
+(15, 22111684, 'A', '2024-03-26', NULL, NULL, '563', '4', 'ma');
+select * from alum_asiste;  
+  
+
+CREATE TABLE alum_emergencia (
+  idalum_emergencia int NOT NULL AUTO_INCREMENT,
+  run_alum_emergencia int NOT NULL,
+  nomemergencia varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  celuemergencia int DEFAULT NULL,
+  direcemergencia varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  observaemergencia varchar(300) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`idalum_emergencia`),
+  UNIQUE KEY `run_alum_emergencia_UNIQUE` (`run_alum_emergencia`)
+  );
+INSERT INTO alum_emergencia (idalum_emergencia, run_alum_emergencia, nomemergencia, celuemergencia, direcemergencia, observaemergencia) VALUES
+(1, 100749262, 'SEBASTIAN ANDRES GARCIA MARTINEZ', 96342553, 'BOSQUE - DELICIA NORTE N° 558', 'a'),
+(2, 21852249, 'GINO ANTONIO HERNÁNDEZ ARIAS', 998676393, 'VILLA REINA LUISA PJE. LAS DALIAS N° 1080', 'b'),
+(3, 19989863, 'EUGENIA MUÑOZ MORALES', 76945674, 'VILLA ISRAEL URRUTIA II, PJE. LOS LIMONES N° 79 ', 'c'),
+(4, 16119674, 'JUANA DEL CARMEN MOLINA OPAZO', 66391298, 'POBLACIÓN DON VICENTE PJE. 9 CASA 63', 'd'),
+(5, 14573326, 'MARCELO ALBORNOZ ', 62564077,'VILLA DON GUILLERMO PJE. 1, CASA 1338', 'e');
+
+
+select * from alum_emergencia;
+
+
+CREATE TABLE IF NOT EXISTS `alum_familia` (
+  `idalum_familia` int NOT NULL AUTO_INCREMENT,
+  `run_alum_familia` int NOT NULL,
+  `neducpadre` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `nivelciclopadre` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `neducmadre` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `nivelciclomadre` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `nomtutor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `runtutor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `directutor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `emailtutor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `comunatutor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `sectortutor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `celututor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `vinculotutor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `nomrepresentante` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `runrepresentante` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `direcrepresentante` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `emailrepresentante` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `comunarepresentante` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `sectorrepresentante` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `celurepresentante` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `vinculorepresentante` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `nomconyuge` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `nhijos` int DEFAULT NULL,
+  `vivecon` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `hijosmayores` int DEFAULT NULL,
+  `viveconobs` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`idalum_familia`),
+  UNIQUE KEY `run_alum_familia_UNIQUE` (`run_alum_familia`)
+);
+INSERT INTO `alum_familia` (`idalum_familia`, `run_alum_familia`, `neducpadre`, `nivelciclopadre`, `neducmadre`, `nivelciclomadre`, `nomtutor`, `runtutor`, `directutor`, `emailtutor`, `comunatutor`, `sectortutor`, `celututor`, `vinculotutor`, `nomrepresentante`, `runrepresentante`, `direcrepresentante`, `emailrepresentante`, `comunarepresentante`, `sectorrepresentante`, `celurepresentante`, `vinculorepresentante`, `nomconyuge`, `nhijos`, `vivecon`, `hijosmayores`, `viveconobs`) VALUES
+(1, 14573326, ' ', ' ', ' ', ' ', '', '', '', '', '', '', '', ' ', '', '', '', '', '', '', '', ' ', '', 2, 'Hijos', 2, ''),
+(2, 17091217, 'Básica Completa', '8°', ' ', '6°', '', '', '', '', '', '', '', ' ', '', '', '', '', '', '', '', ' ', '', 1, 'Sólo (a)', 0, ''),
+(3, 16119674, ' ', ' ', ' ', ' ', '', '', '', '', '', '', '', ' ', '', '', '', '', '', '', '', ' ', '', 2, 'Hijos', 0, ''),
+(4, 19990381, 'Básica incompleta', '7°', 'Básica incompleta', '6°', '', '', '', '', '', '', '', ' ', '', '', '', '', '', '', '', ' ', '', 1, 'Sus Padres', 0, ''),
+(5, 21794263, ' ', ' ', ' ', ' ', '', '', '', '', '', '', '', ' ', '', '', '', '', '', '', '', ' ', '', 0, 'Otro', 0, NULL),
+(6, 21664259, 'Básica incompleta', '7°', 'Básica incompleta', '7°', 'VIRGINIA SALINAS HERNÁNDEZ', '13615616-0', 'SANTA ISABEL S/N', 'virginiasalinas640@mail.com', '138', 'Rural', '57429137', 'Madre', 'Virginia Salinas Hernández', '13615616-0', 'Sector Santa Isabel S/n ', 'virginiasalinas640', '138', 'Rural', '957429137', 'Madre', '', 0, 'Sus Padres', 0, ''),
+(7, 18878176, 'Básica incompleta', '2°', 'Básica incompleta', '2°', '', '', '', '', '', '', '', ' ', '', '', '', '', '', '', '', ' ', '', 1, 'Sus Padres', 0, ''),
+(8, 100749262, 'Media Completa', '4° Medio', 'Media Completa', '4° Medio', '', '', '', '', '', '', '', ' ', '', '', '', '', '', '', '', ' ', '', 1, 'Pareja', 0, ''),
+(9, 21852249, ' ', ' ', ' ', ' ', '', '', '', '', '', '', '', ' ', '', '', '', '', '', '', '', ' ', '', 0, 'Sus Padres', 0, '');
+select * from alum_familia;
+
+
+CREATE TABLE `alum_notas` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `run_alum_nota` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `fecha` date NOT NULL,
+  `nota` decimal(4,1) NOT NULL,
+  `asignaturas_id` int NOT NULL,
+  `num_nota` int NOT NULL,
+  `semestre` int NOT NULL,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO `alum_notas` (`id`, `run_alum_nota`, `fecha`, `nota`, `asignaturas_id`, `num_nota`, `semestre`) VALUES
+(1, '21053735', '2024-11-19', 7.0, 1, 1, 1),
+(2, '21053735', '2024-11-19', 3.8, 1, 2, 1),
+(3, '21053735', '2024-11-19', 4.5, 1, 1, 2),
+(4, '21053735', '2024-11-19', 5.8, 1, 2, 2),
+(5, '21053735', '2024-11-19', 3.1, 1, 3, 2),
+(6, '21867781', '2024-11-19', 7.0, 1, 1, 1),
+(7, '21867781', '2024-11-19', 1.0, 1, 2, 1),
+(8, '21867781', '2024-11-19', 1.0, 1, 1, 2),
+(9, '21867781', '2024-11-19', 1.0, 1, 2, 2);
+
+select * from alum_notas;
+
+
+CREATE TABLE IF NOT EXISTS `alum_sociales` (
+  `idalum_social` int NOT NULL AUTO_INCREMENT,
+  `run_alum_sociales` int NOT NULL,
+  `region` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `comuna` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `establecimiento` varchar(80) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `ultimocursoaprobado` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `ultimoanioestudio` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `cursosrepetido` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `veinteporciento` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `informe20porciento` varchar(250) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `infosalud` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `perteneceetnia` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `embarazo` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `semanas` varchar(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `pueblooriginario` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `evpsicologica` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `problemaaprendizaje` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `pie` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `chilesolida` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `chilesolidacual` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `sistemasalud` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `letrafonasa` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `segurosalud` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `segurocual` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `regsocial` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `obsestablecimiento` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`idalum_social`),
+  UNIQUE KEY `run_alum_sociales_UNIQUE` (`run_alum_sociales`)
+);
+INSERT INTO `alum_sociales` (`idalum_social`, `run_alum_sociales`, `region`, `comuna`, `establecimiento`, `ultimocursoaprobado`, `ultimoanioestudio`, `cursosrepetido`, `veinteporciento`, `informe20porciento`, `infosalud`, `perteneceetnia`, `embarazo`, `semanas`, `pueblooriginario`, `evpsicologica`, `problemaaprendizaje`, `pie`, `chilesolida`, `chilesolidacual`, `sistemasalud`, `letrafonasa`, `segurosalud`, `segurocual`, `regsocial`, `obsestablecimiento`) VALUES
+(1, 14573326, '7', '7404', '3396', '8°', '2023', ' ', 'NO', 'NO', 'Alérgica a Penicilina', 'NO', 'NO', ' ', ' ', 'No Aplica', 'Sin', 'NO', 'Si', 'Priotario', 'Fonasa', 'A', 'No', '', NULL, NULL),
+(2, 17091217, '7', '7203', '3609', '8°', '2016', '0', 'NO', 'NO', '', 'NO', 'NO', ' ', 'No Pertenece', 'Sin Evaluación', 'Con', 'NO', 'No', ' ', 'Fonasa', 'A', 'No', '', NULL, NULL),
+(3, 16119674, '7', '7404', '3396', '8°', '2002', ' ', 'NO', 'NO', '', 'NO', 'NO', ' ', 'No Pertenece', 'No Aplica', 'Sin', 'NO', 'No', ' ', 'Fonasa', 'A', 'No', '', NULL, NULL),
+(4, 19990381, '7', '', '', '8°', '2018', '4', 'NO', 'NO', 'ASMA', 'NO', 'NO', ' ', 'No Pertenece', 'No Aplica', 'Sin', 'NO', 'No', ' ', 'Fonasa', 'A', ' ', '', NULL, NULL),
+(5, 21794263, '7', '', '', '1 Medio', '2024', '1', 'NO', 'NO', '', 'NO', ' ', ' ', ' ', 'No Aplica', 'Con', 'NO', 'No', ' ', 'Fonasa', 'A', ' ', '', NULL, NULL),
+(6, 21664259, '7', '7404', '3396', '8°', '2023', '0', ' ', ' ', '', 'NO', 'NO', ' ', ' ', 'Psicológica', 'Sin', 'NO', 'Si', 'Priotario', 'Fonasa', 'No Sabe', 'No Sabe', '', NULL, NULL),
+(7, 18878176, '7', '7404', '16469', '1 Medio', '2010', '1', 'NO', 'NO', '', 'NO', 'NO', ' ', 'No Pertenece', 'No Aplica', 'Sin', 'NO', 'No', ' ', 'Fonasa', 'A', 'No', '', '', ''),
+(8, 100749262, '', '', '', '6°', '2024', ' ', 'NO', 'NO', 'ANSIEDAD (QUEATEPINA)', 'NO', 'NO', ' ', 'No Pertenece', 'Psicológica', 'Sin', 'NO', ' ', ' ', 'Fonasa', 'A', ' ', '', NULL, NULL),
+(9, 21852249, '', '', '', '3° Medio', '2024', '0', 'NO', 'NO', '', 'NO', 'NO', ' ', 'No Pertenece', 'No Aplica', 'Sin', 'NO', 'No', ' ', 'Fonasa', 'A', ' ', '', NULL, NULL);
+
+SELECT * FROM alum_sociales;
+
+
+CREATE TABLE `anotaciones` (
+  `idanotaciones` int NOT NULL AUTO_INCREMENT,
+  `alum_run` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `tipo` varchar(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `anotacion` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `fanota` date DEFAULT NULL,
+  `profesor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `hanota` time DEFAULT NULL,
+  `alum_idalum` int DEFAULT NULL,
+  `categoria` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`idanotaciones`)
+);
+
+
+INSERT INTO `anotaciones` (`idanotaciones`, `alum_run`, `tipo`, `anotacion`, `fanota`, `profesor`, `hanota`, `alum_idalum`, `categoria`) VALUES
+(2, '22775021', 'N', 'MATEMATICAS: ALUMNO QUE NO TRABAJA, SE HECHA EN LA MESA CON APARIENCIA DE ESTAR DURMIENDO, SE LE HABLA Y NO OBEDECE', '2024-03-22', NULL, '09:50:38', 6, 'L'),
+(3, '22775021', 'P', 'JEFATURA: ALUMNO QUE TRAE COOPERACION PARA EL CURSO Y PARA LA ALUMNA AFECTADA POR EL INCENDIO', '2024-03-25', NULL, '09:52:10', 6, NULL),
+(4, '100720721', 'P', 'JEFATURA: ALUMNA QUE TRAE COOPERACION PARA EL CURSO Y ALUMNA QUE SE LE QUEMO LA CASA', '2024-03-25', NULL, '09:53:17', 9, NULL),
+(5, '100720716', 'P', 'JEFATURA: ALUMNO QUE COOPERA CON UTILES DE ASEO PARA LA SALA Y PARA LA ESTUDIENTE QUE SE LE QUEMO LA CASA', '2024-03-25', NULL, '09:54:24', 7, NULL),
+(6, '16241682', 'P', 'JEFATURA: ALUMNA QUE COOPERA CON CONFORT PARA LA SALA DE CLASES Y ALIMENTOS PARA LA ESTUDIANTE QUE SE LE QUEMO LA CASA', '2024-03-25', NULL, '09:55:35', 14, NULL),
+(7, '22820327', 'P', 'JEFATURA: ALUMNA QUE COOPERA CON CONFORT PARA LA SALA', '2024-03-25', NULL, '09:56:50', 4, NULL),
+(8, '22820327', 'O', ' INSPECTORIA: SE CONVEERSA CON ALUMNA Y SE COMPROMETE A LLEGAR A LA HIORA. SE LE INFORMA DE SU TERCER ATRASO. PROXOIMO ATRASO SE IRA SUSPENDIDA', '2024-03-06', NULL, '09:57:56', 4, NULL),
+(9, '100742748', 'P', 'JEFATURA: ESTUDIANTE QUE COOPERA CON PLANTITA PARA LA SALA Y ASEO DE LA MISMA', '2024-03-25', NULL, '09:59:23', 3, NULL),
+(10, '22733775', 'P', 'JEFATURA: ALUMNO QUE COOPERA PARA LA ESTUDIANTE QUE SUFRIO INCENDIO', '0003-04-25', NULL, '09:00:20', 8, NULL);
+select * from anotaciones;
+
+
+CREATE TABLE IF NOT EXISTS `asignaturas` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `descripcion` text CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO `asignaturas` (`id`, `nombre`, `descripcion`) VALUES
+(1, 'Lenguaje', ''),
+(2, 'Oficio', ''),
+(3, 'Est. Sociales', ''),
+(4, 'Cs. Naturales', ''),
+(5, 'Matemática', ''),
+(12, 'Proy. Eléctricos', ''),
+(6, 'Jefatura', ''),
+(7, 'MACE', ''),
+(8, 'TIC', ''),
+(9, 'C.C. Vida', ''),
+(10, 'Inglés', ''),
+(11, 'Inst. Elect', ''),
+(13, 'Med y Anlis', ''),
+(14, 'C. Social ', ''),
+(15, 'Inser. Lab.', ''),
+(16, 'Sist. Elect.', ''),
+(17, 'P. L. C.', ''),
+(18, 'Montaje', ''),
+(19, 'DOMSCE', ''),
+(20, 'Mant. Oper.', ''),
+(21, 'M. Didáctico', ''),
+(22, 'Act. Educ.', ''),
+(23, 'A. R. Social', ''),
+(24, 'Cons y Cal.', ''),
+(25, 'Act de Ex.', ''),
+(26, 'Higiene ', 's'),
+(27, 'Alimentación ', 's'),
+(28, 'Música', 'ss'),
+(29, 'T. con Fam.', 's'),
+(30, 'Act. Recrea', 'd'),
+(31, 'Conv. Social', 's'),
+(32, 'L. Señas', 's'),
+(33, 'T. Educativo', 'x'),
+(34, 'Salud ', 'x'),
+(35, 'C. Cal. Vida', 's');
+select * from asignaturas;
+
+
+CREATE TABLE IF NOT EXISTS `asignaturas_cursos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `curso_id` int DEFAULT NULL,
+  `asignatura_id` int DEFAULT NULL,
+  `horario_id` int DEFAULT NULL,
+  `docentes_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `curso_id` (`curso_id`),
+  KEY `asignatura_id` (`asignatura_id`)
+);
+INSERT INTO `asignaturas_cursos` (`id`, `curso_id`, `asignatura_id`, `horario_id`, `docentes_id`) VALUES
+(3, 1, 2, 2, 10),
+(2, 1, 2, 1, 10),
+(4, 1, 3, 3, 3),
+(5, 1, 3, 4, 3),
+(6, 1, 6, 5, 3),
+(7, 1, 4, 7, 3),
+(8, 1, 4, 8, 3),
+(9, 1, 2, 9, 10),
+(10, 1, 2, 10, 10),
+(11, 1, 1, 11, 3),
+(12, 1, 1, 12, 3),
+(13, 1, 5, 13, 3),
+(14, 1, 5, 14, 3),
+(15, 1, 4, 15, 3),
+(16, 1, 4, 16, 3),
+(17, 1, 3, 19, 3),
+(18, 1, 3, 20, 3),
+(19, 1, 2, 21, 10),
+(20, 1, 2, 22, 10),
+(21, 1, 1, 25, 3),
+(22, 1, 1, 26, 3),
+(23, 1, 5, 27, 3),
+(24, 1, 5, 28, 3),
+(25, 3, 1, 1, 11),
+(26, 3, 1, 2, 11),
+(27, 3, 7, 3, 10),
+(28, 3, 7, 4, 10),
+(29, 3, 6, 5, 2);
+select * from asignaturas_cursos;
+
+
+CREATE TABLE IF NOT EXISTS `atrasos` (
+  `idatrasos` int NOT NULL AUTO_INCREMENT,
+  `fatraso` date NOT NULL,
+  `hatraso` time NOT NULL,
+  `jatraso` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `alum_run` int NOT NULL,
+  `alum_idalum` int NOT NULL,
+  `profesor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`idatrasos`)
+);
+INSERT INTO `atrasos` (`idatrasos`, `fatraso`, `hatraso`, `jatraso`, `alum_run`, `alum_idalum`, `profesor`) VALUES
+(1, '2024-03-20', '14:35:08', '', 17716794, 183, NULL),
+(2, '2024-03-20', '14:41:56', '', 22557461, 154, NULL),
+(3, '2024-03-20', '19:31:35', '', 18500113, 68, NULL),
+(4, '2024-03-21', '09:10:53', '', 21127982, 11, NULL),
+(5, '2024-03-21', '09:13:24', '', 21427461, 143, NULL),
+(6, '2024-03-21', '16:30:38', '', 22072598, 190, NULL),
+(7, '2024-03-21', '19:47:49', '', 22319793, 61, NULL),
+(8, '2024-03-21', '20:07:02', '', 21012601, 76, NULL),
+(9, '2024-03-22', '14:22:39', '', 18356348, 197, NULL),
+(10, '2024-03-22', '14:29:09', '', 22557461, 154, NULL),
+(11, '2024-03-22', '14:48:52', '', 17716794, 183, NULL),
+(12, '2024-03-22', '15:02:39', '', 21611195, 196, NULL),
+(13, '2024-03-25', '14:33:52', '', 22100011, 180, NULL),
+(14, '2024-03-25', '14:23:32', '', 22058645, 178, NULL),
+(15, '2024-03-25', '14:24:30', '', 22072598, 190, NULL),
+(16, '2024-03-25', '14:26:09', '', 22590523, 160, NULL);
+
+select * from atrasos;
+
+
+
+CREATE TABLE IF NOT EXISTS `clase` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `docente_id` int NOT NULL,
+  `asignatura_id` int NOT NULL,
+  `curso_id` int NOT NULL,
+  `horario_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `docente_id` (`docente_id`),
+  KEY `asignatura_id` (`asignatura_id`),
+  KEY `curso_id` (`curso_id`),
+  KEY `horario_id` (`horario_id`)
+);
+INSERT INTO clase (docente_id, asignatura_id, curso_id, horario_id)
+VALUES
+(1, 2, 1, 3),
+(2, 1, 2, 4),
+(1, 2, 1, 3),
+(2, 1, 6, 4),
+(1, 2, 1, 3),
+(2, 2, 2, 3),
+(1, 2, 1, 3),
+(2, 3, 2, 4);
+
+select * from clase;
+
+
+CREATE TABLE `cursos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `jornada` varchar(1) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `descripcion` text CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci,
+  `descgrado` varchar(80) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `codtipoense` int DEFAULT NULL,
+  `codgrado` int DEFAULT NULL,
+  `letra` varchar(1) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+
+INSERT INTO `cursos` (`id`, `nombre`, `jornada`, `descripcion`, `descgrado`, `codtipoense`, `codgrado`, `letra`) VALUES
+(1, 'BASICA 7 Y 8', 'M', '', 'Nivel Básico 3(7° y 8° básico)', 167, 3, 'A'),
+(2, '1 y 2 HC', 'V', '', '1er nivel (1° y 2° medio)', 363, 1, 'A'),
+(3, '1 y 2 ELECTRICO', 'M', '', '1er nivel (1° y 2° medio)', 563, 1, 'A'),
+(4, '1 y 2 PARVULOS', 'T', '', '1er nivel (1° y 2° medio)', 663, 1, 'A'),
+(5, '3 y 4 HC', 'V', '', '2do nivel (3° y 4° medio)', 363, 3, 'A'),
+(6, '3 ELECTRICO', 'M', '', '2do nivel (3° medio)', 563, 3, 'A'),
+(7, '3 PARVULOS', 'T', '', '2do nivel (3° medio)', 663, 3, 'A'),
+(8, '4 ELECTRICO', 'M', '', '3er nivel (4° medio)', 563, 4, 'A'),
+(9, '4 PARVULOS', 'T', '', '3er nivel (4° medio)', 663, 4, 'A');
+
+
+select * from cursos;
+
+
+CREATE TABLE IF NOT EXISTS `curso_horario` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `curso_id` int NOT NULL,
+  `horario_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `curso_id` (`curso_id`),
+  KEY `horario_id` (`horario_id`)
+);
+
+INSERT INTO `curso_horario` (`id`, `curso_id`, `horario_id`) VALUES
+(1, 1, 1),
+(2, 1, 2),
+(3, 1, 3),
+(4, 1, 4),
+(5, 1, 5),
+(6, 1, 7),
+(7, 1, 8),
+(8, 1, 9),
+(9, 1, 10),
+(10, 1, 11),
+(11, 1, 12),
+(12, 1, 13),
+(13, 1, 14),
+(14, 1, 15),
+(15, 1, 16),
+(16, 1, 19),
+(17, 1, 20),
+(18, 1, 21);
+
+select * from curso_horario;
+
+
+CREATE TABLE `dias_trabajados` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `anio` year NOT NULL,
+  `mes` int NOT NULL,
+  `dias` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `anio` (`anio`,`mes`)
+);
+
+INSERT INTO `dias_trabajados` (`id`, `anio`, `mes`, `dias`) VALUES
+(11, '2024', 3, 1),
+(12, '2024', 4, 22),
+(13, '2024', 5, 20),
+(14, '2024', 6, 10),
+(15, '2024', 7, 16),
+(16, '2024', 8, 20),
+(17, '2024', 9, 16),
+(18, '2024', 10, 22),
+(19, '2024', 11, 20),
+(20, '2024', 12, 5);
+
+select * from dias_trabajados;
+
+
+
+
+CREATE TABLE `docentes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `apellido` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `pass` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO `docentes` (`id`, `nombre`, `apellido`, `email`, `pass`) VALUES
+(1, 'M. Francisca', 'Ávila', 'asas@sd', NULL),
+(2, 'David', 'Guajardo', 'asas@sd', NULL),
+(3, 'Betsabé', 'González', 'asas@sdsd', NULL),
+(4, 'J.Claudio', 'Alvarez', 'asdasd@sdfs', NULL),
+(5, 'Pablo', 'Palma', 'adsd@sdsd', NULL),
+(6, 'Veronica', 'Saavedra', NULL, NULL),
+(7, 'Omar', 'Alvial', NULL, NULL),
+(8, 'Guillermo', 'Sepulveda', NULL, NULL),
+(9, 'M. José', 'Morales', NULL, NULL),
+(10, 'Matías', 'Batarce', 'a@s.cl', NULL),
+(11, 'Carolina', 'Soto', 'a@s.cl', NULL),
+(12, 'M. Ángel', 'M', 'as@as.cl', NULL),
+(13, 'Patricia', 'Sobarzo', 'sdsd@s', NULL);
+
+select * from docentes;
+
+
+CREATE TABLE IF NOT EXISTS `docente_asignatura` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `docente_id` int NOT NULL,
+  `asignatura_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `docente_id` (`docente_id`),
+  KEY `asignatura_id` (`asignatura_id`)
+);
+
+INSERT INTO `docente_asignatura` (`id`, `docente_id`, `asignatura_id`) VALUES
+(1, 10, 2),
+(2, 3, 3),
+(3, 3, 6),
+(4, 3, 4),
+(5, 3, 1),
+(6, 3, 5),
+(7, 11, 1),
+(8, 10, 7),
+(9, 2, 6),
+(10, 1, 5),
+(11, 6, 10),
+(12, 2, 3),
+(13, 7, 4),
+(14, 7, 8),
+(15, 10, 6),
+(16, 1, 9),
+(17, 8, 11);
+
+select * from docente_asignatura;
+
+
+CREATE TABLE `establecimientos` (
+  `idestablecimientos` int NOT NULL AUTO_INCREMENT,
+  `activo` varchar(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `rbd` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `origen` int NOT NULL,
+  `nom` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `cod_comuna` int NOT NULL,
+  `dependencia` int NOT NULL,
+  `urbano_rural` int NOT NULL,
+  `liceo_bicentenario` int DEFAULT NULL,
+  PRIMARY KEY (`idestablecimientos`)
+);
+
+
+INSERT INTO `establecimientos` (`idestablecimientos`, `activo`, `rbd`, `origen`, `nom`, `cod_comuna`, `dependencia`, `urbano_rural`, `liceo_bicentenario`) VALUES
+(1, 'si', '97', 1, 'INST. COM. DE IQUIQUE BALDOMERO WOLNITZKY', 1101, 1, 0, 0),
+(2, 'si', '102', 1, 'ESC.EDUC.ESPECIAL FLOR DEL INCA', 1101, 1, 0, 0),
+(3, 'si', '103', 1, 'ESC.EDUC.GRAL.BAS.Y DES.ART.VIOLETA PARRA', 1101, 1, 0, 0),
+(4, 'si', '105', 1, 'CENTRO DE CAPACITACION LABORAL', 1101, 1, 0, 0),
+(5, 'si', '106', 1, 'INSTITUTO DEL MAR ALMIRANTE CARLOS CONDEL', 1101, 5, 0, 1),
+(6, 'si', '107', 1, 'LICEO LIBERT. GRAL.BERNARDO O"HIGGINS', 1101, 1, 0, 0),
+(7, 'si', '108', 1, 'LICEO POLITEC. JOSE GUTIERREZ DE LA FUEN', 1101, 1, 0, 0),
+(8, 'si', '109', 1, 'COLEGIO DEPORTIVO TEC. PROF. ELENA DUVAUCHELLE CABEZON', 1101, 1, 0, 0),
+(9, 'si', '110', 1, 'LICEO BICENTENARIO DOMINGO SANTA MARIA DE IQQ.', 1101, 1, 0, 1);
+
+
+select * from establecimientos;
+
+
+CREATE TABLE  `horarios` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `dia` enum('Lunes','Martes','Miércoles','Jueves','Viernes') CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `jornada` varchar(1) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `inicio` time DEFAULT NULL,
+  `fin` time DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO `horarios` (`id`, `dia`, `jornada`, `inicio`, `fin`) VALUES
+(1, 'Lunes', 'M', '08:30:00', '09:15:00'),
+(2, 'Lunes', 'M', '09:15:00', '10:00:00'),
+(3, 'Lunes', 'M', '10:10:00', '10:55:00'),
+(4, 'Lunes', 'M', '10:55:00', '11:40:00'),
+(5, 'Lunes', 'M', '11:45:00', '12:30:00'),
+(6, 'Lunes', 'M', '12:30:00', '13:15:00'),
+(7, 'Martes', 'M', '08:30:00', '09:15:00'),
+(8, 'Martes', 'M', '09:15:00', '10:00:00'),
+(9, 'Martes', 'M', '10:10:00', '10:55:00'),
+(10, 'Martes', 'M', '10:55:00', '11:40:00'),
+(11, 'Martes', 'M', '11:45:00', '12:30:00'),
+(12, 'Martes', 'M', '12:30:00', '13:15:00'),
+(13, 'Miércoles', 'M', '08:30:00', '09:15:00'),
+(14, 'Miércoles', 'M', '09:15:00', '10:00:00'),
+(15, 'Miércoles', 'M', '10:10:00', '10:55:00'),
+(16, 'Miércoles', 'M', '10:55:00', '11:40:00'),
+(17, 'Miércoles', 'M', '11:45:00', '12:30:00'),
+(18, 'Miércoles', 'M', '12:30:00', '13:15:00'),
+(19, 'Jueves', 'M', '08:30:00', '09:15:00'),
+(20, 'Jueves', 'M', '09:15:00', '10:00:00'),
+(21, 'Jueves', 'M', '10:10:00', '10:55:00'),
+(22, 'Jueves', 'M', '10:55:00', '11:40:00'),
+(23, 'Jueves', 'M', '11:45:00', '12:30:00'),
+(24, 'Jueves', 'M', '12:30:00', '13:15:00'),
+(25, 'Viernes', 'M', '08:30:00', '09:15:00'),
+(26, 'Viernes', 'M', '09:15:00', '10:00:00'),
+(27, 'Viernes', 'M', '10:10:00', '10:55:00'),
+(28, 'Viernes', 'M', '10:55:00', '11:40:00'),
+(29, 'Viernes', 'M', '11:45:00', '12:30:00'),
+(30, 'Viernes', 'M', '12:30:00', '13:15:00'),
+(31, 'Lunes', 'T', '14:00:00', '14:45:00'),
+(32, 'Lunes', 'T', '14:45:00', '15:30:00'),
+(33, 'Lunes', 'T', '15:40:00', '16:25:00'),
+(34, 'Lunes', 'T', '16:25:00', '17:10:00'),
+(35, 'Lunes', 'T', '17:15:00', '18:00:00'),
+(36, 'Lunes', 'T', '18:00:00', '18:45:00'),
+(37, 'Martes', 'T', '14:00:00', '14:45:00'),
+(38, 'Martes', 'T', '14:45:00', '15:30:00'),
+(39, 'Martes', 'T', '15:40:00', '16:25:00'),
+(40, 'Martes', 'T', '16:25:00', '17:10:00'),
+(41, 'Martes', 'T', '17:15:00', '18:00:00'),
+(42, 'Martes', 'T', '18:00:00', '18:45:00'),
+(43, 'Miércoles', 'T', '14:00:00', '14:45:00'),
+(44, 'Miércoles', 'T', '14:45:00', '15:30:00'),
+(45, 'Miércoles', 'T', '15:40:00', '16:25:00'),
+(46, 'Miércoles', 'T', '16:25:00', '17:10:00'),
+(47, 'Miércoles', 'T', '17:15:00', '18:00:00'),
+(48, 'Miércoles', 'T', '18:00:00', '18:45:00'),
+(49, 'Jueves', 'T', '14:00:00', '14:45:00'),
+(50, 'Jueves', 'T', '14:45:00', '15:30:00'),
+(51, 'Jueves', 'T', '15:40:00', '16:25:00'),
+(52, 'Jueves', 'T', '16:25:00', '17:10:00'),
+(53, 'Jueves', 'T', '17:15:00', '18:00:00'),
+(54, 'Jueves', 'T', '18:00:00', '18:45:00'),
+(55, 'Viernes', 'T', '14:00:00', '14:45:00'),
+(56, 'Viernes', 'T', '14:45:00', '15:30:00'),
+(57, 'Viernes', 'T', '15:40:00', '16:25:00'),
+(58, 'Viernes', 'T', '16:25:00', '17:10:00'),
+(59, 'Viernes', 'T', '17:15:00', '18:00:00'),
+(60, 'Viernes', 'T', '18:00:00', '18:45:00'),
+(61, 'Lunes', 'V', '19:00:00', '19:45:00'),
+(62, 'Lunes', 'V', '19:45:00', '20:30:00'),
+(63, 'Lunes', 'V', '20:30:00', '21:25:00'),
+(64, 'Lunes', 'V', '21:25:00', '22:10:00'),
+(65, 'Lunes', 'V', '22:10:00', '22:55:00'),
+(66, 'Lunes', 'V', '22:55:00', '23:40:00'),
+(67, 'Martes', 'V', '19:00:00', '19:45:00'),
+(68, 'Martes', 'V', '19:45:00', '20:30:00'),
+(69, 'Martes', 'V', '20:30:00', '21:25:00'),
+(70, 'Martes', 'V', '21:25:00', '22:10:00'),
+(71, 'Martes', 'V', '22:10:00', '22:55:00'),
+(72, 'Martes', 'V', '22:55:00', '23:40:00'),
+(73, 'Miércoles', 'V', '19:00:00', '19:45:00'),
+(74, 'Miércoles', 'V', '19:45:00', '20:30:00'),
+(75, 'Miércoles', 'V', '20:30:00', '21:25:00'),
+(76, 'Miércoles', 'V', '21:25:00', '22:10:00'),
+(77, 'Miércoles', 'V', '22:10:00', '22:55:00'),
+(78, 'Miércoles', 'V', '22:55:00', '23:40:00'),
+(79, 'Jueves', 'V', '19:00:00', '19:45:00'),
+(80, 'Jueves', 'V', '19:45:00', '20:30:00'),
+(81, 'Jueves', 'V', '20:30:00', '21:25:00'),
+(82, 'Jueves', 'V', '21:25:00', '22:10:00'),
+(83, 'Jueves', 'V', '22:10:00', '22:55:00'),
+(84, 'Jueves', 'V', '22:55:00', '23:40:00'),
+(85, 'Viernes', 'V', '19:00:00', '19:45:00'),
+(86, 'Viernes', 'V', '19:45:00', '20:30:00'),
+(87, 'Viernes', 'V', '20:30:00', '21:25:00'),
+(88, 'Viernes', 'V', '21:25:00', '22:10:00'),
+(89, 'Viernes', 'V', '22:10:00', '22:55:00'),
+(90, 'Viernes', 'V', '22:55:00', '23:40:00');
+
+
+
+select * from horarios;
+
+
+CREATE TABLE `matricula` (
+  `idmatricula` int NOT NULL AUTO_INCREMENT,
+  `run_matricula` int NOT NULL,
+  `matricula` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `id_cursos` int DEFAULT NULL,
+  `n_alumno` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`idmatricula`)
+);
+
+insert into matricula( run_matricula, matricula, id_cursos, n_alumno)
+values
+(123123, 'bb', 1, 'ds'),
+(31231, 'cc', 2, 'nbv'),
+(423, 'dd', 4, 'trf'),
+(21212, 'kk', 6, 'r'),
+(76867, 'oo', 8, 'uy');
+
+select * from matricula;
+
+
+CREATE TABLE IF NOT EXISTS `m_dias` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `anio` year NOT NULL,
+  `mes` int NOT NULL,
+  `dia` int NOT NULL,
+  `tipo` char(1) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `anio` (`anio`,`mes`,`dia`)
+);
+
+INSERT INTO `m_dias` (`id`, `anio`, `mes`, `dia`, `tipo`) VALUES
+(1, '2024', 3, 1, 'F'),
+(2, '2024', 3, 4, 'F'),
+(3, '2024', 3, 5, 'F'),
+(4, '2024', 3, 29, 'F'),
+(5, '2024', 3, 6, 'C'),
+(6, '2024', 3, 7, 'C'),
+(7, '2024', 3, 8, 'C'),
+(8, '2024', 3, 11, 'C'),
+(9, '2024', 3, 12, 'C');
+
+select * from m_dias;
+
+
+CREATE TABLE `m_escolar` (
+  `idm_escolar` int NOT NULL AUTO_INCREMENT,
+  `mes` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `dias` int NOT NULL,
+  `anio` year DEFAULT NULL,
+  `dias_clases` int DEFAULT NULL,
+  `dias_normales` int DEFAULT NULL,
+  `dias_feriados` int DEFAULT NULL,
+  PRIMARY KEY (`idm_escolar`)
+);
+INSERT INTO m_escolar (mes, dias, anio, dias_clases, dias_normales, dias_feriados)
+VALUES
+('Enero', 31, 2025, 0, 28, 3),
+('Febrero', 28, 2025, 20, 24, 4),
+('Marzo', 31, 2025, 22, 26, 5),
+('Abril', 30, 2025, 20, 24, 4),
+('Mayo', 31, 2025, 21, 26, 5),
+('Junio', 30, 2025, 19, 25, 6),
+('Julio', 31, 2025, 0, 27, 4),
+('Agosto', 31, 2025, 21, 26, 5),
+('Septiembre', 30, 2025, 20, 24, 6),
+('Octubre', 31, 2025, 22, 27, 4),
+('Noviembre', 30, 2025, 21, 25, 5),
+('Diciembre', 31, 2025, 10, 27, 4);
+
+select * from m_escolar;
+
+CREATE TABLE IF NOT EXISTS `nacionalidad` (
+  `idnacionalidad` int NOT NULL AUTO_INCREMENT,
+  `pais_nac` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `gentilicio_nac` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `iso_nac` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`idnacionalidad`)
+);
+
+INSERT INTO `nacionalidad` (`idnacionalidad`, `pais_nac`, `gentilicio_nac`, `iso_nac`) VALUES
+(1, 'Afganistán', 'AFGANA', 'AFG'),
+(2, 'Albania', 'ALBANESA', 'ALB'),
+(3, 'Alemania', 'ALEMANA', 'DEU'),
+(4, 'Andorra', 'ANDORRANA', 'AND'),
+(5, 'Angola', 'ANGOLEÑA', 'AGO'),
+(6, 'AntiguayBarbuda', 'ANTIGUANA', 'ATG'),
+(7, 'ArabiaSaudita', 'SAUDÍ', 'SAU'),
+(8, 'Argelia', 'ARGELINA', 'DZA'),
+(9, 'Argentina', 'ARGENTINA', 'ARG'),
+(10, 'Armenia', 'ARMENIA', 'ARM');
+
+select * from nacionalidad;
+
+
+
+CREATE TABLE `nivelciclo` (
+  `idnivelciclo` int NOT NULL,
+  `nombre` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  PRIMARY KEY (`idnivelciclo`)
+);
+
+insert into nivelciclo(
+idnivelciclo, nombre)
+values
+(1, "aaaa"),
+(7, "eew"),
+(14, "jnnn"),
+(21, "fddddd"),
+(28, "ffds");
+
+select * from nivelciclo;
+
+CREATE TABLE `parametros` (
+  `idparametros` int NOT NULL AUTO_INCREMENT,
+  `finicio_clases` date NOT NULL,
+  `periodo` year NOT NULL,
+  PRIMARY KEY (`idparametros`)
+);
+
+
+INSERT INTO `parametros` (`idparametros`, `finicio_clases`, `periodo`) VALUES
+(1, '2024-03-01', '2024');
+
+select * from parametros;
+
+
+CREATE TABLE `psicosocial` (
+  `idpsicosocial` int NOT NULL,
+  `run` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`idpsicosocial`)
+);
+
+insert into psicosocial(idpsicosocial, run)
+values
+(1, "123132"),
+(3, "98567"),
+(5, "523"),
+(8, "87687"),
+(13, "543453");
+
+
+select * from psicosocial;
+
+
+CREATE TABLE `regcomuna` (
+  `id_regcomuna` int NOT NULL AUTO_INCREMENT,
+  `cod_region` int DEFAULT NULL,
+  `nom_region` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `cod_comuna` int DEFAULT NULL,
+  `nom_comuna` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`id_regcomuna`)
+);
+
+
+INSERT INTO `regcomuna` (`id_regcomuna`, `cod_region`, `nom_region`, `cod_comuna`, `nom_comuna`) VALUES
+(1, 1, 'TPCA', 1101, 'IQUIQUE'),
+(2, 1, 'TPCA', 1107, 'ALTO HOSPICIO'),
+(3, 1, 'TPCA', 1401, 'POZO ALMONTE'),
+(4, 1, 'TPCA', 1402, 'CAMIÑA'),
+(5, 1, 'TPCA', 1403, 'COLCHANE'),
+(6, 1, 'TPCA', 1404, 'HUARA'),
+(7, 1, 'TPCA', 1405, 'PICA'),
+(8, 2, 'ANTOF', 2101, 'ANTOFAGASTA');
+
+
+select * from regcomuna;
+
+CREATE TABLE `regiones` (
+  `idregiones` int NOT NULL AUTO_INCREMENT,
+  `cod_region` int NOT NULL,
+  `nom_region` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  PRIMARY KEY (`idregiones`)
+);
+
+
+
+INSERT INTO `regiones` (`idregiones`, `cod_region`, `nom_region`) VALUES
+(1, 1, 'TARAPACÁ'),
+(2, 2, 'ANTOFAGASTA'),
+(3, 3, 'ATACAMA'),
+(4, 4, 'COQUIMBO'),
+(5, 5, 'VALPARAÍSO'),
+(6, 6, 'L.BERNARDO O´HIGGINS'),
+(7, 7, 'MAULE'),
+(8, 8, 'BIOBIO'),
+(9, 9, 'ARAUCANIA'),
+(10, 10, 'DE LOS LAGOS'),
+(11, 11, 'AYSEN'),
+(12, 12, 'MAGALLANES'),
+(13, 13, 'RM'),
+(14, 14, 'DE LOS RIOS'),
+(15, 15, 'ARICA Y PARINACOTA'),
+(16, 16, 'ÑUBLE');
+
+
+
+CREATE TABLE IF NOT EXISTS `retiros` (
+  `idretiro` int NOT NULL AUTO_INCREMENT,
+  `alum_run` int NOT NULL,
+  `fretiro` date NOT NULL,
+  `hretiro` time NOT NULL,
+  `jretiro` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `factual` date DEFAULT NULL,
+  `alum_idalum` int DEFAULT NULL,
+  `profesor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`idretiro`)
+);
+
+
+INSERT INTO retiros (
+  alum_run, fretiro, hretiro, jretiro, factual, alum_idalum, profesor
+) VALUES
+(12345678, '2025-08-25', '09:00:00', 'Salida médica', '2025-08-25', 1, 'Prof. Soto'),
+(87654321, '2025-08-26', '11:15:00', 'Retiro por actividad deportiva', '2025-08-26', 2, 'Prof. García'),
+(11223344, '2025-08-27', '13:45:00', 'Retiro familiar', '2025-08-27', 3, 'Prof. López');
+
+select * from retiros;
+
+
+CREATE TABLE `salidas` (
+  `idsalida` int NOT NULL AUTO_INCREMENT,
+  `alum_run` int NOT NULL,
+  `fsalida` date NOT NULL,
+  `hsalida` time NOT NULL,
+  `jsalida` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `alum_idalum` int DEFAULT NULL,
+  `profesor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`idsalida`)
+);
+
+
+
+INSERT INTO `salidas` (`idsalida`, `alum_run`, `fsalida`, `hsalida`, `jsalida`, `alum_idalum`, `profesor`) VALUES
+(1, 19894450, '2024-04-10', '18:10:36', 'LOCOMOCION  ', 201, NULL),
+(2, 22304401, '2025-04-09', '16:03:59', ' hfhgfgh', 1, NULL);
+
+select * from salidas;
+
+
+CREATE TABLE `sige` (
+  `idalumsige` int NOT NULL AUTO_INCREMENT,
+  `anio` year DEFAULT NULL,
+  `rbd` int DEFAULT NULL,
+  `codtipoense` int DEFAULT NULL,
+  `codgrado` int DEFAULT NULL,
+  `descgrado` varchar(300) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `letracurso` varchar(1) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `run` int NOT NULL,
+  `digv` varchar(5) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `genero` varchar(1) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `nombres` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `apaterno` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `amaterno` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `direcc` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `comuna` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `codcomuna` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `email` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `telefono` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `celular` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `fnac` date NOT NULL,
+  `codetnia` int DEFAULT NULL,
+  `fincorpora` date NOT NULL,
+  `fretiro` date DEFAULT NULL,
+  `asistencia` int DEFAULT NULL,
+  `promedio` decimal(7,1) DEFAULT NULL,
+  PRIMARY KEY (`idalumsige`,`run`),
+  UNIQUE KEY `run_UNIQUE` (`run`)
+);
+
+INSERT INTO `sige` (
+  anio, rbd, codtipoense, codgrado, descgrado, letracurso, run, digv, genero, 
+  nombres, apaterno, amaterno, direcc, comuna, codcomuna, email, telefono, celular, 
+  fnac, codetnia, fincorpora, fretiro, asistencia, promedio
+) VALUES
+(2025, 12345, 110, 1, '1° Básico', 'A', 12345678, 'K', 'M', 'Juan', 'Pérez', 'González', 'Av. Los Olivos 123', 'Santiago', '13101', 'juan.perez@example.com', '22223333', '987654321', '2016-03-15', NULL, '2025-03-01', NULL, 95, 6.5),
+(2025, 12345, 110, 2, '2° Básico', 'B', 87654321, '9', 'F', 'María', 'López', 'Rojas', 'Calle Las Flores 456', 'Providencia', '13114', 'maria.lopez@example.com', '22667788', '912345678', '2015-07-20', 1, '2025-03-01', NULL, 98, 6.8),
+(2025, 12345, 110, 3, '3° Básico', 'A', 11222333, '3', 'M', 'Carlos', 'Ramírez', 'Soto', 'Pasaje El Bosque 789', 'La Florida', '13123', 'carlos.ramirez@example.com', '22998877', '911223344', '2014-11-05', NULL, '2025-03-01', NULL, 90, 6.2),
+(2025, 12345, 110, 4, '4° Básico', 'C', 99887766, '2', 'F', 'Fernanda', 'Castillo', 'Morales', 'Av. Las Condes 3210', 'Las Condes', '13119', 'fernanda.castillo@example.com', '22445566', '913334455', '2013-02-10', 2, '2025-03-01', NULL, 97, 6.9),
+(2025, 12345, 110, 5, '5° Básico', 'B', 55443322, '7', 'M', 'Diego', 'Muñoz', 'Hernández', 'Camino El Alba 654', 'Peñalolén', '13121', 'diego.munoz@example.com', '22776655', '916667778', '2012-09-30', NULL, '2025-03-01', NULL, 92, 6.3);
+
+select * from sige;
+
+CREATE TABLE IF NOT EXISTS `suspenciones` (
+  `idsuspenciones` int NOT NULL AUTO_INCREMENT,
+  `alum_run` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `dias` varchar(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `suspencion` varchar(400) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `fsuspencion` date DEFAULT NULL,
+  `profesor` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  `hanota` time DEFAULT NULL,
+  `alum_idalum` int DEFAULT NULL,
+  PRIMARY KEY (`idsuspenciones`)
+);
+
+
+INSERT INTO `suspenciones` (
+  alum_run, dias, suspencion, fsuspencion, profesor, hanota, alum_idalum)
+  VALUES
+('12345678-9', '2', 'Agresión verbal a un compañero en la sala de clases', '2025-05-10', 'Juan Soto', '10:30:00', 1),
+('98765432-K', '3', 'Inasistencia reiterada sin justificación', '2025-06-02', 'María López', '09:15:00', 2),
+('11222333-4', '1', 'Interrupción constante de la clase y falta de respeto al docente', '2025-06-20', 'Carlos Ramírez', '11:45:00', 3),
+('55667788-2', '5', 'Pelea física en el recreo con otro estudiante', '2025-07-01', 'Ana Torres', '12:00:00', 4),
+('99887766-5', '2', 'Uso indebido de celular durante prueba a pesar de advertencias', '2025-07-15', 'Luis Castillo', '14:20:00', 5);
+
+select * from suspenciones;
+
+
+CREATE TABLE `total_asiste` (
+  `idtotal_asiste` int NOT NULL AUTO_INCREMENT,
+  `anio` year NOT NULL,
+  `mes` int NOT NULL,
+  `asistencia` int DEFAULT NULL,
+  `alum_idalum` int NOT NULL,
+  `alum_run` int NOT NULL,
+  PRIMARY KEY (`idtotal_asiste`),
+  KEY `fk_total_asiste_alum1_idx` (`alum_idalum`,`alum_run`)
+);
+
+INSERT INTO `total_asiste` (anio, mes, asistencia, alum_idalum, alum_run) VALUES
+(2025, 3, 95, 1, 12345678),
+(2025, 3, 98, 2, 87654321),
+(2025, 3, 90, 3, 11222333),
+(2025, 3, 97, 4, 99887766),
+(2025, 3, 92, 5, 55443322);
+
+select * from total_asiste;
+
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci NOT NULL,
+  `role` enum('admin','docente','soporte','consulta','reg_anotacion','reg_asistencia','reg_porteria','inspector','director','utp','administrativo','asistente_social','sige') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `mail` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_spanish2_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+
+INSERT INTO `usuarios` (`id`, `username`, `password`, `role`, `mail`) VALUES
+(1, 'admin', '$2y$10$wmM/2lrRGJo8NBK7ii1oou8yq338Zp8cBiia.af3YMtL7wtxka0rW', 'admin', NULL),
+(2, 'docente', '$2y$10$fTnnOYFxQKYcaqBXoVSAge5x7gZpjwqGxKa1D/QZS/ltYHh5nx3zm', 'docente', NULL),
+(3, 'consulta', '$2y$10$MiYCzNxTETZ35lqYQCiKPOXSjAiVdJdrmoSe81B4M8wUKJImiIrm.', 'consulta', NULL),
+(4, 'anota', '$2y$10$LJyiugNlxjVRNEtDox/HVO2D03/ExzCSnQI0ugMBQyk.XCZzo5THW', 'reg_anotacion', NULL);
+
+INSERT INTO `usuarios` (`id`, `username`, `password`, `role`, `mail`) VALUES
+(5, 'admin', '123123', 'admin', NULL);
+
+select * from cursos;
