@@ -13,22 +13,40 @@ class User
     }
 
     // Crear usuario
-    public function create($nombre, $email, $password, $rol)
-    {
-        $sql = "INSERT INTO $this->table (nombre, email, password, rol_id)
-                VALUES (:nombre, :email, :password, :rol_id)";
+    public function create(
+        $username,
+        $password,
+        $rol_id,
+        $nombre,
+        $ape_paterno,
+        $ape_materno,
+        $run,
+        $email,
+        $telefono
+    ) {
+        $sql = "INSERT INTO $this->table (
+                username, password, rol_id, nombre, ape_paterno, ape_materno, run, email, numero_telefonico
+            ) VALUES (
+                :username, :password, :rol_id, :nombre, :ape_paterno, :ape_materno, :run, :email, :telefono
+            )";
+
         $stmt = $this->conn->prepare($sql);
         $hashed = password_hash($password, PASSWORD_DEFAULT);
 
         return $stmt->execute([
-            ":nombre" => $nombre,
-            ":email" => $email,
+            ":username" => $username,
             ":password" => $hashed,
-            ":rol_id" => $rol
+            ":rol_id" => $rol_id,
+            ":nombre" => $nombre,
+            ":ape_paterno" => $ape_paterno,
+            ":ape_materno" => $ape_materno,
+            ":run" => $run,
+            ":email" => $email,
+            ":telefono" => $telefono,
         ]);
     }
 
-    // Listar todos
+    // Obtener todos getAll
     public function getAll(): array
     {
         $sql = "
@@ -36,7 +54,11 @@ class User
                 u.id,
                 u.username,
                 u.nombre,
+                u.ape_paterno,
+                u.ape_materno,
+                u.run,
                 u.email,
+                u.numero_telefonico,
                 u.rol_id,
                 r.nombre AS rol
             FROM usuarios2 u
@@ -55,29 +77,38 @@ class User
         $stmt->execute([":id" => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    public function findById(int $id): ?array
+
+    //Obtener por ID
+    public function findById($id)
     {
-        $stmt = $this->conn->prepare("
-            SELECT u.*, r.nombre AS rol 
+        $sql = "
+            SELECT u.*, r.nombre AS rol
             FROM usuarios2 u
             JOIN roles2 r ON r.id = u.rol_id
             WHERE u.id = :id
-        ");
-        $stmt->execute([':id' => $id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row ?: null;
+        ";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    
+
 
     //Obtener por Email
-    public function findByEmail(string $email): ?array
+    public function findByEmail($email)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM usuarios2 WHERE email = :email");
-        $stmt->execute([':email' => $email]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row ?: null;
+        $sql = "
+        SELECT u.*, r.nombre AS rol
+        FROM usuarios2 u
+        JOIN roles2 r ON r.id = u.rol_id
+        WHERE u.email = :email
+        LIMIT 1
+    ";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['email' => $email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
 
     // Actualizar
     public function update($id, $nombre, $email, $rol, $password = null)

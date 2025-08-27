@@ -5,7 +5,8 @@ class AuthController
 {
     private $userModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -28,11 +29,11 @@ class AuthController
 
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user'] = [
-                "id"     => $user['id'],
+                "id" => $user['id'],
                 "nombre" => $user['nombre'],
-                "email"  => $user['email'],
-                "rol_id" => $user['rol_id'], // 👈 importante usar rol_id
-                "rol"    => $user['rol'] ?? null
+                "email" => $user['email'],
+                "rol_id" => $user['rol_id'],
+                "rol" => $user['rol'] // 👈 aquí va el nombre del rol (viene del JOIN en findByEmail)
             ];
             header("Location: index.php?action=dashboard");
             exit;
@@ -41,6 +42,7 @@ class AuthController
             require __DIR__ . '/../views/login.php';
         }
     }
+
 
     // Verificar autenticación
     public function checkAuth()

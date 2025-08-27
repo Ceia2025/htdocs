@@ -3,7 +3,9 @@ require_once __DIR__ . "/../controllers/AuthController.php";
 $auth = new AuthController();
 $auth->checkAuth();
 
-$user = $_SESSION['user']; // 👈 sacamos todo el usuario de sesión
+//var_dump($_SESSION['user']);//debugger
+
+$user = $_SESSION['user']; // sacamos todo el usuario de sesión
 $rol = $user['rol'];
 $nombre = $user['nombre'];
 ?>
@@ -19,14 +21,16 @@ $nombre = $user['nombre'];
     <h1>Bienvenido, <?= htmlspecialchars($nombre) ?></h1>
     <h3>Rol: <?= htmlspecialchars($rol) ?></h3>
 
-    <nav>
-        <a href="index.php?action=logout">Cerrar sesión</a> |
-        <a href="index.php?action=users">Gestión de usuarios</a>
-    </nav>
 
-    <?php if ($rol === "admin"): ?>
-        <a href="#">Gestión de usuarios</a><br>
-        <a href="#">Reportes</a><br>
+    <nav>
+        <a href="index.php?action=logout">Cerrar sesión</a>
+    </nav>
+<br><br><br><br><br>
+    <?php if ($rol === "administrador"): ?>
+        <a href="index.php?action=users">Gestión de usuarios(funcionando)</a> |<br>
+        <a href="#">Reportes(Crear)</a> |<br>
+        <a href="index.php?action=roles">Edicion de Roles(Crear)</a>
+
     <?php elseif ($rol === "docente"): ?>
         <a href="#">Ingresar Notas</a><br>
         <a href="#">Planificaciones</a><br>
@@ -36,7 +40,9 @@ $nombre = $user['nombre'];
         <a href="#">Control de Asistencia</a><br>
     <?php endif; ?>
 
-    <br><a href="index.php?action=logout">Cerrar sesión</a>
+    <br><br>
+    <br><br>
+    <a href="index.php?action=logout">Cerrar sesión</a>
 </body>
 
 </html>

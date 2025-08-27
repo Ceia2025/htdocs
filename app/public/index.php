@@ -14,10 +14,10 @@ switch ($action) {
         $auth->doLogin($_POST); // procesa POST
         break;
     case 'logout':
-        $auth->logout();
+        $auth->logout(); //Cierra la seción
         break;
     case 'dashboard':
-        $auth->dashboard();
+        $auth->dashboard(); //Redirije al Dashboard
         break;
 
     // CRUD usuarios
@@ -38,6 +38,24 @@ switch ($action) {
         break;
     case 'user_delete':
         $userController->destroy($_GET['id']);
+        break;
+
+
+    // CRUD Roles
+    case 'roles':
+        $rolesController->index();
+        break;
+    case 'createRole':
+        $rolesController->create($_POST);
+        break;
+    case 'editRole':
+        $rolesController->edit($_GET['id']);
+        break;
+    case 'updateRole':
+        $rolesController->update($_GET['id'], $_POST);
+        break;
+    case 'deleteRole':
+        $rolesController->delete($_GET['id']);
         break;
 
     default:
