@@ -25,3 +25,5 @@
     <input type="text" name="nombre" placeholder="Nombre del rol" required>
     <button type="submit">Guardar</button>
 </form>
+
+<a href="index.php?action=dashboard">Dashboard</a>

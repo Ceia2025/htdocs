@@ -16,6 +16,8 @@
         <?php endforeach; ?>
     </select>
     <button type="submit">Guardar</button>
+    
+    <a href="index.php?action=dashboard">Regresar</a>
 
 <a href="index.php?action=dashboard">Cerrar sesión</a>
     

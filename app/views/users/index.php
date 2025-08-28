@@ -31,4 +31,8 @@
             </td>
         </tr>
     <?php endforeach; ?>
+
+    
 </table>
+
+<a href="index.php?action=dashboard">Regresar</a>

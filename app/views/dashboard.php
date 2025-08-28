@@ -25,11 +25,13 @@ $nombre = $user['nombre'];
     <nav>
         <a href="index.php?action=logout">Cerrar sesión</a>
     </nav>
-<br><br><br><br><br>
+    <br><br><br><br><br>
     <?php if ($rol === "administrador"): ?>
-        <a href="index.php?action=users">Gestión de usuarios(funcionando)</a> |<br>
-        <a href="#">Reportes(Crear)</a> |<br>
-        <a href="index.php?action=roles">Edicion de Roles(Crear)</a>
+        <a href="index.php?action=users">Gestión de usuarios(funcionando)</a><br>
+        <a href="#">Reportes(Crear)</a><br>
+        <a href="index.php?action=roles">Edicion de Roles(Funcionando)</a><br>
+        <a href="index.php?action=anios">Edicion de Años(Funcionando)</a><br>
+        <a href="index.php?action=cursos">Edicion de Cursos(Funcionando)</a><br>
 
     <?php elseif ($rol === "docente"): ?>
         <a href="#">Ingresar Notas</a><br>

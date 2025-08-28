@@ -16,7 +16,7 @@ app/
 
 
 
- <a href="index.php?action=login">Login</a>
+<a href="index.php?action=login">Login</a>
 <a href="index.php?action=doLogin">Procesar Login</a> <!-- normalmente es un <form action="index.php?action=doLogin" method="POST"> -->
 <a href="index.php?action=logout">Cerrar sesión</a>
 <a href="index.php?action=dashboard">Dashboard</a>

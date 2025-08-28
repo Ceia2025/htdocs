@@ -20,4 +20,6 @@
     </select><br>
 
     <button type="submit">Actualizar</button>
+
+    <a href="index.php?action=dashboard">Regresar</a>
 </form>

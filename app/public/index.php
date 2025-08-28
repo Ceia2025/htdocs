@@ -2,11 +2,15 @@
 require_once __DIR__ . '/../controllers/AuthController.php';
 require_once __DIR__ . '/../controllers/UserController.php';
 require_once __DIR__ . '/../controllers/RolesController.php';
+require_once __DIR__ . '/../controllers/AnioController.php';
+require_once __DIR__ . '/../controllers/CursoController.php';
 
 $action = $_GET['action'] ?? 'login';
 $auth = new AuthController();
 $userController = new UserController();
 $rolesController = new RolesController();
+$anioController = new AnioController();
+$cursosController = new CursosController();
 
 switch ($action) {
     case 'login':
@@ -59,6 +63,48 @@ switch ($action) {
     case 'deleteRole':
         $rolesController->delete($_GET['id']);
         break;
+
+    // CRUD Años
+    case 'anios':
+        $anioController->index();
+        break;
+    case 'anio_create':
+        require __DIR__ . '/../views/anio/create.php';
+        break;
+    case 'anio_store':
+        $anioController->create($_POST);
+        break;
+    case 'anio_edit':
+        $anioController->edit($_GET['id']);
+        break;
+    case 'anio_update':
+        $anioController->update($_GET['id'], $_POST);
+        break;
+    case 'anio_delete':
+        $anioController->delete($_GET['id']);
+        break;
+
+
+    // CRUD Cursos
+    case 'cursos':
+        $cursosController->index();
+        break;
+    case 'curso_create':
+        $cursosController->create();
+        break;
+    case 'curso_store':
+        $cursosController->store($_POST);
+        break;
+    case 'curso_edit':
+        $cursosController->edit($_GET['id']);
+        break;
+    case 'curso_update':
+        $cursosController->update($_GET['id'], $_POST);
+        break;
+    case 'curso_delete':
+        $cursosController->delete($_GET['id']);
+        break;
+
 
     default:
         echo "Ruta no encontrada";
