@@ -1,10 +1,15 @@
+´´´´
 app/
+ ├─config/
+ |   ├─Connection.php
  ├─ models/
  │   ├─ User.php
  │   └─ Role.php
  ├─ controllers/
+ │   ├─ AnioController.php
  │   ├─ AuthController.php
- │   └─ RolesController.php
+ |   ├─ RolesController.php
+ |   └─
  ├─ views/
  │   ├─ dashboard.php
  │   ├─ login.php
@@ -13,6 +18,7 @@ app/
  │       └─ edit.php    (editar)
  └─ index.php
 
+´´´
 
 
 
