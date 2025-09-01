@@ -32,6 +32,10 @@ $nombre = $user['nombre'];
         <a href="index.php?action=roles">Edicion de Roles(Funcionando)</a><br>
         <a href="index.php?action=anios">Edicion de Años(Funcionando)</a><br>
         <a href="index.php?action=cursos">Edicion de Cursos(Funcionando)</a><br>
+        <a href="index.php?action=alumnos">Gestión de Alumnos(Proceso)</a><br>
+        <a href="index.php?action=asignaturas">Gestión de Asignaturas(Funcionando)</a><br>
+        <a href="index.php?action=curso_asignaturas">CUrso asignaturas(Funcionando)</a><br>
+        <a href="index.php?action=alum_emergencia">Alumno Emergencia(Reparar)</a><br>
 
     <?php elseif ($rol === "docente"): ?>
         <a href="#">Ingresar Notas</a><br>

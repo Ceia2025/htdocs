@@ -7,13 +7,6 @@
 <body>
     <h1>Crear Curso</h1>
     <form method="POST" action="index.php?action=curso_store">
-        <label>Año:</label>
-        <select name="anio_id" required>
-            <option value="">Seleccione un año</option>
-            <?php foreach ($anios as $anio): ?>
-                <option value="<?= $anio['id'] ?>"><?= $anio['anio'] ?> - <?= htmlspecialchars($anio['descripcion']) ?></option>
-            <?php endforeach; ?>
-        </select>
         <br><br>
 
         <label>Nombre del curso:</label>

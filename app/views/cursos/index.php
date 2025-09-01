@@ -11,7 +11,6 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Año</th>
                 <th>Nombre del Curso</th>
                 <th>Acciones</th>
             </tr>
@@ -21,7 +20,6 @@
                 <?php foreach ($cursos as $curso): ?>
                     <tr>
                         <td><?= htmlspecialchars($curso['id']) ?></td>
-                        <td><?= htmlspecialchars($curso['anio']) ?></td>
                         <td><?= htmlspecialchars($curso['nombre']) ?></td>
                         <td>
                             <a href="index.php?action=curso_edit&id=<?= $curso['id'] ?>">✏️ Editar</a>

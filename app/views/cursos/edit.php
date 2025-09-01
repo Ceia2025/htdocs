@@ -7,14 +7,6 @@
 <body>
     <h1>Editar Curso</h1>
     <form method="POST" action="index.php?action=curso_update&id=<?= $curso['id'] ?>">
-        <label>Año:</label>
-        <select name="anio_id" required>
-            <?php foreach ($anios as $anio): ?>
-                <option value="<?= $anio['id'] ?>" <?= $anio['id'] == $curso['anio_id'] ? 'selected' : '' ?>>
-                    <?= $anio['anio'] ?> - <?= htmlspecialchars($anio['descripcion']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
         <br><br>
 
         <label>Nombre del curso:</label>
