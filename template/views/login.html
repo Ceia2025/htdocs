@@ -28,29 +28,35 @@
             </h2>
             <p class="mt-2 text-lg/8 text-gray-400">Recuerde Ingresar con su correo y contraseña</p>
         </div>
-        
+
         <form action="#" method="POST" class="mx-auto mt-16 max-w-xl sm:mt-20">
-            <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+            <div class="grid grid-cols-1 gap-y-6">
 
                 <div>
                     <label for="last-name" class="block text-sm/6 font-semibold text-white">Email</label>
                     <div class="mt-2.5">
                         <input id="last-name" type="email" name="last-name" autocomplete="family-name"
-                            class="block w-full rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500" />
+                            class="block w-[330px] rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500" />
                     </div>
                 </div>
 
                 <div>
-                    <label for="last-name" class="block text-sm/6 font-semibold text-white">Contraseña</label>
+                    <div class="flex items-center justify-between">
+                        <label for="last-name" class="block text-sm/6 font-semibold text-white">Contraseña</label>
+                        <div class="text-sm">
+                            <a href="#" class="font-semibold text-indigo-400 hover:text-indigo-300">Olvido la contraseña?</a>
+                        </div>
+                    </div>
                     <div class="mt-2.5">
                         <input id="last-name" type="password" name="last-name" autocomplete="family-name"
-                            class="block w-full rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500" />
+                            class="block w-[330px] rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500" />
                     </div>
+                    
                 </div>
 
             </div>
             <div class="mt-10">
-                <button type="submit" class="block w-full rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm
+                <button type="submit" class="block w-[330px] rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm
                     font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2
                     focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
                     Ingresar

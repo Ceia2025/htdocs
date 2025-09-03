@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <title>Dashboard</title>
+    <title>Perfil</title>
 </head>
 
 <html class="h-full bg-gray-900">
@@ -168,81 +168,95 @@
         </header>
         <main>
             <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-                <!-- Agregar Las opciones del Dashboard -->
-
-                <div class="grid grid-cols-3 gap-8">
 
 
-                    <div
-                        class="relative w-[320px]  rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
-                        <h3 id="tier-enterprise" class="text-base/7 font-semibold text-indigo-400">Asistencia</h3>
-                        <p class="mt-6 text-base/7 text-gray-300">Puede ver la Asistencia por alumno de cada día.
-                        </p>
-                        <a href="#" aria-describedby="tier-enterprise"
-                            class="mt-8 block rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs
-                        hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10">
-                            Ir
-                        </a>
+
+                <!-- Perfil!! -->
+
+
+
+
+                <div class="">
+
+                    <div class="mt-6 border-t border-white/10">
+                        <dl class="divide-y divide-white/10">
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm/6 font-medium text-gray-100">Username</dt>
+                                <dd class="mt-1 text-sm/6 text-gray-400 sm:col-span-2 sm:mt-0">NombreDeUsuario</dd>
+                            </div>
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm/6 font-medium text-gray-100">Nombre Completo</dt>
+                                <dd class="mt-1 text-sm/6 text-gray-400 sm:col-span-2 sm:mt-0">Nombre apeP apeM</dd>
+                            </div>
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm/6 font-medium text-gray-100">Rut</dt>
+                                <dd class="mt-1 text-sm/6 text-gray-400 sm:col-span-2 sm:mt-0">123123-123</dd>
+                            </div>
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm/6 font-medium text-gray-100">Rol</dt>
+                                <dd class="mt-1 text-sm/6 text-gray-400 sm:col-span-2 sm:mt-0">Rol</dd>
+                            </div>
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm/6 font-medium text-gray-100">Email</dt>
+                                <dd class="mt-1 text-sm/6 text-gray-400 sm:col-span-2 sm:mt-0">email@email.emal
+                                </dd>
+                            </div>
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm/6 font-medium text-gray-100">Numero Telefonico</dt>
+                                <dd class="mt-1 text-sm/6 text-gray-400 sm:col-span-2 sm:mt-0">999999
+                                </dd>
+                            </div>
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm/6 font-medium text-gray-100">Fecha Ingreso</dt>
+                                <dd class="mt-1 text-sm/6 text-gray-400 sm:col-span-2 sm:mt-0">10/10/1110
+                                </dd>
+                            </div>
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm/6 font-medium text-gray-100">Fecha creacion</dt>
+                                <dd class="mt-1 text-sm/6 text-gray-400 sm:col-span-2 sm:mt-0">11/11/1111
+                                </dd>
+                            </div>
+
+                            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                <dt class="text-sm/6 font-medium text-gray-100">Foto de perfil</dt>
+                                <dd class="mt-2 text-sm text-white sm:col-span-2 sm:mt-0">
+
+                                    <div class="col-span-full">
+                                        <label for="photo"
+                                            class="block text-sm/6 font-medium text-gray-900">Foto</label>
+                                        <div class="mt-2 flex items-center gap-x-3">
+                                            <svg viewBox="0 0 24 24" fill="currentColor" data-slot="icon"
+                                                aria-hidden="true" class="size-12 text-gray-300">
+                                                <path
+                                                    d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+                                                    clip-rule="evenodd" fill-rule="evenodd" />
+                                            </svg>
+                                            <button type="button"
+                                                class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50">Cmabio</button>
+                                        </div>
+                                    </div>
+
+                                </dd>
+                            </div>
+
+                        </dl>
                     </div>
-                    <div
-                        class="relative w-[320px]  rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
-                        <h3 id="tier-enterprise" class="text-base/7 font-semibold text-indigo-400">Personal</h3>
-                        <p class="mt-6 text-base/7 text-gray-300">Controla el personal, puede agregar, modificar o eliminar</p>
-                        <a href="#" aria-describedby="tier-enterprise"
-                            class="mt-8 block rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs
-                        hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10">
-                            Ir
-                        </a>
-                    </div>
-                    <div
-                        class="relative w-[320px]  rounded-3xl bg-gray-900 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
-                        <h3 id="tier-enterprise" class="text-base/7 font-semibold text-indigo-400">aaaaaaa</h3>
-                        <p class="mt-6 text-base/7 text-gray-300">Seccion dedicada a loasda adasdas asd asdas aa sdas</p>
-                        <a href="#" aria-describedby="tier-enterprise"
-                            class="mt-8 block rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs
-                        hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10">
-                            Ir
-                        </a>
-                    </div>
-
-
-
-                    <div
-                        class="relative w-[320px]  rounded-3xl bg-indigo-100 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
-                        <h3 id="tier-enterprise" class="text-base/7 font-semibold text-indigo-400">Personal</h3>
-                        <p class="mt-6 text-base/7 text-cyan-800 ">Puede ver la Asistencia por alumno de cada día.</p>
-                        <a href="#" aria-describedby="tier-enterprise"
-                            class="mt-8 block rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs
-                        hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10">
-                            Ir
-                        </a>
-                    </div>
-                    <div
-                        class="relative w-[320px]  rounded-3xl bg-indigo-100 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
-                        <h3 id="tier-enterprise" class="text-base/7 font-semibold text-indigo-400">Personal</h3>
-                        <p class="mt-6 text-base/7 text-cyan-800 ">Controla el personal, puede agregar, modificar o eliminar</p>
-                        <a href="#" aria-describedby="tier-enterprise"
-                            class="mt-8 block rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs
-                        hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10">
-                            Ir
-                        </a>
-                    </div>
-                    <div
-                        class="relative w-[320px]  rounded-3xl bg-indigo-100 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
-                        <h3 id="tier-enterprise" class="text-base/7 font-semibold text-indigo-400">aaaaaaa</h3>
-                        <p class="mt-6 text-base/7 text-cyan-800 ">Seccion dedicada a loasda adasdas asd asdas aa sdas</p>
-                        <a href="#" aria-describedby="tier-enterprise"
-                            class="mt-8 block rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs
-                        hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10">
-                            Ir
-                        </a>
-                    </div>
-
-
-
                 </div>
+
+
+
+
+
+            </div>
         </main>
     </div>
+
+
+
+
+
+
+
 
 
 </body>
