@@ -1,0 +1,95 @@
+{
+  "administrador": [
+    {
+      "title": "Gestión de usuarios",
+      "desc": "Controla los usuarios del sistema",
+      "url": "index.php?action=users"
+    },
+    {
+      "title": "Reportes (Crear)",
+      "desc": "Generar y ver reportes del sistema",
+      "url": "#"
+    },
+    {
+      "title": "Edición de Roles",
+      "desc": "Modificar permisos de usuarios",
+      "url": "index.php?action=roles"
+    },
+    {
+      "title": "Edición de Años",
+      "desc": "Gestionar años académicos",
+      "url": "index.php?action=anios"
+    },
+    {
+      "title": "Gestión de Cursos",
+      "desc": "Administrar cursos disponibles",
+      "url": "index.php?action=cursos"
+    },
+    {
+      "title": "Gestión de Alumnos",
+      "desc": "Agregar, modificar o ver alumnos",
+      "url": "index.php?action=alumnos"
+    },
+    {
+      "title": "Gestión de Asignaturas",
+      "desc": "Administrar asignaturas",
+      "url": "index.php?action=asignaturas"
+    },
+    {
+      "title": "Curso Asignaturas",
+      "desc": "Asignar asignaturas a cursos",
+      "url": "index.php?action=curso_asignaturas"
+    },
+    {
+      "title": "Alumno Emergencia",
+      "desc": "Contactos de emergencia de alumnos",
+      "url": "index.php?action=alum_emergencia"
+    },
+    {
+      "title": "Ingresar Notas (Crear)",
+      "desc": "Registrar calificaciones de alumnos",
+      "url": "#"
+    },
+    {
+      "title": "Planificaciones (Crear)",
+      "desc": "Subir y gestionar planificaciones de clases",
+      "url": "#"
+    }
+  ],
+  "docente": [
+    {
+      "title": "Ingresar Notas",
+      "desc": "Registrar calificaciones de alumnos",
+      "url": "#"
+    },
+    {
+      "title": "Planificaciones",
+      "desc": "Subir y gestionar planificaciones de clases",
+      "url": "#"
+    },
+    {
+      "title": "Registro de Anotaciones",
+      "desc": "Control de observaciones y anotaciones de alumnos",
+      "url": "#"
+    },
+    {
+      "title": "Control de Asistencia",
+      "desc": "Ver y registrar asistencia de alumnos",
+      "url": "#"
+    }
+  ],
+  "registro": [
+    {
+      "title": "Registro de Anotaciones",
+      "desc": "Control de observaciones y anotaciones de alumnos",
+      "url": "#"
+    }
+  ],
+  "asistencia": [
+    {
+      "title": "Control de Asistencia",
+      "desc": "Ver y registrar asistencia de alumnos",
+      "url": "#"
+    }
+  ]
+}

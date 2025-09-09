@@ -1,0 +1,84 @@
+Roles|
+
+administrador --------------ok
+docente --------------ok
+asistente social --------------ok?
+Dirección --------------ok?
+Administrativo --------------ok?
+Inspector general --------------ok?
+Registro asistencias
+Registro atrasos y salidas
+Registro de anotaciones
+Solo visualización
+Soporte
+
+    
+    
+    
+    
+    admin
+    
+    Gestión de usuarios
+    Reportes (Crear)
+    Edición de Roles
+    Edición de Años
+    Gestión de Cursos
+    Gestión de Alumnos
+    Gestión de Asignaturas
+    Curso Asignaturas
+    Alumno Emergencia
+    Ingresar Notas (Crear)
+    Planificaciones (Crear)
+    Matricula (Crear)
+    Atrasos (Crear)
+
+
+    Docente
+
+    Ingresar Notas
+    Planificaciones
+    Registro de Anotaciones(Necesario?)
+    Control de Asistencia
+    Gestión de usuarios (solo vista)
+
+    
+    
+    Asistente social
+
+    Gestión de Alumnos(Solo vista sin edición)
+    Alumno Emergencia (Solo vista sin edición)
+    Gestión de usuarios (solo vista)
+
+
+    
+    Dirección
+
+    Gestión de Alumnos (Vista y edicion, no creación)
+    Curso Asignaturas (Solo vista sin edición)
+    Alumno Emergencia (Solo vista sin edición)
+    Ingresar Notas 
+    Planificaciones 
+    Gestión de usuarios (solo vista)
+
+
+
+    Administrativo
+
+    Reportes (Crear)
+    Edición de Años
+    Gestión de Cursos
+    Gestión de Alumnos
+    Gestión de Asignaturas
+    Curso Asignaturas
+    Alumno Emergencia
+    Ingresar Notas
+    Planificaciones
+    Matricula
+    Atrasos
+    Gestión de usuarios (solo vista)
+
+
+    Inspector general
+
+    Alumno Emergencia (Solo vista sin edición)
+    Gestión de usuarios (solo vista)
