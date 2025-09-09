@@ -1,60 +1,3 @@
-<?php
-require_once __DIR__ . "/../controllers/AuthController.php";
-$auth = new AuthController();
-$auth->checkAuth();
-
-//var_dump($_SESSION['user']);//debugger
-
-$user = $_SESSION['user']; // sacamos todo el usuario de sesión
-$rol = $user['rol'];
-$nombre = $user['nombre'];
-?>
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-</head>
-
-<body>
-    <h1>Bienvenido, <?= htmlspecialchars($nombre) ?></h1>
-    <h3>Rol: <?= htmlspecialchars($rol) ?></h3>
-
-
-    <nav>
-        <a href="index.php?action=logout">Cerrar sesión</a>
-    </nav>
-    
-    <br><br><br><br><br>
-    <?php if ($rol === "administrador"): ?>
-        <a href="index.php?action=users">Gestión de usuarios(funcionando)</a><br>
-        <a href="#">Reportes(Crear)</a><br>
-        <a href="index.php?action=roles">Edicion de Roles(Funcionando)</a><br>
-        <a href="index.php?action=anios">Edicion de Años(Funcionando)</a><br>
-        <a href="index.php?action=cursos">Edicion de Cursos(Funcionando)</a><br>
-        <a href="index.php?action=alumnos">Gestión de Alumnos(Proceso)</a><br>
-        <a href="index.php?action=asignaturas">Gestión de Asignaturas(Funcionando)</a><br>
-        <a href="index.php?action=curso_asignaturas">CUrso asignaturas(Funcionando)</a><br>
-        <a href="index.php?action=alum_emergencia">Alumno Emergencia(Reparar)</a><br>
-
-    <?php elseif ($rol === "docente"): ?>
-        <a href="#">Ingresar Notas</a><br>
-        <a href="#">Planificaciones</a><br>
-    <?php elseif ($rol === "registro"): ?>
-        <a href="#">Registro de Anotaciones</a><br>
-    <?php elseif ($rol === "asistencia"): ?>
-        <a href="#">Control de Asistencia</a><br>
-    <?php endif; ?>
-
-    <br><br>
-    <br><br>
-    <a href="index.php?action=logout">Cerrar sesión</a>
-</body>
-
-</html>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -220,54 +163,105 @@ $nombre = $user['nombre'];
         <header
             class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold tracking-tight text-white capitalize">Bienvenido <?= htmlspecialchars($nombre) ?></h1>
-                <h3 class=" font-bold tracking-tight text-white capitalize"> <?= htmlspecialchars($rol) ?></h3>
-
+                <h1 class="text-3xl font-bold tracking-tight text-white">(Acá ira el nombre de quien este adentro)</h1>
             </div>
         </header>
         <main>
             <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
                 <!-- Agregar Las opciones del Dashboard -->
 
-                <div class="grid grid-cols-3 gap-8">
 
 
 
+                <!--
+                
+                
+<html class="h-full bg-gray-900">
 
-                    <div
-                        class="relative w-[320px]  rounded-3xl bg-indigo-100 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
-                        <h3 id="tier-enterprise" class="text-base/7 font-semibold text-indigo-800">Personal</h3>
-                        <p class="mt-6 text-base/7 text-cyan-950 ">Puede ver la Asistencia por alumno de cada día.</p>
-                        <a href="#" aria-describedby="tier-enterprise"
-                            class="mt-8 block rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs
-                        hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10">
-                            Ir
-                        </a>
-                    </div>
-                    <div
-                        class="relative w-[320px]  rounded-3xl bg-indigo-100 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
-                        <h3 id="tier-enterprise" class="text-base/7 font-semibold text-indigo-800">Personal</h3>
-                        <p class="mt-6 text-base/7 text-cyan-950 ">Controla el personal, puede agregar, modificar o eliminar</p>
-                        <a href="#" aria-describedby="tier-enterprise"
-                            class="mt-8 block rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs
-                        hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10">
-                            Ir
-                        </a>
-                    </div>
-                    <div
-                        class="relative w-[320px]  rounded-3xl bg-indigo-100 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
-                        <h3 id="tier-enterprise" class="text-base/7 font-semibold text-indigo-800">aaaaaaa</h3>
-                        <p class="mt-6 text-base/7 text-cyan-950 ">Seccion dedicada a loasda adasdas asd asdas aa sdas</p>
-                        <a href="#" aria-describedby="tier-enterprise"
-                            class="mt-8 block rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs
-                        hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10">
-                            Ir
-                        </a>
-                    </div>
+<body class="h-full">
+    <div class="min-h-full">
+        <nav class="bg-gray-800/50">
+
+                
+                -->
 
 
-
+                <div class="overflow-x-auto bg-gray-900 rounded-3xl">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-600/50 ">
+                            <tr>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Canción
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Artista
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Año
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-gray-500/50 divide-y divide-gray-700">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    The Sliding Mr. Bones (Next Stop, Pottersville)
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    Malcolm Lockyer
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    1961
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    Witchy Woman
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    The Eagles
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    1972
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    Shining Star
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    Earth, Wind, and Fire
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    1975
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+
+
+
+                <br>
+                <br>
+                <br>
+                <br>
+
+                <div class="rounded-3xl bg-indigo-100 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
+                    <h3 id="tier-enterprise" class="text-base/7 font-semibold text-indigo-400">Personal</h3>
+                    <p class="mt-6 text-base/7 text-cyan-800 ">Controla el personal, puede agregar, modificar o eliminar
+                    </p>
+                    <a href="#" aria-describedby="tier-enterprise"
+                        class="mt-8 block rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs
+                        hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10">
+                        Ir
+                    </a>
+                </div>
+
+
+            </div>
         </main>
     </div>
 
