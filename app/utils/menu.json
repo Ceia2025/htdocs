@@ -1,7 +1,7 @@
 {
   "administrador": [
     {
-      "title": "Gestión de usuarios",
+      "title": "Gestión de usuarios OK",
       "desc": "Controla los usuarios del sistema",
       "url": "index.php?action=users"
     },
@@ -11,37 +11,37 @@
       "url": "#"
     },
     {
-      "title": "Edición de Roles",
+      "title": "Edición de Roles OK",
       "desc": "Modificar permisos de usuarios",
       "url": "index.php?action=roles"
     },
     {
-      "title": "Edición de Años",
+      "title": "Edición de Años OK",
       "desc": "Gestionar años académicos",
       "url": "index.php?action=anios"
     },
     {
-      "title": "Gestión de Cursos",
+      "title": "Gestión de Cursos OK",
       "desc": "Administrar cursos disponibles",
       "url": "index.php?action=cursos"
     },
     {
-      "title": "Gestión de Alumnos",
+      "title": "Gestión de Alumnos OK",
       "desc": "Agregar, modificar o ver alumnos",
       "url": "index.php?action=alumnos"
     },
     {
-      "title": "Gestión de Asignaturas",
+      "title": "Gestión de Asignaturas OK",
       "desc": "Administrar asignaturas",
       "url": "index.php?action=asignaturas"
     },
     {
-      "title": "Curso Asignaturas",
+      "title": "Curso Asignaturas OK",
       "desc": "Asignar asignaturas a cursos",
       "url": "index.php?action=curso_asignaturas"
     },
     {
-      "title": "Alumno Emergencia",
+      "title": "Alumno Emergencia OK",
       "desc": "Contactos de emergencia de alumnos",
       "url": "index.php?action=alum_emergencia"
     },

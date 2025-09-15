@@ -1,49 +1,127 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Editar Contacto de Emergencia</title>
+    <title>✏️ Editar Contacto de Emergencia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    <h1>✏️ Editar Contacto</h1>
-    <form method="POST" action="index.php?action=alum_emergencia_update&id=<?= $emergencia['id'] ?>">
-        <label>Alumno:</label>
-        <select name="alumno_id" required>
-            <?php foreach ($alumnos as $a): ?>
-                <option value="<?= $a['id'] ?>" <?= ($a['id'] == $emergencia['alumno_id']) ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($a['nombre'] . " " . $a['ape_paterno'] . " " . $a['ape_materno']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        <br><br>
 
-        <label>Nombre del contacto:</label>
-        <input type="text" name="nombre_contacto" value="<?= htmlspecialchars($emergencia['nombre_contacto']) ?>" required>
-        <br><br>
+<body class="h-full bg-gray-900">
 
-        <label>Teléfono:</label>
-        <input type="text" name="telefono" value="<?= htmlspecialchars($emergencia['telefono']) ?>" required>
-        <br><br>
+    <div class="min-h-full">
 
-        <label>Dirección:</label>
-        <input type="text" name="direccion" value="<?= htmlspecialchars($emergencia['direccion']) ?>">
-        <br><br>
+        <!-- NAVBAR -->
+        <nav class="bg-gray-800/50">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="flex h-16 items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="shrink-0">
+                            <img src="../img/logo.jpg" alt="Logo" class="size-12 rounded-full" />
+                        </div>
+                        <div class="hidden md:block">
+                            <div class="ml-10 flex items-baseline space-x-4">
+                                <a href="index.php?action=dashboard"
+                                    class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">
+                                    Dashboard
+                                </a>
+                                <a href="index.php?action=alum_emergencia"
+                                    class="rounded-md px-3 py-2 text-sm font-medium text-white bg-gray-700">
+                                    Contactos Emergencia
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
-        <label>Relación:</label>
-        <select name="relacion" required>
-            <?php
-            $opciones = ['Madre', 'Padre', 'Relación directa', 'Tutor Legal', 'Representante', 'Apoderado'];
-            foreach ($opciones as $op):
-            ?>
-                <option value="<?= $op ?>" <?= ($op == $emergencia['relacion']) ? 'selected' : '' ?>><?= $op ?></option>
-            <?php endforeach; ?>
-        </select>
-        <br><br>
+        <!-- HEADER -->
+        <header class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
+            <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold tracking-tight text-white">✏️ Editar Contacto de Emergencia</h1>
+            </div>
+        </header>
 
-        <button type="submit">Actualizar</button>
-    </form>
+        <!-- MAIN -->
+        <main>
+            <div class="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
 
-    <br>
-    <a href="index.php?action=alum_emergencia">⬅️ Volver</a>
+                <!-- FORMULARIO -->
+                <div class="bg-gray-700 p-8 rounded-2xl shadow-lg">
+                    <form method="POST" action="index.php?action=alum_emergencia_update&id=<?= $emergencia['id'] ?>" class="space-y-6">
+
+                        <!-- Alumno -->
+                        <div>
+                            <label for="alumno_id" class="block text-sm font-medium text-gray-200">Alumno</label>
+                            <select name="alumno_id" id="alumno_id" required
+                                class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <?php foreach ($alumnos as $a): ?>
+                                    <option value="<?= $a['id'] ?>" <?= ($a['id'] == $emergencia['alumno_id']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($a['nombre'] . " " . $a['ape_paterno'] . " " . $a['ape_materno']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <!-- Nombre del contacto -->
+                        <div>
+                            <label for="nombre_contacto" class="block text-sm font-medium text-gray-200">Nombre del contacto</label>
+                            <input type="text" name="nombre_contacto" id="nombre_contacto" required
+                                value="<?= htmlspecialchars($emergencia['nombre_contacto']) ?>"
+                                class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+
+                        <!-- Teléfono -->
+                        <div>
+                            <label for="telefono" class="block text-sm font-medium text-gray-200">Teléfono</label>
+                            <input type="text" name="telefono" id="telefono" required
+                                value="<?= htmlspecialchars($emergencia['telefono']) ?>"
+                                class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+
+                        <!-- Dirección -->
+                        <div>
+                            <label for="direccion" class="block text-sm font-medium text-gray-200">Dirección</label>
+                            <input type="text" name="direccion" id="direccion"
+                                value="<?= htmlspecialchars($emergencia['direccion']) ?>"
+                                class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+
+                        <!-- Relación -->
+                        <div>
+                            <label for="relacion" class="block text-sm font-medium text-gray-200">Relación</label>
+                            <select name="relacion" id="relacion" required
+                                class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <?php
+                                $opciones = ['Madre', 'Padre', 'Relación directa', 'Tutor Legal', 'Representante', 'Apoderado'];
+                                foreach ($opciones as $op):
+                                ?>
+                                    <option value="<?= $op ?>" <?= ($op == $emergencia['relacion']) ? 'selected' : '' ?>><?= $op ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="flex space-x-4">
+                            <button type="submit"
+                                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition duration-200 ease-in-out">
+                                Actualizar
+                            </button>
+                            <a href="index.php?action=alum_emergencia"
+                                class="w-full text-center inline-block rounded-lg bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 transition duration-200 ease-in-out">
+                                Cancelar
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
 </body>
 </html>
