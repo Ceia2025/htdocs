@@ -65,10 +65,11 @@ class UserController
     }
 
     // Guardar cambios
-    public function update($id, $data) {
-    try {
-        if (!empty($data['password'])) {
-            $sql = "UPDATE usuarios2 
+    public function update($id, $data)
+    {
+        try {
+            if (!empty($data['password'])) {
+                $sql = "UPDATE usuarios2 
                     SET username = :username,
                         nombre = :nombre,
                         ape_paterno = :ape_paterno,
@@ -79,8 +80,8 @@ class UserController
                         rol_id = :rol_id,
                         password = :password
                     WHERE id = :id";
-        } else {
-            $sql = "UPDATE usuarios2 
+            } else {
+                $sql = "UPDATE usuarios2 
                     SET username = :username,
                         nombre = :nombre,
                         ape_paterno = :ape_paterno,
@@ -90,33 +91,33 @@ class UserController
                         email = :email,
                         rol_id = :rol_id
                     WHERE id = :id";
+            }
+
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':username', $data['username']);
+            $stmt->bindParam(':nombre', $data['nombre']);
+            $stmt->bindParam(':ape_paterno', $data['ape_paterno']);
+            $stmt->bindParam(':ape_materno', $data['ape_materno']);
+            $stmt->bindParam(':run', $data['run']);
+            $stmt->bindParam(':telefono', $data['telefono']);
+            $stmt->bindParam(':email', $data['email']);
+            $stmt->bindParam(':rol_id', $data['rol_id'], PDO::PARAM_INT);
+
+            if (!empty($data['password'])) {
+                $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
+                $stmt->bindParam(':password', $hashedPassword);
+            }
+
+            $stmt->execute();
+
+            header("Location: index.php?action=users");
+            exit;
+        } catch (PDOException $e) {
+            die("Error al actualizar usuario: " . $e->getMessage());
         }
-
-        $stmt = $this->conn->prepare($sql);
-
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->bindParam(':username', $data['username']);
-        $stmt->bindParam(':nombre', $data['nombre']);
-        $stmt->bindParam(':ape_paterno', $data['ape_paterno']);
-        $stmt->bindParam(':ape_materno', $data['ape_materno']);
-        $stmt->bindParam(':run', $data['run']);
-        $stmt->bindParam(':telefono', $data['telefono']);
-        $stmt->bindParam(':email', $data['email']);
-        $stmt->bindParam(':rol_id', $data['rol_id'], PDO::PARAM_INT);
-
-        if (!empty($data['password'])) {
-            $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
-            $stmt->bindParam(':password', $hashedPassword);
-        }
-
-        $stmt->execute();
-
-        header("Location: index.php?action=users");
-        exit;
-    } catch (PDOException $e) {
-        die("Error al actualizar usuario: " . $e->getMessage());
     }
-}
 
 
 

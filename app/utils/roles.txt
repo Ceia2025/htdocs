@@ -6,8 +6,9 @@ asistente social --------------ok?
 Dirección --------------ok?
 Administrativo --------------ok?
 Inspector general --------------ok?
-Registro asistencias
-Registro atrasos y salidas
+Porteria:
+    Registro asistencias
+    Registro atrasos y salidas
 Registro de anotaciones
 Solo visualización
 Soporte
@@ -82,3 +83,6 @@ Soporte
 
     Alumno Emergencia (Solo vista sin edición)
     Gestión de usuarios (solo vista)
+
+
+    
