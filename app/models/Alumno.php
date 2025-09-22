@@ -29,6 +29,19 @@ class Alumno
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function search($term)
+    {
+        $sql = "SELECT * FROM {$this->table}
+            WHERE LOWER(CONCAT(nombre, ' ', apepat, ' ', apemat)) LIKE :term
+               OR run LIKE :term
+            ORDER BY created_at DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([":term" => "%" . strtolower($term) . "%"]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     // Crear un alumno
     public function create($data)
     {

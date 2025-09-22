@@ -60,6 +60,22 @@ class AlumnosController
         require __DIR__ . '/../views/alumnos/perfil.php';
     }
 
+    public function search()
+{
+    try {
+        $term = $_GET['term'] ?? '';
+        $alumno = new Alumno();
+        $results = $alumno->search($term);
+
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($results);
+    } catch (Exception $e) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['error' => $e->getMessage()]);
+    }
+    exit;
+}
+
     // Formulario de edición
     public function edit($id)
     {

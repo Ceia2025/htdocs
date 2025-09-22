@@ -138,7 +138,10 @@ switch ($action) {
     case 'alumno_profile':
         $alumnosController->profile($_GET['id']);
         break;
-
+    case 'alumno_search':
+        $controller = new AlumnosController();
+        $controller->search();
+        break;
 
     case 'asignaturas':
         $asignaturas = new AsignaturasController();

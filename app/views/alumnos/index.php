@@ -52,53 +52,104 @@
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
                 <!-- BOTÓN CREAR -->
-                <div class="mb-6 flex justify-end">
+                <div class="mb-6 flex justify-between">
+                    <input id="searchInput" type="text" placeholder="Buscar por RUN o Nombre..."
+                        class="px-4 py-2 rounded-lg border border-gray-600 bg-gray-800 text-gray-200 focus:ring focus:ring-indigo-500 w-1/2" />
+
                     <a href="index.php?action=alumno_create"
                         class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow transition duration-200">
-                        ➕ Nuevo Alumno
+                        Nuevo Alumno
                     </a>
                 </div>
+
 
                 <!-- TABLA -->
                 <div class="overflow-x-auto bg-gray-900 rounded-3xl shadow-lg">
                     <table class="min-w-full divide-y divide-gray-700">
                         <thead class="bg-gray-950/50">
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">RUN</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Mayor Edad</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Nombre Completo</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Fecha Nac.</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Sexo</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Email</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Teléfono</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Nacionalidad</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Región</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Ciudad</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Etnia</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Incorporación</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Fecha Retiro</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Acciones</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    RUN</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Mayor Edad</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Nombre Completo</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Fecha Nac.</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Sexo</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Email</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Teléfono</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Nacionalidad</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Región</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Ciudad</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Etnia</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Incorporación</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Fecha Retiro</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="bg-gray-500/30 divide-y divide-gray-600">
                             <?php if (!empty($alumnos)): ?>
                                 <?php foreach ($alumnos as $alumno): ?>
-                                    <tr onclick="window.location='index.php?action=alumno_profile&id=<?= $alumno['id'] ?>';" class="cursor-pointer hover:bg-gray-700">
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['run'] . '-' . $alumno['codver']) ?></td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['mayoredad']) ?></td>
+                                    <tr onclick="window.location='index.php?action=alumno_profile&id=<?= $alumno['id'] ?>';"
+                                        class="cursor-pointer hover:bg-gray-700">
+                                        <td class="px-4 py-3 text-sm text-gray-100">
+                                            <?= htmlspecialchars($alumno['run'] . '-' . $alumno['codver']) ?>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-100">
+                                            <?= htmlspecialchars($alumno['mayoredad']) ?>
+                                        </td>
                                         <td class="px-4 py-3 text-sm text-gray-100 capitalize">
                                             <?= htmlspecialchars($alumno['nombre'] . " " . $alumno['apepat'] . " " . $alumno['apemat']) ?>
                                         </td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['fechanac']) ?></td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['sexo']) ?></td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['email']) ?></td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['telefono']) ?></td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['nacionalidades']) ?></td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['region']) ?></td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['ciudad']) ?></td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['cod_etnia']) ?></td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['created_at']) ?></td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['deleted_at']) ?></td>
+                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['fechanac']) ?>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['sexo']) ?>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['email']) ?>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['telefono']) ?>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-100">
+                                            <?= htmlspecialchars($alumno['nacionalidades']) ?>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['region']) ?>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['ciudad']) ?>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-100">
+                                            <?= htmlspecialchars($alumno['cod_etnia']) ?>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-100">
+                                            <?= htmlspecialchars($alumno['created_at']) ?>
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-gray-100">
+                                            <?= htmlspecialchars($alumno['deleted_at']) ?>
+                                        </td>
                                         <td class="px-4 py-3 text-sm text-gray-100 space-x-3">
                                             <a href="index.php?action=alumno_edit&id=<?= $alumno['id'] ?>"
                                                 class="text-indigo-400 hover:text-indigo-300 font-medium">Editar</a>
@@ -119,7 +170,7 @@
                     </table>
                 </div>
 
-                
+
                 <!-- VOLVER -->
                 <div class="mt-8 flex items-center justify-center">
                     <a href="index.php?action=dashboard"
@@ -130,6 +181,72 @@
             </div>
         </main>
     </div>
+
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const tableBody = document.querySelector('tbody');
+
+        searchInput.addEventListener('input', async () => {
+            const term = searchInput.value.trim();
+            console.log("Buscando:", term); // 👀 para verificar
+
+            const response = await fetch(`index.php?action=alumno_search&term=${encodeURIComponent(term)}`);
+            console.log("Respuesta cruda:", response);
+
+            if (!response.ok) {
+                console.error("Error en la respuesta:", response.status, response.statusText);
+                return;
+            }
+
+            const alumnos = await response.json();
+            console.log("Resultados JSON:", alumnos);
+
+            tableBody.innerHTML = '';
+
+            if (alumnos.length > 0) {
+                alumnos.forEach(alumno => {
+                    const row = document.createElement('tr');
+                    row.className = "cursor-pointer hover:bg-gray-700";
+                    row.onclick = () => window.location = `index.php?action=alumno_profile&id=${alumno.id}`;
+
+                    row.innerHTML = `
+                <td class="px-4 py-3 text-sm text-gray-100">${alumno.run}-${alumno.codver}</td>
+                <td class="px-4 py-3 text-sm text-gray-100">${alumno.mayoredad}</td>
+                <td class="px-4 py-3 text-sm text-gray-100 capitalize">${alumno.nombre} ${alumno.apepat} ${alumno.apemat}</td>
+                <td class="px-4 py-3 text-sm text-gray-100">${alumno.fechanac ?? ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-100">${alumno.sexo ?? ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-100">${alumno.email ?? ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-100">${alumno.telefono ?? ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-100">${alumno.nacionalidades ?? ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-100">${alumno.region ?? ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-100">${alumno.ciudad ?? ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-100">${alumno.cod_etnia ?? ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-100">${alumno.created_at ?? ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-100">${alumno.deleted_at ?? ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-100 space-x-3">
+                    <a href="index.php?action=alumno_edit&id=${alumno.id}" class="text-indigo-400 hover:text-indigo-300 font-medium">Editar</a>
+                    <a href="index.php?action=alumno_delete&id=${alumno.id}" onclick="return confirm('¿Eliminar este alumno?')" class="text-red-400 hover:text-red-300 font-medium">Eliminar</a>
+                </td>
+            `;
+                    tableBody.appendChild(row);
+                });
+            } else {
+                tableBody.innerHTML = `
+            <tr>
+                <td colspan="13" class="px-6 py-4 text-center text-sm text-gray-300">
+                    No se encontraron resultados
+                </td>
+            </tr>
+        `;
+            }
+        });
+    </script>
+
+
+
+
+
 </body>
 
 </html>
