@@ -4,7 +4,9 @@ use saatdevtest2;
 
 show tables;
 
+
 SHOW CREATE TABLE alum_asistencia2;
+SHOW CREATE TABLE matriculas2;
 SHOW CREATE TABLE alum_emergencia2;
 SHOW CREATE TABLE alum_familia2;
 SHOW CREATE TABLE alum_notas2;
@@ -14,10 +16,24 @@ SHOW CREATE TABLE antecedentes_familiares;
 SHOW CREATE TABLE asignaturas2;
 SHOW CREATE TABLE cursos2;
 SHOW CREATE TABLE curso_asignaturas2;
-SHOW CREATE TABLE matriculas2;
 SHOW CREATE TABLE roles2;
 SHOW CREATE TABLE usuarios2;
 
+-- |||||||||||||||||||||||||||||||||||||||||
+--
+-- 		Alumno Asistencia
+-- 
+-- |||||||||||||||||||||||||||||||||||||||||
+CREATE TABLE `alum_asistencia2` (
+`id` int NOT NULL AUTO_INCREMENT,
+`matricula_id` int NOT NULL,
+`fecha` date NOT NULL,
+`presente` tinyint(1) DEFAULT '1',
+`observaciones` varchar(255) DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `idx_asistencia_matricula` (`matricula_id`),
+CONSTRAINT `alum_asistencia2_ibfk_1` FOREIGN KEY (`matricula_id`) REFERENCES `matriculas2` (`id`) ON DELETE CASCADE
+);
 
 
 -- |||||||||||||||||||||||||||||||||||||||||
