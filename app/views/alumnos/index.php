@@ -119,8 +119,6 @@
                     </table>
                 </div>
 
-                <a href="index.php?action=alumno_profile&id=<?= $alumno['id'] ?>" class="text-green-400 hover:text-green-300 font-medium">Ver Perfil</a>
-
                 
                 <!-- VOLVER -->
                 <div class="mt-8 flex items-center justify-center">

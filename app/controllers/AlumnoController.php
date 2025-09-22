@@ -72,13 +72,20 @@ class AlumnosController
     {
         if (!empty($id) && !empty($data['run']) && !empty($data['nombre']) && !empty($data['apepat'])) {
 
-            // Calcular mayor de edad también en update
+            // Calcular mayor de edad si se envía fecha de nacimiento
             if (!empty($data['fechanac'])) {
                 $data['mayoredad'] = $this->calcularMayorEdad($data['fechanac']);
             }
 
+            // Convertir deleted_at vacío a NULL
+            if (isset($data['deleted_at']) && $data['deleted_at'] === '') {
+                $data['deleted_at'] = null;
+            }
+
+            // Llamada al modelo para actualizar
             $this->alumnoModel->update($id, $data);
         }
+
         header("Location: index.php?action=alumnos");
         exit;
     }

@@ -19,6 +19,13 @@ SHOW CREATE TABLE curso_asignaturas2;
 SHOW CREATE TABLE roles2;
 SHOW CREATE TABLE usuarios2;
 
+
+
+ALTER TABLE alumnos2
+MODIFY deleted_at DATETIME NULL DEFAULT NULL;
+
+select * from alumnos2;
+
 -- |||||||||||||||||||||||||||||||||||||||||
 --
 -- 		Alumno Asistencia
@@ -158,7 +165,7 @@ CREATE TABLE `alumnos2` (
                 'Kawésqar',
                 'Yagán',
                 'Selk nam') NOT NULL DEFAULT 'Ninguna',
-`deleted_at` DATE DEFAULT (CURRENT_DATE),
+`deleted_at` DATE NULL,
 PRIMARY KEY (`id`),
 UNIQUE KEY `run` (`run`)
 );
@@ -173,7 +180,7 @@ ALTER TABLE alumnos2
 ADD COLUMN deleted_at date NULL AFTER `cod_etnia`;
 
 ALTER TABLE alumnos2
-    MODIFY codver VARCHAR(1);
+    MODIFY deleted_at date null;
 
 
 ALTER TABLE alumnos2 

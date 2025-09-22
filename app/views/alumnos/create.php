@@ -38,7 +38,8 @@
         </nav>
 
         <!-- HEADER -->
-        <header class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
+        <header
+            class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
             <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
                 <h1 class="text-3xl font-bold tracking-tight text-white">Crear Alumno</h1>
             </div>
@@ -97,18 +98,6 @@
                                     class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
                             </div>
 
-                            <!-- Mayor de Edad -->
-                            <!--
-                            <div>
-                                <label class="block text-sm font-medium text-gray-200">¿Mayor de Edad?</label>
-                                <select name="mayoredad"
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                                    <option value="Si">Sí</option>
-                                    <option value="No">No</option>
-                                </select>
-                            </div>
-
-                            -->
                             <!-- Número de Hijos -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-200">Número de Hijos</label>
@@ -147,19 +136,46 @@
                                     class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
                             </div>
 
-                            <!-- Región -->
+                            <!-- 
                             <div>
                                 <label class="block text-sm font-medium text-gray-200">Región</label>
                                 <input type="text" name="region"
                                     class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
                             </div>
 
-                            <!-- Ciudad -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-200">Ciudad</label>
                                 <input type="text" name="ciudad"
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                                class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
                             </div>
+                            -->
+
+
+
+
+
+                            <!-- Región -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">Región</label>
+                                <select id="region" name="region"
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                                    <option value="">Seleccione una región</option>
+                                </select>
+                            </div>
+
+                            <!-- Ciudad/Comuna -->
+                            <div class="mt-4">
+                                <label class="block text-sm font-medium text-gray-200">Ciudad / Comuna</label>
+                                <select id="ciudad" name="ciudad"
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                                    <option value="">Seleccione una ciudad</option>
+                                </select>
+                            </div>
+
+
+
+
+
 
                             <!-- Etnia -->
                             <div class="md:col-span-2">
@@ -203,4 +219,41 @@
     </div>
 
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const regionSelect = document.getElementById("region");
+        const ciudadSelect = document.getElementById("ciudad");
+
+        // Cargar JSON desde carpeta utils
+        fetch("../utils/comunas-regiones.json")
+            .then(response => response.json())
+            .then(data => {
+                // Llenar el select de regiones
+                data.regiones.forEach(r => {
+                    const option = document.createElement("option");
+                    option.value = r.region;
+                    option.textContent = r.region;
+                    regionSelect.appendChild(option);
+                });
+
+                // Cuando cambie la región, cargar comunas
+                regionSelect.addEventListener("change", () => {
+                    ciudadSelect.innerHTML = '<option value="">Seleccione una ciudad</option>'; // limpiar
+                    const selectedRegion = regionSelect.value;
+                    const region = data.regiones.find(r => r.region === selectedRegion);
+                    if (region) {
+                        region.comunas.forEach(c => {
+                            const option = document.createElement("option");
+                            option.value = c;
+                            option.textContent = c;
+                            ciudadSelect.appendChild(option);
+                        });
+                    }
+                });
+            })
+            .catch(err => console.error("Error cargando comunas-regiones.json:", err));
+    });
+</script>
+
+
 </html>

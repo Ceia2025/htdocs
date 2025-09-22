@@ -32,14 +32,21 @@ class Alumno
     // Crear un alumno
     public function create($data)
     {
+
+        $data['fechanac'] = !empty($data['fechanac']) ? $data['fechanac'] : null;
+        $data['deleted_at'] = $data['deleted_at'] ?? null;
+
         $numerohijos = isset($data['numerohijos']) && $data['numerohijos'] !== ''
             ? (int) $data['numerohijos']
             : null;
 
+        // Asegurar null si no viene en el formulario
+        $data['deleted_at'] = $data['deleted_at'] ?? null;
+
         $sql = "INSERT INTO {$this->table} 
-                (run, codver, nombre, apepat, apemat, fechanac, mayoredad, numerohijos, telefono, email, sexo, nacionalidades, region, ciudad, cod_etnia, deleted_at) 
-                VALUES 
-                (:run, :codver, :nombre, :apepat, :apemat, :fechanac, :mayoredad, :numerohijos, :telefono, :email, :sexo, :nacionalidades, :region, :ciudad, :cod_etnia, :deleted_at)";
+            (run, codver, nombre, apepat, apemat, fechanac, mayoredad, numerohijos, telefono, email, sexo, nacionalidades, region, ciudad, cod_etnia, deleted_at) 
+            VALUES 
+            (:run, :codver, :nombre, :apepat, :apemat, :fechanac, :mayoredad, :numerohijos, :telefono, :email, :sexo, :nacionalidades, :region, :ciudad, :cod_etnia, :deleted_at)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ":run" => $data['run'],
@@ -64,15 +71,22 @@ class Alumno
     // Actualizar un alumno
     public function update($id, $data)
     {
+        $data['fechanac'] = !empty($data['fechanac']) ? $data['fechanac'] : null;
+        $data['deleted_at'] = $data['deleted_at'] ?? null;
+
+
         $numerohijos = !empty($data['numerohijos']) ? (int) $data['numerohijos'] : null;
 
+        // Asegurar null si no viene en el formulario
+        $data['deleted_at'] = $data['deleted_at'] ?? null;
+
         $sql = "UPDATE {$this->table} 
-        SET run = :run, codver = :codver, nombre = :nombre, apepat = :apepat, apemat = :apemat,
-            fechanac = :fechanac, mayoredad = :mayoredad, numerohijos = :numerohijos,
-            telefono = :telefono, email = :email, sexo = :sexo,
-            nacionalidades = :nacionalidades, region = :region,
-            ciudad = :ciudad, cod_etnia = :cod_etnia, deleted_at = :deleted_at
-        WHERE id = :id";
+    SET run = :run, codver = :codver, nombre = :nombre, apepat = :apepat, apemat = :apemat,
+        fechanac = :fechanac, mayoredad = :mayoredad, numerohijos = :numerohijos,
+        telefono = :telefono, email = :email, sexo = :sexo,
+        nacionalidades = :nacionalidades, region = :region,
+        ciudad = :ciudad, cod_etnia = :cod_etnia, deleted_at = :deleted_at
+    WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
