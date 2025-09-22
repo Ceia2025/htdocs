@@ -9,6 +9,14 @@ class AlumnosController
         $this->alumnoModel = new Alumno();
     }
 
+    //Funcion mayor de edad
+    private function calcularMayorEdad($fechaNacimiento) {
+        $fechaNac = new DateTime($fechaNacimiento);
+        $hoy = new DateTime();
+        $edad = $hoy->diff($fechaNac)->y;
+        return $edad >= 18 ? "Si" : "No";
+    }
+
     // Mostrar todos los alumnos
     public function index() {
         $alumnos = $this->alumnoModel->getAll();
@@ -23,6 +31,14 @@ class AlumnosController
     // Guardar alumno nuevo
     public function store($data) {
         if (!empty($data['run']) && !empty($data['nombre']) && !empty($data['apepat'])) {
+            
+            // Calcular mayor de edad
+            if (!empty($data['fechanac'])) {
+                $data['mayoredad'] = $this->calcularMayorEdad($data['fechanac']);
+            } else {
+                $data['mayoredad'] = "No"; // valor por defecto si no hay fecha
+            }
+
             $this->alumnoModel->create($data);
         }
         header("Location: index.php?action=alumnos");
@@ -38,6 +54,12 @@ class AlumnosController
     // Actualizar alumno
     public function update($id, $data) {
         if (!empty($id) && !empty($data['run']) && !empty($data['nombre']) && !empty($data['apepat'])) {
+            
+            // Calcular mayor de edad también en update
+            if (!empty($data['fechanac'])) {
+                $data['mayoredad'] = $this->calcularMayorEdad($data['fechanac']);
+            }
+
             $this->alumnoModel->update($id, $data);
         }
         header("Location: index.php?action=alumnos");

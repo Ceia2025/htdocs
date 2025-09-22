@@ -1,67 +1,206 @@
-<h2>Crear Alumno</h2>
-<form action="index.php?action=alumno_store" method="POST">
-    <label>RUN:</label>
-    <input type="text" name="run" required><br>
+<!DOCTYPE html>
+<html lang="es">
 
-    <label>Nombre:</label>
-    <input type="text" name="nombre" required><br>
+<head>
+    <meta charset="UTF-8">
+    <title>➕ Crear Alumno</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
 
-    <label>Apellido Paterno:</label>
-    <input type="text" name="apepat" required><br>
+<body class="h-full bg-gray-900">
 
-    <label>Apellido Materno:</label>
-    <input type="text" name="apemat"><br>
+    <div class="min-h-full">
 
-    <label>Fecha de Nacimiento:</label>
-    <input type="date" name="fechanac"><br>
+        <!-- NAVBAR -->
+        <nav class="bg-gray-800/50">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="flex h-16 items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="shrink-0">
+                            <img src="../img/logo.jpg" alt="Logo" class="size-12 rounded-full" />
+                        </div>
+                        <div class="hidden md:block">
+                            <div class="ml-10 flex items-baseline space-x-4">
+                                <a href="index.php?action=dashboard"
+                                    class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">
+                                    Dashboard
+                                </a>
+                                <a href="index.php?action=alumnos"
+                                    class="rounded-md px-3 py-2 text-sm font-medium text-white bg-gray-700">
+                                    Alumnos
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
-    <label>¿Mayor de Edad?</label>
-    <select name="mayoredad">
-        <option value="Si">Si</option>
-        <option value="No">No</option>
-    </select><br>
+        <!-- HEADER -->
+        <header class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
+            <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold tracking-tight text-white">Crear Alumno</h1>
+            </div>
+        </header>
 
-    <label>Número de Hijos:</label>
-    <input type="number" name="numerohijos" min="0"><br>
+        <!-- MAIN -->
+        <main>
+            <div class="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
 
-    <label>Teléfono:</label>
-    <input type="text" name="telefono"><br>
+                <!-- FORM -->
+                <div class="bg-gray-700 p-8 rounded-2xl shadow-lg">
+                    <form action="index.php?action=alumno_store" method="POST" class="space-y-6">
 
-    <label>Email:</label>
-    <input type="email" name="email"><br>
+                        <!-- Grid de 2 columnas -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-    <label>Sexo:</label>
-    <select name="sexo" required>
-        <option value="Femenino">Femenino</option>
-        <option value="Masculino">Masculino</option>
-        <option value="Prefiere no identificar">Prefiere no identificar</option>
-        <option value="Otro">Otro</option>
-    </select><br>
+                            <!-- RUN -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">RUN</label>
+                                <input type="text" name="run" required
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
 
-    <label>Nacionalidad:</label>
-    <input type="text" name="nacionalidades"><br>
+                            <!-- Codigo Verificador -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">Código Verificador</label>
+                                <input type="text" name="codver" required
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
 
-    <label>Región:</label>
-    <input type="text" name="region"><br>
+                            <!-- Nombre -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">Nombre</label>
+                                <input type="text" name="nombre" required
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
 
-    <label>Ciudad:</label>
-    <input type="text" name="ciudad"><br>
+                            <!-- Apellido Paterno -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">Apellido Paterno</label>
+                                <input type="text" name="apepat" required
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
 
-    <label>Etnia:</label>
-    <select name="cod_etnia">
-        <option value="Ninguna">Ninguna</option>
-        <option value="Mapuche">Mapuche</option>
-        <option value="Aymara">Aymara</option>
-        <option value="Rapa Nui">Rapa Nui</option>
-        <option value="Lickan Antai (Atacameños)">Lickan Antai (Atacameños)</option>
-        <option value="Quechua">Quechua</option>
-        <option value="Colla">Colla</option>
-        <option value="Diaguita">Diaguita</option>
-        <option value="Chango">Chango</option>
-        <option value="Kawésqar">Kawésqar</option>
-        <option value="Yagán">Yagán</option>
-        <option value="Selk nam">Selk nam</option>
-    </select><br><br>
+                            <!-- Apellido Materno -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">Apellido Materno</label>
+                                <input type="text" name="apemat"
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
 
-    <button type="submit">Guardar</button>
-</form>
+                            <!-- Fecha de Nacimiento -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">Fecha de Nacimiento</label>
+                                <input type="date" name="fechanac"
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
+
+                            <!-- Mayor de Edad -->
+                            <!--
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">¿Mayor de Edad?</label>
+                                <select name="mayoredad"
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                                    <option value="Si">Sí</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+
+                            -->
+                            <!-- Número de Hijos -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">Número de Hijos</label>
+                                <input type="number" name="numerohijos" min="0"
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">Teléfono</label>
+                                <input type="text" name="telefono"
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
+
+                            <!-- Email -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">Email</label>
+                                <input type="email" name="email"
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
+
+                            <!-- Sexo -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">Sexo</label>
+                                <select name="sexo" required
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                                    <option value="F">Femenino</option>
+                                    <option value="M">Masculino</option>
+                                </select>
+                            </div>
+
+                            <!-- Nacionalidad -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">Nacionalidad</label>
+                                <input type="text" name="nacionalidades"
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
+
+                            <!-- Región -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">Región</label>
+                                <input type="text" name="region"
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
+
+                            <!-- Ciudad -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-200">Ciudad</label>
+                                <input type="text" name="ciudad"
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
+
+                            <!-- Etnia -->
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-200">Etnia</label>
+                                <select name="cod_etnia"
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                                    <option value="Ninguna">Ninguna</option>
+                                    <option value="Mapuche">Mapuche</option>
+                                    <option value="Aymara">Aymara</option>
+                                    <option value="Rapa Nui">Rapa Nui</option>
+                                    <option value="Lickan Antai (Atacameños)">Lickan Antai (Atacameños)</option>
+                                    <option value="Quechua">Quechua</option>
+                                    <option value="Colla">Colla</option>
+                                    <option value="Diaguita">Diaguita</option>
+                                    <option value="Chango">Chango</option>
+                                    <option value="Kawésqar">Kawésqar</option>
+                                    <option value="Yagán">Yagán</option>
+                                    <option value="Selk nam">Selk nam</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="flex space-x-4 pt-4">
+                            <button type="submit"
+                                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition duration-200 ease-in-out">
+                                Guardar
+                            </button>
+                            <a href="index.php?action=alumnos"
+                                class="w-full text-center inline-block rounded-lg bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 transition duration-200 ease-in-out">
+                                Cancelar
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+</body>
+</html>

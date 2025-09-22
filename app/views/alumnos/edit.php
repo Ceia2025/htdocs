@@ -64,6 +64,14 @@
                                 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
 
+                        <!-- Codigo verificador -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-200">Código Verificador</label>
+                            <input type="text" name="codver" value="<?= htmlspecialchars($alumno['codver']) ?>" required
+                                class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 
+                                focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+
                         <!-- Nombre -->
                         <div>
                             <label class="block text-sm font-medium text-gray-200">Nombre</label>
@@ -92,15 +100,6 @@
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
                         </div>
 
-                        <!-- Mayor de Edad -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-200">¿Mayor de Edad?</label>
-                            <select name="mayoredad"
-                                class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
-                                <option value="Si" <?= $alumno['mayoredad'] === 'Si' ? 'selected' : '' ?>>Si</option>
-                                <option value="No" <?= $alumno['mayoredad'] === 'No' ? 'selected' : '' ?>>No</option>
-                            </select>
-                        </div>
 
                         <!-- Número de Hijos -->
                         <div>
@@ -129,10 +128,8 @@
                             <label class="block text-sm font-medium text-gray-200">Sexo</label>
                             <select name="sexo" required
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
-                                <option value="Femenino" <?= $alumno['sexo'] === 'Femenino' ? 'selected' : '' ?>>Femenino</option>
-                                <option value="Masculino" <?= $alumno['sexo'] === 'Masculino' ? 'selected' : '' ?>>Masculino</option>
-                                <option value="Prefiere no identificar" <?= $alumno['sexo'] === 'Prefiere no identificar' ? 'selected' : '' ?>>Prefiere no identificar</option>
-                                <option value="Otro" <?= $alumno['sexo'] === 'Otro' ? 'selected' : '' ?>>Otro</option>
+                                <option value="F" <?= $alumno['sexo'] === 'F' ? 'selected' : '' ?>>Femenino</option>
+                                <option value="M" <?= $alumno['sexo'] === 'M' ? 'selected' : '' ?>>Masculino</option>
                             </select>
                         </div>
 
@@ -154,6 +151,12 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-200">Ciudad</label>
                             <input type="text" name="ciudad" value="<?= htmlspecialchars($alumno['ciudad']) ?>"
+                                class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-200">Fecha Retiro</label>
+                            <input type="date" name="deleted_at" value="<?= htmlspecialchars($alumno['deleted_at']) ?>"
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
                         </div>
 

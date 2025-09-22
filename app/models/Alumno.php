@@ -37,12 +37,13 @@ class Alumno
             : null;
 
         $sql = "INSERT INTO {$this->table} 
-                (run, nombre, apepat, apemat, fechanac, mayoredad, numerohijos, telefono, email, sexo, nacionalidades, region, ciudad, cod_etnia) 
+                (run, codver, nombre, apepat, apemat, fechanac, mayoredad, numerohijos, telefono, email, sexo, nacionalidades, region, ciudad, cod_etnia, deleted_at) 
                 VALUES 
-                (:run, :nombre, :apepat, :apemat, :fechanac, :mayoredad, :numerohijos, :telefono, :email, :sexo, :nacionalidades, :region, :ciudad, :cod_etnia)";
+                (:run, :codver, :nombre, :apepat, :apemat, :fechanac, :mayoredad, :numerohijos, :telefono, :email, :sexo, :nacionalidades, :region, :ciudad, :cod_etnia, :deleted_at)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ":run" => $data['run'],
+            ":codver" => $data['codver'],
             ":nombre" => $data['nombre'],
             ":apepat" => $data['apepat'],
             ":apemat" => $data['apemat'],
@@ -56,6 +57,7 @@ class Alumno
             ":region" => $data['region'],
             ":ciudad" => $data['ciudad'],
             ":cod_etnia" => $data['cod_etnia'],
+            ":deleted_at" => $data['deleted_at'],
         ]);
     }
 
@@ -65,30 +67,32 @@ class Alumno
         $numerohijos = !empty($data['numerohijos']) ? (int) $data['numerohijos'] : null;
 
         $sql = "UPDATE {$this->table} 
-        SET run = :run, nombre = :nombre, apepat = :apepat, apemat = :apemat,
+        SET run = :run, codver = :codver, nombre = :nombre, apepat = :apepat, apemat = :apemat,
             fechanac = :fechanac, mayoredad = :mayoredad, numerohijos = :numerohijos,
             telefono = :telefono, email = :email, sexo = :sexo,
             nacionalidades = :nacionalidades, region = :region,
-            ciudad = :ciudad, cod_etnia = :cod_etnia
+            ciudad = :ciudad, cod_etnia = :cod_etnia, deleted_at = :deleted_at
         WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ":id" => $id,
             ":run" => $data['run'],
+            ":codver" => $data['codver'],
             ":nombre" => $data['nombre'],
             ":apepat" => $data['apepat'],
             ":apemat" => $data['apemat'],
             ":fechanac" => $data['fechanac'],
             ":mayoredad" => $data['mayoredad'],
-            ":numerohijos" => $numerohijos, // <- aquí ya va NULL o un número
+            ":numerohijos" => $numerohijos,
             ":telefono" => $data['telefono'],
             ":email" => $data['email'],
             ":sexo" => $data['sexo'],
             ":nacionalidades" => $data['nacionalidades'],
             ":region" => $data['region'],
             ":ciudad" => $data['ciudad'],
-            ":cod_etnia" => $data['cod_etnia']
+            ":cod_etnia" => $data['cod_etnia'],
+            ":deleted_at" => $data['deleted_at'],
         ]);
     }
 

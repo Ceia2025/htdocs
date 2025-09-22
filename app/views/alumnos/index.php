@@ -64,8 +64,8 @@
                     <table class="min-w-full divide-y divide-gray-700">
                         <thead class="bg-gray-950/50">
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">ID</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">RUN</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Mayor Edad</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Nombre Completo</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Fecha Nac.</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Sexo</th>
@@ -75,6 +75,8 @@
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Región</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Ciudad</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Etnia</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Incorporación</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Fecha Retiro</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Acciones</th>
                             </tr>
                         </thead>
@@ -82,8 +84,8 @@
                             <?php if (!empty($alumnos)): ?>
                                 <?php foreach ($alumnos as $alumno): ?>
                                     <tr>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['id']) ?></td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['run']) ?></td>
+                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['run'] . '-' . $alumno['codver']) ?></td>
+                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['mayoredad']) ?></td>
                                         <td class="px-4 py-3 text-sm text-gray-100 capitalize">
                                             <?= htmlspecialchars($alumno['nombre'] . " " . $alumno['apepat'] . " " . $alumno['apemat']) ?>
                                         </td>
@@ -95,12 +97,14 @@
                                         <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['region']) ?></td>
                                         <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['ciudad']) ?></td>
                                         <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['cod_etnia']) ?></td>
+                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['created_at']) ?></td>
+                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['deleted_at']) ?></td>
                                         <td class="px-4 py-3 text-sm text-gray-100 space-x-3">
                                             <a href="index.php?action=alumno_edit&id=<?= $alumno['id'] ?>"
-                                                class="text-indigo-400 hover:text-indigo-300 font-medium">✏️ Editar</a>
+                                                class="text-indigo-400 hover:text-indigo-300 font-medium">Editar</a>
                                             <a href="index.php?action=alumno_delete&id=<?= $alumno['id'] ?>"
                                                 onclick="return confirm('¿Eliminar este alumno?')"
-                                                class="text-red-400 hover:text-red-300 font-medium">🗑️ Eliminar</a>
+                                                class="text-red-400 hover:text-red-300 font-medium">Eliminar</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
