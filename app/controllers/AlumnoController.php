@@ -5,12 +5,14 @@ class AlumnosController
 {
     private $alumnoModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->alumnoModel = new Alumno();
     }
 
     //Funcion mayor de edad
-    private function calcularMayorEdad($fechaNacimiento) {
+    private function calcularMayorEdad($fechaNacimiento)
+    {
         $fechaNac = new DateTime($fechaNacimiento);
         $hoy = new DateTime();
         $edad = $hoy->diff($fechaNac)->y;
@@ -18,20 +20,23 @@ class AlumnosController
     }
 
     // Mostrar todos los alumnos
-    public function index() {
+    public function index()
+    {
         $alumnos = $this->alumnoModel->getAll();
         require __DIR__ . '/../views/alumnos/index.php';
     }
 
     // Formulario de creación
-    public function create() {
+    public function create()
+    {
         require __DIR__ . '/../views/alumnos/create.php';
     }
 
     // Guardar alumno nuevo
-    public function store($data) {
+    public function store($data)
+    {
         if (!empty($data['run']) && !empty($data['nombre']) && !empty($data['apepat'])) {
-            
+
             // Calcular mayor de edad
             if (!empty($data['fechanac'])) {
                 $data['mayoredad'] = $this->calcularMayorEdad($data['fechanac']);
@@ -44,17 +49,29 @@ class AlumnosController
         header("Location: index.php?action=alumnos");
         exit;
     }
+    //Perfil Alumno
+    public function profile($id)
+    {
+        $alumno = $this->alumnoModel->getById($id);
+        if (!$alumno) {
+            echo "Alumno no encontrado";
+            exit;
+        }
+        require __DIR__ . '/../views/alumnos/perfil.php';
+    }
 
     // Formulario de edición
-    public function edit($id) {
+    public function edit($id)
+    {
         $alumno = $this->alumnoModel->getById($id);
         require __DIR__ . '/../views/alumnos/edit.php';
     }
 
     // Actualizar alumno
-    public function update($id, $data) {
+    public function update($id, $data)
+    {
         if (!empty($id) && !empty($data['run']) && !empty($data['nombre']) && !empty($data['apepat'])) {
-            
+
             // Calcular mayor de edad también en update
             if (!empty($data['fechanac'])) {
                 $data['mayoredad'] = $this->calcularMayorEdad($data['fechanac']);
@@ -67,7 +84,8 @@ class AlumnosController
     }
 
     // Eliminar alumno
-    public function delete($id) {
+    public function delete($id)
+    {
         if (!empty($id)) {
             $this->alumnoModel->delete($id);
         }

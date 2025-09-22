@@ -83,7 +83,7 @@
                         <tbody class="bg-gray-500/30 divide-y divide-gray-600">
                             <?php if (!empty($alumnos)): ?>
                                 <?php foreach ($alumnos as $alumno): ?>
-                                    <tr>
+                                    <tr onclick="window.location='index.php?action=alumno_profile&id=<?= $alumno['id'] ?>';" class="cursor-pointer hover:bg-gray-700">
                                         <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['run'] . '-' . $alumno['codver']) ?></td>
                                         <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['mayoredad']) ?></td>
                                         <td class="px-4 py-3 text-sm text-gray-100 capitalize">
@@ -119,6 +119,9 @@
                     </table>
                 </div>
 
+                <a href="index.php?action=alumno_profile&id=<?= $alumno['id'] ?>" class="text-green-400 hover:text-green-300 font-medium">Ver Perfil</a>
+
+                
                 <!-- VOLVER -->
                 <div class="mt-8 flex items-center justify-center">
                     <a href="index.php?action=dashboard"

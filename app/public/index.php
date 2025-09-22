@@ -135,6 +135,9 @@ switch ($action) {
     case 'alumno_delete':
         $alumnosController->delete($_GET['id']);
         break;
+    case 'alumno_profile':
+        $alumnosController->profile($_GET['id']);
+        break;
 
 
     case 'asignaturas':
