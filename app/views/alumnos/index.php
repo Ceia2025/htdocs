@@ -71,9 +71,10 @@
                                 <th
                                     class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
                                     RUN</th>
+
                                 <th
                                     class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    Mayor Edad</th>
+                                    Edad</th>
                                 <th
                                     class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
                                     Nombre Completo</th>
@@ -91,18 +92,6 @@
                                     Teléfono</th>
                                 <th
                                     class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    Nacionalidad</th>
-                                <th
-                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    Región</th>
-                                <th
-                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    Ciudad</th>
-                                <th
-                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    Etnia</th>
-                                <th
-                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
                                     Incorporación</th>
                                 <th
                                     class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
@@ -115,18 +104,33 @@
                         <tbody class="bg-gray-500/30 divide-y divide-gray-600">
                             <?php if (!empty($alumnos)): ?>
                                 <?php foreach ($alumnos as $alumno): ?>
+                                    <?php
+                                    $edad = null;
+                                    if (!empty($alumno['fechanac'])) {
+                                        $fechaNac = new DateTime($alumno['fechanac']);
+                                        $hoy = new DateTime();
+                                        $edad = $hoy->diff($fechaNac)->y;
+                                    }
+                                    ?>
                                     <tr onclick="window.location='index.php?action=alumno_profile&id=<?= $alumno['id'] ?>';"
                                         class="cursor-pointer hover:bg-gray-700">
                                         <td class="px-4 py-3 text-sm text-gray-100">
                                             <?= htmlspecialchars($alumno['run'] . '-' . $alumno['codver']) ?>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-gray-100">
-                                            <?= htmlspecialchars($alumno['mayoredad']) ?>
+                                            <?= $edad !== null ? $edad . " años" : "No registrada" ?>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-gray-100 capitalize">
                                             <?= htmlspecialchars($alumno['nombre'] . " " . $alumno['apepat'] . " " . $alumno['apemat']) ?>
                                         </td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['fechanac']) ?>
+                                        <td class="px-4 py-3 text-sm text-gray-100">
+                                            <p>
+                                                <?php if (!empty($alumno['fechanac'])): ?>
+                                                    <?= (new DateTime($alumno['fechanac']))->format('d/m/Y') ?>
+                                                <?php else: ?>
+                                                    No registrada
+                                                <?php endif; ?>
+                                            </p>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['sexo']) ?>
                                         </td>
@@ -135,20 +139,22 @@
                                         <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['telefono']) ?>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-gray-100">
-                                            <?= htmlspecialchars($alumno['nacionalidades']) ?>
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['region']) ?>
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['ciudad']) ?>
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-100">
-                                            <?= htmlspecialchars($alumno['cod_etnia']) ?>
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-gray-100">
-                                            <?= htmlspecialchars($alumno['created_at']) ?>
+                                            <p>
+                                                <?php if (!empty($alumno['created_at'])): ?>
+                                                    <?= (new DateTime($alumno['created_at']))->format('d/m/Y') ?>
+                                                <?php else: ?>
+                                                    No registrada
+                                                <?php endif; ?>
+                                            </p>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-gray-100">
-                                            <?= htmlspecialchars($alumno['deleted_at']) ?>
+                                            <p>
+                                                <?php if (!empty($alumno['deleted_at'])): ?>
+                                                    <?= (new DateTime($alumno['deleted_at']))->format('d/m/Y') ?>
+                                                <?php else: ?>
+                                                    No registrada
+                                                <?php endif; ?>
+                                            </p>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-gray-100 space-x-3">
                                             <a href="index.php?action=alumno_edit&id=<?= $alumno['id'] ?>"

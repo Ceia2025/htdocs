@@ -136,24 +136,6 @@
                                     class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
                             </div>
 
-                            <!-- 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-200">Región</label>
-                                <input type="text" name="region"
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-200">Ciudad</label>
-                                <input type="text" name="ciudad"
-                                class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-                            -->
-
-
-
-
-
                             <!-- Región -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-200">Región</label>
@@ -171,11 +153,6 @@
                                     <option value="">Seleccione una ciudad</option>
                                 </select>
                             </div>
-
-
-
-
-
 
                             <!-- Etnia -->
                             <div class="md:col-span-2">
