@@ -50,12 +50,31 @@
         <main>
             <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
 
-                <!-- BOTÓN CREAR -->
-                <div class="mb-4 flex justify-end">
-                    <a href="index.php?action=curso_asignaturas_create"
-                        class="inline-block rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-700 transition">
-                        ➕ Nueva relación
-                    </a>
+                <div class="flex items-center justify-between mb-4">
+                    <!-- FILTRO -->
+                    <form method="get" action="index.php" class="flex items-center gap-2">
+                        <input type="hidden" name="action" value="curso_asignaturas">
+
+                        <label for="curso_id" class="text-gray-300 font-semibold">Filtrar por curso:</label>
+                        <select name="curso_id" id="curso_id"
+                            class="rounded-md bg-gray-800 text-gray-200 border border-gray-600 px-3 py-2"
+                            onchange="this.form.submit()">
+                            <option value="">-- Todos --</option>
+                            <?php foreach ($cursos as $curso): ?>
+                                <option value="<?= $curso['id'] ?>" <?= (isset($_GET['curso_id']) && $_GET['curso_id'] == $curso['id']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($curso['nombre']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </form>
+
+                    <!-- BOTÓN CREAR -->
+                    <div>
+                        <a href="index.php?action=curso_asignaturas_create"
+                            class="inline-block rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-700 transition">
+                            Nueva relación
+                        </a>
+                    </div>
                 </div>
 
                 <!-- TABLA -->

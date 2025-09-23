@@ -40,6 +40,24 @@ class CursoAsignatura
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getByCurso($curso_id): array
+    {
+        $sql = "
+        SELECT ca.id, 
+               c.nombre AS curso, 
+               a.nombre AS asignatura
+        FROM $this->table ca
+        JOIN cursos2 c ON c.id = ca.curso_id
+        JOIN asignaturas2 a ON a.id = ca.asignatura_id
+        WHERE ca.curso_id = :curso_id
+        ORDER BY ca.id
+    ";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([":curso_id" => $curso_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     // Obtener una relación por ID
     public function getById($id)
     {

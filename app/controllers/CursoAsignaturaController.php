@@ -13,9 +13,20 @@ class CursoAsignaturaController
     }
 
     // Mostrar lista
+
     public function index()
     {
-        $cursoAsignaturas = $this->model->getAll();
+        $cursoModel = new Cursos();
+        $cursos = $cursoModel->getAll(); // para llenar el select
+
+        $curso_id = $_GET['curso_id'] ?? null;
+
+        if ($curso_id) {
+            $cursoAsignaturas = $this->model->getByCurso((int) $curso_id);
+        } else {
+            $cursoAsignaturas = $this->model->getAll();
+        }
+
         require __DIR__ . '/../views/curso_asignaturas/index.php';
     }
 
