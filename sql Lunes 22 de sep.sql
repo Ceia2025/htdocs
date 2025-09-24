@@ -8,7 +8,7 @@ SHOW CREATE TABLE anios2;
 SHOW CREATE TABLE alum_asistencia2;
 SHOW CREATE TABLE matriculas2;
 SHOW CREATE TABLE alum_emergencia2;
-SHOW CREATE TABLE alum_familia2;
+SHOW CREATE TABLE alum_familia2;  
 SHOW CREATE TABLE alum_notas2;
 SHOW CREATE TABLE alumnos2;
 SHOW CREATE TABLE antecedentes_familiares;

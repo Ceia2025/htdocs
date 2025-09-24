@@ -60,7 +60,7 @@
                                 <option value="">-- Selecciona un alumno --</option>
                                 <?php foreach ($alumnos as $a): ?>
                                     <option value="<?= $a['id'] ?>">
-                                        <?= htmlspecialchars($a['nombre'] . " " . $a['ape_paterno'] . " " . $a['ape_materno']) ?>
+                                        <?= htmlspecialchars($a['nombre'] . " " . $a['apepat'] . " " . $a['apemat'] . " " . $a['run'] . "-" . $a['codver']) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>

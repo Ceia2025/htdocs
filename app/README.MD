@@ -1,22 +1,48 @@
 ´´´´
 app/
- ├─config/
- |   ├─Connection.php
+ ├─ config/
+ │   └─ Connection.php             # Conexión PDO a la base de datos
+ │
  ├─ models/
+ │   ├─ Alumno.php
+ │   ├─ AlumEmergencia.php
+ │   ├─ Anio.php
  │   ├─ User.php
  │   └─ Role.php
+ │
  ├─ controllers/
+ │   ├─ AlumnoController.php
+ │   ├─ AlumEmergenciaController.php
  │   ├─ AnioController.php
  │   ├─ AuthController.php
- |   ├─ RolesController.php
- |   └─
+ │   ├─ RolesController.php
+ │   └─ UsersController.php
+ │
  ├─ views/
+ │   ├─ layout/
+ │   │   ├─ header.php
+ │   │   ├─ navbar.php
+ │   │   └─ footer.php
+ │   │
  │   ├─ dashboard.php
  │   ├─ login.php
+ │   ├─ alumnos/
+ │   │   ├─ index.php
+ │   │   ├─ create.php
+ │   │   └─ edit.php
+ │   ├─ alum_emergencia/
+ │   │   ├─ index.php
+ │   │   ├─ create.php
+ │   │   └─ edit.php
  │   └─ roles/
- │       ├─ index.php   (listado + crear)
- │       └─ edit.php    (editar)
- └─ index.php
+ │       ├─ index.php
+ │       ├─ create.php
+ │       └─ edit.php
+ │
+ ├─ utils/
+ │   └─ menu.json                   # Configuración de menú por rol
+ │
+ └─ index.php                        # Front controller
 
 ´´´
 
