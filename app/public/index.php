@@ -214,7 +214,7 @@ switch ($action) {
         break;
 
 
-
+    // Alumno emergencia
     case 'alum_emergencia':
         $alumnoemergencia = new AlumEmergenciaController();
         $alumnoemergencia->index();
@@ -244,7 +244,14 @@ switch ($action) {
         $alumnoemergencia = new AlumEmergenciaController();
         $alumnoemergencia->delete($_GET['id']);
         break;
-
+    case 'alumno_search_ajax':
+        require_once __DIR__ . '/../models/Alumno.php';
+        $alumnoModel = new Alumno();
+        $term = $_GET['term'] ?? '';
+        $results = $alumnoModel->searchAlumnoEmergencia($term);
+        header('Content-Type: application/json');
+        echo json_encode($results);
+        exit; // Muy importante para que no cargue otra vista
 
     default:
         echo "Ruta no encontrada";

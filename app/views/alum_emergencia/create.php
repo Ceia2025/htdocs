@@ -38,7 +38,8 @@
         </nav>
 
         <!-- HEADER -->
-        <header class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
+        <header
+            class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
             <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
                 <h1 class="text-3xl font-bold tracking-tight text-white">➕ Nuevo Contacto de Emergencia</h1>
             </div>
@@ -54,21 +55,18 @@
 
                         <!-- Alumno -->
                         <div>
-                            <label for="alumno_id" class="block text-sm font-medium text-gray-200">Alumno</label>
-                            <select name="alumno_id" id="alumno_id" required
+                            <label for="alumno_search" class="block text-sm font-medium text-gray-200">Alumno</label>
+                            <input type="text" id="alumno_search" placeholder="Escribe nombre o RUT"
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                                <option value="">-- Selecciona un alumno --</option>
-                                <?php foreach ($alumnos as $a): ?>
-                                    <option value="<?= $a['id'] ?>">
-                                        <?= htmlspecialchars($a['nombre'] . " " . $a['apepat'] . " " . $a['apemat'] . " " . $a['run'] . "-" . $a['codver']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                            <input type="hidden" name="alumno_id" id="alumno_id">
+                            <ul id="alumno_list"
+                                class="bg-gray-700 mt-1 rounded-lg max-h-40 overflow-y-auto hidden text-white"></ul>
                         </div>
 
                         <!-- Nombre del contacto -->
                         <div>
-                            <label for="nombre_contacto" class="block text-sm font-medium text-gray-200">Nombre del contacto</label>
+                            <label for="nombre_contacto" class="block text-sm font-medium text-gray-200">Nombre del
+                                contacto</label>
                             <input type="text" name="nombre_contacto" id="nombre_contacto" required
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
@@ -123,4 +121,49 @@
     </div>
 
 </body>
+
+<script>
+    const searchInput = document.getElementById('alumno_search');
+    const hiddenInput = document.getElementById('alumno_id');
+    const list = document.getElementById('alumno_list');
+
+    searchInput.addEventListener('input', function () {
+        const term = this.value.trim();
+        if (term.length < 2) {
+            list.classList.add('hidden');
+            return;
+        }
+
+        fetch(`index.php?action=alumno_search_ajax&term=${encodeURIComponent(term)}`)
+            .then(res => res.json())
+            .then(data => {
+                list.innerHTML = '';
+                if (data.length === 0) {
+                    list.classList.add('hidden');
+                    return;
+                }
+                data.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = `${item.nombre} ${item.apepat} ${item.apemat} ${item.run}-${item.codver}`;
+                    li.className = "px-3 py-2 hover:bg-gray-600 cursor-pointer";
+                    li.addEventListener('click', () => {
+                        searchInput.value = li.textContent;
+                        hiddenInput.value = item.id;
+                        list.classList.add('hidden');
+                    });
+                    list.appendChild(li);
+                });
+                list.classList.remove('hidden');
+            });
+    });
+
+    // Cierra la lista si se hace click fuera
+    document.addEventListener('click', (e) => {
+        if (!list.contains(e.target) && e.target !== searchInput) {
+            list.classList.add('hidden');
+        }
+    });
+</script>
+
+
 </html>

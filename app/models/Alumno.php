@@ -40,6 +40,20 @@ class Alumno
         $stmt->execute([":term" => "%" . strtolower($term) . "%"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+    public function searchAlumnoEmergencia($term)
+    {
+        $sql = "SELECT id, nombre, apepat, apemat, run, codver
+            FROM alumnos2
+            WHERE nombre LIKE :term OR apepat LIKE :term OR apemat LIKE :term OR run LIKE :term
+            ORDER BY nombre
+            LIMIT 10";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':term' => "%$term%"]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
 
 
     // Crear un alumno
