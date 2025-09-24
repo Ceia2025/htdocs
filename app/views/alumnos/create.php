@@ -57,17 +57,22 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                             <!-- RUN -->
+
+
                             <div>
-                                <label class="block text-sm font-medium text-gray-200">RUN</label>
-                                <input type="text" name="run" required
+                                <label for="run" class="block text-sm font-medium text-gray-200">RUN</label>
+                                <input type="text" name="run" id="run" required
                                     class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                                <p id="run-error" class="text-red-500 text-sm mt-1 hidden">RUN inválido (debe estar
+                                    entre 1.000.000 y 100.000.000)</p>
                             </div>
 
-                            <!-- Codigo Verificador -->
+                            <!-- CÓDIGO VERIFICADOR -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-200">Código Verificador</label>
-                                <input type="text" name="codver" required
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                                <label for="codver" class="block text-sm font-medium text-gray-200">Código
+                                    Verificador</label>
+                                <input type="text" name="codver" id="codver" required readonly
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 text-center cursor-not-allowed">
                             </div>
 
                             <!-- Nombre -->
@@ -197,6 +202,7 @@
 
 </body>
 <script>
+    //Cargar region, dependiendo de las ciudades 
     document.addEventListener("DOMContentLoaded", () => {
         const regionSelect = document.getElementById("region");
         const ciudadSelect = document.getElementById("ciudad");
@@ -230,6 +236,63 @@
             })
             .catch(err => console.error("Error cargando comunas-regiones.json:", err));
     });
+
+    // ------------------------------------------------------------------------------------------------------------>
+
+    function formatRun(value) {
+        value = value.replace(/\D/g, ""); // solo números
+        return value.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // agrega puntos
+    }
+
+    function validateRun(value) {
+        const numericValue = parseInt(value.replace(/\./g, ""), 10);
+        if (isNaN(numericValue)) return false;
+        return numericValue >= 1000000 && numericValue <= 100000000;
+    }
+
+    function calcularDV(rut) {
+        let suma = 0;
+        let multiplicador = 2;
+        for (let i = rut.length - 1; i >= 0; i--) {
+            suma += parseInt(rut.charAt(i), 10) * multiplicador;
+            multiplicador = multiplicador < 7 ? multiplicador + 1 : 2;
+        }
+        const resto = 11 - (suma % 11);
+        if (resto === 11) return "0";
+        if (resto === 10) return "K";
+        return String(resto);
+    }
+
+    const runInput = document.getElementById('run');
+    const codverInput = document.getElementById('codver');
+    const runError = document.getElementById('run-error');
+
+    // Bloquear cualquier letra o símbolo en el RUN
+    runInput.addEventListener('keypress', function (e) {
+        if (!/[0-9]/.test(e.key)) {
+            e.preventDefault();
+        }
+    });
+
+    runInput.addEventListener('input', function (e) {
+        let formatted = formatRun(e.target.value);
+        e.target.value = formatted;
+
+        if (formatted && !validateRun(formatted)) {
+            runError.classList.remove('hidden');
+            codverInput.value = "";
+        } else {
+            runError.classList.add('hidden');
+            const numericValue = formatted.replace(/\./g, "");
+            if (numericValue.length > 0 && validateRun(formatted)) {
+                codverInput.value = calcularDV(numericValue);
+            } else {
+                codverInput.value = "";
+            }
+        }
+    });
+
+
 </script>
 
 
