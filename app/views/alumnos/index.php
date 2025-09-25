@@ -193,14 +193,14 @@
         const searchInput = document.getElementById('searchInput');
         const tableBody = document.querySelector('tbody');
 
-        // 👉 función para agregar puntos a un RUN
+        // función para agregar puntos a un RUN
         function formatRunForSearch(value) {
             let numeric = value.replace(/\D/g, "");
             if (!numeric) return value;
             return numeric.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        // 👉 al salir del input, si escribió solo números, se autoformatea
+        // al salir del input, si escribió solo números, se autoformatea
         searchInput.addEventListener('blur', () => {
             const value = searchInput.value.trim();
             if (/^\d+$/.test(value)) { // si solo son números
@@ -211,12 +211,12 @@
         searchInput.addEventListener('input', async () => {
             let term = searchInput.value.trim();
 
-            // 👉 si escribió solo números (ej: 18362031), formateamos antes de enviar
+            // si escribió solo números (ej: 18362031), formateamos antes de enviar
             if (/^\d+$/.test(term)) {
                 term = formatRunForSearch(term);
             }
 
-            console.log("Buscando:", term); // 👀 para verificar
+            console.log("Buscando:", term); // para verificar
 
             const response = await fetch(`index.php?action=alumno_search&term=${encodeURIComponent(term)}`);
             console.log("Respuesta cruda:", response);
@@ -238,19 +238,19 @@
                     row.onclick = () => window.location = `index.php?action=alumno_profile&id=${alumno.id}`;
 
                     row.innerHTML = `
-<td class="px-4 py-3 text-sm text-gray-100">${alumno.run}-${alumno.codver}</td>
-<td class="px-4 py-3 text-sm text-gray-100">${alumno.edad ?? ''}</td>
-<td class="px-4 py-3 text-sm text-gray-100 capitalize">${alumno.nombre} ${alumno.apepat} ${alumno.apemat}</td>
-<td class="px-4 py-3 text-sm text-gray-100">${alumno.fechanac ?? ''}</td>
-<td class="px-4 py-3 text-sm text-gray-100">${alumno.sexo ?? ''}</td>
-<td class="px-4 py-3 text-sm text-gray-100">${alumno.email ?? ''}</td>
-<td class="px-4 py-3 text-sm text-gray-100">${alumno.telefono ?? ''}</td>
-<td class="px-4 py-3 text-sm text-gray-100">${alumno.created_at ?? ''}</td>
-<td class="px-4 py-3 text-sm text-gray-100">${alumno.deleted_at ?? ''}</td>
-<td class="px-4 py-3 text-sm text-gray-100 space-x-3">
-    <a href="index.php?action=alumno_edit&id=${alumno.id}" class="text-indigo-400 hover:text-indigo-300 font-medium">Editar</a>
-    <a href="index.php?action=alumno_delete&id=${alumno.id}" onclick="return confirm('¿Eliminar este alumno?')" class="text-red-400 hover:text-red-300 font-medium">Eliminar</a>
-</td>
+                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.run}-${alumno.codver}</td>
+                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.edad ?? ''}</td>
+                        <td class="px-4 py-3 text-sm text-gray-100 capitalize">${alumno.nombre} ${alumno.apepat} ${alumno.apemat}</td>
+                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.fechanac ?? ''}</td>
+                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.sexo ?? ''}</td>
+                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.email ?? ''}</td>
+                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.telefono ?? ''}</td>
+                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.created_at ?? ''}</td>
+                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.deleted_at ?? ''}</td>
+                        <td class="px-4 py-3 text-sm text-gray-100 space-x-3">
+                            <a href="index.php?action=alumno_edit&id=${alumno.id}" class="text-indigo-400 hover:text-indigo-300 font-medium">Editar</a>
+                            <a href="index.php?action=alumno_delete&id=${alumno.id}" onclick="return confirm('¿Eliminar este alumno?')" class="text-red-400 hover:text-red-300 font-medium">Eliminar</a>
+                        </td>
                 `;
                     tableBody.appendChild(row);
                 });
