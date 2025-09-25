@@ -55,7 +55,7 @@
                 <div class="mb-6 flex justify-end">
                     <a href="index.php?action=curso_create"
                         class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow transition duration-200">
-                        ➕ Crear Curso
+                        Crear Curso
                     </a>
                 </div>
 

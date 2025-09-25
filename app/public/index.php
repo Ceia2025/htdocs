@@ -143,6 +143,7 @@ switch ($action) {
         $controller->search();
         break;
 
+        // Asignaturas
     case 'asignaturas':
         $asignaturas = new AsignaturasController();
         $asignaturas->index();
@@ -174,6 +175,7 @@ switch ($action) {
         break;
 
 
+        // Relacion de cursos y asignatura
     case 'curso_asignaturas':
         $cursoAsignaruta = new CursoAsignaturaController();
         $cursoAsignaruta->index();
