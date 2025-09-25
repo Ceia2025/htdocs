@@ -1,206 +1,177 @@
-<!DOCTYPE html>
-<html lang="es">
+<?php
+require_once __DIR__ . "/../../controllers/AuthController.php";
 
-<head>
-    <meta charset="UTF-8">
-    <title>➕ Crear Alumno</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</head>
+$auth = new AuthController();
+$auth->checkAuth(); // obliga a tener sesión iniciada
 
-<body class="h-full bg-gray-900">
+$user = $_SESSION['user']; // usuario logueado
+$nombre = $user['nombre'];
+$rol = $user['rol'];
 
-    <div class="min-h-full">
+// Incluir layout
+include __DIR__ . "/../layout/header.php";
+include __DIR__ . "/../layout/navbar.php";
+?>
 
-        <!-- NAVBAR -->
-        <nav class="bg-gray-800/50">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="flex h-16 items-center justify-between">
-                    <div class="flex items-center">
-                        <div class="shrink-0">
-                            <img src="../img/logo.jpg" alt="Logo" class="size-12 rounded-full" />
-                        </div>
-                        <div class="hidden md:block">
-                            <div class="ml-10 flex items-baseline space-x-4">
-                                <a href="index.php?action=dashboard"
-                                    class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">
-                                    Dashboard
-                                </a>
-                                <a href="index.php?action=alumnos"
-                                    class="rounded-md px-3 py-2 text-sm font-medium text-white bg-gray-700">
-                                    Alumnos
-                                </a>
-                            </div>
-                        </div>
+<!-- MAIN -->
+<header
+    class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
+    <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold tracking-tight text-white">Alumnos</h1>
+    </div>
+</header>
+<main>
+    <div class="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
+
+        <!-- FORM -->
+        <div class="bg-gray-700 p-8 rounded-2xl shadow-lg">
+            <form action="index.php?action=alumno_store" method="POST" class="space-y-6">
+
+                <!-- Grid de 2 columnas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- RUN -->
+
+
+                    <div>
+                        <label for="run" class="block text-sm font-medium text-gray-200">RUN</label>
+                        <input type="text" name="run" id="run" required
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                        <p id="run-error" class="text-red-500 text-sm mt-1 hidden">RUN inválido (debe estar
+                            entre 1.000.000 y 100.000.000)</p>
+                    </div>
+
+                    <!-- CÓDIGO VERIFICADOR -->
+                    <div>
+                        <label for="codver" class="block text-sm font-medium text-gray-200">Código
+                            Verificador</label>
+                        <input type="text" name="codver" id="codver" required readonly
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 text-center cursor-not-allowed">
+                    </div>
+
+                    <!-- Nombre -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Nombre</label>
+                        <input type="text" name="nombre" required
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Apellido Paterno -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Apellido Paterno</label>
+                        <input type="text" name="apepat" required
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Apellido Materno -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Apellido Materno</label>
+                        <input type="text" name="apemat"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Fecha de Nacimiento -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Fecha de Nacimiento</label>
+                        <input type="date" name="fechanac"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Número de Hijos -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Número de Hijos</label>
+                        <input type="number" name="numerohijos" min="0"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Teléfono</label>
+                        <input type="text" name="telefono"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Email</label>
+                        <input type="email" name="email"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Sexo -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Sexo</label>
+                        <select name="sexo" required
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="F">Femenino</option>
+                            <option value="M">Masculino</option>
+                        </select>
+                    </div>
+
+                    <!-- Nacionalidad -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Nacionalidad</label>
+                        <input type="text" name="nacionalidades"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Región -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Región</label>
+                        <select id="region" name="region"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="">Seleccione una región</option>
+                        </select>
+                    </div>
+
+                    <!-- Ciudad/Comuna -->
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-200">Ciudad / Comuna</label>
+                        <select id="ciudad" name="ciudad"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="">Seleccione una ciudad</option>
+                        </select>
+                    </div>
+
+                    <!-- Etnia -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-200">Etnia</label>
+                        <select name="cod_etnia"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="Ninguna">Ninguna</option>
+                            <option value="Mapuche">Mapuche</option>
+                            <option value="Aymara">Aymara</option>
+                            <option value="Rapa Nui">Rapa Nui</option>
+                            <option value="Lickan Antai (Atacameños)">Lickan Antai (Atacameños)</option>
+                            <option value="Quechua">Quechua</option>
+                            <option value="Colla">Colla</option>
+                            <option value="Diaguita">Diaguita</option>
+                            <option value="Chango">Chango</option>
+                            <option value="Kawésqar">Kawésqar</option>
+                            <option value="Yagán">Yagán</option>
+                            <option value="Selk nam">Selk nam</option>
+                        </select>
                     </div>
                 </div>
-            </div>
-        </nav>
 
-        <!-- HEADER -->
-        <header
-            class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
-            <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold tracking-tight text-white">Crear Alumno</h1>
-            </div>
-        </header>
-
-        <!-- MAIN -->
-        <main>
-            <div class="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
-
-                <!-- FORM -->
-                <div class="bg-gray-700 p-8 rounded-2xl shadow-lg">
-                    <form action="index.php?action=alumno_store" method="POST" class="space-y-6">
-
-                        <!-- Grid de 2 columnas -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                            <!-- RUN -->
-
-
-                            <div>
-                                <label for="run" class="block text-sm font-medium text-gray-200">RUN</label>
-                                <input type="text" name="run" id="run" required
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                                <p id="run-error" class="text-red-500 text-sm mt-1 hidden">RUN inválido (debe estar
-                                    entre 1.000.000 y 100.000.000)</p>
-                            </div>
-
-                            <!-- CÓDIGO VERIFICADOR -->
-                            <div>
-                                <label for="codver" class="block text-sm font-medium text-gray-200">Código
-                                    Verificador</label>
-                                <input type="text" name="codver" id="codver" required readonly
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 text-center cursor-not-allowed">
-                            </div>
-
-                            <!-- Nombre -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-200">Nombre</label>
-                                <input type="text" name="nombre" required
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-
-                            <!-- Apellido Paterno -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-200">Apellido Paterno</label>
-                                <input type="text" name="apepat" required
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-
-                            <!-- Apellido Materno -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-200">Apellido Materno</label>
-                                <input type="text" name="apemat"
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-
-                            <!-- Fecha de Nacimiento -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-200">Fecha de Nacimiento</label>
-                                <input type="date" name="fechanac"
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-
-                            <!-- Número de Hijos -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-200">Número de Hijos</label>
-                                <input type="number" name="numerohijos" min="0"
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-
-                            <!-- Teléfono -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-200">Teléfono</label>
-                                <input type="text" name="telefono"
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-
-                            <!-- Email -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-200">Email</label>
-                                <input type="email" name="email"
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-
-                            <!-- Sexo -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-200">Sexo</label>
-                                <select name="sexo" required
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                                    <option value="F">Femenino</option>
-                                    <option value="M">Masculino</option>
-                                </select>
-                            </div>
-
-                            <!-- Nacionalidad -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-200">Nacionalidad</label>
-                                <input type="text" name="nacionalidades"
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-
-                            <!-- Región -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-200">Región</label>
-                                <select id="region" name="region"
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                                    <option value="">Seleccione una región</option>
-                                </select>
-                            </div>
-
-                            <!-- Ciudad/Comuna -->
-                            <div class="mt-4">
-                                <label class="block text-sm font-medium text-gray-200">Ciudad / Comuna</label>
-                                <select id="ciudad" name="ciudad"
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                                    <option value="">Seleccione una ciudad</option>
-                                </select>
-                            </div>
-
-                            <!-- Etnia -->
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-200">Etnia</label>
-                                <select name="cod_etnia"
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                                    <option value="Ninguna">Ninguna</option>
-                                    <option value="Mapuche">Mapuche</option>
-                                    <option value="Aymara">Aymara</option>
-                                    <option value="Rapa Nui">Rapa Nui</option>
-                                    <option value="Lickan Antai (Atacameños)">Lickan Antai (Atacameños)</option>
-                                    <option value="Quechua">Quechua</option>
-                                    <option value="Colla">Colla</option>
-                                    <option value="Diaguita">Diaguita</option>
-                                    <option value="Chango">Chango</option>
-                                    <option value="Kawésqar">Kawésqar</option>
-                                    <option value="Yagán">Yagán</option>
-                                    <option value="Selk nam">Selk nam</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Botones -->
-                        <div class="flex space-x-4 pt-4">
-                            <button type="submit"
-                                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition duration-200 ease-in-out">
-                                Guardar
-                            </button>
-                            <a href="index.php?action=alumnos"
-                                class="w-full text-center inline-block rounded-lg bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 transition duration-200 ease-in-out">
-                                Cancelar
-                            </a>
-                        </div>
-
-                    </form>
+                <!-- Botones -->
+                <div class="flex space-x-4 pt-4">
+                    <button type="submit"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition duration-200 ease-in-out">
+                        Guardar
+                    </button>
+                    <a href="index.php?action=alumnos"
+                        class="w-full text-center inline-block rounded-lg bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 transition duration-200 ease-in-out">
+                        Cancelar
+                    </a>
                 </div>
 
-            </div>
-        </main>
+            </form>
+        </div>
 
     </div>
+</main>
 
-</body>
 <script>
     //Cargar region, dependiendo de las ciudades 
     document.addEventListener("DOMContentLoaded", () => {
@@ -239,6 +210,7 @@
 
     // ------------------------------------------------------------------------------------------------------------>
 
+    // Formateo de rut al momento de guardar
     function formatRun(value) {
         value = value.replace(/\D/g, ""); // solo números
         return value.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // agrega puntos
@@ -295,5 +267,4 @@
 
 </script>
 
-
-</html>
+<?php include __DIR__ . "/../layout/footer.php"; ?>

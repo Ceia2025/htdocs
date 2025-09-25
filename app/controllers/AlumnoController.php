@@ -22,8 +22,11 @@ class AlumnosController
     // Mostrar todos los alumnos
     public function index()
     {
-        $alumnos = $this->alumnoModel->getAll();
-        require __DIR__ . '/../views/alumnos/index.php';
+        require_once __DIR__ . "/../models/Alumno.php";
+        $alumnoModel = new Alumno();
+        $alumnos = $alumnoModel->getAll();
+
+        include __DIR__ . "/../views/alumnos/index.php";
     }
 
     // Formulario de creación
@@ -61,20 +64,20 @@ class AlumnosController
     }
 
     public function search()
-{
-    try {
-        $term = $_GET['term'] ?? '';
-        $alumno = new Alumno();
-        $results = $alumno->search($term);
+    {
+        try {
+            $term = $_GET['term'] ?? '';
+            $alumno = new Alumno();
+            $results = $alumno->search($term);
 
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($results);
-    } catch (Exception $e) {
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(['error' => $e->getMessage()]);
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($results);
+        } catch (Exception $e) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+        exit;
     }
-    exit;
-}
 
     // Formulario de edición
     public function edit($id)

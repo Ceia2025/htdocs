@@ -5,22 +5,31 @@ if (!empty($alumno['fechanac'])) {
     $hoy = new DateTime();
     $edad = $hoy->diff($fechaNac)->y;
 }
+require_once __DIR__ . "/../../controllers/AuthController.php";
+
+$auth = new AuthController();
+$auth->checkAuth(); // obliga a tener sesión iniciada
+
+$user = $_SESSION['user']; // usuario logueado
+$nombre = $user['nombre'];
+$rol = $user['rol'];
+
+// Incluir layout
+include __DIR__ . "/../layout/header.php";
+include __DIR__ . "/../layout/navbar.php";
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Peril Alumno</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</head>
-
+<header
+            class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
+            <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold tracking-tight text-white">Alumnos</h1>
+            </div>
+        </header>
 <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center p-6">
 
     <!-- Contenedor principal -->
-    <div class="w-full max-w-5xl bg-gray-800 rounded-2xl shadow-lg p-8 mt-6">
+    <div class="max-w-5xl w-full md:w-4/5 lg:w-3/4 bg-gray-800 rounded-2xl shadow-lg p-8 mt-6 mx-auto text-white">
 
         <!-- Header -->
         <h1 class="text-4xl font-bold mb-8 text-center">
@@ -101,4 +110,4 @@ if (!empty($alumno['fechanac'])) {
 
 </body>
 
-</html>
+<?php include __DIR__ . "/../layout/footer.php"; ?>
