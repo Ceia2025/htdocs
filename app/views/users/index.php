@@ -13,6 +13,7 @@ include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 ?>
 
+
 <html class="h-full bg-gray-900">
 
 <body class="h-full">
@@ -28,12 +29,12 @@ include __DIR__ . "/../layout/navbar.php";
 
         <!-- MAIN -->
         <main>
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
 
                 <!-- Botón Crear -->
-                <div class="mb-4">
+                <div class="mb-4 flex justify-end">
                     <a href="index.php?action=user_create"
-                        class="inline-block rounded-md bg-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-400">
+                        class="inline-block rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-700 transition">
                         Crear nuevo
                     </a>
                 </div>
@@ -43,9 +44,6 @@ include __DIR__ . "/../layout/navbar.php";
                     <table class="min-w-full divide-y divide-gray-700">
                         <thead class="bg-gray-950/50">
                             <tr>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    ID</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
                                     Rut</th>
@@ -72,9 +70,6 @@ include __DIR__ . "/../layout/navbar.php";
                         <tbody class="bg-gray-500/30 divide-y divide-gray-600">
                             <?php foreach ($users as $user): ?>
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
-                                        <?= htmlspecialchars($user['id']) ?>
-                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
                                         <?= htmlspecialchars($user['run']) ?>
                                     </td>
@@ -113,10 +108,10 @@ include __DIR__ . "/../layout/navbar.php";
                 </div>
 
                 <!-- Regresar -->
-                <div class="mt-6">
+                <div class="mt-8 flex items-center justify-center">
                     <a href="index.php?action=dashboard"
                         class="inline-block rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-gray-600">
-                        Regresar
+                        Volver al Dashboard
                     </a>
                 </div>
             </div>
