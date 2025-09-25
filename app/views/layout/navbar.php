@@ -4,7 +4,7 @@
             <div class="flex items-center">
                 <!-- Logo -->
                 <div class="shrink-0">
-                    <img src="../img/logo.jpg" alt="Your Company" class="size-12" />
+                    <img src="img/logo.jpg" alt="Logo CEIA" class="size-12 rounded-full" />
                 </div>
                 <!-- Menú principal -->
                 <div class="hidden md:block">

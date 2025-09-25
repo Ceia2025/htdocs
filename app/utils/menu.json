@@ -1,49 +1,59 @@
 {
   "administrador": [
     {
-      "title": "Gestión de usuarios OK",
+      "title": "Gestión de usuarios Terminado",
       "desc": "Controla los usuarios del sistema",
       "url": "index.php?action=users"
     },
     {
-      "title": "Reportes (Crear)",
-      "desc": "Generar y ver reportes del sistema",
-      "url": "#"
-    },
-    {
-      "title": "Edición de Roles OK",
+      "title": "Edición de Roles Terminado",
       "desc": "Modificar permisos de usuarios",
       "url": "index.php?action=roles"
     },
     {
-      "title": "Edición de Años OK",
+      "title": "Edición de Años Terminado",
       "desc": "Gestionar años académicos",
       "url": "index.php?action=anios"
     },
     {
-      "title": "Gestión de Cursos OK",
-      "desc": "Administrar cursos disponibles",
+      "title": "Gestión de Cursos Terminado",
+      "desc": "Creación, edición y eliminación de cursos 1° 2° etc",
       "url": "index.php?action=cursos"
     },
     {
-      "title": "Gestión de Alumnos OK",
-      "desc": "Agregar, modificar o ver alumnos",
-      "url": "index.php?action=alumnos"
-    },
-    {
-      "title": "Gestión de Asignaturas OK",
-      "desc": "Administrar asignaturas",
+      "title": "Gestión de Asignaturas Terminado",
+      "desc": "Creación, edición y eliminación de Asignaturas nombre y desc",
       "url": "index.php?action=asignaturas"
     },
     {
-      "title": "Curso Asignaturas OK",
+      "title": "Curso Asignaturas Terminado",
       "desc": "Asignar asignaturas a cursos",
       "url": "index.php?action=curso_asignaturas"
     },
     {
-      "title": "Alumno Emergencia OK",
-      "desc": "Contactos de emergencia de alumnos",
+      "title": "Gestión de Alumnos (Solo ingreso)",
+      "desc": "Agregar, modificar o ver alumnos",
+      "url": "index.php?action=alumnos"
+    },
+    {
+      "title": "Alumno Emergencia Terminado",
+      "desc": "Se agregan contactos de emergencia de alumnos",
       "url": "index.php?action=alum_emergencia"
+    },
+    {
+      "title": "Alumno Familia (Crear)",
+      "desc": "Antecedentes familiares de los alumnos",
+      "url": "index.php?action=alum_emergencia"
+    },
+    {
+      "title": "Matricula (Crear)",
+      "desc": "Registrar calificaciones de alumnos",
+      "url": "#"
+    },
+    {
+      "title": " (Crear)",
+      "desc": "Registrar calificaciones de alumnos",
+      "url": "#"
     },
     {
       "title": "Ingresar Notas (Crear)",
@@ -53,6 +63,11 @@
     {
       "title": "Planificaciones (Crear)",
       "desc": "Subir y gestionar planificaciones de clases",
+      "url": "#"
+    },
+    {
+      "title": "Reportes (Crear)",
+      "desc": "Generar y ver reportes del sistema",
       "url": "#"
     }
   ],

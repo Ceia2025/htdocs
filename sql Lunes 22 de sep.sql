@@ -18,6 +18,7 @@ SHOW CREATE TABLE curso_asignaturas2;
 SHOW CREATE TABLE roles2;
 SHOW CREATE TABLE usuarios2;
 
+select * from alum_familia2;
 
 -- |||||||||||||||||||||||||||||||||||||||||
 --
@@ -93,6 +94,7 @@ CREATE TABLE `alum_asistencia2`(
   CONSTRAINT `alum_asistencia2_ibfk_1` FOREIGN KEY (`matricula_id`) REFERENCES `matriculas2` (`id`) ON DELETE CASCADE
   );
   
+  select * from cursos2;
   
 -- |||||||||||||||||||||||||||||||||||||||||
 --
@@ -170,7 +172,7 @@ CREATE TABLE `alumnos2` (
 PRIMARY KEY (`id`),
 UNIQUE KEY `run` (`run`)
 );
-
+-- 'No pertenece a ningún Pueblo Originario', 'Aymara', 'Likanantai( Atacameño )', 'Colla', 'Diaguita', 'Quechua', 'Rapa Nui', 'Mapuche', 'Kawésqar', 'Yagán', 'Otro', 'No Registra'
 
 
 -- |||||||||||||||||||||||||||||||||||||||||
