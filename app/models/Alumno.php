@@ -40,7 +40,7 @@ class Alumno
         $stmt->execute([":term" => "%" . strtolower($term) . "%"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
     public function searchAlumnoEmergencia($term)
     {
         $sql = "SELECT id, nombre, apepat, apemat, run, codver
@@ -71,9 +71,9 @@ class Alumno
         $data['deleted_at'] = $data['deleted_at'] ?? null;
 
         $sql = "INSERT INTO {$this->table} 
-            (run, codver, nombre, apepat, apemat, fechanac, mayoredad, numerohijos, telefono, email, sexo, nacionalidades, region, ciudad, cod_etnia, deleted_at) 
+                (run, codver, nombre, apepat, apemat, fechanac, mayoredad, numerohijos, telefono, email, sexo, nacionalidades, region, ciudad, direccion, cod_etnia, deleted_at) 
             VALUES 
-            (:run, :codver, :nombre, :apepat, :apemat, :fechanac, :mayoredad, :numerohijos, :telefono, :email, :sexo, :nacionalidades, :region, :ciudad, :cod_etnia, :deleted_at)";
+                (:run, :codver, :nombre, :apepat, :apemat, :fechanac, :mayoredad, :numerohijos, :telefono, :email, :sexo, :nacionalidades, :region, :ciudad, :direccion, :cod_etnia, :deleted_at)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ":run" => $data['run'],
@@ -90,6 +90,7 @@ class Alumno
             ":nacionalidades" => $data['nacionalidades'],
             ":region" => $data['region'],
             ":ciudad" => $data['ciudad'],
+            ":direccion" => $data['direccion'] ?? null, // <-- NUEVO
             ":cod_etnia" => $data['cod_etnia'],
             ":deleted_at" => $data['deleted_at'],
         ]);
@@ -108,12 +109,12 @@ class Alumno
         $data['deleted_at'] = $data['deleted_at'] ?? null;
 
         $sql = "UPDATE {$this->table} 
-    SET run = :run, codver = :codver, nombre = :nombre, apepat = :apepat, apemat = :apemat,
-        fechanac = :fechanac, mayoredad = :mayoredad, numerohijos = :numerohijos,
-        telefono = :telefono, email = :email, sexo = :sexo,
-        nacionalidades = :nacionalidades, region = :region,
-        ciudad = :ciudad, cod_etnia = :cod_etnia, deleted_at = :deleted_at
-    WHERE id = :id";
+                SET run = :run, codver = :codver, nombre = :nombre, apepat = :apepat, apemat = :apemat,
+                    fechanac = :fechanac, mayoredad = :mayoredad, numerohijos = :numerohijos,
+                    telefono = :telefono, email = :email, sexo = :sexo,
+                    nacionalidades = :nacionalidades, region = :region,
+                    ciudad = :ciudad, direccion = :direccion, cod_etnia = :cod_etnia, deleted_at = :deleted_at
+                WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
@@ -132,6 +133,7 @@ class Alumno
             ":nacionalidades" => $data['nacionalidades'],
             ":region" => $data['region'],
             ":ciudad" => $data['ciudad'],
+            ":direccion" => $data['direccion'] ?? null, // <-- NUEVO
             ":cod_etnia" => $data['cod_etnia'],
             ":deleted_at" => $data['deleted_at'],
         ]);

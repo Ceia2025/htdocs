@@ -64,6 +64,7 @@ include __DIR__ . "/../layout/navbar.php";
                 </p>
                 <p><span class="font-semibold">Región:</span> <?= htmlspecialchars($alumno['region']) ?></p>
                 <p><span class="font-semibold">Ciudad:</span> <?= htmlspecialchars($alumno['ciudad']) ?></p>
+                <p><span class="font-semibold">Direccion:</span> <?= htmlspecialchars($alumno['direccion']) ?></p>
                 <p><span class="font-semibold">Etnia:</span> <?= htmlspecialchars($alumno['cod_etnia']) ?></p>
                 <p><span class="font-semibold">Incorporación:</span>
                     <?php if (!empty($alumno['created_at'])): ?>

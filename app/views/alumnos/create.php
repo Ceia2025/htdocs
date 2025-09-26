@@ -133,25 +133,43 @@ include __DIR__ . "/../layout/navbar.php";
                         </select>
                     </div>
 
+                    <!-- Dirección -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Direccion</label>
+                        <input type="text" name="direccion"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
                     <!-- Etnia -->
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-200">Etnia</label>
                         <select name="cod_etnia"
                             class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                            <option value="Ninguna">Ninguna</option>
-                            <option value="Mapuche">Mapuche</option>
-                            <option value="Aymara">Aymara</option>
-                            <option value="Rapa Nui">Rapa Nui</option>
-                            <option value="Lickan Antai (Atacameños)">Lickan Antai (Atacameños)</option>
-                            <option value="Quechua">Quechua</option>
-                            <option value="Colla">Colla</option>
-                            <option value="Diaguita">Diaguita</option>
-                            <option value="Chango">Chango</option>
-                            <option value="Kawésqar">Kawésqar</option>
-                            <option value="Yagán">Yagán</option>
-                            <option value="Selk nam">Selk nam</option>
+                            <?php
+                            $etnias = [
+                                "No pertenece a ningún Pueblo Originario",
+                                "Aymara",
+                                "Likanantai( Atacameño )",
+                                "Colla",
+                                "Diaguita",
+                                "Quechua",
+                                "Rapa Nui",
+                                "Mapuche",
+                                "Kawésqar",
+                                "Yagán",
+                                "Otro",
+                                "No Registra"
+                            ];
+                            foreach ($etnias as $etnia): ?>
+                                <option value="<?= $etnia ?>" <?= (!isset($alumno['cod_etnia']) && $etnia === "No pertenece a ningún Pueblo Originario")
+                                      || (isset($alumno['cod_etnia']) && $alumno['cod_etnia'] === $etnia)
+                                      ? 'selected' : '' ?>>
+                                    <?= $etnia ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
+
                 </div>
 
                 <!-- Botones -->

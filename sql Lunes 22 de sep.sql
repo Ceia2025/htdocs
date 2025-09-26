@@ -138,42 +138,43 @@ CONSTRAINT `alum_notas2_ibfk_2` FOREIGN KEY (`asignatura_id`) REFERENCES `asigna
 -- 		Alumnos
 -- 
 -- |||||||||||||||||||||||||||||||||||||||||
-CREATE TABLE `alumnos2` (
-`id` int NOT NULL AUTO_INCREMENT,
-`run` varchar(20) NOT NULL,
-`codver` VARCHAR(1) NOT NULL,
-`nombre` varchar(100) NOT NULL,
-`apepat` varchar(100) NOT NULL,
-`apemat` varchar(100) NOT NULL,
-`fechanac` date NOT NULL,
-`mayoredad` enum('No','Si') NULL,
-`numerohijos` int DEFAULT NULL,
-`telefono` varchar(12) DEFAULT NULL,
-`celular` varchar(8) DEFAULT NULL,
-`email` varchar(100) DEFAULT NULL,
-`sexo` enum('F','M') NOT NULL,
-`created_at` DATE NOT NULL DEFAULT (CURRENT_DATE),
-`nacionalidades` varchar(12) DEFAULT NULL,
-`region` varchar(12) DEFAULT NULL,
-`ciudad` varchar(12) DEFAULT NULL,
-`cod_etnia` enum('Ninguna',
-				'Mapuche',
-                'Aymara',
-                'Rapa Nui',
-                'Lickan Antai (Atacameños)',
-                'Quechua',
-                'Colla',
-                'Diaguita',
-                'Chango',
-                'Kawésqar',
-                'Yagán',
-                'Selk nam') NOT NULL DEFAULT 'Ninguna',
-`deleted_at` DATE NULL,
-PRIMARY KEY (`id`),
-UNIQUE KEY `run` (`run`)
-);
--- 'No pertenece a ningún Pueblo Originario', 'Aymara', 'Likanantai( Atacameño )', 'Colla', 'Diaguita', 'Quechua', 'Rapa Nui', 'Mapuche', 'Kawésqar', 'Yagán', 'Otro', 'No Registra'
 
+CREATE TABLE `alumnos2` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `run` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+   `codver` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `nombre` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+   `apepat` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+   `apemat` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `fechanac` date DEFAULT NULL,
+   `mayoredad` enum('No','Si') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `numerohijos` int DEFAULT NULL,
+   `telefono` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `celular` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `sexo` enum('F','M') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `created_at` date NOT NULL DEFAULT (curdate()),
+   `nacionalidades` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `region` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+   `ciudad` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `direccion` VARCHAR(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `cod_etnia` enum('No pertenece a ningún Pueblo Originario',
+					'Aymara',
+					'Likanantai( Atacameño )',
+					'Colla',
+					'Diaguita',
+					'Quechua',
+					'Rapa Nui',
+					'Mapuche',
+					'Kawésqar',
+					'Yagán',
+					'Otro',
+					'No Registra') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'No Registra',
+   `deleted_at` datetime DEFAULT NULL,
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `run` (`run`)
+ ) ;
+ 
 
 -- |||||||||||||||||||||||||||||||||||||||||
 --

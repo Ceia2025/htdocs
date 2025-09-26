@@ -124,6 +124,13 @@ include __DIR__ . "/../layout/navbar.php";
                     <input type="text" name="ciudad" value="<?= htmlspecialchars($alumno['ciudad']) ?>"
                         class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
                 </div>
+                
+                <!-- Dirección -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-200">Direccion</label>
+                    <input type="text" name="direccion" value="<?= htmlspecialchars($alumno['direccion']) ?>"
+                        class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
+                </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-200">Fecha Retiro</label>
@@ -138,18 +145,18 @@ include __DIR__ . "/../layout/navbar.php";
                         class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
                         <?php
                         $etnias = [
-                            "Ninguna",
-                            "Mapuche",
+                            "No pertenece a ningún Pueblo Originario",
                             "Aymara",
-                            "Rapa Nui",
-                            "Lickan Antai (Atacameños)",
-                            "Quechua",
+                            "Likanantai( Atacameño )",
                             "Colla",
                             "Diaguita",
-                            "Chango",
+                            "Quechua",
+                            "Rapa Nui",
+                            "Mapuche",
                             "Kawésqar",
                             "Yagán",
-                            "Selk nam"
+                            "Otro",
+                            "No Registra"
                         ];
                         foreach ($etnias as $etnia): ?>
                             <option value="<?= $etnia ?>" <?= $alumno['cod_etnia'] === $etnia ? 'selected' : '' ?>>
