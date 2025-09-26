@@ -27,8 +27,13 @@ switch ($action) {
     case 'login':
         $auth->login(); // muestra formulario
         break;
+    //case 'doLogin':
+      //  $auth->doLogin($_POST); // procesa POST
+        //break;
     case 'doLogin':
-        $auth->doLogin($_POST); // procesa POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $userController->doLogin($_POST);
+        }
         break;
     case 'logout':
         $auth->logout(); //Cierra la seción
@@ -143,7 +148,7 @@ switch ($action) {
         $controller->search();
         break;
 
-        // Asignaturas
+    // Asignaturas
     case 'asignaturas':
         $asignaturas = new AsignaturasController();
         $asignaturas->index();
@@ -175,7 +180,7 @@ switch ($action) {
         break;
 
 
-        // Relacion de cursos y asignatura
+    // Relacion de cursos y asignatura
     case 'curso_asignaturas':
         $cursoAsignaruta = new CursoAsignaturaController();
         $cursoAsignaruta->index();

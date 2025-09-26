@@ -109,6 +109,20 @@ class User
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Buscar por email o username
+    public function findByLogin($login)
+    {
+        $sql = "SELECT u.*, r.nombre AS rol
+            FROM usuarios2 u
+            JOIN roles2 r ON r.id = u.rol_id
+            WHERE u.email = :login OR u.username = :login
+            LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':login' => $login]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
 
     // Actualizar
     public function update($id, $nombre, $email, $rol, $password = null)

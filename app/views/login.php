@@ -29,12 +29,11 @@
         <form action="index.php?action=doLogin" method="POST" class="mx-auto mt-16 max-w-xl sm:mt-20">
             <div class="grid grid-cols-1 gap-y-6">
 
-                <!-- Email -->
+                <!-- Email o Username -->
                 <div>
-                    <label for="email" class="block text-sm font-semibold text-white">Email</label>
+                    <label for="login" class="block text-sm font-semibold text-white">Usuario o Email</label>
                     <div class="mt-2.5">
-                        <input id="email" type="email" name="email" required
-                            class="block w-[330px] rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1
+                        <input id="login" type="text" name="login" required class="block w-[330px] rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1
                             -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2
                             focus:-outline-offset-2 focus:outline-indigo-500" />
                     </div>
@@ -45,12 +44,12 @@
                     <div class="flex items-center justify-between">
                         <label for="password" class="block text-sm font-semibold text-white">Contraseña</label>
                         <div class="text-sm">
-                            <a href="#" class="font-semibold text-indigo-400 hover:text-indigo-300">¿Olvidó la contraseña?</a>
+                            <a href="#" class="font-semibold text-indigo-400 hover:text-indigo-300">¿Olvidó la
+                                contraseña?</a>
                         </div>
                     </div>
                     <div class="mt-2.5">
-                        <input id="password" type="password" name="password" required
-                            class="block w-[330px] rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1
+                        <input id="password" type="password" name="password" required class="block w-[330px] rounded-md bg-white/5 px-3.5 py-2 text-base text-white outline-1
                             -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2
                             focus:-outline-offset-2 focus:outline-indigo-500" />
                     </div>
@@ -60,8 +59,7 @@
 
             <!-- Botón -->
             <div class="mt-10">
-                <button type="submit"
-                    class="block w-[330px] rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm
+                <button type="submit" class="block w-[330px] rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm
                     font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2
                     focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
                     Ingresar
@@ -75,4 +73,5 @@
         </form>
     </div>
 </body>
+
 </html>
