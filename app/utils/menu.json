@@ -69,6 +69,16 @@
       "title": "Reportes (Crear)",
       "desc": "Generar y ver reportes del sistema",
       "url": "#"
+    },
+    {
+      "title": "Inventario",
+      "desc": "Inventario",
+      "url": "index.php?action=inventario_index"
+    },
+    {
+      "title": "Procedencias para inventario",
+      "desc": "Procedencias",
+      "url": "index.php?action=procedencias"
     }
   ],
   "docente": [

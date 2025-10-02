@@ -272,3 +272,160 @@ CREATE TABLE `usuarios2` (
    KEY `rol_id` (`rol_id`),
    CONSTRAINT `usuarios2_ibfk_1` FOREIGN KEY (`rol_id`) REFERENCES `roles2` (`id`)
  );
+ 
+ 
+ 
+ -- Tablas de inventario para el colegio, agregados el proyecto saat
+ 
+ CREATE TABLE nivel_educativo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) UNIQUE
+);
+
+insert into nivel_educativo(nombre) values('Parvularia');
+insert into nivel_educativo(nombre) values('Básica');
+insert into nivel_educativo(nombre) values('Media');
+insert into nivel_educativo(nombre) values('No Aplica');
+
+CREATE TABLE individualizacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    descripcion VARCHAR(255) NOT NULL
+);
+
+INSERT INTO individualizacion (descripcion) VALUES
+('Silla - estructura fierro con tapiz cuerina'),
+('Silla - ejecutiva con ruedas'),
+('Mesa - redonda fierro melamina'),
+('Mesa - estudiante metal madera tipo 5'),
+('Escritorio - madera 2 cajones'),
+('Notebook - HP 240 G7'),
+('Notebook - Lenovo E-4155'),
+('Computador de escritorio - HP modelo 280'),
+('Monitor - Samsung B1630N'),
+('Monitor - HP V194'),
+('Impresora multifuncional - Epson L380'),
+('Impresora multifuncional - Brother DCP-T500W'),
+('Proyector - NEC NP-VE303'),
+('Parlante - Channel 2.1 TV Soundbar'),
+('Estufa - a gas marca Kendal con cilindro'),
+('Pizarra acrílica - grande'),
+('Extintor'),
+('Basurero - metálico redondo'),
+('Refrigerador - Daewoo 2 puertas'),
+('Horno eléctrico - Thomas grande'),
+('Ventilador - pedestal marca Groven'),
+('Telón - con base Dinon'),
+('Camilla - fierro con cuerina'),
+('Cámara - Sony HDR-CX440'),
+('Máquina de escribir - Underwood'),
+('Guitarra acústica - Mercury'),
+('Micrófono - Carverpro PCT18'),
+('Tablet - Lenovo TB 8505'),
+('Router - TP-Link'),
+('Escalera - aluminio 3 peldaños'),
+('Caja de herramientas - juegos de llaves 14 piezas marca Force');
+
+
+CREATE TABLE categorizacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) UNIQUE
+);
+
+insert into categorizacion(nombre) values('Implementos deportivos');
+insert into categorizacion(nombre) values('Implementos de laboratorio');
+insert into categorizacion(nombre) values('Instrumentos musicales y/o artísticos');
+insert into categorizacion(nombre) values('Libros y revistas');
+insert into categorizacion(nombre) values('Equipos informáticos');
+insert into categorizacion(nombre) values('Equipos multicopiadores');
+insert into categorizacion(nombre) values('Equipos de amplificación y sonido');
+insert into categorizacion(nombre) values('Equipos de climatización: calefacción, ventilación y aire acondicionado');
+insert into categorizacion(nombre) values('Útiles escolares, equipamiento especializado de Liceos Técnicos Profesionales o materiales de oficina');
+insert into categorizacion(nombre) values('Materiales y útiles de aseo');
+insert into categorizacion(nombre) values('Mobiliario escolar fuera de la sala de clase');
+insert into categorizacion(nombre) values('Mobiliario escolar dentro de la sala de clase');
+insert into categorizacion(nombre) values('Mobiliario no pedagógico o de oficina');
+insert into categorizacion(nombre) values('Otros equipos, materiales o insumos');
+
+CREATE TABLE estado_conservacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) UNIQUE
+);
+
+insert into estado_conservacion(nombre) values('Nuevo');
+insert into estado_conservacion(nombre) values('Con uso');
+insert into estado_conservacion(nombre) values('Descartable');
+
+CREATE TABLE lugar_fisico (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) UNIQUE
+);
+
+insert into lugar_fisico(nombre) values('recepción');
+insert into lugar_fisico(nombre) values('oficina portería');
+insert into lugar_fisico(nombre) values('sala computación');
+insert into lugar_fisico(nombre) values('Oficina Director');
+insert into lugar_fisico(nombre) values('Sala de archivos');
+insert into lugar_fisico(nombre) values('sala taller párvulo');
+insert into lugar_fisico(nombre) values('oficina SIGE');
+insert into lugar_fisico(nombre) values('Inspectoría');
+insert into lugar_fisico(nombre) values('sala de profesores');
+insert into lugar_fisico(nombre) values('Bodega sala de profesores');
+insert into lugar_fisico(nombre) values('U.T.P');
+insert into lugar_fisico(nombre) values('Comedor Funcionarios');
+insert into lugar_fisico(nombre) values('Bodega cocina');
+insert into lugar_fisico(nombre) values('Biblioteca');
+insert into lugar_fisico(nombre) values('Bodega Biblioteca');
+insert into lugar_fisico(nombre) values('Cuarto Eléctrico');
+insert into lugar_fisico(nombre) values('Tercero eléctrico ');
+insert into lugar_fisico(nombre) values('P.I.E');
+insert into lugar_fisico(nombre) values('Bodega de Útiles');
+insert into lugar_fisico(nombre) values('Laboratorio');
+insert into lugar_fisico(nombre) values('Auditorio');
+insert into lugar_fisico(nombre) values('Comedor Estudiantes');
+insert into lugar_fisico(nombre) values('Sala Tercero Párvulo');
+insert into lugar_fisico(nombre) values('Bodega Sur ');
+insert into lugar_fisico(nombre) values('7° y 8°');
+insert into lugar_fisico(nombre) values('Bodega S.A.A.T.');
+insert into lugar_fisico(nombre) values('Baño Personal establecimiento');
+insert into lugar_fisico(nombre) values('Taller de eléctricidad número 1');
+insert into lugar_fisico(nombre) values('Taller de eléctricidad número 2');
+insert into lugar_fisico(nombre) values('Enfermería y sala de contención');
+insert into lugar_fisico(nombre) values('1° y 2° Eléctrico');
+insert into lugar_fisico(nombre) values('Taller eléctrico');
+insert into lugar_fisico(nombre) values('Taller oficio');
+insert into lugar_fisico(nombre) values('Patio');
+
+
+
+
+CREATE TABLE procedencia (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tipo ENUM('Inversión','Donación', 'Sin información'),
+    donador_fondo VARCHAR(100),
+    fecha_adquisicion varchar(50)
+);
+
+insert into procedencia(tipo, donador_fondo, fecha_adquisicion) values('Inversión', 'sin información', 'sin información');
+
+
+CREATE TABLE inventario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nivel_id INT NOT NULL,
+    individualizacion_id INT NOT NULL,
+    categorizacion_id INT NOT NULL,
+    cantidad INT DEFAULT 1,
+    estado_id INT NOT NULL,
+    lugar_id INT NOT NULL,
+    procedencia_id INT NOT NULL,
+    codigo_general VARCHAR(20) NOT NULL,
+    codigo_especifico INT NOT NULL,
+    UNIQUE (codigo_general, codigo_especifico), -- para tu control
+    FOREIGN KEY (nivel_id) REFERENCES nivel_educativo(id),
+    FOREIGN KEY (individualizacion_id) REFERENCES individualizacion(id),
+    FOREIGN KEY (categorizacion_id) REFERENCES categorizacion(id),
+    FOREIGN KEY (estado_id) REFERENCES estado_conservacion(id),
+    FOREIGN KEY (lugar_id) REFERENCES lugar_fisico(id),
+    FOREIGN KEY (procedencia_id) REFERENCES procedencia(id)
+);
+
+select * from inventario;

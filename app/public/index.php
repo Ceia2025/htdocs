@@ -9,6 +9,13 @@ require_once __DIR__ . '/../controllers/AsignaturasController.php';
 require_once __DIR__ . '/../controllers/CursoAsignaturaController.php';
 require_once __DIR__ . '/../controllers/AlumEmergenciaController.php';
 
+require_once __DIR__ . '/../controllers/inventario/InventarioController.php';
+require_once __DIR__ . '/../controllers/procedencia/ProcedenciaController.php';
+
+// Instancias de controladores
+$inventarioController = new InventarioController();
+$procedenciaController = new ProcedenciaController();
+
 
 $action = $_GET['action'] ?? 'login';
 $auth = new AuthController();
@@ -28,8 +35,8 @@ switch ($action) {
         $auth->login(); // muestra formulario
         break;
     //case 'doLogin':
-      //  $auth->doLogin($_POST); // procesa POST
-        //break;
+    //  $auth->doLogin($_POST); // procesa POST
+    //break;
     case 'doLogin':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userController->doLogin($_POST);
@@ -260,6 +267,78 @@ switch ($action) {
         echo json_encode($results);
         exit; // Muy importante para que no cargue otra vista
 
+
+
+    //Inventario
+    case 'inventario_index':
+        $inventarioController->index();
+        break;
+    case 'inventario_create':
+        $inventarioController->create();
+        break;
+    case 'inventario_store':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $inventarioController->store($_POST);
+        }
+        break;
+    case 'inventario_edit':
+        $id = $_GET['id'];
+        $inventarioController->edit($id);
+        break;
+    case 'inventario_update':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_GET['id'];
+            $inventarioController->update($id, $_POST);
+        }
+        break;
+    case 'inventario_delete':
+        $id = $_GET['id'];
+        $inventarioController->delete($id);
+        break;
+    /*case 'inventario_destroy':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_GET['id'];
+            $inventarioController->destroy($id);
+        }
+        break;*/
+
+    //Procedencia SOLO PARA EL INVENTARIO
+    case 'procedencias':
+        $procedenciaController->index();
+        break;
+    case 'procedencia_store':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $procedenciaController->store($_POST); // procesa POST y redirige
+        }
+        break;
+    case 'procedencia_edit':
+        if (isset($_GET['id'])) {
+            $procedenciaController->edit($_GET['id']);
+        } else {
+            echo "ID de procedencia no especificado";
+        }
+        break;
+    case 'procedencia_update':
+        if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $procedenciaController->update($_GET['id'], $_POST); // CORRECTO
+        }
+        break;
+    case 'procedencia_delete':
+        if (isset($_GET['id'])) {
+            $procedenciaController->delete($_GET['id']);
+        } else {
+            echo "ID de procedencia no especificado";
+        }
+        break;
+
+
+    case 'procedencia_create':
+        $procedenciaController->create(); // solo muestra formulario
+        break;
+
+
+
     default:
-        echo "Ruta no encontrada";
+        echo "<h1>Ruta no encontrada</h1>";
+        break;
 }
