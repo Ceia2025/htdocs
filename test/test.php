@@ -321,8 +321,7 @@
                         class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm hover:bg-red-200 transition-colors">
                         <i class="fas fa-exclamation-triangle mr-1"></i>Solo Estudiantes en Riesgo
                     </button>
-                    <button
-                        id="filterPositive"
+                    <button id="filterPositive"
                         class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm hover:bg-green-200 transition-colors">
                         <i class="fas fa-star mr-1"></i>Solo Anotaciones Positivas
                     </button>
@@ -364,7 +363,100 @@
             </div>
         </div>
     </div>
-    <script> let globalData = []; let filteredData = []; let studentRiskCounts = {}; let courseChart, categoryChart; let dataTable; document.getElementById('csvFile').addEventListener('change', handleFileSelect); document.getElementById('applyFilters').addEventListener('click', applyFilters); document.getElementById('clearFilters').addEventListener('click', clearFilters); document.getElementById('filterRisk').addEventListener('click', filterByRisk); document.getElementById('filterPositive').addEventListener('click', filterByPositive); function handleFileSelect(event) { const file = event.target.files[0]; if (file && file.type === 'text/csv') { showLoading(); const reader = new FileReader(); reader.onload = function (e) { parseCSV(e.target.result); }; reader.readAsText(file); } } function showLoading() { document.getElementById('noDataMessage').style.display = 'none'; document.getElementById('loadingMessage').style.display = 'block'; document.getElementById('dashboardContent').style.display = 'none'; } function hideLoading() { document.getElementById('loadingMessage').style.display = 'none'; document.getElementById('dashboardContent').style.display = 'block'; } function parseCSV(csvText) { try { const lines = csvText.split('\n').filter(line => line.trim()); const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, '')); globalData = []; for (let i = 1; i < lines.length; i++) { const values = parseCSVLine(lines[i]); if (values.length >= headers.length) { const record = {}; headers.forEach((header, index) => { record[header] = values[index] ? values[index].trim().replace(/"/g, '') : ''; }); globalData.push(record); } } calculateRiskCounts(); initializeDashboard(); hideLoading(); } catch (error) { console.error('Error parsing CSV:', error); alert('Error al procesar el archivo CSV. Verifique el formato.'); document.getElementById('loadingMessage').style.display = 'none'; document.getElementById('noDataMessage').style.display = 'block'; } } function parseCSVLine(line) { const result = []; let current = ''; let inQuotes = false; for (let i = 0; i < line.length; i++) { const char = line[i]; const nextChar = line[i + 1]; if (char === '"') { if (inQuotes && nextChar === '"') { current += '"'; i++; } else { inQuotes = !inQuotes; } } else if (char === ',' && !inQuotes) { result.push(current); current = ''; } else { current += char; } } result.push(current); return result; } function calculateRiskCounts() { studentRiskCounts = {}; globalData.forEach(record => { const student = record['Nombre del estudiante']; const category = record['categoria']; if (!student) return; if (!studentRiskCounts[student]) { studentRiskCounts[student] = { negative: 0, positive: 0, course: record['curso'] || '' }; } if (category && category.toLowerCase().includes('positiva')) { studentRiskCounts[student].positive++; } else if (category && !category.toLowerCase().includes('positiva')) { studentRiskCounts[student].negative++; } }); } function getRiskLevel(student) { const counts = studentRiskCounts[student]; if (!counts) return 'low'; if (counts.negative > 6) return 'high'; if (counts.negative > 3) return 'medium'; return 'low'; } function getRiskLabel(student) { const counts = studentRiskCounts[student]; if (!counts) return 'Bajo'; if (counts.negative > 6) return 'Alto Riesgo'; if (counts.negative > 3) return 'Atención'; if (counts.positive > 0) return 'Positivo'; return 'Normal'; } function initializeDashboard() { filteredData = [...globalData]; populateFilters(); updateKPIs(); createCharts(); createStudentRankings(); initializeDataTable(); } function populateFilters() { const courses = [...new Set(globalData.map(record => record['curso']).filter(Boolean))].sort(); const teachers = [...new Set(globalData.map(record => record['DOCENTE /FUNCIONARIO']).filter(Boolean))].sort(); populateSelect('filterCourse', courses); populateSelect('filterTeacher', teachers); } function populateSelect(elementId, options) { const select = document.getElementById(elementId); const currentValue = select.value; select.innerHTML = select.children[0].outerHTML; // Keep first option options.forEach(option => { const optionElement = document.createElement('option'); optionElement.value = option; optionElement.textContent = option; select.appendChild(optionElement); }); select.value = currentValue; } function updateKPIs() { const total = filteredData.length; const studentsAtRisk = Object.values(studentRiskCounts).filter(counts => counts.negative > 6).length; const positiveCount = filteredData.filter(record => record['categoria'] && record['categoria'].toLowerCase().includes('positiva') ).length; // Find course with most incidents const courseCounts = {}; filteredData.forEach(record => { const course = record['curso']; if (course) { courseCounts[course] = (courseCounts[course] || 0) + 1; } }); const criticalCourse = Object.keys(courseCounts).reduce((a, b) => courseCounts[a] > courseCounts[b] ? a : b, '-' ); document.getElementById('totalAnnotations').textContent = total; document.getElementById('studentsAtRisk').textContent = studentsAtRisk; document.getElementById('positiveAnnotations').textContent = positiveCount; document.getElementById('criticalCourse').textContent = criticalCourse; } function createCharts() { createCourseChart(); createCategoryChart(); } function createCourseChart() { const ctx = document.getElementById('courseChart').getContext('2d'); if (courseChart) { courseChart.destroy(); } const courseCounts = {}; const coursePositiveCounts = {}; filteredData.forEach(record => { const course = record['curso']; const category = record['categoria']; if (course) { courseCounts[course] = (courseCounts[course] || 0) + 1; if (category && category.toLowerCase().includes('positiva')) { coursePositiveCounts[course] = (coursePositiveCounts[course] || 0) + 1; } } }); const courses = Object.keys(courseCounts).sort(); const negativeData = courses.map(course => courseCounts[course] - (coursePositiveCounts[course] || 0)); const positiveData = courses.map(course => coursePositiveCounts[course] || 0); courseChart = new Chart(ctx, { type: 'bar', data: { labels: courses, datasets: [{ label: 'Anotaciones Negativas', data: negativeData, backgroundColor: '#ef4444', borderColor: '#dc2626', borderWidth: 1 }, { label: 'Anotaciones Positivas', data: positiveData, backgroundColor: '#10b981', borderColor: '#059669', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, stacked: true }, x: { stacked: true } }, plugins: { legend: { position: 'top' }, title: { display: false } } } }); } function createCategoryChart() { const ctx = document.getElementById('categoryChart').getContext('2d'); if (categoryChart) { categoryChart.destroy(); } const categoryCounts = {}; filteredData.forEach(record => { const category = record['categoria']; if (category) { categoryCounts[category] = (categoryCounts[category] || 0) + 1; } }); const categories = Object.keys(categoryCounts); const counts = Object.values(categoryCounts); const colors = { 'Leve': '#fbbf24', 'Grave': '#f87171', 'Gravísima': '#dc2626', 'Positiva': '#10b981' }; const backgroundColors = categories.map(cat => colors[cat] || '#6b7280'); categoryChart = new Chart(ctx, { type: 'doughnut', data: { labels: categories, datasets: [{ data: counts, backgroundColor: backgroundColors, borderColor: backgroundColors.map(color => color), borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, title: { display: false } } } }); } function createStudentRankings() { const container = document.getElementById('studentRankings'); container.innerHTML = ''; // Group students by course const courseStudents = {}; Object.keys(studentRiskCounts).forEach(student => { const course = studentRiskCounts[student].course; if (!courseStudents[course]) { courseStudents[course] = []; } courseStudents[course].push({ name: student, negative: studentRiskCounts[student].negative, positive: studentRiskCounts[student].positive, riskLevel: getRiskLevel(student) }); }); // Sort and display for each course Object.keys(courseStudents).sort().forEach(course => { if (!course) return; const students = courseStudents[course].sort((a, b) => b.negative - a.negative); const courseSection = document.createElement('div'); courseSection.className = 'course-section'; courseSection.innerHTML = ` <h3 class="text-xl font-bold mb-4 text-gray-800"> <i class="fas fa-graduation-cap mr-2"></i>${course} </h3> <div class="space-y-2"> ${students.map(student => ` <div class="student-card risk-${student.riskLevel}"> <div class="flex justify-between items-center"> <div class="flex-1"> <h4 class="font-semibold text-gray-800">${student.name}</h4> <div class="flex space-x-4 text-sm text-gray-600"> <span class="text-red-600"> <i class="fas fa-exclamation-circle mr-1"></i> ${student.negative} negativas </span> <span class="text-green-600"> <i class="fas fa-star mr-1"></i> ${student.positive} positivas </span> </div> </div> <div class="text-right"> <span class="px-3 py-1 rounded-full text-sm font-medium ${ student.riskLevel === 'high' ? 'bg-red-100 text-red-800' : student.riskLevel === 'medium' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }"> ${getRiskLabel(student.name)} </span> </div> </div> </div> `).join('')} </div> `; container.appendChild(courseSection); }); } function initializeDataTable() { if (dataTable) { dataTable.destroy(); } const tableBody = document.querySelector('#annotationsTable tbody'); tableBody.innerHTML = ''; filteredData.forEach(record => { const row = tableBody.insertRow(); const student = record['Nombre del estudiante']; const riskLevel = getRiskLevel(student); row.className = `risk-${riskLevel}`; const category = record['categoria'] || ''; const categoryClass = `category-${category.toLowerCase().replace('í', 'i')}`; row.innerHTML = ` <td>${record['Fecha'] || ''}</td> <td>${student || ''}</td> <td>${record['curso'] || ''}</td> <td><span class="px-2 py-1 rounded-full text-xs font-medium ${categoryClass}">${category}</span></td> <td class="max-w-xs truncate">${record['motivo'] || ''}</td> <td class="max-w-xs truncate">${record['accion tomada'] || ''}</td> <td>${record['Asignatura'] || ''}</td> <td>${record['DOCENTE /FUNCIONARIO'] || ''}</td> <td><span class="px-2 py-1 rounded-full text-xs font-medium ${ riskLevel === 'high' ? 'bg-red-100 text-red-800' : riskLevel === 'medium' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }">${getRiskLabel(student)}</span></td> `; }); dataTable = $('#annotationsTable').DataTable({ pageLength: 25, language: { url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json' }, columnDefs: [{ targets: [4, 5], render: function(data, type, row) { if (type === 'display' && data.length > 50) { return data.substr(0, 50) + '...'; } return data; } }], responsive: true, order: [[0, 'desc']] }); } function applyFilters() { const courseFilter = document.getElementById('filterCourse').value; const categoryFilter = document.getElementById('filterCategory').value; const teacherFilter = document.getElementById('filterTeacher').value; filteredData = globalData.filter(record => { const courseMatch = !courseFilter || record['curso'] === courseFilter; const categoryMatch = !categoryFilter || record['categoria'] === categoryFilter; const teacherMatch = !teacherFilter || record['DOCENTE /FUNCIONARIO'] === teacherFilter; return courseMatch && categoryMatch && teacherMatch; }); updateDashboard(); } function clearFilters() { document.getElementById('filterCourse').value = ''; document.getElementById('filterCategory').value = ''; document.getElementById('filterTeacher').value = ''; filteredData = [...globalData]; updateDashboard(); } function filterByRisk() { const riskStudents = Object.keys(studentRiskCounts).filter(student => studentRiskCounts[student].negative > 6 ); filteredData = globalData.filter(record => riskStudents.includes(record['Nombre del estudiante']) ); updateDashboard(); } function filterByPositive() { filteredData = globalData.filter(record => record['categoria'] && record['categoria'].toLowerCase().includes('positiva') ); updateDashboard(); } function updateDashboard() { updateKPIs(); createCharts(); createStudentRankings(); initializeDataTable(); } </script>
-</body>
+    <script>
+        let globalData = [];
+        let filteredData = [];
+        let studentRiskCounts = {};
+        let courseChart, categoryChart;
+        let dataTable;
 
-</html>
+        document.getElementById('csvFile').addEventListener('change', handleFileSelect);
+        document.getElementById('applyFilters').addEventListener('click', applyFilters);
+        document.getElementById('clearFilters').addEventListener('click', clearFilters);
+        document.getElementById('filterRisk').addEventListener('click', filterByRisk);
+        document.getElementById('filterPositive').addEventListener('click', filterByPositive);
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file && file.type === 'text/csv') {
+                showLoading();
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    parseCSV(e.target.result);
+                };
+                reader.readAsText(file);
+            }
+        } function showLoading() {
+            document.getElementById('noDataMessage').style.display = 'none';
+            document.getElementById('loadingMessage').style.display = 'block';
+            document.getElementById('dashboardContent').style.display = 'none';
+        }
+        function hideLoading() {
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('dashboardContent').style.display = 'block';
+        } function parseCSV(csvText) {
+            try {
+                const lines = csvText.split('\n').filter(line => line.trim());
+                const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+                globalData = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const values = parseCSVLine(lines[i]);
+                    if (values.length >= headers.length) {
+                        const record = {};
+                        headers.forEach((header, index) => {
+                            record[header] = values[index] ? values[index].trim().replace(/"/g, '') : '';
+                        });
+                        globalData.push(record);
+                    }
+                }
+                calculateRiskCounts();
+                initializeDashboard();
+                hideLoading();
+            } catch (error) {
+                console.error('Error parsing CSV:', error);
+                alert('Error al procesar el archivo CSV. Verifique el formato.');
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('noDataMessage').style.display = 'block';
+            }
+        } function parseCSVLine(line) { const result = []; let current = ''; let inQuotes = false; for (let i = 0; i < line.length; i++) { const char = line[i]; const nextChar = line[i + 1]; if (char === '"') { if (inQuotes && nextChar === '"') { current += '"'; i++; } else { inQuotes = !inQuotes; } } else if (char === ',' && !inQuotes) { result.push(current); current = ''; } else { current += char; } } result.push(current); return result; } function calculateRiskCounts() { studentRiskCounts = {}; globalData.forEach(record => { const student = record['Nombre del estudiante']; const category = record['categoria']; if (!student) return; if (!studentRiskCounts[student]) { studentRiskCounts[student] = { negative: 0, positive: 0, course: record['curso'] || '' }; } if (category && category.toLowerCase().includes('positiva')) { studentRiskCounts[student].positive++; } else if (category && !category.toLowerCase().includes('positiva')) { studentRiskCounts[student].negative++; } }); } function getRiskLevel(student) { const counts = studentRiskCounts[student]; if (!counts) return 'low'; if (counts.negative > 6) return 'high'; if (counts.negative > 3) return 'medium'; return 'low'; } function getRiskLabel(student) { const counts = studentRiskCounts[student]; if (!counts) return 'Bajo'; if (counts.negative > 6) return 'Alto Riesgo'; if (counts.negative > 3) return 'Atención'; if (counts.positive > 0) return 'Positivo'; return 'Normal'; } function initializeDashboard() { filteredData = [...globalData]; populateFilters(); updateKPIs(); createCharts(); createStudentRankings(); initializeDataTable(); } function populateFilters() { const courses = [...new Set(globalData.map(record => record['curso']).filter(Boolean))].sort(); const teachers = [...new Set(globalData.map(record => record['DOCENTE /FUNCIONARIO']).filter(Boolean))].sort(); populateSelect('filterCourse', courses); populateSelect('filterTeacher', teachers); } function populateSelect(elementId, options) {
+            const select = document.getElementById(elementId);
+            const currentValue = select.value;
+            select.innerHTML = select.children[0].outerHTML;
+
+
+            // Keep first option 
+            // options.forEach(
+            //      option => {
+            //          const optionElement = document.createElement('option');
+            //          optionElement.value = option;
+            //          optionElement.textContent = option;
+            //          select.appendChild(optionElement); }
+            //          );
+            // select.value = currentValue;
+            // }
+            // function updateKPIs() {
+            //      const total = filteredData.length;
+            //      const studentsAtRisk = Object.values(studentRiskCounts).filter(counts => counts.negative > 6).length;
+            //      const positiveCount = filteredData.filter(record => record['categoria'] && record['categoria'].toLowerCase().includes('positiva') ).length;
+            // // Find course with most incidents
+            //      const courseCounts = {};
+            //      filteredData.forEach(
+            //      record => { 
+            //          const course = record['curso'];
+            //      if (course) { courseCounts[course] = (courseCounts[course] || 0) + 1; } });
+            //      const criticalCourse = Object.keys(courseCounts).reduce((a, b) => courseCounts[a] > courseCounts[b] ? a : b, '-' );
+            //      document.getElementById('totalAnnotations').textContent = total;
+            //      document.getElementById('studentsAtRisk').textContent = studentsAtRisk;
+            //      document.getElementById('positiveAnnotations').textContent = positiveCount;
+            //      document.getElementById('criticalCourse').textContent = criticalCourse;
+            //  } function createCharts() {
+            //      createCourseChart(); createCategoryChart();
+            //      } function createCourseChart() {
+            //      const ctx = document.getElementById('courseChart').getContext('2d'); if (courseChart) { courseChart.destroy(); } const courseCounts = {}; const coursePositiveCounts = {}; filteredData.forEach(record => { const course = record['curso']; const category = record['categoria']; if (course) { courseCounts[course] = (courseCounts[course] || 0) + 1; if (category && category.toLowerCase().includes('positiva')) { coursePositiveCounts[course] = (coursePositiveCounts[course] || 0) + 1; } } }); const courses = Object.keys(courseCounts).sort(); const negativeData = courses.map(course => courseCounts[course] - (coursePositiveCounts[course] || 0)); const positiveData = courses.map(course => coursePositiveCounts[course] || 0); courseChart = new Chart(ctx, { type: 'bar', data: { labels: courses, datasets: [{ label: 'Anotaciones Negativas', data: negativeData, backgroundColor: '#ef4444', borderColor: '#dc2626', borderWidth: 1 }, { label: 'Anotaciones Positivas', data: positiveData, backgroundColor: '#10b981', borderColor: '#059669', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, stacked: true }, x: { stacked: true } }, plugins: { legend: { position: 'top' }, title: { display: false } } } }); } function createCategoryChart() { const ctx = document.getElementById('categoryChart').getContext('2d'); if (categoryChart) { categoryChart.destroy(); } const categoryCounts = {}; filteredData.forEach(record => { const category = record['categoria']; if (category) { categoryCounts[category] = (categoryCounts[category] || 0) + 1; } }); const categories = Object.keys(categoryCounts); const counts = Object.values(categoryCounts); const colors = { 'Leve': '#fbbf24', 'Grave': '#f87171', 'Gravísima': '#dc2626', 'Positiva': '#10b981' }; const backgroundColors = categories.map(cat => colors[cat] || '#6b7280'); categoryChart = new Chart(ctx, { type: 'doughnut', data: { labels: categories, datasets: [{ data: counts, backgroundColor: backgroundColors, borderColor: backgroundColors.map(color => color), borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, title: { display: false } } } }); } function createStudentRankings() { const container = document.getElementById('studentRankings'); container.innerHTML = ''; // Group students by course const courseStudents = {}; Object.keys(studentRiskCounts).forEach(student => { const course = studentRiskCounts[student].course; if (!courseStudents[course]) { courseStudents[course] = []; } courseStudents[course].push({ name: student, negative: studentRiskCounts[student].negative, positive: studentRiskCounts[student].positive, riskLevel: getRiskLevel(student) }); }); 
+        
+</script>
+
+
+        </body >
+
+</html >
