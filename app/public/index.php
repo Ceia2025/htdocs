@@ -291,16 +291,20 @@ switch ($action) {
             $inventarioController->update($id, $_POST);
         }
         break;
+
     case 'inventario_delete':
-        $id = $_GET['id'];
-        $inventarioController->delete($id);
+        $inventarioController->delete($_GET['id']);
         break;
+
+
     /*case 'inventario_destroy':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_GET['id'];
             $inventarioController->destroy($id);
         }
         break;*/
+
+
 
     //Procedencia SOLO PARA EL INVENTARIO
     case 'procedencias':

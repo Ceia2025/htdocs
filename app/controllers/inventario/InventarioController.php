@@ -98,10 +98,21 @@ class InventarioController
         header("Location: index.php?action=inventario_index");
     }
 
+    public function delete2($id)
+    {
+        $inventario = new Inventario();
+        if ($inventario->delete($id)) {
+            header("Location: index.php?action=inventario_index");
+            exit;
+        } else {
+            echo "Error al eliminar el inventario.";
+        }
+    }
     public function delete($id)
     {
         $inventario = new Inventario();
         $inventario->delete($id);
         header("Location: index.php?action=inventario_index");
+        exit;
     }
 }

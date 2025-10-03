@@ -405,8 +405,6 @@ CREATE TABLE procedencia (
     fecha_adquisicion varchar(50)
 );
 
-insert into procedencia(tipo, donador_fondo, fecha_adquisicion) values('Inversión', 'sin información', 'sin información');
-
 
 CREATE TABLE inventario (
     id INT AUTO_INCREMENT PRIMARY KEY,
