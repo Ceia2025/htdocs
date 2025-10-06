@@ -71,7 +71,8 @@ class ProcedenciaController
     public function delete($id)
     {
         $this->model->delete($id);
-        header("Location: index.php?controller=procedencia&action=index");
+        $referer = $_SERVER['HTTP_REFERER'] ?? 'index.php?action=procedencias';
+        header("Location: $referer");
         exit;
     }
 }
