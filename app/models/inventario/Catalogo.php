@@ -16,7 +16,14 @@ class Catalogo
     // Obtener todos los registros
     public function getAll()
     {
-        $sql = "SELECT * FROM {$this->table} ORDER BY nombre ASC";
+        // Verifica si la tabla tiene una columna 'nombre'
+        $check = $this->conn->query("SHOW COLUMNS FROM {$this->table} LIKE 'nombre'");
+        if ($check->rowCount() > 0) {
+            $sql = "SELECT * FROM {$this->table} ORDER BY nombre ASC";
+        } else {
+            $sql = "SELECT * FROM {$this->table} ORDER BY descripcion ASC";
+        }
+
         $stmt = $this->conn->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

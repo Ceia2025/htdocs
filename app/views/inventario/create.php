@@ -46,7 +46,9 @@ include __DIR__ . "/../layout/navbar.php";
                             required>
                             <option value="">-- Seleccione --</option>
                             <?php foreach ($individualizaciones as $ind): ?>
-                                <option value="<?= $ind['id'] ?>"><?= htmlspecialchars($ind['descripcion']) ?></option>
+                                <option value="<?= $ind['id'] ?>">
+                                    <?= htmlspecialchars($ind['nombre'] . ' (' . $ind['codigo_general'] . '-' . $ind['codigo_especifico'] . ')') ?>
+                                </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -61,7 +63,7 @@ include __DIR__ . "/../layout/navbar.php";
                             class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <option value="">-- Seleccione --</option>
                             <?php foreach ($categorizaciones as $cat): ?>
-                                <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['nombre']) ?></option>
+                                <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['descripcion']) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -112,21 +114,7 @@ include __DIR__ . "/../layout/navbar.php";
                         </select>
                     </div>
 
-                    <!-- Código General -->
-                    <div>
-                        <label for="codigo_general" class="block text-sm font-medium text-gray-200">Código
-                            General</label>
-                        <input type="text" name="codigo_general" id="codigo_general" required
-                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                    </div>
 
-                    <!-- Código Específico -->
-                    <div>
-                        <label for="codigo_especifico" class="block text-sm font-medium text-gray-200">Código
-                            Específico</label>
-                        <input type="number" name="codigo_especifico" id="codigo_especifico" min="1" required
-                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                    </div>
 
                     <!-- Botones -->
                     <div class="flex space-x-4">

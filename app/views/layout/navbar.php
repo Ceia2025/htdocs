@@ -18,7 +18,7 @@
                         <a href="#"
                             class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Calendario</a>
                         <a href="#"
-                            class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Reportes</a>
+                            class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">caca de perro</a>
                     </div>
                 </div>
             </div>

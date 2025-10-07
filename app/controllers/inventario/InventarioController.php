@@ -9,7 +9,27 @@ class InventarioController
     public function index()
     {
         $inventario = new Inventario();
-        $items = $inventario->getAll();
+
+        // Si hay filtros en GET, los aplicamos
+        if (!empty($_GET)) {
+            $items = $inventario->filter($_GET);
+        } else {
+            $items = $inventario->getAll();
+        }
+
+        // Catálogos para los select
+        $nivelesObj = new Catalogo("nivel_educativo");
+        $niveles = $nivelesObj->getAll();
+
+        $categorizacionesObj = new Catalogo("categorizacion");
+        $categorizaciones = $categorizacionesObj->getAll();
+
+        $estadosObj = new Catalogo("estado_conservacion");
+        $estados = $estadosObj->getAll();
+
+        $lugaresObj = new Catalogo("lugar_fisico");
+        $lugares = $lugaresObj->getAll();
+
         require_once __DIR__ . '/../../views/inventario/index.php';
     }
 
@@ -47,8 +67,6 @@ class InventarioController
             "estado_id" => $post['estado_id'],
             "lugar_id" => $post['lugar_id'],
             "procedencia_id" => $post['procedencia_id'],
-            "codigo_general" => $post['codigo_general'],
-            "codigo_especifico" => $post['codigo_especifico']
         ];
         $inventario->create($data);
         header("Location: index.php?action=inventario_index");
@@ -91,8 +109,6 @@ class InventarioController
             "estado_id" => $post['estado_id'],
             "lugar_id" => $post['lugar_id'],
             "procedencia_id" => $post['procedencia_id'],
-            "codigo_general" => $post['codigo_general'],
-            "codigo_especifico" => $post['codigo_especifico']
         ];
         $inventario->update($id, $data);
         header("Location: index.php?action=inventario_index");
