@@ -287,11 +287,6 @@ insert into nivel_educativo(nombre) values('Básica');
 insert into nivel_educativo(nombre) values('Media');
 insert into nivel_educativo(nombre) values('No Aplica');
 
-CREATE TABLE individualizacion (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    descripcion VARCHAR(255) NOT NULL
-);
-
 INSERT INTO individualizacion (descripcion) VALUES
 ('Silla - estructura fierro con tapiz cuerina'),
 ('Silla - ejecutiva con ruedas'),
@@ -326,10 +321,12 @@ INSERT INTO individualizacion (descripcion) VALUES
 ('Caja de herramientas - juegos de llaves 14 piezas marca Force');
 
 
-CREATE TABLE categorizacion (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) UNIQUE
-);
+-- asegurar que no se repitan codigo general + codigo especifico 
+ALTER TABLE categorizacion 
+ADD UNIQUE KEY unique_codigo (codigo_general, codigo_especifico);
+
+
+    
 
 insert into categorizacion(nombre) values('Implementos deportivos');
 insert into categorizacion(nombre) values('Implementos de laboratorio');
@@ -415,9 +412,6 @@ CREATE TABLE inventario (
     estado_id INT NOT NULL,
     lugar_id INT NOT NULL,
     procedencia_id INT NOT NULL,
-    codigo_general VARCHAR(20) NOT NULL,
-    codigo_especifico INT NOT NULL,
-    UNIQUE (codigo_general, codigo_especifico), -- para tu control
     FOREIGN KEY (nivel_id) REFERENCES nivel_educativo(id),
     FOREIGN KEY (individualizacion_id) REFERENCES individualizacion(id),
     FOREIGN KEY (categorizacion_id) REFERENCES categorizacion(id),
@@ -426,4 +420,28 @@ CREATE TABLE inventario (
     FOREIGN KEY (procedencia_id) REFERENCES procedencia(id)
 );
 
+show create table inventario;
 select * from inventario;
+
+CREATE TABLE categorizacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    descripcion VARCHAR(255) NOT NULL
+);
+RENAME TABLE individualizacion TO individualizacion2;
+RENAME TABLE categorizacion TO categorizacion2;
+RENAME TABLE individualizacion2 TO categorizacion;
+RENAME TABLE categorizacion2 TO individualizacion;
+
+CREATE TABLE individualizacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    codigo_general VARCHAR(20) NOT NULL,
+    codigo_especifico INT NOT NULL
+);
+-- asegurar que no se repitan codigo general + codigo especifico 
+ALTER TABLE categorizacion 
+ADD UNIQUE KEY unique_codigo (codigo_general, codigo_especifico);
+
+
+select * from individualizacion;
+select * from categorizacion;

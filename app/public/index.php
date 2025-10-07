@@ -9,14 +9,17 @@ require_once __DIR__ . '/../controllers/AsignaturasController.php';
 require_once __DIR__ . '/../controllers/CursoAsignaturaController.php';
 require_once __DIR__ . '/../controllers/AlumEmergenciaController.php';
 
+//Inventario
 require_once __DIR__ . '/../controllers/inventario/InventarioController.php';
 require_once __DIR__ . '/../controllers/procedencia/ProcedenciaController.php';
+require_once __DIR__ . '/../controllers/inventario/CategorizacionController.php';
 
 // Instancias de controladores
 $inventarioController = new InventarioController();
 $procedenciaController = new ProcedenciaController();
+$categorizacionController = new CategorizacionController();
 
-
+// Instancias de aplicación SAAT
 $action = $_GET['action'] ?? 'login';
 $auth = new AuthController();
 $userController = new UserController();
@@ -341,6 +344,31 @@ switch ($action) {
         break;
 
 
+
+        // Categporizacion
+    case 'categorizaciones':
+        $categorizacionController->index();
+        break;
+
+    case 'categorizacion_create':
+        require __DIR__ . '/../views/categorizacion/create.php';
+        break;
+
+    case 'categorizacion_store':
+        $categorizacionController->create($_POST);
+        break;
+
+    case 'categorizacion_edit':
+        $categorizacionController->edit($_GET['id']);
+        break;
+
+    case 'categorizacion_update':
+        $categorizacionController->update($_GET['id'], $_POST);
+        break;
+
+    case 'categorizacion_delete':
+        $categorizacionController->delete($_GET['id']);
+        break;
 
     default:
         echo "<h1>Ruta no encontrada</h1>";

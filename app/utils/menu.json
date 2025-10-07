@@ -79,6 +79,11 @@
       "title": "Procedencias para inventario",
       "desc": "Procedencias",
       "url": "index.php?action=procedencias"
+    },
+    {
+      "title": "Individualizacion",
+      "desc": "En este apartado estan las categorias de items mas sus respectivos codigo",
+      "url": "index.php?action=categorizaciones"
     }
   ],
   "docente": [
