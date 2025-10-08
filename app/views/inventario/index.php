@@ -104,6 +104,19 @@ include __DIR__ . "/../layout/navbar.php";
         <main>
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
+                <!-- RESUMEN -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="rounded-lg bg-gray-800 border border-gray-700 p-4">
+                        <p class="text-sm text-gray-400">Total de registros</p>
+                        <p class="text-2xl font-semibold text-white"><?= $totalRegistros ?? 0 ?></p>
+                    </div>
+                    <div class="rounded-lg bg-gray-800 border border-gray-700 p-4">
+                        <p class="text-sm text-gray-400">Total de objetos</p>
+                        <p class="text-2xl font-semibold text-white"><?= $totalObjetos ?? 0 ?></p>
+                    </div>
+                </div>
+
+
                 <!-- BOTÓN NUEVO -->
                 <div class="mb-4 flex justify-end">
                     <a href="index.php?action=inventario_create"
@@ -125,7 +138,8 @@ include __DIR__ . "/../layout/navbar.php";
                                 <th class="px-6 py-3">Lugar Físico</th>
                                 <th class="px-6 py-3">Procedencia</th>
                                 <th class="px-6 py-3">Código General</th>
-                                <th class="px-6 py-3">Código Específico</th>
+                                <!--
+                                <th class="px-6 py-3">Código Específico</th>-->
                                 <th class="px-6 py-3 text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -143,7 +157,7 @@ include __DIR__ . "/../layout/navbar.php";
                                             <?= htmlspecialchars($item['procedencia_tipo'] . " - " . $item['donador_fondo'] . " - " . $item['fecha_adquisicion']) ?>
                                         </td>
                                         <td class="px-6 py-3"><?= htmlspecialchars($item['codigo_general']) ?></td>
-                                        <td class="px-6 py-3"><?= $item['codigo_especifico'] ?></td>
+                                        <!-- <td class="px-6 py-3"> < ?= $item['codigo_especifico'] ?></td>-->
                                         <td class="px-6 py-3 text-center space-x-2">
                                             <a href="index.php?action=inventario_edit&id=<?= $item['id'] ?>"
                                                 class="text-indigo-400 hover:text-indigo-300 font-medium">
@@ -159,7 +173,7 @@ include __DIR__ . "/../layout/navbar.php";
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="11" class="px-6 py-4 text-center text-gray-400">
+                                    <td colspan="9" class="px-6 py-4 text-center text-gray-400">
                                         No hay registros en el inventario.
                                     </td>
                                 </tr>
@@ -183,8 +197,8 @@ include __DIR__ . "/../layout/navbar.php";
 <?php include __DIR__ . "/../layout/footer.php"; ?>
 
 
-secciones 
+secciones
 
-    <section id="lal">
+<section id="lal">
 
-    </section>
+</section>

@@ -17,6 +17,12 @@ class InventarioController
             $items = $inventario->getAll();
         }
 
+        // Contador de registros para el inventario
+        $totalRegistros = count($items);
+        $totalObjetos = array_reduce($items, function ($carry, $item) {
+            return $carry + (int) ($item['cantidad'] ?? 0);
+        }, 0);
+
         // Catálogos para los select
         $nivelesObj = new Catalogo("nivel_educativo");
         $niveles = $nivelesObj->getAll();
