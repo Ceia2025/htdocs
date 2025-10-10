@@ -26,78 +26,96 @@ include __DIR__ . "/../layout/navbar.php";
             </div>
         </header>
         <!-- FILTRO DE BÚSQUEDA -->
-        <form method="GET" action="index.php" class="mb-6 bg-gray-800 p-4 rounded-lg shadow-lg text-white">
+        <form method="GET" action="index.php" class="mb-6 bg-gray-800 p-4 md:p-6 rounded-xl shadow-xl text-white">
             <input type="hidden" name="action" value="inventario_index">
 
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                <div>
-                    <label class="block text-sm">Nivel Educativo</label>
-                    <select name="nivel_id" class="w-full rounded bg-gray-700 text-white p-2">
-                        <option value="">-- Todos --</option>
-                        <?php foreach ($niveles as $n): ?>
-                            <option value="<?= $n['id'] ?>" <?= ($_GET['nivel_id'] ?? '') == $n['id'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($n['nombre']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+            <!-- CONTENEDOR RESPONSIVO -->
+            <div class="flex flex-col gap-4">
+
+                <!-- FILA DE FILTROS -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 items-end">
+
+                    <!-- NIVEL EDUCATIVO -->
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Nivel Educativo</label>
+                        <select name="nivel_id"
+                            class="w-full h-[42px] rounded-md bg-gray-700 text-white px-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="">-- Todos --</option>
+                            <?php foreach ($niveles as $n): ?>
+                                <option value="<?= $n['id'] ?>" <?= ($_GET['nivel_id'] ?? '') == $n['id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($n['nombre']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- INDIVIDUALIZACIÓN -->
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Individualización o Código General</label>
+                        <input type="text" name="busqueda_individualizacion"
+                            value="<?= htmlspecialchars($_GET['busqueda_individualizacion'] ?? '') ?>"
+                            placeholder="Ej: Silla o SFCC"
+                            class="w-full h-[42px] rounded-md bg-gray-700 text-white px-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- CATEGORIZACIÓN -->
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Categorización</label>
+                        <select name="categorizacion_id"
+                            class="w-full h-[42px] rounded-md bg-gray-700 text-white px-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="">-- Todas --</option>
+                            <?php foreach ($categorizaciones as $c): ?>
+                                <option value="<?= $c['id'] ?>" <?= ($_GET['categorizacion_id'] ?? '') == $c['id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($c['descripcion']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- ESTADO -->
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Estado</label>
+                        <select name="estado_id"
+                            class="w-full h-[42px] rounded-md bg-gray-700 text-white px-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="">-- Todos --</option>
+                            <?php foreach ($estados as $e): ?>
+                                <option value="<?= $e['id'] ?>" <?= ($_GET['estado_id'] ?? '') == $e['id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($e['nombre']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- LUGAR -->
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Lugar Físico</label>
+                        <select name="lugar_id"
+                            class="w-full h-[42px] rounded-md bg-gray-700 text-white px-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="">-- Todos --</option>
+                            <?php foreach ($lugares as $l): ?>
+                                <option value="<?= $l['id'] ?>" <?= ($_GET['lugar_id'] ?? '') == $l['id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($l['nombre']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- BOTONES (en la misma fila en pantallas grandes) -->
+                    <div class="flex flex-wrap gap-2 justify-end sm:justify-start xl:justify-end mt-2 xl:mt-0">
+                        <button type="submit"
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg shadow flex items-center gap-2">
+                            🔍 Buscar
+                        </button>
+                        <a href="index.php?action=inventario_index"
+                            class="bg-gray-600 hover:bg-gray-500 text-white font-semibold px-4 py-2 rounded-lg shadow flex items-center gap-2">
+                            ❌ Limpiar
+                        </a>
+                    </div>
                 </div>
-
-                <div>
-                    <label class="block text-sm">Individualización o Código General</label>
-                    <input type="text" name="busqueda_individualizacion"
-                        value="<?= htmlspecialchars($_GET['busqueda_individualizacion'] ?? '') ?>"
-                        placeholder="Ej: Silla o SFCC" class="w-full rounded bg-gray-700 text-white p-2">
-                </div>
-
-                <div>
-                    <label class="block text-sm">Categorización</label>
-                    <select name="categorizacion_id" class="w-full rounded bg-gray-700 text-white p-2">
-                        <option value="">-- Todas --</option>
-                        <?php foreach ($categorizaciones as $c): ?>
-                            <option value="<?= $c['id'] ?>" <?= ($_GET['categorizacion_id'] ?? '') == $c['id'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($c['descripcion']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm">Estado</label>
-                    <select name="estado_id" class="w-full rounded bg-gray-700 text-white p-2">
-                        <option value="">-- Todos --</option>
-                        <?php foreach ($estados as $e): ?>
-                            <option value="<?= $e['id'] ?>" <?= ($_GET['estado_id'] ?? '') == $e['id'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($e['nombre']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm">Lugar Físico</label>
-                    <select name="lugar_id" class="w-full rounded bg-gray-700 text-white p-2">
-                        <option value="">-- Todos --</option>
-                        <?php foreach ($lugares as $l): ?>
-                            <option value="<?= $l['id'] ?>" <?= ($_GET['lugar_id'] ?? '') == $l['id'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($l['nombre']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-            </div>
-
-            <div class="flex justify-end mt-4">
-                <button type="submit"
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg mr-2">
-                    Buscar
-                </button>
-                <a href="index.php?action=inventario_index"
-                    class="bg-gray-600 hover:bg-gray-500 text-white font-semibold px-4 py-2 rounded-lg">
-                    Limpiar
-                </a>
             </div>
         </form>
+
+
 
 
         <!-- MAIN -->
@@ -108,7 +126,8 @@ include __DIR__ . "/../layout/navbar.php";
                 <div class="mb-4 flex justify-end">
                     <a href="index.php?action=inventario_exportExcel<?= isset($_SERVER['QUERY_STRING'])
                         ? '&' . preg_replace('/(^|&)action=[^&]*/', '', $_SERVER['QUERY_STRING'])
-                        : '' ?>" class="inline-block rounded-md bg-green-600 px-4 py-2 mr-2 text-sm font-semibold text-white shadow hover:bg-green-700 transition ml-2">
+                        : '' ?>"
+                        class="inline-block rounded-md bg-green-600 px-4 py-2 mr-2 text-sm font-semibold text-white shadow hover:bg-green-700 transition ml-2">
                         Exportar a Excel
                     </a>
 
