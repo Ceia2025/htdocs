@@ -338,14 +338,23 @@ switch ($action) {
         }
         break;
 
+    case 'inventario_showLugarGrupo':
+        $controller = new InventarioController();
+        $controller->showLugarGrupo($_GET['lugar'], $_GET['codigo_general']);
+        break;
+
 
     case 'procedencia_create':
         $procedenciaController->create(); // solo muestra formulario
         break;
 
+    //Expotal Inventario a excel
+    case 'inventario_exportExcel':
+        $controller = new InventarioController();
+        $controller->exportExcel();
+        break;
 
-
-        // Categporizacion
+    // Categporizacion
     case 'categorizaciones':
         $categorizacionController->index();
         break;

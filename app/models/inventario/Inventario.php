@@ -14,17 +14,18 @@ class Inventario
 
     public function getAll()
     {
-        $sql = "SELECT inv.*, 
-                   ne.nombre AS nivel_educativo,
-                   ind.nombre AS individualizacion,
-                   ind.codigo_general,
-                   ind.codigo_especifico,
-                   cat.descripcion AS categorizacion,
-                   ec.nombre AS estado,
-                   lf.nombre AS lugar,
-                   p.tipo AS procedencia_tipo,
-                   p.donador_fondo,
-                   p.fecha_adquisicion
+        $sql = "SELECT 
+                lf.nombre AS lugar,
+                ind.codigo_general,
+                MIN(ind.nombre) AS individualizacion,
+                MIN(cat.descripcion) AS categorizacion,
+                SUM(inv.cantidad) AS cantidad_total,
+                COUNT(inv.id) AS registros,
+                MIN(ne.nombre) AS nivel_educativo,
+                MIN(ec.nombre) AS estado,
+                MIN(p.tipo) AS procedencia_tipo,
+                MIN(p.donador_fondo) AS donador_fondo,
+                MIN(p.fecha_adquisicion) AS fecha_adquisicion
             FROM {$this->table} inv
             JOIN nivel_educativo ne ON inv.nivel_id = ne.id
             JOIN individualizacion ind ON inv.individualizacion_id = ind.id
@@ -32,10 +33,13 @@ class Inventario
             JOIN estado_conservacion ec ON inv.estado_id = ec.id
             JOIN lugar_fisico lf ON inv.lugar_id = lf.id
             JOIN procedencia p ON inv.procedencia_id = p.id
-            ORDER BY inv.id DESC";
+            GROUP BY lf.nombre, ind.codigo_general
+            ORDER BY lf.nombre ASC, ind.codigo_general ASC";
+
         $stmt = $this->conn->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public function getById($id)
     {
@@ -56,10 +60,9 @@ class Inventario
         }
 
         if (!empty($filters['busqueda_individualizacion'])) {
-            // Combina búsqueda por nombre o código general (sin tildes, insensible a mayúsculas)
             $conditions[] = "(
             LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(ind.nombre, 'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u')) 
-                LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(:busqueda,'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'))
+            LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(:busqueda,'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'))
             OR UPPER(ind.codigo_general) LIKE UPPER(:busqueda)
         )";
             $params[':busqueda'] = '%' . $filters['busqueda_individualizacion'] . '%';
@@ -82,17 +85,18 @@ class Inventario
 
         $where = count($conditions) ? 'WHERE ' . implode(' AND ', $conditions) : '';
 
-        $sql = "SELECT inv.*, 
-                   ne.nombre AS nivel_educativo,
-                   ind.nombre AS individualizacion,
-                   ind.codigo_general,
-                   ind.codigo_especifico,
-                   cat.descripcion AS categorizacion,
-                   ec.nombre AS estado,
-                   lf.nombre AS lugar,
-                   p.tipo AS procedencia_tipo,
-                   p.donador_fondo,
-                   p.fecha_adquisicion
+        $sql = "SELECT 
+                lf.nombre AS lugar,
+                ind.codigo_general,
+                MIN(ind.nombre) AS individualizacion,
+                MIN(cat.descripcion) AS categorizacion,
+                SUM(inv.cantidad) AS cantidad_total,
+                COUNT(inv.id) AS registros,
+                MIN(ne.nombre) AS nivel_educativo,
+                MIN(ec.nombre) AS estado,
+                MIN(p.tipo) AS procedencia_tipo,
+                MIN(p.donador_fondo) AS donador_fondo,
+                MIN(p.fecha_adquisicion) AS fecha_adquisicion
             FROM {$this->table} inv
             JOIN nivel_educativo ne ON inv.nivel_id = ne.id
             JOIN individualizacion ind ON inv.individualizacion_id = ind.id
@@ -101,13 +105,46 @@ class Inventario
             JOIN lugar_fisico lf ON inv.lugar_id = lf.id
             JOIN procedencia p ON inv.procedencia_id = p.id
             $where
-            ORDER BY inv.id DESC";
+            GROUP BY lf.nombre, ind.codigo_general
+            ORDER BY lf.nombre ASC, ind.codigo_general ASC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getByLugarYCodigo($lugar, $codigo)
+{
+    $sql = "SELECT 
+                inv.id,
+                ne.nombre AS nivel_educativo,
+                ind.nombre AS individualizacion,
+                ind.codigo_general,
+                ind.codigo_especifico,
+                cat.descripcion AS categorizacion,
+                inv.cantidad,
+                ec.nombre AS estado,
+                lf.nombre AS lugar,
+                p.tipo AS procedencia_tipo,
+                p.donador_fondo,
+                p.fecha_adquisicion
+            FROM {$this->table} inv
+            JOIN nivel_educativo ne ON inv.nivel_id = ne.id
+            JOIN individualizacion ind ON inv.individualizacion_id = ind.id
+            JOIN categorizacion cat ON inv.categorizacion_id = cat.id
+            JOIN estado_conservacion ec ON inv.estado_id = ec.id
+            JOIN lugar_fisico lf ON inv.lugar_id = lf.id
+            JOIN procedencia p ON inv.procedencia_id = p.id
+            WHERE lf.nombre = :lugar AND ind.codigo_general = :codigo_general
+            ORDER BY inv.id ASC";
+    
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+        ':lugar' => $lugar,
+        ':codigo_general' => $codigo
+    ]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 
     public function create($data)

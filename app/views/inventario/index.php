@@ -90,11 +90,11 @@ include __DIR__ . "/../layout/navbar.php";
             <div class="flex justify-end mt-4">
                 <button type="submit"
                     class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg mr-2">
-                    🔍 Buscar
+                    Buscar
                 </button>
                 <a href="index.php?action=inventario_index"
                     class="bg-gray-600 hover:bg-gray-500 text-white font-semibold px-4 py-2 rounded-lg">
-                    ❌ Limpiar
+                    Limpiar
                 </a>
             </div>
         </form>
@@ -104,24 +104,17 @@ include __DIR__ . "/../layout/navbar.php";
         <main>
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
-                <!-- RESUMEN -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div class="rounded-lg bg-gray-800 border border-gray-700 p-4">
-                        <p class="text-sm text-gray-400">Total de registros</p>
-                        <p class="text-2xl font-semibold text-white"><?= $totalRegistros ?? 0 ?></p>
-                    </div>
-                    <div class="rounded-lg bg-gray-800 border border-gray-700 p-4">
-                        <p class="text-sm text-gray-400">Total de objetos</p>
-                        <p class="text-2xl font-semibold text-white"><?= $totalObjetos ?? 0 ?></p>
-                    </div>
-                </div>
-
-
                 <!-- BOTÓN NUEVO -->
                 <div class="mb-4 flex justify-end">
+                    <a href="index.php?action=inventario_exportExcel<?= isset($_SERVER['QUERY_STRING'])
+                        ? '&' . preg_replace('/(^|&)action=[^&]*/', '', $_SERVER['QUERY_STRING'])
+                        : '' ?>" class="inline-block rounded-md bg-green-600 px-4 py-2 mr-2 text-sm font-semibold text-white shadow hover:bg-green-700 transition ml-2">
+                        Exportar a Excel
+                    </a>
+
                     <a href="index.php?action=inventario_create"
                         class="inline-block rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-700 transition">
-                        ➕ Nuevo Registro
+                        Nuevo Registro
                     </a>
                 </div>
 
@@ -133,13 +126,11 @@ include __DIR__ . "/../layout/navbar.php";
                                 <th class="px-6 py-3">Nivel Educativo</th>
                                 <th class="px-6 py-3">Individualización</th>
                                 <th class="px-6 py-3">Categorización</th>
-                                <th class="px-6 py-3">Cantidad</th>
+                                <th class="px-6 py-3">Cantidad Total</th>
                                 <th class="px-6 py-3">Estado</th>
                                 <th class="px-6 py-3">Lugar Físico</th>
                                 <th class="px-6 py-3">Procedencia</th>
                                 <th class="px-6 py-3">Código General</th>
-                                <!--
-                                <th class="px-6 py-3">Código Específico</th>-->
                                 <th class="px-6 py-3 text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -150,30 +141,26 @@ include __DIR__ . "/../layout/navbar.php";
                                         <td class="px-6 py-3"><?= htmlspecialchars($item['nivel_educativo']) ?></td>
                                         <td class="px-6 py-3"><?= htmlspecialchars($item['individualizacion']) ?></td>
                                         <td class="px-6 py-3"><?= htmlspecialchars($item['categorizacion']) ?></td>
-                                        <td class="px-6 py-3"><?= $item['cantidad'] ?></td>
+                                        <td class="px-6 py-3"><?= $item['cantidad_total'] ?></td>
                                         <td class="px-6 py-3"><?= htmlspecialchars($item['estado']) ?></td>
                                         <td class="px-6 py-3"><?= htmlspecialchars($item['lugar']) ?></td>
                                         <td class="px-6 py-3">
                                             <?= htmlspecialchars($item['procedencia_tipo'] . " - " . $item['donador_fondo'] . " - " . $item['fecha_adquisicion']) ?>
                                         </td>
                                         <td class="px-6 py-3"><?= htmlspecialchars($item['codigo_general']) ?></td>
-                                        <!-- <td class="px-6 py-3"> < ?= $item['codigo_especifico'] ?></td>-->
-                                        <td class="px-6 py-3 text-center space-x-2">
-                                            <a href="index.php?action=inventario_edit&id=<?= $item['id'] ?>"
+
+
+                                        <td class="px-6 py-3 text-center">
+                                            <a href="index.php?action=inventario_showLugarGrupo&lugar=<?= urlencode($item['lugar']) ?>&codigo_general=<?= urlencode($item['codigo_general']) ?>"
                                                 class="text-indigo-400 hover:text-indigo-300 font-medium">
-                                                ✏️ Editar
-                                            </a>
-                                            <a href="index.php?action=inventario_delete&id=<?= $item['id'] ?>"
-                                                onclick="return confirm('¿Seguro que deseas eliminar este registro?');"
-                                                class="text-red-400 hover:text-red-300 font-medium">
-                                                🗑️ Eliminar
+                                                Ver Detalle
                                             </a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="9" class="px-6 py-4 text-center text-gray-400">
+                                    <td colspan="11" class="px-6 py-4 text-center text-gray-400">
                                         No hay registros en el inventario.
                                     </td>
                                 </tr>
@@ -195,10 +182,3 @@ include __DIR__ . "/../layout/navbar.php";
     </div>
 </body>
 <?php include __DIR__ . "/../layout/footer.php"; ?>
-
-
-secciones
-
-<section id="lal">
-
-</section>

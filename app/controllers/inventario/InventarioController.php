@@ -17,12 +17,6 @@ class InventarioController
             $items = $inventario->getAll();
         }
 
-        // Contador de registros para el inventario
-        $totalRegistros = count($items);
-        $totalObjetos = array_reduce($items, function ($carry, $item) {
-            return $carry + (int) ($item['cantidad'] ?? 0);
-        }, 0);
-
         // Catálogos para los select
         $nivelesObj = new Catalogo("nivel_educativo");
         $niveles = $nivelesObj->getAll();
@@ -78,6 +72,14 @@ class InventarioController
         header("Location: index.php?action=inventario_index");
     }
 
+    public function showLugarGrupo($lugar, $codigo_general)
+    {
+        $inventario = new Inventario();
+        $items = $inventario->getByLugarYCodigo($lugar, $codigo_general);
+
+        require_once __DIR__ . '/../../views/inventario/show_lugar_grupo.php';
+    }
+
     public function edit($id)
     {
         $inventario = new Inventario();
@@ -120,16 +122,6 @@ class InventarioController
         header("Location: index.php?action=inventario_index");
     }
 
-    public function delete2($id)
-    {
-        $inventario = new Inventario();
-        if ($inventario->delete($id)) {
-            header("Location: index.php?action=inventario_index");
-            exit;
-        } else {
-            echo "Error al eliminar el inventario.";
-        }
-    }
     public function delete($id)
     {
         $inventario = new Inventario();
@@ -137,4 +129,59 @@ class InventarioController
         header("Location: index.php?action=inventario_index");
         exit;
     }
+
+    // Exportando a exel, primera prueba
+    public function exportExcel()
+{
+    // Incluimos el modelo
+    $inventario = new Inventario();
+
+    // Aplicar los mismos filtros que el index
+    if (!empty($_GET)) {
+        $items = $inventario->filter($_GET);
+    } else {
+        $items = $inventario->getAll();
+    }
+
+    // Definir nombre del archivo
+    $filename = "INVENTARIOMUEBLES_" . date('Y-m-d') . ".xls";
+
+    // Enviar cabeceras para forzar descarga como Excel
+    header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
+    header("Content-Disposition: attachment; filename=\"$filename\"");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+
+    // Imprimir encabezados según formato oficial
+    echo "<table border='1'>";
+    echo "<tr>
+            <th>Nivel educativo</th>
+            <th>Individualización del bien</th>
+            <th>Categorización</th>
+            <th>Cantidad</th>
+            <th>Estado de conservación</th>
+            <th>Lugar físico</th>
+            <th>Procedencia: Inversión o donación</th>
+            <th>Procedencia: Donador o fondo de adquisición</th>
+            <th>Procedencia: Fecha de adquisición</th>
+          </tr>";
+
+    // Imprimir los datos
+    foreach ($items as $row) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($row['nivel_educativo']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['individualizacion']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['categorizacion']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['cantidad_total']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['estado']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['lugar']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['procedencia_tipo']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['donador_fondo']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['fecha_adquisicion']) . "</td>";
+        echo "</tr>";
+    }
+
+    echo "</table>";
+    exit;
+}
 }
