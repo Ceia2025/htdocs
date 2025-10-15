@@ -41,9 +41,14 @@
       "url": "index.php?action=alum_emergencia"
     },
     {
-      "title": "Alumno Familia (Crear)",
+      "title": "Alumno Familia terminado",
       "desc": "Antecedentes familiares de los alumnos",
       "url": "index.php?action=alum_emergencia"
+    },
+    {
+      "title": "Antecedentes familiares del alumno",
+      "desc": "Antecedentes familiares de los alumnos",
+      "url": "index.php?action=antecedentefamiliar"
     },
     {
       "title": "Matricula (Crear)",

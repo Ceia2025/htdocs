@@ -8,6 +8,7 @@ require_once __DIR__ . '/../controllers/AlumnoController.php';
 require_once __DIR__ . '/../controllers/AsignaturasController.php';
 require_once __DIR__ . '/../controllers/CursoAsignaturaController.php';
 require_once __DIR__ . '/../controllers/AlumEmergenciaController.php';
+require_once __DIR__ . '/../controllers/AntecedenteFamiliarController.php';
 
 //Inventario
 require_once __DIR__ . '/../controllers/inventario/InventarioController.php';
@@ -30,6 +31,7 @@ $alumnosController = new AlumnosController();
 $asignaturas = new AsignaturasController();
 $cursoAsignaruta = new CursoAsignaturaController();
 $alumnoemergencia = new AlumEmergenciaController();
+$antecedenteFamiliarController = new AntecedenteFamiliarController();
 
 
 
@@ -300,12 +302,30 @@ switch ($action) {
         break;
 
 
-    /*case 'inventario_destroy':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = $_GET['id'];
-            $inventarioController->destroy($id);
-        }
-        break;*/
+        //Antecedentes Familiares
+    case 'antecedentefamiliar':
+        $antecedenteFamiliarController->index();
+        break;
+
+    case 'antecedentefamiliar_create':
+        $antecedenteFamiliarController->createForm();
+        break;
+
+    case 'antecedentefamiliar_store':
+        $antecedenteFamiliarController->create($_POST);
+        break;
+
+    case 'antecedentefamiliar_edit':
+        $antecedenteFamiliarController->edit($_GET['id']);
+        break;
+
+    case 'antecedentefamiliar_update':
+        $antecedenteFamiliarController->update($_GET['id'], $_POST);
+        break;
+
+    case 'antecedentefamiliar_delete':
+        $antecedenteFamiliarController->delete($_GET['id']);
+        break;
 
 
 

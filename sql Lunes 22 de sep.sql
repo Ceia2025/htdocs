@@ -3,6 +3,17 @@ create database saatdevtest2;
 use saatdevtest2;
 
 show tables;
+select * from antecedentes_familiares;
+--
+select * from alum_familia2;
+
+CREATE TABLE `anios2` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `anio` year NOT NULL,
+   `descripcion` varchar(100) DEFAULT NULL,
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `anio` (`anio`)
+ );
 
 SHOW CREATE TABLE anios2;
 SHOW CREATE TABLE alum_asistencia2;
@@ -287,6 +298,14 @@ insert into nivel_educativo(nombre) values('Básica');
 insert into nivel_educativo(nombre) values('Media');
 insert into nivel_educativo(nombre) values('No Aplica');
 
+CREATE TABLE `individualizacion` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nombre` VARCHAR(255) NOT NULL,
+    `codigo_general` VARCHAR(50) NOT NULL,
+    `codigo_especifico` INT NOT NULL,
+    PRIMARY KEY (`id`)
+)
+
 INSERT INTO individualizacion (descripcion) VALUES
 ('Silla - estructura fierro con tapiz cuerina'),
 ('Silla - ejecutiva con ruedas'),
@@ -403,30 +422,59 @@ CREATE TABLE procedencia (
 );
 
 
-CREATE TABLE inventario (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nivel_id INT NOT NULL,
-    individualizacion_id INT NOT NULL,
-    categorizacion_id INT NOT NULL,
-    cantidad INT DEFAULT 1,
-    estado_id INT NOT NULL,
-    lugar_id INT NOT NULL,
-    procedencia_id INT NOT NULL,
-    FOREIGN KEY (nivel_id) REFERENCES nivel_educativo(id),
-    FOREIGN KEY (individualizacion_id) REFERENCES individualizacion(id),
-    FOREIGN KEY (categorizacion_id) REFERENCES categorizacion(id),
-    FOREIGN KEY (estado_id) REFERENCES estado_conservacion(id),
-    FOREIGN KEY (lugar_id) REFERENCES lugar_fisico(id),
-    FOREIGN KEY (procedencia_id) REFERENCES procedencia(id)
-);
+CREATE TABLE `inventario` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `nivel_id` int NOT NULL,
+   `individualizacion_id` int NOT NULL,
+   `categorizacion_id` int NOT NULL,
+   `cantidad` int DEFAULT '1',
+   `estado_id` int NOT NULL,
+   `lugar_id` int NOT NULL,
+   `procedencia_id` int NOT NULL,
+   PRIMARY KEY (`id`),
+   KEY `nivel_id` (`nivel_id`),
+   KEY `estado_id` (`estado_id`),
+   KEY `lugar_id` (`lugar_id`),
+   KEY `procedencia_id` (`procedencia_id`),
+   KEY `inventario_ibfk_2` (`individualizacion_id`),
+   KEY `inventario_ibfk_3` (`categorizacion_id`),
+   CONSTRAINT `inventario_ibfk_1` FOREIGN KEY (`nivel_id`) REFERENCES `nivel_educativo` (`id`),
+   CONSTRAINT `inventario_ibfk_2` FOREIGN KEY (`individualizacion_id`) REFERENCES `individualizacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+   CONSTRAINT `inventario_ibfk_3` FOREIGN KEY (`categorizacion_id`) REFERENCES `categorizacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+   CONSTRAINT `inventario_ibfk_4` FOREIGN KEY (`estado_id`) REFERENCES `estado_conservacion` (`id`),
+   CONSTRAINT `inventario_ibfk_5` FOREIGN KEY (`lugar_id`) REFERENCES `lugar_fisico` (`id`),
+   CONSTRAINT `inventario_ibfk_6` FOREIGN KEY (`procedencia_id`) REFERENCES `procedencia` (`id`)
+ );
+
+select * from inventario;
+
+drop table inventario;
 
 show create table inventario;
 select * from inventario;
+
 
 CREATE TABLE categorizacion (
     id INT AUTO_INCREMENT PRIMARY KEY,
     descripcion VARCHAR(255) NOT NULL
 );
+
+insert into categorizacion(descripcion) values('Implementos deportivos');
+insert into categorizacion(descripcion) values('Implementos de laboratorio');
+insert into categorizacion(descripcion) values('Instrumentos musicales y/o artíscos');
+insert into categorizacion(descripcion) values('Libros y revistas');
+insert into categorizacion(descripcion) values('Equipos informática');
+insert into categorizacion(descripcion) values('Equipos multicopiadores');
+insert into categorizacion(descripcion) values('Equipos de amplificación y sonido');
+insert into categorizacion(descripcion) values('Equipos de climatización: calfación, ventilación, y aire acondicionado');
+insert into categorizacion(descripcion) values('Útiles escolares, equipamiento especializados de Liceos Técnico Profecionales o material de oficina');
+insert into categorizacion(descripcion) values('Materiales y útiles de aseo');
+insert into categorizacion(descripcion) values('Mobiliario escolar fuera de la sala de clase');
+insert into categorizacion(descripcion) values('Mobiliario escolar dentro de la sala de clase');
+insert into categorizacion(descripcion) values('Mobiliario no pedagógico o de oficina');
+insert into categorizacion(descripcion) values('Otros equipos, materiales o insumos');
+
+
 RENAME TABLE individualizacion TO individualizacion2;
 RENAME TABLE categorizacion TO categorizacion2;
 RENAME TABLE individualizacion2 TO categorizacion;
@@ -438,6 +486,10 @@ CREATE TABLE individualizacion (
     codigo_general VARCHAR(20) NOT NULL,
     codigo_especifico INT NOT NULL
 );
+
+select * from inventario;
+
+select * from  categorizacion;
 -- asegurar que no se repitan codigo general + codigo especifico 
 ALTER TABLE categorizacion 
 ADD UNIQUE KEY unique_codigo (codigo_general, codigo_especifico);
