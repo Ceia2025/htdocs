@@ -14,9 +14,17 @@ class AlumEmergenciaController
     // Listar
     public function index()
     {
-        $emergencias = $this->model->getAll();
+        $search = $_GET['q'] ?? null;
+
+        if ($search) {
+            $emergencias = $this->model->searchByAlumno($search);
+        } else {
+            $emergencias = $this->model->getAll();
+        }
+
         require __DIR__ . '/../views/alum_emergencia/index.php';
     }
+
 
     // Formulario crear
     public function create()

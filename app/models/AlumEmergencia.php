@@ -32,11 +32,39 @@ class AlumEmergencia
     // Obtener todos los contactos de emergencia (con datos del alumno)
     public function getAll(): array
     {
-        $sql = "SELECT e.*, a.nombre AS alumno_nombre, a.apepat AS ape_paterno, a.apemat AS ape_materno
+        $sql = "SELECT e.*, a.nombre AS alumno_nombre, a.apepat AS ape_paterno, a.apemat AS ape_materno, a.run
                 FROM $this->table e
                 JOIN alumnos2 a ON a.id = e.alumno_id
                 ORDER BY e.id DESC";
         $stmt = $this->conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // 🔍 Buscar contactos de emergencia por nombre o RUN del alumno
+    public function searchByAlumno($term): array
+    {
+        // Normalizamos el término buscado: quitamos puntos y guiones
+        $termNormalized = str_replace(['.', '-'], '', $term);
+
+        $sql = "SELECT e.*, 
+                   a.nombre AS alumno_nombre, 
+                   a.apepat AS ape_paterno, 
+                   a.apemat AS ape_materno, 
+                   a.run
+            FROM $this->table e
+            JOIN alumnos2 a ON a.id = e.alumno_id
+            WHERE a.nombre LIKE :term
+               OR a.apepat LIKE :term
+               OR a.apemat LIKE :term
+               OR REPLACE(REPLACE(a.run, '.', ''), '-', '') LIKE :termNormalized
+            ORDER BY e.id DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':term' => "%$term%",
+            ':termNormalized' => "%$termNormalized%"
+        ]);
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

@@ -497,3 +497,38 @@ ADD UNIQUE KEY unique_codigo (codigo_general, codigo_especifico);
 
 select * from individualizacion;
 select * from categorizacion;
+
+
+create table antecedente_familiar(
+id int auto_increment primary key,
+procedencia_colegio varchar(50) null,
+comuna varchar(40) null,
+ultimo_curso enum(	'1ro basico',
+					'2do basico',
+					'3ro basico',
+					'4to basico',
+					'5to basico',
+					'6to basico',
+					'7mo basico',
+					'8vo basico',
+					'1ro medio',
+					'2do medio',
+					'3ro Medio',
+					'4to Medio'),
+ultimo_anio_cursado YEAR(4) null,
+cursos_repetidos int null default(0),
+pertenece_20 boolean null,
+informe_20 boolean null,
+embarazo boolean null,
+semanas int null,
+info_saludo varchar(200) null,
+eva_psico varchar(80) null,
+prob_apren boolean null,
+pie boolean null,
+chile_solidario boolean null,
+chile_solidario_cual varchar(50) null,
+fonasa varchar(30) null,
+grupo_fonasa enum('Ninguno','A','B','C','D'),
+isapre varchar(30) null,
+seguro_salud varchar(30) null
+);
