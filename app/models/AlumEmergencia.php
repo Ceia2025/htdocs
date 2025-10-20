@@ -68,6 +68,14 @@ class AlumEmergencia
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    //
+    public function findByAlumno($alumno_id)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM alum_emergencia2 WHERE alumno_id = ?");
+        $stmt->execute([$alumno_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // Obtener por ID
     public function getById($id)
     {

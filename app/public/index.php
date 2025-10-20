@@ -160,6 +160,14 @@ switch ($action) {
         $controller->search();
         break;
 
+    case 'alumnos_stepper':
+        $alumnosController->createStepper(); // formulario stepper
+        break;
+
+    case 'alumnos_store_stepper':
+        $alumnosController->storeStepper($_POST); // guardar todo
+        break;
+
     // Asignaturas
     case 'asignaturas':
         $asignaturas = new AsignaturasController();
@@ -302,7 +310,7 @@ switch ($action) {
         break;
 
 
-        //Antecedentes Familiares
+    //Antecedentes Familiares
     case 'antecedentefamiliar':
         $antecedenteFamiliarController->index();
         break;

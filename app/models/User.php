@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config/Connection.php';
 class User
 {
     private $conn;
-    private $table = "usuarios2"; // 👈 tu tabla
+    private $table = "usuarios2"; 
 
     public function __construct()
     {

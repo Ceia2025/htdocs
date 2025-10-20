@@ -304,7 +304,7 @@ CREATE TABLE `individualizacion` (
     `codigo_general` VARCHAR(50) NOT NULL,
     `codigo_especifico` INT NOT NULL,
     PRIMARY KEY (`id`)
-)
+);
 
 INSERT INTO individualizacion (descripcion) VALUES
 ('Silla - estructura fierro con tapiz cuerina'),
@@ -499,10 +499,14 @@ select * from individualizacion;
 select * from categorizacion;
 
 
-create table antecedente_familiar(
+select * from antecedente_escolar;
+
+drop table  antecedente_escolar;
+
+create table antecedente_escolar(
 id int auto_increment primary key,
-procedencia_colegio varchar(50) null,
-comuna varchar(40) null,
+procedencia_colegio varchar(100) null,
+comuna varchar(100) null,
 ultimo_curso enum(	'1ro basico',
 					'2do basico',
 					'3ro basico',
@@ -515,20 +519,20 @@ ultimo_curso enum(	'1ro basico',
 					'2do medio',
 					'3ro Medio',
 					'4to Medio'),
-ultimo_anio_cursado YEAR(4) null,
+ultimo_anio_cursado varchar(4) null,
 cursos_repetidos int null default(0),
 pertenece_20 boolean null,
 informe_20 boolean null,
 embarazo boolean null,
 semanas int null,
-info_saludo varchar(200) null,
+info_salud varchar(200) null,
 eva_psico varchar(80) null,
-prob_apren boolean null,
-pie boolean null,
+prob_apren enum('Sin', 'Con', 'Desconocido') null,
+pie enum('Si', 'No', 'No se sabe') null,
 chile_solidario boolean null,
-chile_solidario_cual varchar(50) null,
+chile_solidario_cual enum('Prioritario', 'Preferente', 'Incremento', 'Pro-Retención') null,
 fonasa varchar(30) null,
 grupo_fonasa enum('Ninguno','A','B','C','D'),
-isapre varchar(30) null,
+isapre enum('Ninguno', 'BANCA MEDICA', 'CRUZ BLANCA', 'COLMENA', 'MAS VIDA', 'CON SALUD', 'VIDA TRES', 'DIPRECA' ) null,
 seguro_salud varchar(30) null
 );

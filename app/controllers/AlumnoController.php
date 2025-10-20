@@ -52,6 +52,50 @@ class AlumnosController
         header("Location: index.php?action=alumnos");
         exit;
     }
+
+
+    public function storeStepper($data)
+    {
+        $alumnoModel = new Alumno();
+        $alumnoId = $alumnoModel->create($data);
+
+        if (!empty($data['emergencias'])) {
+            $emergenciaModel = new AlumEmergencia();
+            foreach ($data['emergencias'] as $e) {
+                $emergenciaModel->create(
+                    $alumnoId,
+                    $e['nombre_contacto'] ?? null,
+                    $e['telefono'] ?? null,
+                    $e['direccion'] ?? null,
+                    $e['relacion'] ?? null
+                );
+            }
+        }
+
+        if (!empty($data['padre']) || !empty($data['madre'])) {
+            $familiarModel = new AntecedenteFamiliar();
+            $familiarModel->create(
+                $alumnoId,
+                $data['padre'] ?? null,
+                $data['nivel_ciclo_p'] ?? null,
+                $data['madre'] ?? null,
+                $data['nivel_ciclo_m'] ?? null
+            );
+        }
+
+        header("Location: index.php?action=alumnos");
+        exit;
+    }
+
+    //Redireccion a la vista
+    public function createStepper()
+    {
+        require_once __DIR__ . '/../views/alumnos/form_stepper.php';
+    }
+
+
+
+
     //Perfil Alumno
     public function profile($id)
     {
@@ -60,8 +104,22 @@ class AlumnosController
             echo "Alumno no encontrado";
             exit;
         }
+
+        // Cargar modelos adicionales
+        require_once __DIR__ . '/../models/AlumEmergencia.php';
+        require_once __DIR__ . '/../models/AntecedenteFamiliar.php';
+
+        $emergenciaModel = new AlumEmergencia();
+        $familiarModel = new AntecedenteFamiliar();
+
+        // Obtener datos relacionados
+        $contactos = $emergenciaModel->findByAlumno($id);
+        $antecedentes = $familiarModel->findByAlumno($id);
+
+        // Cargar la vista
         require __DIR__ . '/../views/alumnos/perfil.php';
     }
+
 
     public function search()
     {

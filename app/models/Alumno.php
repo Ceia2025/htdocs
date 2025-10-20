@@ -59,7 +59,6 @@ class Alumno
     // Crear un alumno
     public function create($data)
     {
-
         $data['fechanac'] = !empty($data['fechanac']) ? $data['fechanac'] : null;
         $data['deleted_at'] = $data['deleted_at'] ?? null;
 
@@ -67,15 +66,13 @@ class Alumno
             ? (int) $data['numerohijos']
             : null;
 
-        // Asegurar null si no viene en el formulario
-        $data['deleted_at'] = $data['deleted_at'] ?? null;
-
         $sql = "INSERT INTO {$this->table} 
-                (run, codver, nombre, apepat, apemat, fechanac, mayoredad, numerohijos, telefono, email, sexo, nacionalidades, region, ciudad, direccion, cod_etnia, deleted_at) 
-            VALUES 
-                (:run, :codver, :nombre, :apepat, :apemat, :fechanac, :mayoredad, :numerohijos, :telefono, :email, :sexo, :nacionalidades, :region, :ciudad, :direccion, :cod_etnia, :deleted_at)";
+            (run, codver, nombre, apepat, apemat, fechanac, mayoredad, numerohijos, telefono, email, sexo, nacionalidades, region, ciudad, direccion, cod_etnia, deleted_at) 
+        VALUES 
+            (:run, :codver, :nombre, :apepat, :apemat, :fechanac, :mayoredad, :numerohijos, :telefono, :email, :sexo, :nacionalidades, :region, :ciudad, :direccion, :cod_etnia, :deleted_at)";
+
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
+        $success = $stmt->execute([
             ":run" => $data['run'],
             ":codver" => $data['codver'],
             ":nombre" => $data['nombre'],
@@ -90,11 +87,15 @@ class Alumno
             ":nacionalidades" => $data['nacionalidades'],
             ":region" => $data['region'],
             ":ciudad" => $data['ciudad'],
-            ":direccion" => $data['direccion'] ?? null, // <-- NUEVO
+            ":direccion" => $data['direccion'] ?? null,
             ":cod_etnia" => $data['cod_etnia'],
             ":deleted_at" => $data['deleted_at'],
         ]);
+
+        // ✅ Devolver ID del alumno insertado
+        return $success ? $this->conn->lastInsertId() : false;
     }
+
 
     // Actualizar un alumno
     public function update($id, $data)
