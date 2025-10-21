@@ -9,6 +9,7 @@ require_once __DIR__ . '/../controllers/AsignaturasController.php';
 require_once __DIR__ . '/../controllers/CursoAsignaturaController.php';
 require_once __DIR__ . '/../controllers/AlumEmergenciaController.php';
 require_once __DIR__ . '/../controllers/AntecedenteFamiliarController.php';
+require_once __DIR__ . '/../controllers/AntecedenteEscolarController.php';
 
 //Inventario
 require_once __DIR__ . '/../controllers/inventario/InventarioController.php';
@@ -32,6 +33,7 @@ $asignaturas = new AsignaturasController();
 $cursoAsignaruta = new CursoAsignaturaController();
 $alumnoemergencia = new AlumEmergenciaController();
 $antecedenteFamiliarController = new AntecedenteFamiliarController();
+$antecedenteEscolarController = new AntecedenteEscolarController();
 
 
 
@@ -140,7 +142,7 @@ switch ($action) {
     case 'alumno_create':
         $alumnosController->create();
         break;
-    case 'alumno_store':
+    case 'alumnos_store':
         $alumnosController->store($_POST);
         break;
     case 'alumno_edit':
@@ -405,6 +407,26 @@ switch ($action) {
 
     case 'categorizacion_delete':
         $categorizacionController->delete($_GET['id']);
+        break;
+
+    //Antecenters escolares
+    case 'antecedente_escolar':
+        $antecedenteEscolarController->index();
+        break;
+    case 'antecedente_escolar_create':
+        $antecedenteEscolarController->create();
+        break;
+    case 'antecedente_escolar_store':
+        $antecedenteEscolarController->store($_POST);
+        break;
+    case 'antecedente_escolar_edit':
+        $antecedenteEscolarController->edit($_GET['id']);
+        break;
+    case 'antecedente_escolar_update':
+        $antecedenteEscolarController->update($_GET['id'], $_POST);
+        break;
+    case 'antecedente_escolar_delete':
+        $antecedenteEscolarController->delete($_GET['id']);
         break;
 
     default:

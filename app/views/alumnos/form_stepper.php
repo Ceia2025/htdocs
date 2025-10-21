@@ -46,10 +46,10 @@ include __DIR__ . "/../layout/navbar.php";
         <!-- Barra de progreso -->
         <div class="mb-10">
             <div class="flex justify-between text-sm font-medium mb-2">
-                <span>Paso 1</span><span>Paso 2</span><span>Paso 3</span>
+                <span>Paso 1</span><span>Paso 2</span><span>Paso 3</span><span>Paso 4</span>
             </div>
             <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
-                <div id="progress-bar" class="h-2 bg-indigo-600 transition-all duration-500 w-1/3"></div>
+                <div id="progress-bar" class="h-2 bg-indigo-600 transition-all duration-500 w-1/4"></div>
             </div>
         </div>
 
@@ -305,10 +305,180 @@ include __DIR__ . "/../layout/navbar.php";
                 </div>
 
                 <div class="flex justify-between pt-8">
+                    <button type="button" class="prev-step btn-gray">Anterior</button>
+                    <button type="button" class="next-step btn-indigo">Siguiente</button>
+                </div>
+
+            </div>
+
+            <!-- 🏫 PASO 4: ANTECEDENTE ESCOLAR -->
+            <div class="step hidden" data-step="4">
+                <h2 class="text-2xl font-bold mb-6 border-b border-gray-600 pb-2">4️⃣ Antecedente Escolar</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Procedencia -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Procedencia del Colegio</label>
+                        <input type="text" name="antecedente_escolar[procedencia_colegio]"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Comuna -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Comuna</label>
+                        <input type="text" name="antecedente_escolar[comuna]"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Último Curso -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Último Curso</label>
+                        <select name="antecedente_escolar[ultimo_curso]"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
+                            <option value="">Seleccionar...</option>
+                            <?php
+                            $cursos = ['1ro basico', '2do basico', '3ro basico', '4to basico', '5to basico', '6to basico', '7mo basico', '8vo basico', '1ro medio', '2do medio', '3ro Medio', '4to Medio'];
+                            foreach ($cursos as $c)
+                                echo "<option value='$c'>$c</option>";
+                            ?>
+                        </select>
+                    </div>
+
+                    <!-- Último Año Cursado -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Último Año Cursado</label>
+                        <input type="text" name="antecedente_escolar[ultimo_anio_cursado]" maxlength="4"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Cursos Repetidos -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Cursos Repetidos</label>
+                        <input type="number" name="antecedente_escolar[cursos_repetidos]" min="0"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Pertenece al 20% -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Pertenece al 20%</label>
+                        <select name="antecedente_escolar[pertenece_20]"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
+                            <option value="">Seleccionar...</option>
+                            <option value="1">Sí</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+
+                    <!-- Informe 20% -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Tiene Informe 20%</label>
+                        <select name="antecedente_escolar[informe_20]"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
+                            <option value="">Seleccionar...</option>
+                            <option value="1">Sí</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+
+                    <!-- Problemas de Aprendizaje -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Problemas de Aprendizaje</label>
+                        <select name="antecedente_escolar[prob_apren]"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
+                            <?php
+                            $pa = ['Sin', 'Con', 'Desconocido'];
+                            foreach ($pa as $p)
+                                echo "<option value='$p'>$p</option>";
+                            ?>
+                        </select>
+                    </div>
+
+                    <!-- PIE -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">PIE</label>
+                        <select name="antecedente_escolar[pie]"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
+                            <?php
+                            $pie = ['Si', 'No', 'No se sabe'];
+                            foreach ($pie as $p)
+                                echo "<option value='$p'>$p</option>";
+                            ?>
+                        </select>
+                    </div>
+
+                    <!-- Chile Solidario -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Chile Solidario</label>
+                        <select name="antecedente_escolar[chile_solidario]"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
+                            <option value="">Seleccionar...</option>
+                            <option value="1">Sí</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+
+                    <!-- Tipo Chile Solidario -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Tipo Chile Solidario</label>
+                        <select name="antecedente_escolar[chile_solidario_cual]"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
+                            <option value="">Seleccionar...</option>
+                            <?php
+                            $cs = ['Prioritario', 'Preferente', 'Incremento', 'Pro-Retención'];
+                            foreach ($cs as $v)
+                                echo "<option value='$v'>$v</option>";
+                            ?>
+                        </select>
+                    </div>
+
+                    <!-- Grupo Fonasa -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Grupo Fonasa</label>
+                        <select name="antecedente_escolar[grupo_fonasa]"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
+                            <?php
+                            $gf = ['Ninguno', 'A', 'B', 'C', 'D'];
+                            foreach ($gf as $g)
+                                echo "<option value='$g'>$g</option>";
+                            ?>
+                        </select>
+                    </div>
+
+                    <!-- Isapre -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Isapre</label>
+                        <select name="antecedente_escolar[isapre]"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
+                            <?php
+                            $isapres = ['Ninguno', 'BANCA MEDICA', 'CRUZ BLANCA', 'COLMENA', 'MAS VIDA', 'CON SALUD', 'VIDA TRES', 'DIPRECA'];
+                            foreach ($isapres as $i)
+                                echo "<option value='$i'>$i</option>";
+                            ?>
+                        </select>
+                    </div>
+
+                    <!-- Seguro Salud -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Seguro de Salud</label>
+                        <input type="text" name="antecedente_escolar[seguro_salud]"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Información de Salud -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-200">Información de Salud</label>
+                        <textarea name="antecedente_escolar[info_salud]" rows="3"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex justify-between pt-8">
                     <button type="button" class="prev-step btn-gray">⬅️ Anterior</button>
                     <button type="submit" id="btnGuardar" class="btn-green">Guardar ✅</button>
                 </div>
+
             </div>
+
         </form>
 
         <div class="mt-8 flex items-center justify-center">
@@ -348,12 +518,25 @@ include __DIR__ . "/../layout/navbar.php";
         const steps = document.querySelectorAll('.step');
         const progressBar = document.getElementById('progress-bar');
 
+        // ✅ Mostrar paso actual y deshabilitar validación de los demás
         function showStep(step) {
-            steps.forEach(s => s.classList.add('hidden'));
-            document.querySelector(`.step[data-step="${step}"]`).classList.remove('hidden');
+            steps.forEach((s, i) => {
+                const isActive = (i + 1) === step;
+                s.classList.toggle('hidden', !isActive);
+
+                // Deshabilita validación solo en los pasos ocultos
+                s.querySelectorAll('[required]').forEach(input => {
+                    if (!isActive) {
+                        input.removeAttribute('required');
+                    } else {
+                        input.setAttribute('required', true);
+                    }
+                });
+            });
             progressBar.style.width = (step / steps.length * 100) + '%';
         }
 
+        // 🔹 Botón "Siguiente"
         document.querySelectorAll('.next-step').forEach(btn => {
             btn.addEventListener('click', () => {
                 if (currentStep < steps.length) currentStep++;
@@ -361,6 +544,7 @@ include __DIR__ . "/../layout/navbar.php";
             });
         });
 
+        // 🔹 Botón "Anterior"
         document.querySelectorAll('.prev-step').forEach(btn => {
             btn.addEventListener('click', () => {
                 if (currentStep > 1) currentStep--;
@@ -368,6 +552,7 @@ include __DIR__ . "/../layout/navbar.php";
             });
         });
 
+        // 🔹 Agregar contacto de emergencia dinámico
         let count = 1;
         document.getElementById('addEmergencia').addEventListener('click', () => {
             const container = document.getElementById('emergencias-container');
@@ -387,7 +572,7 @@ include __DIR__ . "/../layout/navbar.php";
             count++;
         });
 
-        // Región → ciudad dinámica (reutiliza tu JSON)
+        // 🔹 Región → ciudad dinámica (JSON)
         fetch("../utils/comunas-regiones.json")
             .then(res => res.json())
             .then(data => {
@@ -415,14 +600,24 @@ include __DIR__ . "/../layout/navbar.php";
                 });
             });
 
+        // ✅ Habilitar todos los campos antes de enviar el formulario
+        document.getElementById('stepperForm').addEventListener('submit', function (e) {
+            console.log("✅ Enviando formulario...");
+
+            // Reactiva todos los inputs deshabilitados antes de enviar
+            document.querySelectorAll('#stepperForm input[disabled], #stepperForm select[disabled], #stepperForm textarea[disabled]')
+                .forEach(el => el.disabled = false);
+        });
+
+        // Mostrar primer paso
         showStep(currentStep);
     });
 
-    //------------------------------------------------------------------------------------------
-    //Create alumno
+
+    /* 🔹 Validación de RUN chileno */
     function formatRun(value) {
-        value = value.replace(/\D/g, ""); // solo números
-        return value.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // agrega puntos
+        value = value.replace(/\D/g, "");
+        return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
     function validateRun(value) {
@@ -448,11 +643,8 @@ include __DIR__ . "/../layout/navbar.php";
     const codverInput = document.getElementById('codver');
     const runError = document.getElementById('run-error');
 
-    // Bloquear cualquier letra o símbolo en el RUN
     runInput.addEventListener('keypress', function (e) {
-        if (!/[0-9]/.test(e.key)) {
-            e.preventDefault();
-        }
+        if (!/[0-9]/.test(e.key)) e.preventDefault();
     });
 
     runInput.addEventListener('input', function (e) {
@@ -472,72 +664,8 @@ include __DIR__ . "/../layout/navbar.php";
             }
         }
     });
-
-    //------------------------------------------------------------------------------------------
-    //Alumno emergencia
-    const searchInput = document.getElementById('alumno_search');
-    const hiddenInput = document.getElementById('alumno_id');
-    const list = document.getElementById('alumno_list');
-
-    searchInput.addEventListener('input', function () {
-        const term = this.value.trim();
-        if (term.length < 2) {
-            list.classList.add('hidden');
-            return;
-        }
-
-        fetch(`index.php?action=alumno_search_ajax&term=${encodeURIComponent(term)}`)
-            .then(res => res.json())
-            .then(data => {
-                list.innerHTML = '';
-                if (data.length === 0) {
-                    list.classList.add('hidden');
-                    return;
-                }
-                data.forEach(item => {
-                    const li = document.createElement('li');
-                    li.textContent = `${item.nombre} ${item.apepat} ${item.apemat} ${item.run}-${item.codver}`;
-                    li.className = "px-3 py-2 hover:bg-gray-600 cursor-pointer";
-                    li.addEventListener('click', () => {
-                        searchInput.value = li.textContent;
-                        hiddenInput.value = item.id;
-                        list.classList.add('hidden');
-                    });
-                    list.appendChild(li);
-                });
-                list.classList.remove('hidden');
-            });
-    });
-
-    // Cierra la lista si se hace click fuera
-    document.addEventListener('click', (e) => {
-        if (!list.contains(e.target) && e.target !== searchInput) {
-            list.classList.add('hidden');
-        }
-    });
-
-    //------------------------------------------------------------------------------------------------------------
-    // Boto de guardado console.log
-    document.getElementById('stepperForm').addEventListener('submit', function (e) {
-        console.log("✅ Enviando formulario...");
-    });
-    //------------------------------------------------------------------------------------------------------------
-
-    // Quitar el focius de forma temporal entre stepper
-
-    function showStep(step) {
-        steps.forEach((s, i) => {
-            const isActive = (i + 1) === step;
-            s.classList.toggle('hidden', !isActive);
-
-            // Deshabilita validación en pasos ocultos
-            s.querySelectorAll('[required]').forEach(input => {
-                input.disabled = !isActive;
-            });
-        });
-
-        progressBar.style.width = (step / steps.length * 100) + '%';
-    }
 </script>
+
+
 
 <?php include __DIR__ . "/../layout/footer.php"; ?>

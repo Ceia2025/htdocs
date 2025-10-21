@@ -28,7 +28,7 @@ include __DIR__ . "/../layout/navbar.php";
             <input id="searchInput" type="text" placeholder="Buscar por RUN o Nombre..."
                 class="px-4 py-2 rounded-lg border border-gray-600 bg-gray-800 text-gray-200 focus:ring focus:ring-indigo-500 w-1/2" />
 
-            <a href="index.php?action=alumno_create"
+            <a href="index.php?action=alumnos_stepper"
                 class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow transition duration-200">
                 Nuevo Alumno
             </a>

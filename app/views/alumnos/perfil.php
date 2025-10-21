@@ -107,6 +107,73 @@ include __DIR__ . "/../layout/navbar.php";
             <?php endif; ?>
         </section>
 
+        <!-- ANTECEDENTE ESCOLAR -->
+        <!-- 🏫 ANTECEDENTE ESCOLAR -->
+        <section>
+            <h2 class="text-2xl font-bold border-b border-gray-600 pb-2 mb-6">Antecedente Escolar</h2>
+
+            <?php if (!empty($alumno['antecedente_id'])): ?>
+                <div class="bg-gray-700 p-8 rounded-xl shadow-xl border border-gray-600">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+                        <!-- 🧾 Columna izquierda -->
+                        <div class="space-y-3">
+                            <h3 class="text-lg font-semibold text-indigo-400 mb-2">Datos Generales</h3>
+                            <p><span class="font-semibold text-gray-200">Procedencia del Colegio:</span>
+                                <?= htmlspecialchars($alumno['procedencia_colegio']) ?></p>
+                            <p><span class="font-semibold text-gray-200">Comuna:</span>
+                                <?= htmlspecialchars($alumno['comuna']) ?></p>
+                            <p><span class="font-semibold text-gray-200">Último Curso:</span>
+                                <?= htmlspecialchars($alumno['ultimo_curso']) ?></p>
+                            <p><span class="font-semibold text-gray-200">Último Año Cursado:</span>
+                                <?= htmlspecialchars($alumno['ultimo_anio_cursado']) ?></p>
+                            <p><span class="font-semibold text-gray-200">Cursos Repetidos:</span>
+                                <?= htmlspecialchars($alumno['cursos_repetidos']) ?></p>
+                            <p><span class="font-semibold text-gray-200">Evaluación Psicológica:</span>
+                                <?= htmlspecialchars($alumno['eva_psico'] ?: 'No registrada') ?></p>
+                            <p><span class="font-semibold text-gray-200">Información de Salud:</span>
+                                <?= htmlspecialchars($alumno['info_salud'] ?: 'No registrada') ?></p>
+                        </div>
+
+                        <!-- 🧠 Columna derecha -->
+                        <div class="space-y-3">
+                            <h3 class="text-lg font-semibold text-indigo-400 mb-2">Condiciones y Programas</h3>
+                            <p><span class="font-semibold text-gray-200">Pertenece al 20%:</span>
+                                <?= $alumno['pertenece_20'] ? 'Sí' : 'No' ?></p>
+                            <p><span class="font-semibold text-gray-200">Informe 20%:</span>
+                                <?= $alumno['informe_20'] ? 'Sí' : 'No' ?></p>
+                            <p><span class="font-semibold text-gray-200">Embarazo:</span>
+                                <?= $alumno['embarazo'] ? 'Sí (' . htmlspecialchars($alumno['semanas'] ?? '-') . ' semanas)' : 'No' ?>
+                            </p>
+                            <p><span class="font-semibold text-gray-200">Problemas de Aprendizaje:</span>
+                                <?= htmlspecialchars($alumno['prob_apren']) ?></p>
+                            <p><span class="font-semibold text-gray-200">PIE:</span> <?= htmlspecialchars($alumno['pie']) ?>
+                            </p>
+                            <p><span class="font-semibold text-gray-200">Chile Solidario:</span>
+                                <?= $alumno['chile_solidario']
+                                    ? htmlspecialchars($alumno['chile_solidario_cual'] ?? 'Sí')
+                                    : 'No' ?>
+                            </p>
+                            <p><span class="font-semibold text-gray-200">Grupo Fonasa:</span>
+                                <?= htmlspecialchars($alumno['grupo_fonasa'] ?: 'No registra') ?></p>
+                            <p><span class="font-semibold text-gray-200">Isapre:</span>
+                                <?= htmlspecialchars($alumno['isapre'] ?: 'No registra') ?></p>
+                            <p><span class="font-semibold text-gray-200">Seguro de Salud:</span>
+                                <?= htmlspecialchars($alumno['seguro_salud'] ?: 'No registra') ?></p>
+                        </div>
+                    </div>
+                </div>
+            <?php else: ?>
+                <p class="text-gray-400 italic">No hay antecedente escolar registrado para este alumno.</p>
+            <?php endif; ?>
+        </section>
+
+
+
+
+
+
+
         <!-- 🔙 BOTONES -->
         <div class="flex justify-center mt-8 gap-4">
             <a href="index.php?action=alumnos"

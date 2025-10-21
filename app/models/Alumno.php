@@ -74,27 +74,62 @@ class Alumno
         $stmt = $this->conn->prepare($sql);
         $success = $stmt->execute([
             ":run" => $data['run'],
-            ":codver" => $data['codver'],
-            ":nombre" => $data['nombre'],
-            ":apepat" => $data['apepat'],
-            ":apemat" => $data['apemat'],
-            ":fechanac" => $data['fechanac'],
-            ":mayoredad" => $data['mayoredad'],
+            ":codver" => $data['codver'] ?? null,
+            ":nombre" => $data['nombre'] ?? null,
+            ":apepat" => $data['apepat'] ?? null,
+            ":apemat" => $data['apemat'] ?? null,
+            ":fechanac" => $data['fechanac'] ?? null,
+            ":mayoredad" => $data['mayoredad'] ?? "No",
             ":numerohijos" => $numerohijos,
-            ":telefono" => $data['telefono'],
-            ":email" => $data['email'],
-            ":sexo" => $data['sexo'],
-            ":nacionalidades" => $data['nacionalidades'],
-            ":region" => $data['region'],
-            ":ciudad" => $data['ciudad'],
+            ":telefono" => $data['telefono'] ?? null,
+            ":email" => $data['email'] ?? null,
+            ":sexo" => $data['sexo'] ?? null,
+            ":nacionalidades" => $data['nacionalidades'] ?? null,
+            ":region" => $data['region'] ?? null,
+            ":ciudad" => $data['ciudad'] ?? null,
             ":direccion" => $data['direccion'] ?? null,
-            ":cod_etnia" => $data['cod_etnia'],
-            ":deleted_at" => $data['deleted_at'],
+            ":cod_etnia" => $data['cod_etnia'] ?? 'No pertenece a ningún Pueblo Originario',
+            ":deleted_at" => $data['deleted_at'] ?? null,
         ]);
 
         // ✅ Devolver ID del alumno insertado
         return $success ? $this->conn->lastInsertId() : false;
     }
+
+    // Obtener alumno junto con su antecedente escolar
+    public function getWithAntecedente($id)
+    {
+        $sql = "SELECT 
+                a.*,
+                ae.id AS antecedente_id,
+                ae.procedencia_colegio,
+                ae.comuna,
+                ae.ultimo_curso,
+                ae.ultimo_anio_cursado,
+                ae.cursos_repetidos,
+                ae.pertenece_20,
+                ae.informe_20,
+                ae.embarazo,
+                ae.semanas,
+                ae.info_salud,
+                ae.eva_psico,
+                ae.prob_apren,
+                ae.pie,
+                ae.chile_solidario,
+                ae.chile_solidario_cual,
+                ae.fonasa,
+                ae.grupo_fonasa,
+                ae.isapre,
+                ae.seguro_salud
+            FROM {$this->table} a
+            LEFT JOIN antecedente_escolar ae ON a.id = ae.alumno_id
+            WHERE a.id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([":id" => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 
 
     // Actualizar un alumno

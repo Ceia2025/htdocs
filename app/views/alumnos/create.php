@@ -25,7 +25,7 @@ include __DIR__ . "/../layout/navbar.php";
 
         <!-- FORM -->
         <div class="bg-gray-700 p-8 rounded-2xl shadow-lg">
-            <form action="index.php?action=alumno_store" method="POST" class="space-y-6">
+            <form action="index.php?action=alumnos_store" method="POST" class="space-y-6">
 
                 <!-- Grid de 2 columnas -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

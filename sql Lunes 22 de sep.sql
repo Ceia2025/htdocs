@@ -150,42 +150,95 @@ CONSTRAINT `alum_notas2_ibfk_2` FOREIGN KEY (`asignatura_id`) REFERENCES `asigna
 -- 
 -- |||||||||||||||||||||||||||||||||||||||||
 
+
 CREATE TABLE `alumnos2` (
-   `id` int NOT NULL AUTO_INCREMENT,
-   `run` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-   `codver` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-   `nombre` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-   `apepat` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-   `apemat` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-   `fechanac` date DEFAULT NULL,
-   `mayoredad` enum('No','Si') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-   `numerohijos` int DEFAULT NULL,
-   `telefono` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-   `celular` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-   `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-   `sexo` enum('F','M') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-   `created_at` date NOT NULL DEFAULT (curdate()),
-   `nacionalidades` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-   `region` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-   `ciudad` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-   `direccion` VARCHAR(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-   `cod_etnia` enum('No pertenece a ningún Pueblo Originario',
-					'Aymara',
-					'Likanantai( Atacameño )',
-					'Colla',
-					'Diaguita',
-					'Quechua',
-					'Rapa Nui',
-					'Mapuche',
-					'Kawésqar',
-					'Yagán',
-					'Otro',
-					'No Registra') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'No Registra',
-   `deleted_at` datetime DEFAULT NULL,
-   PRIMARY KEY (`id`),
-   UNIQUE KEY `run` (`run`)
- ) ;
+`id` int NOT NULL AUTO_INCREMENT,
+`run` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+`codver` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+`nombre` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+`apepat` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+`apemat` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+`fechanac` date DEFAULT NULL,
+`mayoredad` enum('No','Si') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+`numerohijos` int DEFAULT NULL,
+`telefono` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+`celular` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+`email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+`sexo` enum('F','M') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+`created_at` date NOT NULL DEFAULT (curdate()),
+`nacionalidades` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+`region` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+`ciudad` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+`direccion` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+`cod_etnia` enum(
+	'No pertenece a ningún Pueblo Originario',
+    'Aymara',
+    'Likanantai( Atacameño )',
+    'Colla',
+    'Diaguita',
+    'Quechua',
+    'Rapa Nui',
+    'Mapuche',
+    'Kawésqar',
+    'Yagán',
+    'Otro',
+    'No Registra
+    ') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'No Registra',
+`deleted_at` datetime DEFAULT NULL,
+PRIMARY KEY (`id`),
+UNIQUE KEY `run` (`run`)
+);
+
  
+ -- |||||||||||||||||||||||||||||||||||||||||
+ --
+ -- 	Antecedentes escolares
+ --
+ -- |||||||||||||||||||||||||||||||||||||||||
+ create table antecedente_escolar(
+id int auto_increment primary key,
+procedencia_colegio varchar(100) null,
+comuna varchar(100) null,
+ultimo_curso enum(	'1ro basico',
+					'2do basico',
+					'3ro basico',
+					'4to basico',
+					'5to basico',
+					'6to basico',
+					'7mo basico',
+					'8vo basico',
+					'1ro medio',
+					'2do medio',
+					'3ro Medio',
+					'4to Medio'),
+ultimo_anio_cursado varchar(4) null,
+cursos_repetidos int null default(0),
+pertenece_20 boolean null,
+informe_20 boolean null,
+embarazo boolean null,
+semanas int null,
+info_salud varchar(200) null,
+eva_psico varchar(80) null,
+prob_apren enum('Sin', 'Con', 'Desconocido') null,
+pie enum('Si', 'No', 'No se sabe') null,
+chile_solidario boolean null,
+chile_solidario_cual enum('Prioritario', 'Preferente', 'Incremento', 'Pro-Retención') null,
+fonasa varchar(30) null,
+grupo_fonasa enum('Ninguno','A','B','C','D'),
+isapre enum('Ninguno', 'BANCA MEDICA', 'CRUZ BLANCA', 'COLMENA', 'MAS VIDA', 'CON SALUD', 'VIDA TRES', 'DIPRECA' ) null,
+seguro_salud varchar(30) null
+);
+ 
+ SELECT id, alumno_id, procedencia_colegio 
+FROM antecedente_escolar 
+WHERE alumno_id = 19;
+
+SELECT id, alumno_id, procedencia_colegio, comuna 
+FROM antecedente_escolar 
+ORDER BY id DESC ;
+
+SELECT id, alumno_id, procedencia_colegio, comuna FROM antecedente_escolar ORDER BY id DESC;
+
 
 -- |||||||||||||||||||||||||||||||||||||||||
 --
@@ -503,36 +556,3 @@ select * from antecedente_escolar;
 
 drop table  antecedente_escolar;
 
-create table antecedente_escolar(
-id int auto_increment primary key,
-procedencia_colegio varchar(100) null,
-comuna varchar(100) null,
-ultimo_curso enum(	'1ro basico',
-					'2do basico',
-					'3ro basico',
-					'4to basico',
-					'5to basico',
-					'6to basico',
-					'7mo basico',
-					'8vo basico',
-					'1ro medio',
-					'2do medio',
-					'3ro Medio',
-					'4to Medio'),
-ultimo_anio_cursado varchar(4) null,
-cursos_repetidos int null default(0),
-pertenece_20 boolean null,
-informe_20 boolean null,
-embarazo boolean null,
-semanas int null,
-info_salud varchar(200) null,
-eva_psico varchar(80) null,
-prob_apren enum('Sin', 'Con', 'Desconocido') null,
-pie enum('Si', 'No', 'No se sabe') null,
-chile_solidario boolean null,
-chile_solidario_cual enum('Prioritario', 'Preferente', 'Incremento', 'Pro-Retención') null,
-fonasa varchar(30) null,
-grupo_fonasa enum('Ninguno','A','B','C','D'),
-isapre enum('Ninguno', 'BANCA MEDICA', 'CRUZ BLANCA', 'COLMENA', 'MAS VIDA', 'CON SALUD', 'VIDA TRES', 'DIPRECA' ) null,
-seguro_salud varchar(30) null
-);

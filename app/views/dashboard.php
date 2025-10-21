@@ -29,36 +29,46 @@ include __DIR__ . "/layout/navbar.php";
 
 <!-- MAIN -->
 <main>
-    <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-3 gap-8">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <!-- Grid responsive: 1 col móvil, 2 col tablet, 3 col escritorio -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
             <?php
-            // Cargar el archivo JSON
             $menu = json_decode(file_get_contents("../utils/menu.json"), true);
 
-            // Usar el rol del usuario logueado
             if (isset($menu[$rol])) {
                 foreach ($menu[$rol] as $item): ?>
-                    <div class="relative w-[320px] rounded-3xl bg-indigo-100 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
-                        <h3 class="text-base/7 font-semibold text-indigo-800">
-                            <?= htmlspecialchars($item['title']) ?>
-                        </h3>
-                        <p class="mt-6 text-base/7 text-cyan-950">
-                            <?= htmlspecialchars($item['desc']) ?>
-                        </p>
-                        <a href="<?= htmlspecialchars($item['url']) ?>"
-                            class="mt-8 block rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs
-                        hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10">
-                            Ir
-                        </a>
+                    <!-- Tarjeta flex vertical para empujar el botón al fondo -->
+                    <div
+                        class="flex flex-col justify-between h-full min-h-[280px] rounded-3xl bg-indigo-100 p-8 shadow-2xl ring-1 ring-gray-900/10 transition-transform hover:scale-105 hover:shadow-3xl">
+
+                        <div>
+                            <h3 class="text-lg font-semibold text-indigo-800">
+                                <?= htmlspecialchars($item['title']) ?>
+                            </h3>
+                            <p class="mt-4 text-base text-cyan-950 leading-relaxed">
+                                <?= htmlspecialchars($item['desc']) ?>
+                            </p>
+                        </div>
+
+                        <!-- Botón al fondo -->
+                        <div class="mt-8">
+                            <a href="<?= htmlspecialchars($item['url']) ?>"
+                                class="block w-full rounded-md bg-indigo-500 px-4 py-2.5 text-center text-sm font-semibold text-white shadow hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                Ir
+                            </a>
+                        </div>
+
                     </div>
                 <?php endforeach;
             } else {
                 echo "<p class='text-red-500'>No hay menús disponibles para este rol.</p>";
             }
             ?>
+
         </div>
     </div>
 </main>
+
 
 <?php include __DIR__ . "/layout/footer.php"; ?>

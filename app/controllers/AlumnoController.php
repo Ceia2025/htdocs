@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/../models/Alumno.php';
+require_once __DIR__ . '/../models/AntecedenteEscolar.php';
+
 
 class AlumnosController
 {
@@ -53,12 +55,21 @@ class AlumnosController
         exit;
     }
 
+    public function storeStepperTest($data)
+    {
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
+        exit;
+    }
 
     public function storeStepper($data)
     {
+
         $alumnoModel = new Alumno();
         $alumnoId = $alumnoModel->create($data);
 
+        // 🔹 Guardar contactos de emergencia
         if (!empty($data['emergencias'])) {
             $emergenciaModel = new AlumEmergencia();
             foreach ($data['emergencias'] as $e) {
@@ -72,6 +83,7 @@ class AlumnosController
             }
         }
 
+        // 🔹 Guardar antecedentes familiares
         if (!empty($data['padre']) || !empty($data['madre'])) {
             $familiarModel = new AntecedenteFamiliar();
             $familiarModel->create(
@@ -83,9 +95,18 @@ class AlumnosController
             );
         }
 
+        // 🔹 Guardar antecedente escolar (NUEVO)
+        if (!empty($data['antecedente_escolar'])) {
+            $escolarModel = new AntecedenteEscolar();
+            $escolar = $data['antecedente_escolar'];
+            $escolar['alumno_id'] = $alumnoId; // 👈 Asegúrate de tener esta línea
+            $escolarModel->create($escolar);
+        }
+
         header("Location: index.php?action=alumnos");
         exit;
     }
+
 
     //Redireccion a la vista
     public function createStepper()
@@ -99,7 +120,7 @@ class AlumnosController
     //Perfil Alumno
     public function profile($id)
     {
-        $alumno = $this->alumnoModel->getById($id);
+        $alumno = $this->alumnoModel->getWithAntecedente($id);
         if (!$alumno) {
             echo "Alumno no encontrado";
             exit;
@@ -108,13 +129,21 @@ class AlumnosController
         // Cargar modelos adicionales
         require_once __DIR__ . '/../models/AlumEmergencia.php';
         require_once __DIR__ . '/../models/AntecedenteFamiliar.php';
+        require_once __DIR__ . '/../models/AntecedenteEscolar.php';
 
         $emergenciaModel = new AlumEmergencia();
         $familiarModel = new AntecedenteFamiliar();
+        $escolarModel = new AntecedenteEscolar();
 
         // Obtener datos relacionados
         $contactos = $emergenciaModel->findByAlumno($id);
         $antecedentes = $familiarModel->findByAlumno($id);
+        //$antecedenteEscolar = $escolarModel->getByAlumnoId($id); // 🔹 Nuevo método (ver paso 4)
+
+        //echo "<pre>";
+        //print_r($alumno);
+        //echo "</pre>";
+        //exit;
 
         // Cargar la vista
         require __DIR__ . '/../views/alumnos/perfil.php';

@@ -51,6 +51,11 @@
       "url": "index.php?action=alumnos_stepper"
     },
     {
+      "title": "Antecedentes escolares TEST",
+      "desc": "Antecedentes familiares de los alumnos",
+      "url": "index.php?action=antecedente_escolar"
+    },
+    {
       "title": "Matricula (Crear)",
       "desc": "Registrar calificaciones de alumnos",
       "url": "#"
