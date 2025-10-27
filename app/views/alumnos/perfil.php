@@ -53,6 +53,13 @@ include __DIR__ . "/../layout/navbar.php";
                     <p><strong>Etnia:</strong> <?= htmlspecialchars($alumno['cod_etnia']) ?></p>
                 </div>
             </div>
+
+            <div class="flex justify-center mt-8 gap-4">
+
+                <a href="index.php?action=alumno_edit&id=<?= $alumno['id'] ?>"
+                    class="btn bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition">
+                    Editar</a>
+            </div>
         </section>
 
         <!-- CONTACTOS DE EMERGENCIA -->
@@ -68,6 +75,7 @@ include __DIR__ . "/../layout/navbar.php";
                                 <th class="px-4 py-2 text-left">Teléfono</th>
                                 <th class="px-4 py-2 text-left">Dirección</th>
                                 <th class="px-4 py-2 text-left">Relación</th>
+                                <th class="px-4 py-2 text-left">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-700">
@@ -77,6 +85,17 @@ include __DIR__ . "/../layout/navbar.php";
                                     <td class="px-4 py-2"><?= htmlspecialchars($c['telefono']) ?></td>
                                     <td class="px-4 py-2"><?= htmlspecialchars($c['direccion']) ?></td>
                                     <td class="px-4 py-2"><?= htmlspecialchars($c['relacion']) ?></td>
+                                    <td class="px-4 py-2">
+                                        <a href="index.php?action=alum_emergencia_edit&id=<?= $c['id'] ?>&back=alumno_profile&alumno_id=<?= $alumno['id'] ?>"
+                                            class="inline-block bg-blue-600 hover:bg-blue-700 px-4 py-1 rounded-lg font-semibold transition">
+                                            Editar
+                                        </a>
+                                        <a href="index.php?action=alum_emergencia_deleteProfile&id=<?= $c['id'] ?>&alumno_id=<?= $alumno['id'] ?>"
+                                            onclick="return confirm('¿Estás seguro de eliminar este contacto?');"
+                                            class="inline-block bg-red-600 hover:bg-red-700 px-4 py-1 rounded-lg font-semibold text-white transition ml-2">
+                                            Eliminar
+                                        </a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -85,6 +104,14 @@ include __DIR__ . "/../layout/navbar.php";
             <?php else: ?>
                 <p class="text-gray-400 italic">No hay contactos de emergencia registrados.</p>
             <?php endif; ?>
+
+            <div class="flex justify-center mt-8 gap-4">
+                <!-- (Opcional) Crear nuevo y volver al perfil -->
+                <a href="index.php?action=alum_emergencia_createProfile&alumno_id=<?= $alumno['id'] ?>"
+                    class="btn bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-semibold transition">
+                    Agregar contacto
+                </a>
+            </div>
         </section>
 
         <!-- ANTECEDENTES FAMILIARES -->
@@ -105,10 +132,18 @@ include __DIR__ . "/../layout/navbar.php";
             <?php else: ?>
                 <p class="text-gray-400 italic">No hay antecedentes familiares registrados.</p>
             <?php endif; ?>
+
+            <div class="flex justify-center mt-8 gap-4">
+
+                <a href="index.php?action=antecedentefamiliar_editProfile&alumno_id=<?= $alumno['id'] ?>"
+                    class="btn bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition">
+                    Editar
+                </a>
+            </div>
+
         </section>
 
         <!-- ANTECEDENTE ESCOLAR -->
-        <!-- 🏫 ANTECEDENTE ESCOLAR -->
         <section>
             <h2 class="text-2xl font-bold border-b border-gray-600 pb-2 mb-6">Antecedente Escolar</h2>
 
@@ -116,7 +151,7 @@ include __DIR__ . "/../layout/navbar.php";
                 <div class="bg-gray-700 p-8 rounded-xl shadow-xl border border-gray-600">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
 
-                        <!-- 🧾 Columna izquierda -->
+                        <!-- Columna izquierda -->
                         <div class="space-y-3">
                             <h3 class="text-lg font-semibold text-indigo-400 mb-2">Datos Generales</h3>
                             <p><span class="font-semibold text-gray-200">Procedencia del Colegio:</span>
@@ -166,6 +201,16 @@ include __DIR__ . "/../layout/navbar.php";
             <?php else: ?>
                 <p class="text-gray-400 italic">No hay antecedente escolar registrado para este alumno.</p>
             <?php endif; ?>
+
+            <div class="flex justify-center mt-8 gap-4">
+
+                <a href="index.php?action=antecedente_escolar_editProfile&alumno_id=<?= $alumno['id'] ?>"
+                    class="btn bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition">
+                    Editar</a>
+
+            </div>
+
+
         </section>
 
 
@@ -174,13 +219,13 @@ include __DIR__ . "/../layout/navbar.php";
 
 
 
-        <!-- 🔙 BOTONES -->
+        <!-- BOTONES -->
         <div class="flex justify-center mt-8 gap-4">
             <a href="index.php?action=alumnos"
-                class="btn bg-indigo-600 hover:bg-indigo-700 px-6 py-2 rounded-lg font-semibold transition">⬅️
+                class="btn bg-indigo-600 hover:bg-indigo-700 px-6 py-2 rounded-lg font-semibold transition">
                 Volver</a>
             <a href="index.php?action=alumno_edit&id=<?= $alumno['id'] ?>"
-                class="btn bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition">✏️ Editar</a>
+                class="btn bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition">Editar</a>
         </div>
 
     </div>

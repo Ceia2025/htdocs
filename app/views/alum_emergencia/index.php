@@ -116,6 +116,10 @@ include __DIR__ . "/../layout/navbar.php";
                         class="inline-block rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-gray-600">
                         ⬅️ Volver al Dashboard
                     </a>
+                    <a href="index.php?action=alumno_profile&id=<?= $alumno['id'] ?>"
+                        class="inline-block rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-gray-600">
+                        ⬅️ Volver al Perfil
+                    </a>
                 </div>
             </div>
         </main>

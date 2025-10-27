@@ -20,7 +20,8 @@ include __DIR__ . "/../layout/navbar.php";
 
 
         <!-- HEADER -->
-        <header class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
+        <header
+            class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
             <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
                 <h1 class="text-3xl font-bold tracking-tight text-white">Editar Contacto de Emergencia</h1>
             </div>
@@ -30,9 +31,13 @@ include __DIR__ . "/../layout/navbar.php";
         <main>
             <div class="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
 
-                <!-- FORMULARIO -->
                 <div class="bg-gray-700 p-8 rounded-2xl shadow-lg">
-                    <form method="POST" action="index.php?action=alum_emergencia_update&id=<?= $emergencia['id'] ?>" class="space-y-6">
+                    <form method="POST" action="index.php?action=alum_emergencia_update&id=<?= $emergencia['id'] ?>"
+                        class="space-y-6">
+                        <!-- Mantener retorno -->
+                        <input type="hidden" name="back" value="<?= htmlspecialchars($back ?? 'alum_emergencia') ?>">
+                        <input type="hidden" name="alumno_id"
+                            value="<?= htmlspecialchars($alumno_id ?? $emergencia['alumno_id']) ?>">
 
                         <!-- Alumno -->
                         <div>
@@ -49,7 +54,8 @@ include __DIR__ . "/../layout/navbar.php";
 
                         <!-- Nombre del contacto -->
                         <div>
-                            <label for="nombre_contacto" class="block text-sm font-medium text-gray-200">Nombre del contacto</label>
+                            <label for="nombre_contacto" class="block text-sm font-medium text-gray-200">Nombre del
+                                contacto</label>
                             <input type="text" name="nombre_contacto" id="nombre_contacto" required
                                 value="<?= htmlspecialchars($emergencia['nombre_contacto']) ?>"
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
@@ -78,21 +84,29 @@ include __DIR__ . "/../layout/navbar.php";
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                                 <?php
                                 $opciones = ['Madre', 'Padre', 'Relación directa', 'Tutor Legal', 'Representante', 'Apoderado'];
-                                foreach ($opciones as $op):
-                                ?>
-                                    <option value="<?= $op ?>" <?= ($op == $emergencia['relacion']) ? 'selected' : '' ?>><?= $op ?></option>
+                                foreach ($opciones as $op): ?>
+                                    <option value="<?= $op ?>" <?= ($op == $emergencia['relacion']) ? 'selected' : '' ?>>
+                                        <?= $op ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
 
                         <!-- Botones -->
-                        <div class="flex space-x-4">
+                        <div class="flex gap-4">
                             <button type="submit"
-                                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition duration-200 ease-in-out">
+                                class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition">
                                 Actualizar
                             </button>
-                            <a href="index.php?action=alum_emergencia"
-                                class="w-full text-center inline-block rounded-lg bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 transition duration-200 ease-in-out">
+
+                            <?php
+                            // construir href de cancelación respetando back
+                            $cancelHref = "index.php?action=alum_emergencia";
+                            if (!empty($back) && $back === 'alumno_profile' && !empty($alumno_id)) {
+                                $cancelHref = "index.php?action=alumno_profile&id=" . urlencode($alumno_id);
+                            }
+                            ?>
+                            <a href="<?= $cancelHref ?>"
+                                class="flex-1 text-center inline-block rounded-lg bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 transition">
                                 Cancelar
                             </a>
                         </div>

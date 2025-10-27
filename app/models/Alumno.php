@@ -175,6 +175,23 @@ class Alumno
         ]);
     }
 
+    //Verificar existencia de rut
+    public function runExists($run)
+    {
+        $sql = "SELECT COUNT(*) FROM {$this->table} WHERE run = :run";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':run' => $run]);
+        return $stmt->fetchColumn() > 0;
+    }
+
+    public function existsByRun($run)
+    {
+        $sql = "SELECT COUNT(*) FROM {$this->table} WHERE run = :run";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':run' => $run]);
+        return $stmt->fetchColumn() > 0;
+    }
+
     // Eliminar un alumno
     public function delete($id)
     {

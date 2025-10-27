@@ -62,10 +62,18 @@ include __DIR__ . "/../layout/navbar.php";
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="run" class="block text-sm font-medium text-gray-200">RUN</label>
-                        <input type="text" name="run" id="run" required
-                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
-                        <p id="run-error" class="text-red-500 text-sm mt-1 hidden">RUN inválido (debe estar
-                            entre 1.000.000 y 100.000.000)</p>
+                        <input type="text" name="run" id="run" required class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 
+               focus:ring-indigo-500 focus:outline-none" placeholder="Ej: 12.345.678">
+
+                        <!-- Error de formato -->
+                        <p id="run-error" class="text-red-500 text-sm mt-1 hidden">
+                            RUN inválido (debe estar entre 1.000.000 y 100.000.000)
+                        </p>
+
+                        <!-- Error de duplicado -->
+                        <p id="run-exists-msg" class="text-red-500 text-sm mt-1 hidden">
+                            Este RUN ya se encuentra registrado.
+                        </p>
                     </div>
 
                     <!-- CÓDIGO VERIFICADOR -->
@@ -511,12 +519,16 @@ include __DIR__ . "/../layout/navbar.php";
         @apply bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-semibold transition;
     }
 </style>
-
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         let currentStep = 1;
         const steps = document.querySelectorAll('.step');
         const progressBar = document.getElementById('progress-bar');
+        const runInput = document.getElementById('run');
+        const codverInput = document.getElementById('codver');
+        const runError = document.getElementById('run-error');
+        const runExistsMsg = document.getElementById('run-exists-msg');
+        let runDuplicado = false; // 🔹 controla si el RUN ya existe
 
         // ✅ Mostrar paso actual y deshabilitar validación de los demás
         function showStep(step) {
@@ -524,7 +536,6 @@ include __DIR__ . "/../layout/navbar.php";
                 const isActive = (i + 1) === step;
                 s.classList.toggle('hidden', !isActive);
 
-                // Deshabilita validación solo en los pasos ocultos
                 s.querySelectorAll('[required]').forEach(input => {
                     if (!isActive) {
                         input.removeAttribute('required');
@@ -538,7 +549,13 @@ include __DIR__ . "/../layout/navbar.php";
 
         // 🔹 Botón "Siguiente"
         document.querySelectorAll('.next-step').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
+                // ⛔ Si el RUN ya existe, no permitir avanzar
+                if (runDuplicado) {
+                    alert("⚠️ No puedes continuar. El RUN ya está registrado en el sistema.");
+                    e.preventDefault();
+                    return;
+                }
                 if (currentStep < steps.length) currentStep++;
                 showStep(currentStep);
             });
@@ -603,68 +620,99 @@ include __DIR__ . "/../layout/navbar.php";
         // ✅ Habilitar todos los campos antes de enviar el formulario
         document.getElementById('stepperForm').addEventListener('submit', function (e) {
             console.log("✅ Enviando formulario...");
-
-            // Reactiva todos los inputs deshabilitados antes de enviar
+            if (runDuplicado) {
+                e.preventDefault();
+                alert("⚠️ No se puede enviar el formulario. El RUN ya existe.");
+                return;
+            }
             document.querySelectorAll('#stepperForm input[disabled], #stepperForm select[disabled], #stepperForm textarea[disabled]')
                 .forEach(el => el.disabled = false);
         });
 
         // Mostrar primer paso
         showStep(currentStep);
-    });
 
-
-    /* 🔹 Validación de RUN chileno */
-    function formatRun(value) {
-        value = value.replace(/\D/g, "");
-        return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-
-    function validateRun(value) {
-        const numericValue = parseInt(value.replace(/\./g, ""), 10);
-        if (isNaN(numericValue)) return false;
-        return numericValue >= 1000000 && numericValue <= 100000000;
-    }
-
-    function calcularDV(rut) {
-        let suma = 0;
-        let multiplicador = 2;
-        for (let i = rut.length - 1; i >= 0; i--) {
-            suma += parseInt(rut.charAt(i), 10) * multiplicador;
-            multiplicador = multiplicador < 7 ? multiplicador + 1 : 2;
+        /* 🔹 Funciones auxiliares para RUN */
+        function formatRun(value) {
+            value = value.replace(/\D/g, "");
+            return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
-        const resto = 11 - (suma % 11);
-        if (resto === 11) return "0";
-        if (resto === 10) return "K";
-        return String(resto);
-    }
 
-    const runInput = document.getElementById('run');
-    const codverInput = document.getElementById('codver');
-    const runError = document.getElementById('run-error');
+        function validateRun(value) {
+            const numericValue = parseInt(value.replace(/\./g, ""), 10);
+            if (isNaN(numericValue)) return false;
+            return numericValue >= 1000000 && numericValue <= 100000000;
+        }
 
-    runInput.addEventListener('keypress', function (e) {
-        if (!/[0-9]/.test(e.key)) e.preventDefault();
-    });
-
-    runInput.addEventListener('input', function (e) {
-        let formatted = formatRun(e.target.value);
-        e.target.value = formatted;
-
-        if (formatted && !validateRun(formatted)) {
-            runError.classList.remove('hidden');
-            codverInput.value = "";
-        } else {
-            runError.classList.add('hidden');
-            const numericValue = formatted.replace(/\./g, "");
-            if (numericValue.length > 0 && validateRun(formatted)) {
-                codverInput.value = calcularDV(numericValue);
-            } else {
-                codverInput.value = "";
+        function calcularDV(rut) {
+            let suma = 0;
+            let multiplicador = 2;
+            for (let i = rut.length - 1; i >= 0; i--) {
+                suma += parseInt(rut.charAt(i), 10) * multiplicador;
+                multiplicador = multiplicador < 7 ? multiplicador + 1 : 2;
             }
+            const resto = 11 - (suma % 11);
+            if (resto === 11) return "0";
+            if (resto === 10) return "K";
+            return String(resto);
+        }
+
+        // 🔹 Validación de RUN y cálculo de dígito verificador
+        runInput.addEventListener('keypress', function (e) {
+            if (!/[0-9]/.test(e.key)) e.preventDefault();
+        });
+
+        runInput.addEventListener('input', function (e) {
+            let formatted = formatRun(e.target.value);
+            e.target.value = formatted;
+
+            if (formatted && !validateRun(formatted)) {
+                runError.classList.remove('hidden');
+                codverInput.value = "";
+            } else {
+                runError.classList.add('hidden');
+                const numericValue = formatted.replace(/\./g, "");
+                if (numericValue.length > 0 && validateRun(formatted)) {
+                    codverInput.value = calcularDV(numericValue);
+                } else {
+                    codverInput.value = "";
+                }
+            }
+        });
+
+        // 🔹 Verificación automática de RUN en tiempo real
+        let checkRunTimeout;
+        runInput.addEventListener('blur', checkRun);
+        runInput.addEventListener('input', () => {
+            clearTimeout(checkRunTimeout);
+            checkRunTimeout = setTimeout(checkRun, 700);
+        });
+
+        function checkRun() {
+            const runValue = runInput.value.trim();
+            if (!runValue || !validateRun(runValue)) return;
+
+            fetch(`index.php?action=check_run_exists&run=${encodeURIComponent(runValue)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.exists) {
+                        runExistsMsg.textContent = "⚠️ Este RUN ya está registrado en el sistema.";
+                        runExistsMsg.classList.remove('hidden');
+                        runExistsMsg.classList.add('text-red-500');
+                        runInput.classList.add('border-red-500');
+                        runDuplicado = true;
+                    } else {
+                        runExistsMsg.textContent = "";
+                        runExistsMsg.classList.add('hidden');
+                        runInput.classList.remove('border-red-500');
+                        runDuplicado = false;
+                    }
+                })
+                .catch(err => console.error('Error verificando RUN:', err));
         }
     });
 </script>
+
 
 
 

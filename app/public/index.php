@@ -170,6 +170,12 @@ switch ($action) {
         $alumnosController->storeStepper($_POST); // guardar todo
         break;
 
+    case 'check_run_exists':
+        require_once __DIR__ . '/../controllers/AlumnosController.php';
+        $controller = new AlumnosController();
+        $controller->checkRunExists();
+        break;
+
     // Asignaturas
     case 'asignaturas':
         $asignaturas = new AsignaturasController();
@@ -282,6 +288,18 @@ switch ($action) {
         echo json_encode($results);
         exit; // Muy importante para que no cargue otra vista
 
+    case 'alum_emergencia_createProfile':
+        $alumnoemergencia = new AlumEmergenciaController();
+        $alumnoemergencia->createProfile($_GET['alumno_id']);
+        break;
+    case 'alum_emergencia_storeProfile':
+        $alumnoemergencia = new AlumEmergenciaController();
+        $alumnoemergencia->storeProfile($_POST);
+        break;
+    case 'alum_emergencia_deleteProfile':
+        $alumnoemergencia = new AlumEmergenciaController();
+        $alumnoemergencia->deleteProfile($_GET['id'], $_GET['alumno_id']);
+        break;
 
 
     //Inventario
@@ -336,7 +354,14 @@ switch ($action) {
     case 'antecedentefamiliar_delete':
         $antecedenteFamiliarController->delete($_GET['id']);
         break;
-
+    case 'antecedentefamiliar_editProfile':
+        $controller = new AntecedenteFamiliarController();
+        $controller->editProfile($_GET['alumno_id']);
+        break;
+    case 'antecedentefamiliar_updateProfile':
+        $controller = new AntecedenteFamiliarController();
+        $controller->updateProfile($_POST);
+        break;
 
 
     //Procedencia SOLO PARA EL INVENTARIO
@@ -427,6 +452,15 @@ switch ($action) {
         break;
     case 'antecedente_escolar_delete':
         $antecedenteEscolarController->delete($_GET['id']);
+        break;
+    case 'antecedente_escolar_editProfile':
+        $controller = new AntecedenteEscolarController();
+        $controller->editProfile($_GET['alumno_id']);
+        break;
+
+    case 'antecedente_escolar_updateProfile':
+        $controller = new AntecedenteEscolarController();
+        $controller->updateProfile($_POST);
         break;
 
     default:

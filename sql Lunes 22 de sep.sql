@@ -2,6 +2,9 @@ show databases;
 create database saatdevtest2;
 use saatdevtest2;
 
+
+select * from alum_emergencia2;
+
 show tables;
 select * from antecedentes_familiares;
 --

@@ -65,8 +65,17 @@ class AlumnosController
 
     public function storeStepper($data)
     {
-
         $alumnoModel = new Alumno();
+
+        // ✅ Comprobar si el RUN ya existe antes de insertar
+        if ($alumnoModel->existsByRun($data['run'])) {
+            echo "<script>
+            alert('⚠️ El RUN \"{$data['run']}\" ya está registrado. Por favor, verifícalo.');
+            window.history.back();
+        </script>";
+            exit;
+        }
+
         $alumnoId = $alumnoModel->create($data);
 
         // 🔹 Guardar contactos de emergencia
@@ -95,17 +104,18 @@ class AlumnosController
             );
         }
 
-        // 🔹 Guardar antecedente escolar (NUEVO)
+        // 🔹 Guardar antecedente escolar
         if (!empty($data['antecedente_escolar'])) {
             $escolarModel = new AntecedenteEscolar();
             $escolar = $data['antecedente_escolar'];
-            $escolar['alumno_id'] = $alumnoId; // 👈 Asegúrate de tener esta línea
+            $escolar['alumno_id'] = $alumnoId;
             $escolarModel->create($escolar);
         }
 
         header("Location: index.php?action=alumnos");
         exit;
     }
+
 
 
     //Redireccion a la vista
@@ -193,6 +203,25 @@ class AlumnosController
         }
 
         header("Location: index.php?action=alumnos");
+        exit;
+    }
+
+    //verificar si ya existe el rut del alumno
+    public function checkRunExists()
+    {
+        if (!isset($_GET['run'])) {
+            echo json_encode(['error' => 'Falta parámetro RUN']);
+            exit;
+        }
+
+        $run = trim($_GET['run']);
+        $alumnoModel = new Alumno();
+
+        // Nueva función en el modelo
+        $exists = $alumnoModel->runExists($run);
+
+        header('Content-Type: application/json');
+        echo json_encode(['exists' => $exists]);
         exit;
     }
 
