@@ -46,7 +46,7 @@
       "url": "index.php?action=antecedentefamiliar"
     },
     {
-      "title": "INGRESO ALUMNO MATRICULA TEST",
+      "title": "Matricula",
       "desc": "Antecedentes familiares de los alumnos",
       "url": "index.php?action=alumnos_stepper"
     },
@@ -94,6 +94,11 @@
       "title": "Individualizacion",
       "desc": "En este apartado estan las categorias de items mas sus respectivos codigo",
       "url": "index.php?action=categorizaciones"
+    },
+    {
+      "title": "Mantenedor de matricula",
+      "desc": "En este apartado estan las categorias de items mas sus respectivos codigo",
+      "url": "index.php?action=matriculas"
     }
   ],
   "docente": [

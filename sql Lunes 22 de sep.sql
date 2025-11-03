@@ -32,7 +32,35 @@ SHOW CREATE TABLE curso_asignaturas2;
 SHOW CREATE TABLE roles2;
 SHOW CREATE TABLE usuarios2;
 
-select * from alum_familia2;
+select * from alumnos2;
+
+CREATE TABLE `alumnos2` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `run` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+   `codver` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `nombre` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+   `apepat` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+   `apemat` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `fechanac` date DEFAULT NULL,
+   `mayoredad` enum('No','Si') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `numerohijos` int DEFAULT NULL,
+   `telefono` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `celular` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `sexo` enum('F','M') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `created_at` date NOT NULL DEFAULT (curdate()),
+   `nacionalidades` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `region` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+   `ciudad` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `direccion` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+   `cod_etnia` enum('No pertenece a ningún Pueblo Originario','Aymara','Likanantai( Atacameño )','Colla','Diaguita','Quechua','Rapa Nui','Mapuche','Kawésqar','Yagán','Otro','No Registra') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'No Registra',
+   `deleted_at` datetime DEFAULT NULL,
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `run` (`run`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+ 
+ 
+ select * from alumnos2;
 
 -- |||||||||||||||||||||||||||||||||||||||||
 --

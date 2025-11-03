@@ -44,8 +44,12 @@ include __DIR__ . "/../layout/navbar.php";
                     <p><strong>Sexo:</strong> <?= htmlspecialchars($alumno['sexo']) ?></p>
                     <p><strong>Email:</strong> <?= htmlspecialchars($alumno['email']) ?></p>
                     <p><strong>Teléfono:</strong> <?= htmlspecialchars($alumno['telefono']) ?></p>
+                    <p><strong>celular:</strong> <?= htmlspecialchars($alumno['celular']) ?></p>
                 </div>
+
                 <div class="bg-gray-700 p-6 rounded-xl space-y-2">
+                    <p><strong>Fecha Creacion:</strong> <?= htmlspecialchars($alumno['created_at']) ?></p>
+                    <p><strong>Fecha Retiro:</strong> <?= htmlspecialchars($alumno['deleted_at']) ?></p>
                     <p><strong>Nacionalidad:</strong> <?= htmlspecialchars($alumno['nacionalidades']) ?></p>
                     <p><strong>Región:</strong> <?= htmlspecialchars($alumno['region']) ?></p>
                     <p><strong>Ciudad:</strong> <?= htmlspecialchars($alumno['ciudad']) ?></p>

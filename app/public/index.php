@@ -10,6 +10,14 @@ require_once __DIR__ . '/../controllers/CursoAsignaturaController.php';
 require_once __DIR__ . '/../controllers/AlumEmergenciaController.php';
 require_once __DIR__ . '/../controllers/AntecedenteFamiliarController.php';
 require_once __DIR__ . '/../controllers/AntecedenteEscolarController.php';
+require_once __DIR__ . '/../controllers/MatriculaController.php';
+require_once __DIR__ . '/../controllers/PerfilAcademicoController.php';
+require_once __DIR__ . '/../controllers/AntecedenteEscolarController.php';
+require_once __DIR__ . '/../controllers/NotasController.php';
+
+
+
+
 
 //Inventario
 require_once __DIR__ . '/../controllers/inventario/InventarioController.php';
@@ -34,6 +42,9 @@ $cursoAsignaruta = new CursoAsignaturaController();
 $alumnoemergencia = new AlumEmergenciaController();
 $antecedenteFamiliarController = new AntecedenteFamiliarController();
 $antecedenteEscolarController = new AntecedenteEscolarController();
+$matriculaController = new MatriculaController();
+
+
 
 
 
@@ -74,6 +85,12 @@ switch ($action) {
         break;
     case 'user_delete':
         $userController->destroy($_GET['id']);
+        break;
+
+    //Përfil academico
+    case 'perfil_academico':
+        $perfilController = new PerfilAcademicoController();
+        $perfilController->show($_GET['id']);
         break;
 
     // CRUD Roles
@@ -461,6 +478,87 @@ switch ($action) {
     case 'antecedente_escolar_updateProfile':
         $controller = new AntecedenteEscolarController();
         $controller->updateProfile($_POST);
+        break;
+
+
+    // CRUD MATRÍCULAS
+    case 'matriculas':
+        $matriculaController->index();
+        break;
+
+    case 'matricula_create':
+        $matriculaController->create();
+        break;
+
+    case 'matricula_store':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $matriculaController->store($_POST);
+        }
+        break;
+
+    case 'matricula_edit':
+        if (isset($_GET['id'])) {
+            $matriculaController->edit($_GET['id']);
+        }
+        break;
+
+    case 'matricula_update':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
+            $matriculaController->update($_GET['id'], $_POST);
+        }
+        break;
+
+    case 'matricula_delete':
+        if (isset($_GET['id'])) {
+            $matriculaController->delete($_GET['id']);
+        }
+        break;
+
+    /*
+case 'alumno_search_ajax':
+    require_once __DIR__ . '/../models/Alumno.php';
+    $alumnoModel = new Alumno();
+    $term = $_GET['term'] ?? '';
+    $results = $alumnoModel->searchAlumnoEmergencia($term);
+    header('Content-Type: application/json');
+    echo json_encode($results);
+    exit;*/
+
+
+    // NOTAS
+    case 'notas':
+        $notasController = new NotasController();
+        $notasController->index();
+        break;
+
+    case 'notas_createGroup':
+        $notasController = new NotasController();
+        $notasController->createGroup($_GET['curso_id'], $_GET['anio_id']);
+        break;
+
+    case 'notas_storeGroup':
+        $notasController = new NotasController();
+        $notasController->storeGroup($_GET['curso_id'], $_GET['anio_id'], $_POST);
+        break;
+
+    case 'notas_edit':
+        $notasController = new NotasController();
+        $notasController->edit($_GET['id']);
+        break;
+
+    case 'notas_update':
+        $notasController = new NotasController();
+        $notasController->update($_GET['id'], $_POST);
+        break;
+
+    case 'notas_delete':
+        $notasController = new NotasController();
+        $notasController->delete($_GET['id']);
+        break;
+
+    case 'notas_profile':
+        $notasController = new NotasController();
+        $notasController->indexProfile($_GET['matricula_id']);
         break;
 
     default:

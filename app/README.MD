@@ -1,4 +1,4 @@
-´´´´
+´´´
 app/
  ├─ config/
  │   └─ Connection.php             # Conexión PDO a la base de datos
