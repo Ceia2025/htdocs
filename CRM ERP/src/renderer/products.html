@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Productos</title>
+</head>
+<body>
+  <a href="index.html">← Volver</a>
+  <h2>Productos</h2>
+
+  <div id="status"></div>
+
+  <form id="form">
+    <input type="hidden" id="id">
+    <label>Nombre: <input type="text" id="name" required></label><br>
+    <label>SKU: <input type="text" id="sku" required></label><br>
+    <label>Precio: <input type="number" id="price" required></label><br>
+    <label>Cantidad: <input type="number" id="qty" required></label><br>
+    <button type="submit">Guardar</button>
+  </form>
+
+  <hr>
+  <table border="1" cellpadding="4" cellspacing="0">
+    <thead>
+      <tr>
+        <th>ID</th><th>Nombre</th><th>SKU</th><th>Precio</th><th>Cantidad</th><th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <script>
+    const statusDiv = document.getElementById('status');
+
+    function showMessage(msg, ok = true) {
+      statusDiv.textContent = msg;
+      statusDiv.style.color = ok ? "green" : "red";
+    }
+
+    async function render() {
+      const data = await window.api.list();
+      const tbody = document.getElementById('tbody');
+      tbody.innerHTML = '';
+      data.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.id}</td>
+          <td>${p.name}</td>
+          <td>${p.sku}</td>
+          <td>${p.price}</td>
+          <td>${p.qty}</td>
+          <td>
+            <button onclick="edit(${p.id})">Editar</button>
+            <button onclick="remove(${p.id})">Eliminar</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function remove(id) {
+      if (confirm('¿Eliminar producto?')) {
+        const res = await window.api.remove(id);
+        showMessage(res.message || "Eliminado correctamente");
+        render();
+      }
+    }
+
+    async function edit(id) {
+      const data = await window.api.list();
+      const p = data.find(x => x.id === id);
+      if (!p) return;
+      document.getElementById('id').value = p.id;
+      document.getElementById('name').value = p.name;
+      document.getElementById('sku').value = p.sku;
+      document.getElementById('price').value = p.price;
+      document.getElementById('qty').value = p.qty;
+    }
+
+    document.getElementById('form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const id = document.getElementById('id').value;
+      const prod = {
+        id: id ? parseInt(id) : undefined,
+        name: document.getElementById('name').value,
+        sku: document.getElementById('sku').value,
+        price: parseFloat(document.getElementById('price').value),
+        qty: parseInt(document.getElementById('qty').value)
+      };
+
+      let res = id ? await window.api.update(prod) : await window.api.create(prod);
+      showMessage(res.message, res.ok);
+      e.target.reset();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

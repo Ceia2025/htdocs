@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Clientes</title>
+</head>
+<body>
+  <a href="index.html">← Volver</a>
+  <h2>Clientes</h2>
+
+  <div id="status"></div>
+
+  <form id="form">
+    <input type="hidden" id="id">
+    <label>Nombre: <input type="text" id="name" required></label><br>
+    <label>Email: <input type="email" id="email" required></label><br>
+    <label>Teléfono: <input type="text" id="phone"></label><br>
+    <button type="submit">Guardar</button>
+  </form>
+
+  <hr>
+  <table border="1" cellpadding="4" cellspacing="0">
+    <thead>
+      <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <script>
+    const statusDiv = document.getElementById('status');
+
+    function showMessage(msg, ok = true) {
+      statusDiv.textContent = msg;
+      statusDiv.style.color = ok ? "green" : "red";
+    }
+
+    async function render() {
+      const data = await window.api.listAll('customers');
+      const tbody = document.getElementById('tbody');
+      tbody.innerHTML = '';
+      data.forEach(c => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${c.id}</td>
+          <td>${c.name}</td>
+          <td>${c.email}</td>
+          <td>${c.phone || ''}</td>
+          <td>
+            <button onclick="edit(${c.id})">Editar</button>
+            <button onclick="remove(${c.id})">Eliminar</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function remove(id) {
+      if (confirm('¿Eliminar cliente?')) {
+        await window.api.removeIn('customers', id);
+        showMessage("Cliente eliminado");
+        render();
+      }
+    }
+
+    async function edit(id) {
+      const data = await window.api.listAll('customers');
+      const c = data.find(x => x.id === id);
+      if (!c) return;
+      document.getElementById('id').value = c.id;
+      document.getElementById('name').value = c.name;
+      document.getElementById('email').value = c.email;
+      document.getElementById('phone').value = c.phone || '';
+    }
+
+    document.getElementById('form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const id = document.getElementById('id').value;
+      const cliente = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value
+      };
+
+      if (id) {
+        await window.api.updateIn('customers', parseInt(id), cliente);
+        showMessage("Cliente actualizado");
+      } else {
+        await window.api.createIn('customers', cliente);
+        showMessage("Cliente agregado");
+      }
+
+      e.target.reset();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

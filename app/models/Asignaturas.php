@@ -15,7 +15,7 @@ class Asignaturas
     // Obtener todos los cursos
     public function getAll()
     {
-        $sql = "SELECT id, nombre, descp 
+        $sql = "SELECT id, abreviatura , nombre, descp 
                 FROM {$this->table}
                 ORDER BY nombre ASC";
         $stmt = $this->conn->query($sql);
@@ -25,7 +25,7 @@ class Asignaturas
     // Obtener curso por ID
     public function getById($id)
     {
-        $sql = "SELECT id, nombre, descp 
+        $sql = "SELECT id, abreviatura, nombre, descp 
                 FROM {$this->table} 
                 WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
@@ -34,22 +34,23 @@ class Asignaturas
     }
 
     // Crear curso
-    public function create($nombre, $descp)
+    public function create($abreviatura, $nombre, $descp)
     {
-        $sql = "INSERT INTO {$this->table} (nombre, descp) 
-                VALUES (:nombre, :descp)";
+        $sql = "INSERT INTO {$this->table} (abreviatura, nombre, descp) 
+                VALUES (:abreviatura, :nombre, :descp)";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([":nombre" => $nombre, ":descp" => $descp]);
+        return $stmt->execute([":abreviatura" => $abreviatura, ":nombre" => $nombre, ":descp" => $descp]);
     }
 
     // Actualizar curso
-    public function update($id, $nombre, $descp) {
+    public function update($id,$abreviatura, $nombre, $descp) {
     $sql = "UPDATE {$this->table} 
-            SET nombre = :nombre, 
+            SET abreviatura = :abreviatura,
+                nombre = :nombre, 
                 descp = :descp
             WHERE id = :id";
     $stmt = $this->conn->prepare($sql);
-    return $stmt->execute([":id" => $id, ":nombre" => $nombre, ":descp" => $descp]);
+    return $stmt->execute([":id" => $id,":abreviatura" => $abreviatura, ":nombre" => $nombre, ":descp" => $descp]);
 }
 
     // Eliminar curso

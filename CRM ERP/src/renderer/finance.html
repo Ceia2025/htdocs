@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Finanzas</title>
+</head>
+<body>
+  <a href="index.html">← Volver</a>
+  <h2>Finanzas</h2>
+
+  <p>
+    Este módulo registra los <strong>movimientos de dinero</strong> del sistema.<br>
+    Puedes registrar ingresos (dinero que entra) y egresos (dinero que sale).<br>
+    Los datos pueden provenir de ventas, pagos, servicios o registros manuales.
+  </p>
+
+  <div id="status"></div>
+
+  <form id="form">
+    <input type="hidden" id="id">
+
+    <label>Cuenta:
+      <input type="text" id="account" placeholder="Ej: Caja chica o Banco Estado" required>
+    </label><br><br>
+
+    <label>Tipo:
+      <select id="type">
+        <option value="Ingreso">Ingreso</option>
+        <option value="Egreso">Egreso</option>
+      </select>
+    </label><br><br>
+
+    <label>Monto:
+      <input type="number" id="amount" min="0" required>
+    </label><br>
+    <small>Escribe el valor del movimiento (ejemplo: 25000).</small><br><br>
+
+    <label>Descripción:
+      <input type="text" id="description" placeholder="Ej: Pago de servicio eléctrico" required>
+    </label><br><br>
+
+    <button type="submit">Guardar</button>
+  </form>
+
+  <hr>
+  <h3>Movimientos registrados</h3>
+  <table border="1" cellpadding="4" cellspacing="0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Cuenta</th>
+        <th>Tipo</th>
+        <th>Monto</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <hr>
+  <h3>Resumen actual</h3>
+  <p id="summary">Cargando...</p>
+
+  <script>
+    const statusDiv = document.getElementById("status");
+    const summary   = document.getElementById("summary");
+
+    function showMessage(msg, ok = true) {
+      statusDiv.textContent = msg;
+      statusDiv.style.color = ok ? "green" : "red";
+    }
+
+    async function render() {
+      const movimientos = await window.api.listAll("finance");
+      const tbody = document.getElementById("tbody");
+      tbody.innerHTML = "";
+
+      let totalIngresos = 0;
+      let totalEgresos  = 0;
+
+      movimientos.forEach((m, idx) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${idx + 1}</td>
+          <td>${m.account}</td>
+          <td>${m.type}</td>
+          <td>${m.amount}</td>
+          <td>${m.description}</td>`;
+        tbody.appendChild(tr);
+
+        if (m.type === "Ingreso") totalIngresos += m.amount;
+        else if (m.type === "Egreso") totalEgresos += m.amount;
+      });
+
+      const balance = totalIngresos - totalEgresos;
+      summary.textContent = `💵 Ingresos: $${totalIngresos.toLocaleString()} | 💸 Egresos: $${totalEgresos.toLocaleString()} | 📊 Balance: $${balance.toLocaleString()}`;
+    }
+
+    document.getElementById("form").addEventListener("submit", async e => {
+      e.preventDefault();
+      const data = {
+        account: document.getElementById("account").value,
+        type: document.getElementById("type").value,
+        amount: parseFloat(document.getElementById("amount").value),
+        description: document.getElementById("description").value
+      };
+      const res = await window.api.createIn("finance", data);
+      showMessage(res.message || "Movimiento registrado correctamente");
+      e.target.reset();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

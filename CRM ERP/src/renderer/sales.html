@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ventas - Órdenes</title>
+</head>
+<body>
+  <a href="index.html">← Volver</a>
+  <h2>Ventas - Órdenes</h2>
+
+  <div id="status"></div>
+
+  <form id="form">
+    <input type="hidden" id="id">
+
+    <!-- 🔍 Cliente con buscador -->
+    <label>Cliente:
+      <input type="text" id="customer_search" placeholder="Buscar cliente..." list="customer_list">
+      <datalist id="customer_list"></datalist>
+    </label><br>
+    <input type="hidden" id="customer_id">
+
+    <!-- 🔍 Producto con buscador -->
+    <label>Producto:
+      <input type="text" id="product_search" placeholder="Buscar producto..." list="product_list">
+      <datalist id="product_list"></datalist>
+    </label><br>
+    <input type="hidden" id="product_id">
+
+    <label>Cantidad: <input type="number" id="qty" required></label><br>
+    <label>Precio (sin IVA): <input type="number" id="price" readonly></label><br>
+    <label>Precio con IVA (19%): <input type="number" id="price_iva" readonly></label><br>
+    <label>Total: <input type="number" id="total" readonly></label><br>
+
+    <label>Estado:
+      <select id="statusSel">
+        <option value="borrador">Borrador</option>
+        <option value="confirmado">Confirmado</option>
+        <option value="facturado">Facturado</option>
+      </select>
+    </label><br>
+    <button type="submit">Guardar</button>
+  </form>
+
+  <hr>
+  <table border="1" cellpadding="4" cellspacing="0">
+    <thead>
+      <tr>
+        <th>ID</th><th>Cliente</th><th>Producto</th><th>Cantidad</th>
+        <th>Precio (con IVA)</th><th>Total</th><th>Estado</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <script>
+    const statusDiv = document.getElementById('status');
+    const qty = document.getElementById('qty');
+    const price = document.getElementById('price');
+    const priceIVA = document.getElementById('price_iva');
+    const total = document.getElementById('total');
+
+    function showMessage(msg, ok = true) {
+      statusDiv.textContent = msg;
+      statusDiv.style.color = ok ? "green" : "red";
+    }
+
+    // 🔹 Calcular totales
+    function calcTotal() {
+      const p = parseFloat(price.value || 0);
+      const q = parseFloat(qty.value || 0);
+      const pIVA = (p * 1.19).toFixed(2);
+      priceIVA.value = pIVA;
+      total.value = (pIVA * q).toFixed(2);
+    }
+    qty.addEventListener("input", calcTotal);
+
+    // 🔹 Cargar ventas
+    async function render() {
+      const sales = await window.api.listAll('sales');
+      const customers = await window.api.listAll('customers');
+      const products = await window.api.list();
+
+      const tbody = document.getElementById('tbody');
+      tbody.innerHTML = '';
+
+      sales.forEach(s => {
+        const c = customers.find(x => x.id === parseInt(s.customer_id));
+        const p = products.find(x => x.id === parseInt(s.product_id));
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${s.id}</td>
+          <td>${c ? c.name : '(Cliente ' + s.customer_id + ')'}</td>
+          <td>${p ? p.name : '(Producto ' + s.product_id + ')'}</td>
+          <td>${s.qty}</td>
+          <td>${s.price_iva}</td>
+          <td>${s.total}</td>
+          <td>${s.status}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 🔍 Autocompletar clientes
+    async function loadCustomerList() {
+      const customers = await window.api.listAll('customers');
+      const datalist = document.getElementById('customer_list');
+      datalist.innerHTML = '';
+      customers.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = `${c.name} (ID: ${c.id})`;
+        datalist.appendChild(opt);
+      });
+    }
+
+    document.getElementById('customer_search').addEventListener('change', async (e) => {
+      const customers = await window.api.listAll('customers');
+      const selected = customers.find(c => e.target.value.includes(`ID: ${c.id}`));
+      if (selected) document.getElementById('customer_id').value = selected.id;
+    });
+
+    // 🔍 Autocompletar productos
+    async function loadProductList() {
+      const products = await window.api.list();
+      const datalist = document.getElementById('product_list');
+      datalist.innerHTML = '';
+      products.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = `${p.name} (SKU: ${p.sku}, ID: ${p.id || 'N/A'})`;
+        datalist.appendChild(opt);
+      });
+    }
+
+    document.getElementById('product_search').addEventListener('change', async (e) => {
+      const products = await window.api.list();
+      const selected = products.find(p => e.target.value.includes(p.name));
+      if (selected) {
+        document.getElementById('product_id').value = selected.id;
+        price.value = selected.price;
+        calcTotal();
+      }
+    });
+
+    // 🧾 Guardar venta
+    document.getElementById('form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = {
+        customer_id: parseInt(document.getElementById('customer_id').value),
+        product_id: parseInt(document.getElementById('product_id').value),
+        qty: parseFloat(qty.value),
+        price: parseFloat(price.value),
+        price_iva: parseFloat(priceIVA.value),
+        total: parseFloat(total.value),
+        status: document.getElementById('statusSel').value
+      };
+      const res = await window.api.createIn('sales', data);
+      showMessage(res.message || "Venta registrada");
+      e.target.reset();
+      render();
+    });
+
+    // 🚀 Inicialización
+    loadCustomerList();
+    loadProductList();
+    render();
+  </script>
+</body>
+</html>

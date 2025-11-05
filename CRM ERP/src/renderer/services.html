@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Servicios</title>
+</head>
+<body>
+  <a href="index.html">← Volver</a>
+  <h2>Servicios</h2>
+
+  <div id="status"></div>
+
+  <form id="form">
+    <input type="hidden" id="id">
+    <label>Cliente ID: <input type="number" id="customer_id" required></label><br>
+    <label>Título del servicio: <input type="text" id="title" required></label><br>
+    <label>Descripción: <input type="text" id="description"></label><br>
+    <label>Estado:
+      <select id="statusSel">
+        <option value="pendiente">Pendiente</option>
+        <option value="en_progreso">En progreso</option>
+        <option value="completado">Completado</option>
+      </select>
+    </label><br>
+    <button type="submit">Guardar</button>
+  </form>
+
+  <hr>
+  <table border="1" cellpadding="4" cellspacing="0">
+    <thead>
+      <tr><th>ID</th><th>Cliente</th><th>Título</th><th>Descripción</th><th>Estado</th></tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <script>
+    const statusDiv = document.getElementById("status");
+
+    function showMessage(msg, ok = true) {
+      statusDiv.textContent = msg;
+      statusDiv.style.color = ok ? "green" : "red";
+    }
+
+    async function render() {
+      const services = await window.api.listAll("services");
+      const customers = await window.api.listAll("customers");
+      const tbody = document.getElementById("tbody");
+      tbody.innerHTML = "";
+
+      services.forEach(s => {
+        const c = customers.find(x => x.id === parseInt(s.customer_id));
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${s.id}</td>
+          <td>${c ? c.name : "(Cliente " + s.customer_id + ")"}</td>
+          <td>${s.title}</td>
+          <td>${s.description || ""}</td>
+          <td>${s.status}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById("form").addEventListener("submit", async e => {
+      e.preventDefault();
+      const data = {
+        customer_id: parseInt(document.getElementById("customer_id").value),
+        title: document.getElementById("title").value,
+        description: document.getElementById("description").value,
+        status: document.getElementById("statusSel").value
+      };
+      await window.api.createIn("services", data);
+      showMessage("Servicio registrado");
+      e.target.reset();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

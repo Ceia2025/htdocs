@@ -12,61 +12,62 @@ class NotasController
         $this->model = new Nota();
     }
 
-    // ✅ Listado general
+    // Listado general
     public function index()
     {
         $notas = $this->model->getAll();
         require __DIR__ . '/../views/notas/index.php';
     }
 
-    // ✅ Formulario ingreso masivo
+    // Formulario de ingreso masivo
     public function createGroup($curso_id, $anio_id)
     {
         $alumnos = $this->model->getByCursoYAnio($curso_id, $anio_id);
 
-        require_once __DIR__ . '/../models/Asignaturas.php';
         $asignaturasModel = new Asignaturas();
         $asignaturas = $asignaturasModel->getAll();
 
         require __DIR__ . '/../views/notas/createGroup.php';
     }
 
-    // ✅ Guardar notas en grupo
+    // Guardar notas en grupo
     public function storeGroup($curso_id, $anio_id, $data)
     {
+        $semestre = intval($data['semestre'] ?? 1);
+
         $this->model->createMultiple(
             $curso_id,
             $anio_id,
             $data['asignatura_id'],
             $data['fecha'],
-            $data['notas']
+            $data['notas'],
+            $semestre
         );
 
-        header("Location: index.php?action=perfil_curso&id=$curso_id&anio_id=$anio_id");
+        header("Location: index.php?action=perfil_curso&id=$curso_id&anio_id=$anio_id&semestre=$semestre");
         exit;
     }
 
-    // ✅ Mostrar notas en perfil académico
+    // Perfil académico
     public function indexProfile($matricula_id)
     {
-        $notas = $this->model->getByMatricula($matricula_id);
+        $semestre = intval($_GET['semestre'] ?? 1);
+        $notas = $this->model->getByMatriculaAndSemestre($matricula_id, $semestre);
         require __DIR__ . '/../views/notas/indexProfile.php';
     }
 
-    // ✅ Editar
+    // Editar nota
     public function edit($id)
     {
         $nota = $this->model->getById($id);
 
-        // Cargar asignaturas para el <select>
-        require_once __DIR__ . '/../models/Asignaturas.php';
         $asignaturasModel = new Asignaturas();
         $asignaturas = $asignaturasModel->getAll();
 
         require __DIR__ . '/../views/notas/edit.php';
     }
 
-    // ✅ Actualizar
+    // Actualizar
     public function update($id, $data)
     {
         $val = floatval($data['nota']);
@@ -75,12 +76,14 @@ class NotasController
             exit;
         }
 
+        $data['semestre'] = intval($data['semestre'] ?? 1);
         $this->model->update($id, $data);
+
         header("Location: index.php?action=notas");
         exit;
     }
 
-    // ✅ Eliminar
+    // Eliminar
     public function delete($id)
     {
         $this->model->delete($id);

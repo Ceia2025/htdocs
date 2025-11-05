@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Punto de Venta - POS</title>
+</head>
+<body>
+  <a href="index.html">← Volver</a>
+  <h2>Punto de Venta (POS)</h2>
+
+  <div id="status"></div>
+
+  <form id="form">
+    <input type="hidden" id="id">
+
+    <!-- 🔍 Cliente con buscador -->
+    <label>Cliente:
+      <input type="text" id="customer_search" placeholder="Buscar cliente..." list="customer_list">
+      <datalist id="customer_list"></datalist>
+    </label><br>
+    <small>Selecciona el cliente que está realizando la compra.</small><br>
+    <input type="hidden" id="customer_id"><br>
+
+    <!-- 🔍 Producto con buscador -->
+    <label>Producto:
+      <input type="text" id="product_search" placeholder="Buscar producto..." list="product_list">
+      <datalist id="product_list"></datalist>
+    </label><br>
+    <small>Busca un producto disponible por nombre o SKU.</small><br>
+    <input type="hidden" id="product_id"><br>
+
+    <label>Cantidad:
+      <input type="number" id="qty" min="1" value="1" required>
+    </label><br>
+    <small>Indica cuántas unidades del producto se están vendiendo.</small><br><br>
+
+    <label>Precio unitario (sin IVA):
+      <input type="number" id="price_base" readonly>
+    </label><br>
+    <small>Se carga automáticamente al seleccionar el producto.</small><br><br>
+
+    <label>Precio unitario con IVA (19%):
+      <input type="number" id="price_iva" readonly>
+    </label><br>
+    <small>Calculado como precio base × 1,19.</small><br><br>
+
+    <label>Total:
+      <input type="number" id="total" readonly>
+    </label><br>
+    <small>Se calcula como (precio con IVA × cantidad).</small><br><br>
+
+    <label>Método de pago:
+      <select id="payment_method">
+        <option value="efectivo">Efectivo</option>
+        <option value="tarjeta">Tarjeta</option>
+        <option value="transferencia">Transferencia</option>
+      </select>
+    </label><br>
+    <small>Selecciona el método de pago utilizado por el cliente.</small><br><br>
+
+    <button type="submit">Guardar venta</button>
+  </form>
+
+  <hr>
+  <table border="1" cellpadding="4" cellspacing="0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio c/IVA</th>
+        <th>Total</th>
+        <th>Método de pago</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <script>
+    const statusDiv = document.getElementById("status");
+    const qty       = document.getElementById("qty");
+    const priceBase = document.getElementById("price_base");
+    const priceIVA  = document.getElementById("price_iva");
+    const total     = document.getElementById("total");
+
+    function showMessage(msg, ok = true) {
+      statusDiv.textContent = msg;
+      statusDiv.style.color = ok ? "green" : "red";
+    }
+
+    // 🔹 Calcular IVA y total
+    function calcTotals() {
+      const pBase = parseFloat(priceBase.value || 0);
+      const q     = parseFloat(qty.value || 0);
+      const pIVA  = +(pBase * 1.19).toFixed(2);
+      priceIVA.value = pIVA;
+      total.value    = +(pIVA * q).toFixed(2);
+    }
+    qty.addEventListener("input", calcTotals);
+
+    // 🔹 Render tabla POS
+    async function render() {
+      const ventas    = await window.api.listAll("pos");
+      const customers = await window.api.listAll("customers");
+      const products  = await window.api.list();
+      const tbody     = document.getElementById("tbody");
+      tbody.innerHTML = "";
+
+      ventas.forEach(v => {
+        const c = customers.find(x => x.id === parseInt(v.customer_id));
+        const p = products.find(x => x.id === parseInt(v.product_id));
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${v.id}</td>
+          <td>${c ? c.name : "(Cliente " + v.customer_id + ")"}</td>
+          <td>${p ? p.name : "(Producto " + v.product_id + ")"}</td>
+          <td>${v.qty}</td>
+          <td>${v.price_iva}</td>
+          <td>${v.total}</td>
+          <td>${v.payment_method}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 🔍 Autocompletar clientes
+    async function loadCustomerList() {
+      const customers = await window.api.listAll("customers");
+      const datalist  = document.getElementById("customer_list");
+      datalist.innerHTML = "";
+      customers.forEach(c => {
+        const option = document.createElement("option");
+        option.value = `${c.name} (ID: ${c.id})`;
+        datalist.appendChild(option);
+      });
+    }
+
+    document.getElementById("customer_search").addEventListener("change", async (e) => {
+      const customers = await window.api.listAll("customers");
+      const selected  = customers.find(c => e.target.value.includes(`ID: ${c.id}`));
+      if (selected) document.getElementById("customer_id").value = selected.id;
+    });
+
+    // 🔍 Autocompletar productos
+    async function loadProductList() {
+      const products = await window.api.list();
+      const datalist = document.getElementById("product_list");
+      datalist.innerHTML = "";
+      products.forEach(p => {
+        const option = document.createElement("option");
+        option.value = `${p.name} (SKU: ${p.sku}, ID: ${p.id || "N/A"})`;
+        datalist.appendChild(option);
+      });
+    }
+
+    document.getElementById("product_search").addEventListener("change", async (e) => {
+      const products = await window.api.list();
+      const selected = products.find(p => e.target.value.includes(p.name));
+      if (selected) {
+        document.getElementById("product_id").value = selected.id;
+        priceBase.value = selected.price;  // precio base del producto (sin IVA)
+        calcTotals();
+      }
+    });
+
+    // 🧾 Guardar venta POS
+    document.getElementById("form").addEventListener("submit", async e => {
+      e.preventDefault();
+      const data = {
+        customer_id: parseInt(document.getElementById("customer_id").value),
+        product_id:  parseInt(document.getElementById("product_id").value),
+        qty:         parseFloat(qty.value),
+        price_base:  parseFloat(priceBase.value),   // guardamos base
+        price_iva:   parseFloat(priceIVA.value),    // y con IVA
+        total:       parseFloat(total.value),
+        payment_method: document.getElementById("payment_method").value
+      };
+
+      const res = await window.api.createIn("pos", data);
+      showMessage(res.message || "Venta registrada correctamente");
+      e.target.reset();
+      render();
+    });
+
+    // 🚀 Inicialización
+    loadCustomerList();
+    loadProductList();
+    render();
+  </script>
+</body>
+</html>

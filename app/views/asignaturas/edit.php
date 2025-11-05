@@ -35,6 +35,13 @@ include __DIR__ . "/../layout/navbar.php";
                 <div class="bg-gray-700 p-8 rounded-2xl shadow-lg">
                     <form method="POST" action="index.php?action=asignatura_update&id=<?= $asignatura['id'] ?>" class="space-y-6">
 
+                    <!-- Nombre de la Abreviatura -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-200">Nombre de la Abreviatura</label>
+                            <input type="text" name="abreviatura" value="<?= htmlspecialchars($asignatura['abreviatura']) ?>" required
+                                class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+
                         <!-- Nombre de la Asignatura -->
                         <div>
                             <label class="block text-sm font-medium text-gray-200">Nombre de la Asignatura</label>

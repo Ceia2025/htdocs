@@ -24,6 +24,19 @@ class CursoAsignatura
         ]);
     }
 
+    //Obtener asignaturas por curso
+    public function getAsignaturasPorCurso($curso_id)
+    {
+        $sql = "SELECT a.id, a.nombre 
+            FROM curso_asignaturas2 ca
+            INNER JOIN asignaturas2 a ON ca.asignatura_id = a.id
+            WHERE ca.curso_id = :curso_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':curso_id', $curso_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // Obtener todas las relaciones
     public function getAll(): array
     {

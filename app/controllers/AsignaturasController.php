@@ -23,7 +23,7 @@ class AsignaturasController
     // Guardar curso nuevo
     public function store($data) {
         if (!empty($data['nombre'])) {
-            $this->asignaturasModel->create($data['nombre'], $data['descp']);
+            $this->asignaturasModel->create($data['abreviatura'],$data['nombre'], $data['descp']);
         }
         header("Location: index.php?action=asignaturas");
         exit;
@@ -38,7 +38,7 @@ class AsignaturasController
     // Actualizar curso
     public function update($id, $data) {
         if (!empty($data['nombre'])) {
-            $this->asignaturasModel->update($id, $data['nombre'], $data['descp']);
+            $this->asignaturasModel->update($id, $data['abreviatura'],$data['nombre'], $data['descp']);
         }
         header("Location: index.php?action=asignaturas");
         exit;

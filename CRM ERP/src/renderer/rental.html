@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Arriendos - Rental</title>
+</head>
+<body>
+  <a href="index.html">← Volver</a>
+  <h2>Arriendos</h2>
+
+  <div id="status"></div>
+
+  <form id="form">
+    <input type="hidden" id="id">
+
+    <!-- 🔍 Cliente con buscador -->
+    <label>Cliente:
+      <input type="text" id="customer_search" placeholder="Buscar cliente..." list="customer_list">
+      <datalist id="customer_list"></datalist>
+    </label><br>
+    <input type="hidden" id="customer_id">
+
+    <!-- 🔍 Producto con buscador -->
+    <label>Producto:
+      <input type="text" id="product_search" placeholder="Buscar producto..." list="product_list">
+      <datalist id="product_list"></datalist>
+    </label><br>
+    <input type="hidden" id="product_id">
+
+    <label>Fecha inicio: <input type="date" id="start_date" required></label><br>
+    <label>Fecha fin: <input type="date" id="end_date" required></label><br>
+    <label>Precio diario (10% del producto): <input type="number" id="daily_price" readonly></label><br>
+    <label>Total: <input type="number" id="total" readonly></label><br>
+
+    <button type="submit">Guardar</button>
+  </form>
+
+  <hr>
+  <table border="1" cellpadding="4" cellspacing="0">
+    <thead>
+      <tr>
+        <th>ID</th><th>Cliente</th><th>Producto</th>
+        <th>Inicio</th><th>Fin</th><th>Días</th><th>Total</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <script>
+    const statusDiv = document.getElementById("status");
+    const startDate = document.getElementById("start_date");
+    const endDate = document.getElementById("end_date");
+    const dailyPrice = document.getElementById("daily_price");
+    const total = document.getElementById("total");
+    const productId = document.getElementById("product_id");
+
+    let selectedProduct = null;
+
+    function showMessage(msg, ok = true) {
+      statusDiv.textContent = msg;
+      statusDiv.style.color = ok ? "green" : "red";
+    }
+
+    // 🔹 Calcular días entre fechas
+    function calcularDias() {
+      const start = new Date(startDate.value);
+      const end = new Date(endDate.value);
+      const diff = (end - start) / (1000 * 60 * 60 * 24);
+      return diff > 0 ? diff : 0;
+    }
+
+    // 🔹 Calcular total automáticamente
+    function calcularTotal() {
+      const dias = calcularDias();
+      const precio = parseFloat(dailyPrice.value || 0);
+      total.value = (dias * precio).toFixed(2);
+    }
+
+    startDate.addEventListener("input", calcularTotal);
+    endDate.addEventListener("input", calcularTotal);
+
+    // 🔍 Cargar clientes
+    async function loadCustomerList() {
+      const customers = await window.api.listAll("customers");
+      const datalist = document.getElementById("customer_list");
+      datalist.innerHTML = "";
+      customers.forEach(c => {
+        const option = document.createElement("option");
+        option.value = `${c.name} (ID: ${c.id})`;
+        datalist.appendChild(option);
+      });
+    }
+
+    document.getElementById("customer_search").addEventListener("change", async (e) => {
+      const customers = await window.api.listAll("customers");
+      const selected = customers.find(c => e.target.value.includes(`ID: ${c.id}`));
+      if (selected) document.getElementById("customer_id").value = selected.id;
+    });
+
+    // 🔍 Cargar productos
+    async function loadProductList() {
+      const products = await window.api.list();
+      const datalist = document.getElementById("product_list");
+      datalist.innerHTML = "";
+      products.forEach(p => {
+        const option = document.createElement("option");
+        option.value = `${p.name} (SKU: ${p.sku}, ID: ${p.id || "N/A"})`;
+        datalist.appendChild(option);
+      });
+    }
+
+    document.getElementById("product_search").addEventListener("change", async (e) => {
+      const products = await window.api.list();
+      const selected = products.find(p => e.target.value.includes(p.name));
+      if (selected) {
+        selectedProduct = selected;
+        productId.value = selected.id;
+        dailyPrice.value = (selected.price * 0.10).toFixed(2);
+        calcularTotal();
+      }
+    });
+
+    // 🧾 Guardar arriendo
+    document.getElementById("form").addEventListener("submit", async e => {
+      e.preventDefault();
+      const dias = calcularDias();
+
+      const data = {
+        customer_id: parseInt(document.getElementById("customer_id").value),
+        product_id: parseInt(productId.value),
+        start_date: startDate.value,
+        end_date: endDate.value,
+        days: dias,
+        daily_price: parseFloat(dailyPrice.value),
+        total: parseFloat(total.value)
+      };
+
+      const res = await window.api.createIn("rental", data);
+      showMessage(res.message || "Arriendo guardado correctamente");
+      e.target.reset();
+      render();
+    });
+
+    // 🔹 Renderizar tabla
+    async function render() {
+      const rentals = await window.api.listAll("rental");
+      const customers = await window.api.listAll("customers");
+      const products = await window.api.list();
+      const tbody = document.getElementById("tbody");
+      tbody.innerHTML = "";
+
+      rentals.forEach(r => {
+        const c = customers.find(x => x.id === parseInt(r.customer_id));
+        const p = products.find(x => x.id === parseInt(r.product_id));
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${r.id}</td>
+          <td>${c ? c.name : "(Cliente " + r.customer_id + ")"}</td>
+          <td>${p ? p.name : "(Producto " + r.product_id + ")"}</td>
+          <td>${r.start_date}</td>
+          <td>${r.end_date}</td>
+          <td>${r.days}</td>
+          <td>${r.total}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 🚀 Inicialización
+    loadCustomerList();
+    loadProductList();
+    render();
+  </script>
+</body>
+</html>

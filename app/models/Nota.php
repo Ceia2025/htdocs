@@ -12,35 +12,29 @@ class Nota
         $this->conn = $db->open();
     }
 
-    // Obtener por ID
+    // 🟣 Obtener nota por ID
     public function getById($id)
     {
-        $sql = "SELECT n.*,
-                   a.nombre AS asignatura_nombre,
-                   m.alumno_id, m.curso_id, m.anio_id,
-                   al.nombre AS alumno_nombre, al.apepat, al.apemat
-            FROM {$this->table} n
-            JOIN asignaturas2 a ON n.asignatura_id = a.id
-            JOIN matriculas2 m   ON n.matricula_id = m.id
-            JOIN alumnos2 al     ON m.alumno_id = al.id
-            WHERE n.id = :id
-            LIMIT 1";
+        $sql = "SELECT n.*, a.nombre AS asignatura_nombre,
+                       m.alumno_id, m.curso_id, m.anio_id,
+                       al.nombre AS alumno_nombre, al.apepat, al.apemat
+                FROM {$this->table} n
+                JOIN asignaturas2 a ON n.asignatura_id = a.id
+                JOIN matriculas2 m ON n.matricula_id = m.id
+                JOIN alumnos2 al ON m.alumno_id = al.id
+                WHERE n.id = :id LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-
-    // Obtener todas las notas (vista general)
+    // 🟣 Listado general
     public function getAll(): array
     {
-        $sql = "SELECT n.*, 
-                       a.nombre AS asignatura_nombre,
+        $sql = "SELECT n.*, a.nombre AS asignatura_nombre,
                        al.nombre AS alumno_nombre,
-                       al.apepat AS alumno_apepat,
-                       al.apemat AS alumno_apemat,
-                       m.id AS matricula_id,
-                       c.nombre AS curso_nombre,
+                       al.apepat AS alumno_apepat, al.apemat AS alumno_apemat,
+                       m.id AS matricula_id, c.nombre AS curso_nombre,
                        an.anio AS anio_escolar
                 FROM {$this->table} n
                 JOIN asignaturas2 a ON n.asignatura_id = a.id
@@ -53,8 +47,21 @@ class Nota
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // ✅ Obtener notas por matrícula (para perfil académico)
-    public function getByMatricula($matricula_id):array
+    // 🟣 Notas por matrícula y semestre
+    public function getByMatriculaAndSemestre($matricula_id, $semestre): array
+    {
+        $sql = "SELECT n.*, a.nombre AS asignatura_nombre
+                FROM {$this->table} n
+                JOIN asignaturas2 a ON n.asignatura_id = a.id
+                WHERE n.matricula_id = :matricula_id AND n.semestre = :semestre
+                ORDER BY a.nombre, n.fecha DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':matricula_id' => $matricula_id, ':semestre' => $semestre]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // 🟣 Notas por matrícula (todas)
+    public function getByMatricula($matricula_id): array
     {
         $sql = "SELECT n.*, a.nombre AS asignatura_nombre
                 FROM {$this->table} n
@@ -66,10 +73,11 @@ class Nota
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // ✅ Obtener notas por curso y año (para ingreso masivo)
+    // 🟣 Obtener alumnos del curso/año
     public function getByCursoYAnio($curso_id, $anio_id)
     {
-        $sql = "SELECT m.id AS matricula_id, al.id AS alumno_id, al.nombre, al.apepat, al.apemat, al.deleted_at
+        $sql = "SELECT m.id AS matricula_id, al.id AS alumno_id,
+                       al.nombre, al.apepat, al.apemat, al.deleted_at
                 FROM matriculas2 m
                 JOIN alumnos2 al ON m.alumno_id = al.id
                 WHERE m.curso_id = :curso_id AND m.anio_id = :anio_id
@@ -79,45 +87,60 @@ class Nota
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // ✅ Crear múltiples notas (una por alumno)
-    public function createMultiple($curso_id, $anio_id, $asignatura_id, $fecha, $notas)
+    // 🟣 Crear múltiples notas (hasta 10 por alumno/asignatura/semestre)
+    public function createMultiple($curso_id, $anio_id, $asignatura_id, $fecha, $notas, $semestre)
     {
-        $sql = "INSERT INTO {$this->table} (matricula_id, asignatura_id, nota, fecha)
-                VALUES (:matricula_id, :asignatura_id, :nota, :fecha)";
+        $sql = "INSERT INTO {$this->table} (matricula_id, asignatura_id, semestre, nota, fecha)
+                VALUES (:matricula_id, :asignatura_id, :semestre, :nota, :fecha)";
         $stmt = $this->conn->prepare($sql);
 
         foreach ($notas as $n) {
-            // Si el alumno está retirado, la nota se marca en 0
             $notaValor = ($n['deleted_at'] !== null) ? 0 : $n['nota'];
-            // Validar rango 1.0 - 7.0 si el alumno no está retirado
             if ($n['deleted_at'] === null && ($notaValor < 1.0 || $notaValor > 7.0)) {
-                continue; // ignora notas inválidas
+                continue;
+            }
+
+            // 🧠 Validar que no tenga más de 10 notas ya registradas
+            $check = $this->conn->prepare("
+                SELECT COUNT(*) FROM {$this->table}
+                WHERE matricula_id = :matricula_id AND asignatura_id = :asignatura_id AND semestre = :semestre
+            ");
+            $check->execute([
+                ':matricula_id' => $n['matricula_id'],
+                ':asignatura_id' => $asignatura_id,
+                ':semestre' => $semestre
+            ]);
+
+            if ($check->fetchColumn() >= 10) {
+                continue; // ignora si ya tiene 10 notas
             }
 
             $stmt->execute([
                 ':matricula_id' => $n['matricula_id'],
                 ':asignatura_id' => $asignatura_id,
+                ':semestre' => $semestre,
                 ':nota' => $notaValor,
                 ':fecha' => $fecha
             ]);
         }
     }
 
-    // ✅ Actualizar una nota
+    // 🟣 Actualizar
     public function update($id, $data)
     {
         $sql = "UPDATE {$this->table}
-                SET nota = :nota, fecha = :fecha
+                SET nota = :nota, fecha = :fecha, semestre = :semestre
                 WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ':nota' => $data['nota'],
             ':fecha' => $data['fecha'],
+            ':semestre' => $data['semestre'],
             ':id' => $id
         ]);
     }
 
-    // ✅ Eliminar una nota
+    // 🟣 Eliminar
     public function delete($id)
     {
         $stmt = $this->conn->prepare("DELETE FROM {$this->table} WHERE id = :id");

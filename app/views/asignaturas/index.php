@@ -44,7 +44,7 @@ include __DIR__ . "/../layout/navbar.php";
                     <table class="w-full border-collapse bg-gray-800 text-left text-sm text-gray-300">
                         <thead class="bg-gray-700 text-gray-200">
                             <tr>
-                                <th class="px-6 py-3">ID</th>
+                                <th class="px-6 py-3">Abreviatura</th>
                                 <th class="px-6 py-3">Nombre de la Asignatura</th>
                                 <th class="px-6 py-3">Descripción</th>
                                 <th class="px-6 py-3 text-center">Acciones</th>
@@ -54,7 +54,7 @@ include __DIR__ . "/../layout/navbar.php";
                             <?php if (!empty($asignaturas)): ?>
                                 <?php foreach ($asignaturas as $asignatura): ?>
                                     <tr class="border-b border-gray-700 hover:bg-gray-700/50">
-                                        <td class="px-6 py-3"><?= htmlspecialchars($asignatura['id']) ?></td>
+                                        <td class="px-6 py-3"><?= htmlspecialchars($asignatura['abreviatura']) ?></td> 
                                         <td class="px-6 py-3"><?= htmlspecialchars($asignatura['nombre']) ?></td>
                                         <td class="px-6 py-3"><?= htmlspecialchars($asignatura['descp']) ?></td>
                                         <td class="px-6 py-3 text-center space-x-2">

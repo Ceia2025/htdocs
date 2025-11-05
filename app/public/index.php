@@ -530,6 +530,12 @@ case 'alumno_search_ajax':
         $notasController = new NotasController();
         $notasController->index();
         break;
+        
+    case 'notas_index':
+        require_once 'controllers/NotasController.php';
+        $controller = new NotasController();
+        $controller->indexProfile($_GET['matricula_id']);
+        break;
 
     case 'notas_createGroup':
         $notasController = new NotasController();
