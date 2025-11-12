@@ -225,6 +225,31 @@ class AlumnosController
         exit;
     }
 
+    // 🔹 Marcar alumno como retirado
+    public function retire($id)
+    {
+        if (!empty($id)) {
+            error_log("🧠 Retirando alumno con ID: $id");
+            $fechaActual = date('Y-m-d H:i:s');
+            $this->alumnoModel->markAsRetired($id, $fechaActual);
+        }else{
+            error_log("⚠️ ID vacío en retire()");
+        }
+        header("Location: index.php?action=alumno_edit&id=$id");
+        exit;
+    }
+
+    // 🔹 Reintegrar alumno
+    public function restore($id)
+    {
+        if (!empty($id)) {
+            $this->alumnoModel->restore($id);
+        }
+        header("Location: index.php?action=alumno_edit&id=$id");
+        exit;
+    }
+
+
     // Eliminar alumno
     public function delete($id)
     {

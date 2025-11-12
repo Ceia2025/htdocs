@@ -35,9 +35,9 @@ include __DIR__ . "/../layout/navbar.php";
             <!-- Navegación -->
             <div class="flex space-x-4 mb-6">
                 <a href="index.php?action=alumno_profile&id=<?= $alumno['id'] ?>"
-                    class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow">👤 Perfil Alumno</a>
+                    class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow">Perfil Alumno</a>
                 <a href="index.php?action=matriculas"
-                    class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow">⬅ Volver</a>
+                    class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow">Volver</a>
             </div>
 
             <!-- Secciones -->
@@ -50,7 +50,7 @@ include __DIR__ . "/../layout/navbar.php";
 
 
 
-                    <!-- 📚 SECCIÓN DE NOTAS CON SEMESTRES -->
+                    <!-- SECCIÓN DE NOTAS CON SEMESTRES -->
                     <section class="mt-10">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="bg-indigo-600/20 p-3 rounded-xl">
@@ -62,6 +62,9 @@ include __DIR__ . "/../layout/navbar.php";
                             </div>
                             <h2 class="text-2xl font-bold text-gray-100 tracking-tight">Notas del Alumno</h2>
                         </div>
+
+
+
 
                         <?php
                         require_once __DIR__ . "/../../models/Nota.php";
@@ -83,30 +86,44 @@ include __DIR__ . "/../layout/navbar.php";
                             $estadoSemestre = 'Fuera de plazo (semestre cerrado)';
                         }
 
-                        // 🔹 Semestre seleccionado manualmente (si viene por GET)
+                        // Semestre seleccionado manualmente (si viene por GET)
                         $semestreSeleccionado = intval($_GET['semestre'] ?? $semestreActual);
 
-                        // 🔹 Obtener notas filtradas por semestre
+                        // Obtener notas filtradas por semestre
                         $notas = $notaModel->getByMatriculaAndSemestre($matricula['id'], $semestreSeleccionado);
                         ?>
 
-                        <!-- 🔽 Selector de semestre -->
-                        <form method="get" class="mb-6 flex flex-wrap items-center gap-3">
-                            <input type="hidden" name="action" value="perfil_academico">
-                            <input type="hidden" name="matricula_id" value="<?= $matricula['id'] ?>">
-                            <label class="text-gray-300 font-semibold">Seleccionar semestre:</label>
-                            <select name="semestre"
-                                class="bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2">
-                                <option value="1" <?= $semestreSeleccionado == 1 ? 'selected' : '' ?>>1° Semestre
-                                    (Marzo–Julio)</option>
-                                <option value="2" <?= $semestreSeleccionado == 2 ? 'selected' : '' ?>>2° Semestre
-                                    (Agosto–Diciembre)</option>
-                            </select>
-                            <button
-                                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-semibold transition">
-                                Ver Notas
-                            </button>
+                        <!-- Selector de semestre -->
+                        <form method="get" action="index.php"
+                            class="flex flex-col md:flex-row md:items-center md:justify-between bg-gray-800 border border-gray-700 rounded-xl p-4 mb-6 shadow">
+
+                            <div class="flex items-center gap-3 flex-wrap">
+                                <input type="hidden" name="action" value="perfil_academico">
+                                <input type="hidden" name="id" value="<?= $matricula['id'] ?>">
+
+                                <label class="text-gray-300 font-semibold">Seleccionar semestre:</label>
+                                <select name="semestre"
+                                    class="bg-gray-900 text-white border border-gray-700 rounded-lg px-3 py-2 focus:ring focus:ring-indigo-500">
+                                    <option value="1" <?= $semestreSeleccionado == 1 ? 'selected' : '' ?>>1° Semestre
+                                        (Marzo–Julio)</option>
+                                    <option value="2" <?= $semestreSeleccionado == 2 ? 'selected' : '' ?>>2° Semestre
+                                        (Agosto–Diciembre)</option>
+                                </select>
+                            </div>
+
+                            <div class="flex gap-3 mt-4 md:mt-0">
+                                <button type="submit"
+                                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-semibold shadow transition">
+                                    🔍 Ver notas
+                                </button>
+
+                                <a href="index.php?action=notas_index&matricula_id=<?= $matricula['id'] ?>"
+                                    class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg font-semibold shadow transition">
+                                    📘 Ver todas las notas
+                                </a>
+                            </div>
                         </form>
+
 
                         <p class="text-sm italic text-indigo-400 mb-4"><?= htmlspecialchars($estadoSemestre) ?></p>
 
@@ -151,13 +168,20 @@ include __DIR__ . "/../layout/navbar.php";
                                             <tr
                                                 class="border-b border-gray-700 hover:bg-gray-700/40 transition-colors duration-200">
                                                 <td class="px-6 py-3 font-medium text-gray-100">
-                                                    <?= htmlspecialchars($asig['nombre']) ?></td>
+                                                    <?= htmlspecialchars($asig['nombre']) ?>
+                                                </td>
                                                 <td class="px-6 py-3 text-center">
                                                     <?php if (!empty($notasAsig)): ?>
                                                         <?php foreach ($notasAsig as $n): ?>
                                                             <span
                                                                 class="inline-block bg-gray-700 text-indigo-300 px-2 py-1 rounded-lg mx-1 mb-1">
                                                                 <?= htmlspecialchars(number_format($n['nota'], 1)) ?>
+                                                                <!-- Botón editar -->
+                                                                <a href="index.php?action=notas_edit&id=<?= $n['id'] ?>"
+                                                                    class="ml-2 text-yellow-400 hover:text-yellow-300"
+                                                                    title="Editar nota">
+                                                                    ✏️
+                                                                </a>
                                                             </span>
                                                         <?php endforeach; ?>
                                                     <?php else: ?>

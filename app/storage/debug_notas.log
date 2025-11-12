@@ -1,0 +1,238 @@
+Array
+(
+    [fecha] => 2025-11-10 13:38:45
+    [curso_id] => 2
+    [anio_id] => 2
+    [semestre] => 2
+    [asignatura_id] => 10
+    [notas_recibidas] => Array
+        (
+            [22] => Array
+                (
+                    [nota] => 5
+                    [matricula_id] => 4
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
+Array
+(
+    [fecha] => 2025-11-10 13:43:21
+    [curso_id] => 2
+    [anio_id] => 2
+    [semestre] => 2
+    [asignatura_id] => 10
+    [notas_recibidas] => Array
+        (
+            [22] => Array
+                (
+                    [nota] => 2.2
+                    [matricula_id] => 4
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
+Array
+(
+    [fecha] => 2025-11-10 16:41:35
+    [curso_id] => 2
+    [anio_id] => 2
+    [semestre] => 2
+    [asignatura_id] => 10
+    [notas_recibidas] => Array
+        (
+            [22] => Array
+                (
+                    [nota] => 7
+                    [matricula_id] => 4
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
+Array
+(
+    [fecha] => 2025-11-10 17:56:46
+    [curso_id] => 2
+    [anio_id] => 2
+    [semestre] => 2
+    [asignatura_id] => 4
+    [notas_recibidas] => Array
+        (
+            [22] => Array
+                (
+                    [nota] => 2.2
+                    [matricula_id] => 4
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
+Array
+(
+    [fecha] => 2025-11-11 15:11:27
+    [curso_id] => 2
+    [anio_id] => 3
+    [semestre] => 2
+    [asignatura_id] => 10
+    [notas_recibidas] => Array
+        (
+            [9] => Array
+                (
+                    [nota] => 1.1
+                    [matricula_id] => 8
+                    [deleted_at] => 
+                )
+
+            [15] => Array
+                (
+                    [nota] => 5.5
+                    [matricula_id] => 9
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
+Array
+(
+    [fecha] => 2025-11-11 15:11:57
+    [curso_id] => 2
+    [anio_id] => 3
+    [semestre] => 2
+    [asignatura_id] => 13
+    [notas_recibidas] => Array
+        (
+            [9] => Array
+                (
+                    [nota] => 
+                    [matricula_id] => 8
+                    [deleted_at] => 
+                )
+
+            [15] => Array
+                (
+                    [nota] => 5.6
+                    [matricula_id] => 9
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
+Array
+(
+    [fecha] => 2025-11-11 15:12:21
+    [curso_id] => 2
+    [anio_id] => 3
+    [semestre] => 2
+    [asignatura_id] => 13
+    [notas_recibidas] => Array
+        (
+            [9] => Array
+                (
+                    [nota] => 1.1
+                    [matricula_id] => 8
+                    [deleted_at] => 
+                )
+
+            [15] => Array
+                (
+                    [nota] => 5.6
+                    [matricula_id] => 9
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
+Array
+(
+    [fecha] => 2025-11-12 13:16:37
+    [curso_id] => 2
+    [anio_id] => 2
+    [semestre] => 2
+    [asignatura_id] => 13
+    [notas_recibidas] => Array
+        (
+            [22] => Array
+                (
+                    [nota] => 5.5
+                    [matricula_id] => 4
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
+Array
+(
+    [fecha] => 2025-11-12 13:16:52
+    [curso_id] => 2
+    [anio_id] => 2
+    [semestre] => 2
+    [asignatura_id] => 13
+    [notas_recibidas] => Array
+        (
+            [22] => Array
+                (
+                    [nota] => 5.5
+                    [matricula_id] => 4
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
+Array
+(
+    [fecha] => 2025-11-12 13:20:36
+    [curso_id] => 9
+    [anio_id] => 2
+    [semestre] => 2
+    [asignatura_id] => 15
+    [notas_recibidas] => Array
+        (
+            [4] => Array
+                (
+                    [nota] => 5.5
+                    [matricula_id] => 11
+                    [deleted_at] => 
+                )
+
+            [6] => Array
+                (
+                    [nota] => 6.4
+                    [matricula_id] => 10
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------

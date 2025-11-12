@@ -2,7 +2,7 @@
   "name": "odoo-lite-electron-txt",
   "version": "1.0.0",
   "description": "Demo estilo Odoo sin DB (txt) y sin CSS para Electron",
-  "main": "src/main.js",
+  "main": "src/main/app.cjs",
   "type": "module",
   "scripts": {
     "start": "electron .",

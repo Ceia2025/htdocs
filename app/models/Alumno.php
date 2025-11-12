@@ -175,6 +175,36 @@ class Alumno
         ]);
     }
 
+
+    // 🔹 Marcar alumno como retirado (soft delete)
+    public function markAsRetired($id, $fecha)
+    {
+        $sql = "UPDATE {$this->table} SET deleted_at = :fecha WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $success = $stmt->execute([
+            ':id' => $id,
+            ':fecha' => $fecha
+        ]);
+
+        if (!$success) {
+            error_log("❌ Error al actualizar deleted_at para ID: $id");
+            error_log(print_r($stmt->errorInfo(), true));
+        } else {
+            error_log("✅ Se actualizó deleted_at correctamente para ID: $id");
+        }
+
+        return $success;
+    }
+
+    // 🔹 Reintegrar alumno (anular retiro)
+    public function restore($id)
+    {
+        $sql = "UPDATE {$this->table} SET deleted_at = NULL WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([':id' => $id]);
+    }
+
+
     //Verificar existencia de rut
     public function runExists($run)
     {

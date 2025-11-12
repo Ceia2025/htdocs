@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-console.log("⚙️ preload.cjs ejecutándose...");
+console.log("preload.cjs ejecutándose...");
 
 try {
   contextBridge.exposeInMainWorld('api', {

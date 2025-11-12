@@ -88,23 +88,31 @@ class Nota
     }
 
     // 🟣 Crear múltiples notas (hasta 10 por alumno/asignatura/semestre)
+    // 🟣 Crear múltiples notas (hasta 10 por alumno/asignatura/semestre)
     public function createMultiple($curso_id, $anio_id, $asignatura_id, $fecha, $notas, $semestre)
     {
         $sql = "INSERT INTO {$this->table} (matricula_id, asignatura_id, semestre, nota, fecha)
-                VALUES (:matricula_id, :asignatura_id, :semestre, :nota, :fecha)";
+            VALUES (:matricula_id, :asignatura_id, :semestre, :nota, :fecha)";
         $stmt = $this->conn->prepare($sql);
 
         foreach ($notas as $n) {
-            $notaValor = ($n['deleted_at'] !== null) ? 0 : $n['nota'];
-            if ($n['deleted_at'] === null && ($notaValor < 1.0 || $notaValor > 7.0)) {
+
+            // Determinar si el alumno está retirado (deleted_at vacío o null = activo)
+            $estaRetirado = !empty($n['deleted_at']);
+            $notaValor = $estaRetirado ? 0 : floatval($n['nota']);
+
+            // Si no está retirado, validar que la nota esté dentro del rango 1.0 - 7.0
+            if (!$estaRetirado && ($notaValor < 1.0 || $notaValor > 7.0)) {
                 continue;
             }
 
-            // 🧠 Validar que no tenga más de 10 notas ya registradas
+            // Validar que no tenga más de 10 notas por asignatura y semestre
             $check = $this->conn->prepare("
-                SELECT COUNT(*) FROM {$this->table}
-                WHERE matricula_id = :matricula_id AND asignatura_id = :asignatura_id AND semestre = :semestre
-            ");
+            SELECT COUNT(*) FROM {$this->table}
+            WHERE matricula_id = :matricula_id 
+              AND asignatura_id = :asignatura_id 
+              AND semestre = :semestre
+        ");
             $check->execute([
                 ':matricula_id' => $n['matricula_id'],
                 ':asignatura_id' => $asignatura_id,
@@ -112,18 +120,25 @@ class Nota
             ]);
 
             if ($check->fetchColumn() >= 10) {
-                continue; // ignora si ya tiene 10 notas
+                continue; // ignora si ya tiene 10 notas registradas
             }
 
-            $stmt->execute([
+            //Insertar nota
+            $ok = $stmt->execute([
                 ':matricula_id' => $n['matricula_id'],
                 ':asignatura_id' => $asignatura_id,
                 ':semestre' => $semestre,
                 ':nota' => $notaValor,
                 ':fecha' => $fecha
             ]);
+
+            // Registrar en log si falla (solo durante desarrollo)
+            if (!$ok) {
+                error_log("Error al insertar nota para matricula {$n['matricula_id']} ({$stmt->errorInfo()[2]})");
+            }
         }
     }
+
 
     // 🟣 Actualizar
     public function update($id, $data)

@@ -9,7 +9,7 @@ include __DIR__ . "/../layout/navbar.php";
 // 📘 Parámetro: ID de matrícula (obligatorio)
 $matricula_id = $_GET['matricula_id'] ?? null;
 if (!$matricula_id) {
-    echo "<p class='text-center text-red-400 mt-10'>❌ No se recibió el ID de matrícula.</p>";
+    echo "<p class='text-center text-red-400 mt-10'>No se recibió el ID de matrícula.</p>";
     exit;
 }
 
@@ -41,16 +41,16 @@ $notas = $notaModel->getByMatriculaAndSemestre($matricula_id, $semestreSeleccion
         <h1 class="text-3xl font-bold mb-6 text-indigo-400">📘 Notas del Alumno</h1>
 
         <!-- 🔽 Selector de semestre -->
-        <form method="get" class="mb-6 flex flex-wrap items-center gap-3">
+        <form method="get" action="index.php" class="mb-6 flex flex-wrap items-center gap-3">
             <input type="hidden" name="action" value="notas_index">
-            <input type="hidden" name="matricula_id" value="<?= $matricula_id ?>">
-
+            <input type="hidden" name="matricula_id" value="<?= $matricula['id'] ?>">
             <label class="text-gray-300 font-semibold">Semestre:</label>
             <select name="semestre" class="bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2">
                 <option value="1" <?= $semestreSeleccionado == 1 ? 'selected' : '' ?>>1° Semestre</option>
                 <option value="2" <?= $semestreSeleccionado == 2 ? 'selected' : '' ?>>2° Semestre</option>
             </select>
-            <button class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg font-semibold transition">
+            <button type="submit"
+                class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg font-semibold transition">
                 Ver
             </button>
         </form>
@@ -114,7 +114,7 @@ $notas = $notaModel->getByMatriculaAndSemestre($matricula_id, $semestreSeleccion
         <!-- 🔹 BOTÓN AGREGAR NOTAS (solo si el semestre está abierto) -->
         <?php
         $semestreAbierto = ($semestreSeleccionado == 1 && $mesActual >= 3 && $mesActual <= 7)
-                        || ($semestreSeleccionado == 2 && $mesActual >= 8 && $mesActual <= 12);
+            || ($semestreSeleccionado == 2 && $mesActual >= 8 && $mesActual <= 12);
         ?>
 
         <div class="mt-8 flex justify-center">
@@ -123,13 +123,13 @@ $notas = $notaModel->getByMatriculaAndSemestre($matricula_id, $semestreSeleccion
                     class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 px-6 py-2 rounded-xl font-semibold text-white shadow-lg hover:shadow-indigo-500/30 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 4v16m8-8H4" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                     Agregar Notas
                 </a>
             <?php else: ?>
-                <p class="text-gray-400 italic text-center">📅 Este semestre está cerrado. Solo se pueden visualizar notas.</p>
+                <p class="text-gray-400 italic text-center">📅 Este semestre está cerrado. Solo se pueden visualizar notas.
+                </p>
             <?php endif; ?>
         </div>
 

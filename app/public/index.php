@@ -19,6 +19,7 @@ require_once __DIR__ . '/../controllers/NotasController.php';
 
 
 
+
 //Inventario
 require_once __DIR__ . '/../controllers/inventario/InventarioController.php';
 require_once __DIR__ . '/../controllers/procedencia/ProcedenciaController.php';
@@ -191,6 +192,16 @@ switch ($action) {
         require_once __DIR__ . '/../controllers/AlumnosController.php';
         $controller = new AlumnosController();
         $controller->checkRunExists();
+        break;
+
+    case 'alumno_retire':
+        $controller = new AlumnosController();
+        $controller->retire($_GET['id']);
+        break;
+
+    case 'alumno_restore':
+        $controller = new AlumnosController();
+        $controller->restore($_GET['id']);
         break;
 
     // Asignaturas
@@ -525,16 +536,15 @@ case 'alumno_search_ajax':
     exit;*/
 
 
-    // NOTAS
     case 'notas':
         $notasController = new NotasController();
         $notasController->index();
         break;
-        
+
     case 'notas_index':
-        require_once 'controllers/NotasController.php';
+        require_once __DIR__ . '/../controllers/NotasController.php';
         $controller = new NotasController();
-        $controller->indexProfile($_GET['matricula_id']);
+        $controller->indexByAlumno($_GET['matricula_id']);
         break;
 
     case 'notas_createGroup':
@@ -560,11 +570,6 @@ case 'alumno_search_ajax':
     case 'notas_delete':
         $notasController = new NotasController();
         $notasController->delete($_GET['id']);
-        break;
-
-    case 'notas_profile':
-        $notasController = new NotasController();
-        $notasController->indexProfile($_GET['matricula_id']);
         break;
 
     default:

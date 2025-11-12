@@ -91,10 +91,10 @@ include __DIR__ . "/../layout/navbar.php";
                                         <td class="px-6 py-3"><?= htmlspecialchars($e['relacion']) ?></td>
                                         <td class="px-6 py-3 text-center space-x-2">
                                             <a href="index.php?action=alum_emergencia_edit&id=<?= $e['id'] ?>"
-                                                class="text-indigo-400 hover:text-indigo-300 font-medium">✏️ Editar</a>
+                                                class="text-indigo-400 hover:text-indigo-300 font-medium">Editar</a>
                                             <a href="index.php?action=alum_emergencia_delete&id=<?= $e['id'] ?>"
                                                 onclick="return confirm('¿Seguro que deseas eliminar este contacto?');"
-                                                class="text-red-400 hover:text-red-300 font-medium">🗑️ Eliminar</a>
+                                                class="text-red-400 hover:text-red-300 font-medium">Eliminar</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -114,11 +114,7 @@ include __DIR__ . "/../layout/navbar.php";
                 <div class="mt-6 flex justify-center">
                     <a href="index.php?action=dashboard"
                         class="inline-block rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-gray-600">
-                        ⬅️ Volver al Dashboard
-                    </a>
-                    <a href="index.php?action=alumno_profile&id=<?= $alumno['id'] ?>"
-                        class="inline-block rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-gray-600">
-                        ⬅️ Volver al Perfil
+                        Volver al Dashboard
                     </a>
                 </div>
             </div>

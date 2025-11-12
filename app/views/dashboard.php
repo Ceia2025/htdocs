@@ -4,63 +4,79 @@ require_once __DIR__ . "/../controllers/AuthController.php";
 $auth = new AuthController();
 $auth->checkAuth();
 
-$user = $_SESSION['user']; // usuario de sesión
+$user = $_SESSION['user'];
 $rol = $user['rol'];
 $nombre = $user['nombre'];
 
-
 include __DIR__ . "/layout/header.php";
 include __DIR__ . "/layout/navbar.php";
-
 ?>
 
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
 
-<header
-    class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
-    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-white capitalize">
-            Bienvenido <?= htmlspecialchars($nombre) ?>
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fadeIn {
+        animation: fadeIn 1.5s ease-out forwards;
+        opacity: 0;
+        /* inicia invisible */
+    }
+</style>
+
+
+
+<header class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-600 shadow-md">
+    <div class="mx-auto max-w-7xl px-6 py-8 text-white">
+        <h1 class="text-3xl font-bold tracking-tight">
+            👋 Bienvenido <?= htmlspecialchars($nombre) ?>
         </h1>
-        <h3 class="font-bold tracking-tight text-gray-300 capitalize">
-            Rol: <?= htmlspecialchars($rol) ?>
+        <h3 class="text-gray-200 font-medium mt-1">
+            Rol: <span class="font-semibold"><?= htmlspecialchars($rol) ?></span>
         </h3>
     </div>
 </header>
 
-<!-- MAIN -->
-<main>
-    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <!-- Grid responsive: 1 col móvil, 2 col tablet, 3 col escritorio -->
+<main class="bg-gray-900 min-h-screen py-10">
+    <div class="max-w-7xl mx-auto px-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
             <?php
             $menu = json_decode(file_get_contents("../utils/menu.json"), true);
-
+            $delay = 0;
             if (isset($menu[$rol])) {
                 foreach ($menu[$rol] as $item): ?>
-                    <!-- Tarjeta flex vertical para empujar el botón al fondo -->
                     <div
-                        class="flex flex-col justify-between h-full min-h-[280px] rounded-3xl bg-indigo-100 p-8 shadow-2xl ring-1 ring-gray-900/10 transition-transform hover:scale-105 hover:shadow-3xl">
+                        class="animate-fadeIn group relative flex flex-col justify-between h-full p-8 rounded-3xl bg-gradient-to-br from-gray-800 to-gray-850 
+            border border-gray-700 hover:border-indigo-500 shadow-lg transition-all duration-300 hover:shadow-indigo-500/20">
 
                         <div>
-                            <h3 class="text-lg font-semibold text-indigo-800">
+                            <h3 class="text-xl font-semibold text-indigo-400 mb-2">
                                 <?= htmlspecialchars($item['title']) ?>
                             </h3>
-                            <p class="mt-4 text-base text-cyan-950 leading-relaxed">
+                            <p class="text-gray-300 text-sm leading-relaxed">
                                 <?= htmlspecialchars($item['desc']) ?>
                             </p>
                         </div>
 
-                        <!-- Botón al fondo -->
-                        <div class="mt-8">
+                        <div class="mt-6">
                             <a href="<?= htmlspecialchars($item['url']) ?>"
-                                class="block w-full rounded-md bg-indigo-500 px-4 py-2.5 text-center text-sm font-semibold text-white shadow hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                class="block text-center w-full py-2.5 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-500 
+                                       focus:outline-none focus:ring-4 focus:ring-indigo-400 transition-all duration-300">
                                 Ir
                             </a>
                         </div>
-
                     </div>
                 <?php endforeach;
+                $delay += 0.15;
             } else {
                 echo "<p class='text-red-500'>No hay menús disponibles para este rol.</p>";
             }
@@ -69,6 +85,5 @@ include __DIR__ . "/layout/navbar.php";
         </div>
     </div>
 </main>
-
 
 <?php include __DIR__ . "/layout/footer.php"; ?>

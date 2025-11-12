@@ -7,12 +7,21 @@ import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// 🗂️ Directorio donde se guardarán los datos
-const dataDir = path.join(__dirname, '..', 'storage');
+// =============================================================
+// 📦 CONFIGURAR RUTA DE ALMACENAMIENTO DE DATOS
+// =============================================================
+
+// Usamos la ruta segura del usuario (para que funcione en producción)
+const userDataPath = app.getPath('userData');
+const dataDir = path.join(userDataPath, 'storage');
+
+// Crear carpeta si no existe
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
-// 📄 Archivo JSON principal
+// Ruta del archivo de base de datos JSON
 const dbFile = path.join(dataDir, 'data.json');
+
+// Inicializar base de datos si no existe
 if (!fs.existsSync(dbFile)) {
   fs.writeFileSync(
     dbFile,
@@ -33,7 +42,12 @@ if (!fs.existsSync(dbFile)) {
   );
 }
 
-// 📥 Leer base de datos
+console.log('📄 Base de datos:', dbFile);
+
+// =============================================================
+// FUNCIONES DE LECTURA Y GUARDADO
+// =============================================================
+
 function loadDB() {
   try {
     return JSON.parse(fs.readFileSync(dbFile, 'utf8'));
@@ -52,13 +66,12 @@ function loadDB() {
   }
 }
 
-// 💾 Guardar base de datos
 function saveDB(db) {
   fs.writeFileSync(dbFile, JSON.stringify(db, null, 2), 'utf8');
 }
 
 // =============================================================
-// 🧱 BLOQUE 1: CRUD exclusivo para PRODUCTOS
+// BLOQUE 1: CRUD exclusivo para PRODUCTOS
 // =============================================================
 
 ipcMain.handle('products:list', () => loadDB().products);
@@ -92,7 +105,7 @@ ipcMain.handle('products:delete', (event, id) => {
 });
 
 // =============================================================
-// 🧱 BLOQUE 2: CRUD genérico para todos los demás módulos
+// BLOQUE 2: CRUD genérico para todos los demás módulos
 // =============================================================
 
 ipcMain.handle('data:list', (e, collection) => {
@@ -132,6 +145,30 @@ ipcMain.handle('data:delete', (e, { collection, id }) => {
 });
 
 // =============================================================
+// 🕒 CONTROL DE FECHAS DE USO (protección temporal)
+// =============================================================
+
+const startDate = new Date("2025-11-05");
+const endDate = new Date("2025-12-12");
+const today = new Date();
+
+async function checkDateAndLaunch() {
+  if (today < startDate || today > endDate) {
+    console.log("⛔ Esta aplicación solo puede usarse entre el 05/11/2025 y el 12/12/2025.");
+    await app.whenReady();
+    const { dialog } = await import('electron');
+    dialog.showErrorBox(
+      "Acceso no autorizado",
+      "Esta aplicación solo puede utilizarse entre el 5 de noviembre y el 12 de diciembre de 2025.\n\n" +
+      "Por favor, contacta con Daniel Scarlazzetta para más información."
+    );
+    app.quit();
+    return;
+  }
+  createWindow();
+}
+
+// =============================================================
 // 🪟 CREAR VENTANA PRINCIPAL
 // =============================================================
 
@@ -157,7 +194,12 @@ function createWindow() {
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
 }
 
-app.whenReady().then(createWindow);
+// =============================================================
+// 🚀 EJECUCIÓN PRINCIPAL
+// =============================================================
+
+app.whenReady().then(checkDateAndLaunch);
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });

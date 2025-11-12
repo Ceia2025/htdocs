@@ -1,64 +1,87 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <title>CRM - Oportunidades</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-  <a href="index.html">← Volver</a>
-  <h2>CRM - Oportunidades</h2>
+  <div class="container">
+    <header>
+      <a href="index.html" class="back-link">← Volver</a>
+      <h2>CRM - Oportunidades</h2>
+    </header>
 
-  <div id="status"></div>
+    <div id="status" class="status"></div>
 
-  <form id="form">
-    <input type="hidden" id="id">
+    <form id="form" class="form-card">
+      <input type="hidden" id="id">
+      <input type="hidden" id="customer_id">
 
-    <label>Cliente:
-      <input type="text" id="customer_search" placeholder="Buscar cliente..." list="customer_list">
-      <datalist id="customer_list"></datalist>
-    </label><br>
-    <small>Selecciona el cliente existente al que pertenece esta oportunidad.</small><br><br>
+      <!-- 🔍 Cliente -->
+      <div class="form-group">
+        <label>Cliente</label>
+        <input type="text" id="customer_search" placeholder="Buscar cliente..." list="customer_list">
+        <datalist id="customer_list"></datalist>
+        <small>Selecciona el cliente existente al que pertenece esta oportunidad.</small>
+      </div>
 
-    <label>Título:
-      <input type="text" id="title" required>
-    </label><br>
-    <small>Escribe un nombre corto para identificar esta oportunidad (por ejemplo: “Venta de laptop”).</small><br><br>
+      <!-- 🏷️ Título -->
+      <div class="form-group">
+        <label>Título</label>
+        <input type="text" id="title" required>
+        <small>Escribe un nombre corto para identificar esta oportunidad (por ejemplo: “Venta de laptop”).</small>
+      </div>
 
-    <label>Descripción:
-      <input type="text" id="description">
-    </label><br>
-    <small>Agrega detalles o notas internas, como tareas pendientes o próximos pasos.</small><br><br>
+      <!-- 📝 Descripción -->
+      <div class="form-group">
+        <label>Descripción</label>
+        <input type="text" id="description">
+        <small>Agrega detalles o notas internas, como tareas pendientes o próximos pasos.</small>
+      </div>
 
-    <label>Estado:
-      <select id="stage">
-        <option value="nuevo">Nuevo</option>
-        <option value="contactado">Contactado</option>
-        <option value="en_progreso">En progreso</option>
-        <option value="cerrado_ganado">Cerrado (ganado)</option>
-        <option value="cerrado_perdido">Cerrado (perdido)</option>
-      </select>
-    </label><br>
-    <small>Selecciona el estado actual de la oportunidad.</small><br><br>
+      <!-- 🔢 Cantidad -->
+      <div class="form-group">
+        <label>Cantidad / Monto estimado</label>
+        <input type="number" id="amount" placeholder="Ej: 250000" min="0">
+        <small>Indica el valor estimado de esta oportunidad.</small>
+      </div>
 
-    <button type="submit">Guardar</button>
-  </form>
+      <!-- 📊 Estado -->
+      <div class="form-group">
+        <label>Estado</label>
+        <select id="stage">
+          <option value="nuevo">Nuevo</option>
+          <option value="contactado">Contactado</option>
+          <option value="en_progreso">En progreso</option>
+          <option value="cerrado_ganado">Cerrado (ganado)</option>
+          <option value="cerrado_perdido">Cerrado (perdido)</option>
+        </select>
+        <small>Selecciona el estado actual de la oportunidad.</small>
+      </div>
 
+      <button type="submit" class="btn">Guardar</button>
+    </form>
 
-  <hr>
-  <table border="1" cellpadding="4" cellspacing="0">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Cliente</th>
-        <th>Título</th>
-        <th>Descripción</th>
-        <th>Etapa</th>
-      </tr>
-    </thead>
-    <tbody id="tbody"></tbody>
-  </table>
+    <hr class="divider">
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Cantidad</th>
+            <th>Etapa</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
 
   <script>
     const statusDiv = document.getElementById("status");
@@ -68,6 +91,7 @@
       statusDiv.style.color = ok ? "green" : "red";
     }
 
+    // 🔁 Renderizar tabla
     async function render() {
       const crm = await window.api.listAll("crm");
       const customers = await window.api.listAll("customers");
@@ -82,52 +106,89 @@
           <td>${c ? c.name : "(Cliente " + item.customer_id + ")"}</td>
           <td>${item.title}</td>
           <td>${item.description || ""}</td>
-          <td>${item.stage}</td>`;
+          <td>${item.amount ? "$" + item.amount.toLocaleString() : "-"}</td>
+          <td>${item.stage}</td>
+          <td>
+            <button onclick="edit(${item.id})">✏️ Editar</button>
+            <button onclick="remove(${item.id})">🗑️ Eliminar</button>
+          </td>`;
         tbody.appendChild(tr);
       });
     }
 
+    // 🗑️ Eliminar oportunidad
+    async function remove(id) {
+      if (confirm("¿Eliminar esta oportunidad?")) {
+        await window.api.removeIn("crm", id);
+        showMessage("Oportunidad eliminada correctamente");
+        render();
+      }
+    }
+
+    // ✏️ Editar oportunidad
+    async function edit(id) {
+      const crm = await window.api.listAll("crm");
+      const item = crm.find(x => x.id === id);
+      if (!item) return;
+
+      document.getElementById("id").value = item.id;
+      document.getElementById("customer_id").value = item.customer_id;
+      const customers = await window.api.listAll("customers");
+      const cliente = customers.find(c => c.id === parseInt(item.customer_id));
+      document.getElementById("customer_search").value = cliente ? `${cliente.name} (ID: ${cliente.id})` : "";
+
+      document.getElementById("title").value = item.title;
+      document.getElementById("description").value = item.description || "";
+      document.getElementById("amount").value = item.amount || "";
+      document.getElementById("stage").value = item.stage;
+    }
+
+    // 💾 Guardar / Actualizar oportunidad
     document.getElementById("form").addEventListener("submit", async e => {
       e.preventDefault();
+      const id = document.getElementById("id").value;
       const data = {
         customer_id: parseInt(document.getElementById("customer_id").value),
         title: document.getElementById("title").value,
         description: document.getElementById("description").value,
+        amount: parseFloat(document.getElementById("amount").value) || 0,
         stage: document.getElementById("stage").value
       };
-      await window.api.createIn("crm", data);
-      showMessage("Oportunidad guardada correctamente");
+
+      if (id) {
+        await window.api.updateIn("crm", parseInt(id), data);
+        showMessage("Oportunidad actualizada correctamente");
+      } else {
+        await window.api.createIn("crm", data);
+        showMessage("Oportunidad guardada correctamente");
+      }
+
       e.target.reset();
+      document.getElementById("customer_id").value = "";
       render();
     });
 
     // 🔍 Autocompletar clientes
     async function loadCustomerList() {
-      const customers = await window.api.listAll('customers');
-      const datalist = document.getElementById('customer_list');
-      datalist.innerHTML = '';
+      const customers = await window.api.listAll("customers");
+      const datalist = document.getElementById("customer_list");
+      datalist.innerHTML = "";
       customers.forEach(c => {
-        const option = document.createElement('option');
+        const option = document.createElement("option");
         option.value = `${c.name} (ID: ${c.id})`;
         datalist.appendChild(option);
       });
     }
 
-    document.getElementById('customer_search').addEventListener('change', async (e) => {
-      const customers = await window.api.listAll('customers');
+    document.getElementById("customer_search").addEventListener("change", async (e) => {
+      const customers = await window.api.listAll("customers");
       const selected = customers.find(c => e.target.value.includes(`ID: ${c.id}`));
-      if (selected) {
-        document.getElementById('customer_id').value = selected.id;
-      } else {
-        document.getElementById('customer_id').value = '';
-      }
+      document.getElementById("customer_id").value = selected ? selected.id : "";
     });
 
-    // 🔁 Cargar datos iniciales
+    // 🔁 Inicializar datos
     loadCustomerList();
-
     render();
   </script>
 </body>
-
 </html>

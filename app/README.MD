@@ -70,3 +70,7 @@ crud roles
 <a href="index.php?action=editRole&id=1">Editar Rol</a>
 <a href="index.php?action=updateRole&id=1">Actualizar Rol</a> <!-- en un <form> -->
 <a href="index.php?action=deleteRole&id=1">Eliminar Rol</a>
+
+
+
+http://localhost:8080/app/public/index.php?action=notas_createGroup&curso_id=2&anio_id=3

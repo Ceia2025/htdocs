@@ -3,61 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <title>Ventas - Órdenes</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <a href="index.html">← Volver</a>
-  <h2>Ventas - Órdenes</h2>
+  <div class="container">
+    <header>
+      <a href="index.html" class="back-link">← Volver</a>
+      <h2>Ventas - Órdenes</h2>
+    </header>
 
-  <div id="status"></div>
+    <div id="status" class="status"></div>
 
-  <form id="form">
-    <input type="hidden" id="id">
+    <form id="form" class="form-card">
+      <input type="hidden" id="id">
 
-    <!-- 🔍 Cliente con buscador -->
-    <label>Cliente:
-      <input type="text" id="customer_search" placeholder="Buscar cliente..." list="customer_list">
-      <datalist id="customer_list"></datalist>
-    </label><br>
-    <input type="hidden" id="customer_id">
+      <!-- 🔍 Cliente -->
+      <div class="form-group">
+        <label>Cliente</label>
+        <input type="text" id="customer_search" placeholder="Buscar cliente..." list="customer_list">
+        <datalist id="customer_list"></datalist>
+        <input type="hidden" id="customer_id">
+      </div>
 
-    <!-- 🔍 Producto con buscador -->
-    <label>Producto:
-      <input type="text" id="product_search" placeholder="Buscar producto..." list="product_list">
-      <datalist id="product_list"></datalist>
-    </label><br>
-    <input type="hidden" id="product_id">
+      <!-- 🔍 Producto -->
+      <div class="form-group">
+        <label>Producto</label>
+        <input type="text" id="product_search" placeholder="Buscar producto..." list="product_list">
+        <datalist id="product_list"></datalist>
+        <input type="hidden" id="product_id">
+      </div>
 
-    <label>Cantidad: <input type="number" id="qty" required></label><br>
-    <label>Precio (sin IVA): <input type="number" id="price" readonly></label><br>
-    <label>Precio con IVA (19%): <input type="number" id="price_iva" readonly></label><br>
-    <label>Total: <input type="number" id="total" readonly></label><br>
+      <div class="form-group">
+        <label>Cantidad</label>
+        <input type="number" id="qty" min="1" required>
+      </div>
 
-    <label>Estado:
-      <select id="statusSel">
-        <option value="borrador">Borrador</option>
-        <option value="confirmado">Confirmado</option>
-        <option value="facturado">Facturado</option>
-      </select>
-    </label><br>
-    <button type="submit">Guardar</button>
-  </form>
+      <div class="form-group">
+        <label>Precio (sin IVA)</label>
+        <input type="number" id="price" readonly>
+      </div>
 
-  <hr>
-  <table border="1" cellpadding="4" cellspacing="0">
-    <thead>
-      <tr>
-        <th>ID</th><th>Cliente</th><th>Producto</th><th>Cantidad</th>
-        <th>Precio (con IVA)</th><th>Total</th><th>Estado</th>
-      </tr>
-    </thead>
-    <tbody id="tbody"></tbody>
-  </table>
+      <div class="form-group">
+        <label>Precio con IVA (19%)</label>
+        <input type="number" id="price_iva" readonly>
+      </div>
+
+      <!-- 💸 Descuento -->
+      <div class="form-group">
+        <label>Descuento (%)</label>
+        <input type="number" id="discount" min="0" max="100" value="0">
+        <small>Aplica un descuento porcentual sobre el total (0–100%).</small>
+      </div>
+
+      <div class="form-group">
+        <label>Total</label>
+        <input type="number" id="total" readonly>
+      </div>
+
+      <div class="form-group">
+        <label>Estado</label>
+        <select id="statusSel">
+          <option value="borrador">Borrador</option>
+          <option value="confirmado">Confirmado</option>
+          <option value="facturado">Facturado</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn">Guardar</button>
+    </form>
+
+    <hr class="divider">
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio c/IVA</th>
+            <th>Descuento (%)</th>
+            <th>Total Final</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
 
   <script>
     const statusDiv = document.getElementById('status');
     const qty = document.getElementById('qty');
     const price = document.getElementById('price');
     const priceIVA = document.getElementById('price_iva');
+    const discount = document.getElementById('discount');
     const total = document.getElementById('total');
 
     function showMessage(msg, ok = true) {
@@ -69,11 +110,20 @@
     function calcTotal() {
       const p = parseFloat(price.value || 0);
       const q = parseFloat(qty.value || 0);
+      const d = parseFloat(discount.value || 0);
       const pIVA = (p * 1.19).toFixed(2);
       priceIVA.value = pIVA;
-      total.value = (pIVA * q).toFixed(2);
+
+      // Total antes del descuento
+      let subtotal = pIVA * q;
+
+      // Aplicar descuento
+      const totalDesc = subtotal - (subtotal * d / 100);
+      total.value = totalDesc.toFixed(2);
     }
+
     qty.addEventListener("input", calcTotal);
+    discount.addEventListener("input", calcTotal);
 
     // 🔹 Cargar ventas
     async function render() {
@@ -94,6 +144,7 @@
           <td>${p ? p.name : '(Producto ' + s.product_id + ')'}</td>
           <td>${s.qty}</td>
           <td>${s.price_iva}</td>
+          <td>${s.discount || 0}%</td>
           <td>${s.total}</td>
           <td>${s.status}</td>`;
         tbody.appendChild(tr);
@@ -149,6 +200,7 @@
         qty: parseFloat(qty.value),
         price: parseFloat(price.value),
         price_iva: parseFloat(priceIVA.value),
+        discount: parseFloat(discount.value) || 0,
         total: parseFloat(total.value),
         status: document.getElementById('statusSel').value
       };

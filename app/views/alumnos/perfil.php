@@ -116,6 +116,7 @@ include __DIR__ . "/../layout/navbar.php";
                     Agregar contacto
                 </a>
             </div>
+
         </section>
 
         <!-- ANTECEDENTES FAMILIARES -->
@@ -207,11 +208,9 @@ include __DIR__ . "/../layout/navbar.php";
             <?php endif; ?>
 
             <div class="flex justify-center mt-8 gap-4">
-
                 <a href="index.php?action=antecedente_escolar_editProfile&alumno_id=<?= $alumno['id'] ?>"
                     class="btn bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition">
                     Editar</a>
-
             </div>
 
 
@@ -224,13 +223,14 @@ include __DIR__ . "/../layout/navbar.php";
 
 
         <!-- BOTONES -->
-        <div class="flex justify-center mt-8 gap-4">
+        <div class="flex justify-center mt-8 gap-4 w-full">
             <a href="index.php?action=alumnos"
-                class="btn bg-indigo-600 hover:bg-indigo-700 px-6 py-2 rounded-lg font-semibold transition">
-                Volver</a>
-            <a href="index.php?action=alumno_edit&id=<?= $alumno['id'] ?>"
-                class="btn bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition">Editar</a>
+                class=" flex justify-center btn bg-indigo-600 hover:bg-indigo-700 px-6 py-2 rounded-lg font-semibold transition w-full">
+                Volver
+            </a>
         </div>
+
+
 
     </div>
 </main>

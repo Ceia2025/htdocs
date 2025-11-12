@@ -15,12 +15,12 @@ include __DIR__ . "/../layout/navbar.php";
 
 <main>
     <!-- HEADER -->
-        <header
-            class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
-            <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold tracking-tight text-white">Alumnos</h1>
-            </div>
-        </header>
+    <header
+        class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
+        <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold tracking-tight text-white">Alumnos</h1>
+        </div>
+    </header>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
         <!-- BOTÓN NUEVO ALUMNO -->
@@ -75,7 +75,8 @@ include __DIR__ . "/../layout/navbar.php";
                             }
                             ?>
                             <tr onclick="window.location='index.php?action=alumno_profile&id=<?= $alumno['id'] ?>';"
-                                class="cursor-pointer hover:bg-gray-700">
+                                class="cursor-pointer hover:bg-gray-700 <?= !empty($alumno['deleted_at']) ? 'bg-red-950/30' : '' ?>">
+
                                 <td class="px-4 py-3 text-sm text-gray-100">
                                     <?= htmlspecialchars($alumno['run'] . '-' . $alumno['codver']) ?>
                                 </td>
@@ -109,14 +110,19 @@ include __DIR__ . "/../layout/navbar.php";
                                         <?php endif; ?>
                                     </p>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-100">
-                                    <p>
-                                        <?php if (!empty($alumno['deleted_at'])): ?>
+                                <td class="px-4 py-3 text-sm">
+                                    <?php if (!empty($alumno['deleted_at'])): ?>
+                                        <span
+                                            class="inline-flex items-center px-2 py-1 bg-red-900/40 border border-red-500 text-red-300 rounded-md text-xs font-semibold">
+                                            Retirado<br>
                                             <?= (new DateTime($alumno['deleted_at']))->format('d/m/Y') ?>
-                                        <?php else: ?>
-                                            No registrada
-                                        <?php endif; ?>
-                                    </p>
+                                        </span>
+                                    <?php else: ?>
+                                        <span
+                                            class="inline-flex items-center px-2 py-1 bg-green-900/40 border border-green-500 text-green-300 rounded-md text-xs font-semibold">
+                                            ✅ Activo
+                                        </span>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="px-4 py-3 text-sm text-gray-100 space-x-3">
                                     <a href="index.php?action=alumno_edit&id=<?= $alumno['id'] ?>"

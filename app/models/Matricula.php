@@ -13,7 +13,8 @@ class Matricula
     }
 
     //Busca Por matricula
-    public function buscarMatriculas($nombre = null, $rut = null, $anio = null, $curso = null) {
+    public function buscarMatriculas($nombre = null, $rut = null, $anio = null, $curso = null)
+    {
         $sql = "
             SELECT m.id, 
                    a.run, 
@@ -132,6 +133,23 @@ class Matricula
             ':anio_id' => $data['anio_id'],
             ':fecha_matricula' => $data['fecha_matricula'] ?? date('Y-m-d')
         ]);
+    }
+
+    // 🔹 Obtener matrícula según alumno, curso y año
+    public function getByAlumnoYCurso($alumno_id, $curso_id, $anio_id)
+    {
+        $sql = "SELECT * FROM matriculas2
+            WHERE alumno_id = :alumno_id 
+              AND curso_id = :curso_id 
+              AND anio_id = :anio_id
+            LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':alumno_id' => $alumno_id,
+            ':curso_id' => $curso_id,
+            ':anio_id' => $anio_id
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     // Eliminar matrícula
