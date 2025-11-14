@@ -204,6 +204,11 @@ switch ($action) {
         $controller->restore($_GET['id']);
         break;
 
+    case 'alumno_search_ajax_matricula':
+        $controller = new AlumnosController();
+        $controller->searchAjax();
+        break;
+
     // Asignaturas
     case 'asignaturas':
         $asignaturas = new AsignaturasController();
@@ -525,15 +530,6 @@ switch ($action) {
         }
         break;
 
-    /*
-case 'alumno_search_ajax':
-    require_once __DIR__ . '/../models/Alumno.php';
-    $alumnoModel = new Alumno();
-    $term = $_GET['term'] ?? '';
-    $results = $alumnoModel->searchAlumnoEmergencia($term);
-    header('Content-Type: application/json');
-    echo json_encode($results);
-    exit;*/
 
 
     case 'notas':

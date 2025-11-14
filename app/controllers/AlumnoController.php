@@ -148,14 +148,6 @@ class AlumnosController
         // Obtener datos relacionados
         $contactos = $emergenciaModel->findByAlumno($id);
         $antecedentes = $familiarModel->findByAlumno($id);
-        //$antecedenteEscolar = $escolarModel->getByAlumnoId($id); // 🔹 Nuevo método (ver paso 4)
-
-        //echo "<pre>";
-        //print_r($alumno);
-        //echo "</pre>";
-        //exit;
-
-        // Cargar la vista
         require __DIR__ . '/../views/alumnos/perfil.php';
     }
 
@@ -232,7 +224,7 @@ class AlumnosController
             error_log("🧠 Retirando alumno con ID: $id");
             $fechaActual = date('Y-m-d H:i:s');
             $this->alumnoModel->markAsRetired($id, $fechaActual);
-        }else{
+        } else {
             error_log("⚠️ ID vacío en retire()");
         }
         header("Location: index.php?action=alumno_edit&id=$id");
@@ -248,6 +240,30 @@ class AlumnosController
         header("Location: index.php?action=alumno_edit&id=$id");
         exit;
     }
+
+    //Buscar al alumno en el momento en que se generan nuevas matriculas
+    public function searchAjax()
+    {
+        header('Content-Type: application/json; charset=utf-8');
+
+        try {
+            $term = $_GET['term'] ?? '';
+
+            if (strlen($term) < 2) {
+                echo json_encode([]);
+                exit;
+            }
+
+            $alumno = new Alumno();
+            $results = $alumno->searchForAutocomplete($term);
+
+            echo json_encode($results);
+        } catch (Exception $e) {
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+        exit;
+    }
+
 
 
     // Eliminar alumno

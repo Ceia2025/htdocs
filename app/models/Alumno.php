@@ -222,6 +222,39 @@ class Alumno
         return $stmt->fetchColumn() > 0;
     }
 
+
+    //Busqyeda de aliumno para el aprtado de ajax en la creación de matricula
+    public function searchForAutocomplete($term)
+    {
+        // Normalizar el término ingresado: quitar puntos, guiones y espacios
+        $clean = preg_replace('/[^0-9kK]/', '', $term);
+
+        $sql = "
+        SELECT id, nombre, apepat, apemat,
+               run, codver,
+               REPLACE(REPLACE(REPLACE(run, '.', ''), '-', ''), ' ', '') AS run_clean
+        FROM alumnos2
+        WHERE deleted_at IS NULL
+        AND (
+            LOWER(CONCAT(nombre, ' ', apepat, ' ', apemat)) LIKE :term
+            OR run LIKE :term
+            OR REPLACE(REPLACE(REPLACE(run, '.', ''), '-', ''), ' ', '') LIKE :clean
+        )
+        ORDER BY nombre
+        LIMIT 10
+    ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':term' => "%$term%",
+            ':clean' => "%$clean%"
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
     // Eliminar un alumno
     public function delete($id)
     {

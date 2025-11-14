@@ -34,7 +34,8 @@ include __DIR__ . "/../layout/navbar.php";
                         <!-- Buscador de Alumno -->
                         <div>
                             <label for="alumno_search" class="block text-sm font-medium text-gray-200">Alumno</label>
-                            <input type="text" id="alumno_search" placeholder="Buscar por nombre o RUT..."
+                            <input type="text" id="alumno_search" autocomplete="off"
+                                placeholder="Buscar por nombre o RUT..."
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <input type="hidden" name="alumno_id" id="alumno_id">
                             <ul id="alumno_list"
@@ -97,7 +98,7 @@ include __DIR__ . "/../layout/navbar.php";
             return;
         }
 
-        fetch(`index.php?action=alumno_search_ajax&term=${encodeURIComponent(term)}`)
+        fetch(`index.php?action=alumno_search_ajax_matricula&term=${encodeURIComponent(term)}`)
             .then(res => res.json())
             .then(data => {
                 list.innerHTML = '';
