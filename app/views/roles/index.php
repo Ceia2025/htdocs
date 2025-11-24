@@ -29,46 +29,8 @@ include __DIR__ . "/../layout/navbar.php";
         <main>
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
-
-                <!-- TABLA -->
-                <div class="overflow-x-auto bg-gray-900 rounded-3xl shadow-lg">
-                    <table class="min-w-full divide-y divide-gray-700">
-                        <thead class="bg-gray-950/50">
-                            <tr>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    ID</th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    Nombre</th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-gray-500/30 divide-y divide-gray-600">
-
-                            <?php foreach ($roles as $r): ?>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100"><?= $r['id'] ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100 capitalize">
-                                        <?= htmlspecialchars($r['nombre']) ?>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
-                                        <a href="index.php?action=editRole&id=<?= $r['id'] ?>">Editar</a> |
-                                        <a href="index.php?action=deleteRole&id=<?= $r['id'] ?>"
-                                            onclick="return confirm('¿Eliminar este rol?')">Eliminar</a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-
-
-                        </tbody>
-                    </table>
-                </div>
-
-
-                <div class="mt-8 flex items-center justify-center bg-gray-900">
+                <!-- CREAR NUEVO ROL -->
+                <div class="mt-8  mb-8  flex items-center justify-center bg-gray-900">
                     <div class="bg-gray-700 p-6 rounded-2xl shadow-lg w-full max-w-md">
                         <h2 class="text-2xl font-bold text-white mb-6 text-center">Nuevo Rol</h2>
 
@@ -89,6 +51,38 @@ include __DIR__ . "/../layout/navbar.php";
                 </div>
 
 
+                <!-- TABLA -->
+                <div class="overflow-x-auto bg-gray-900 rounded-3xl shadow-lg">
+                    <table class="min-w-full divide-y divide-gray-700">
+                        <thead class="bg-gray-950/50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Nombre</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-gray-500/30 divide-y divide-gray-600">
+
+                            <?php foreach ($roles as $r): ?>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100 capitalize">
+                                        <?= htmlspecialchars($r['nombre']) ?>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
+                                        <a href="index.php?action=editRole&id=<?= $r['id'] ?>">Editar</a> |
+                                        <a href="index.php?action=deleteRole&id=<?= $r['id'] ?>"
+                                            onclick="return confirm('¿Eliminar este rol?')">Eliminar</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+
+
+                        </tbody>
+                    </table>
+                </div>
 
 
                 <!-- Regresar -->

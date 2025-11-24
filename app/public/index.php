@@ -14,6 +14,12 @@ require_once __DIR__ . '/../controllers/MatriculaController.php';
 require_once __DIR__ . '/../controllers/PerfilAcademicoController.php';
 require_once __DIR__ . '/../controllers/AntecedenteEscolarController.php';
 require_once __DIR__ . '/../controllers/NotasController.php';
+//Profesores
+require_once __DIR__ . '/../controllers/ProfesoresController.php';
+require_once __DIR__ . '/../controllers/ProfesorCursoAsignaturaController.php';
+require_once __DIR__ . '/../controllers/HorariosController.php';
+require_once __DIR__ . '/../controllers/ProfesorCursoAsignaturaController.php';
+
 
 
 
@@ -567,6 +573,111 @@ switch ($action) {
         $notasController = new NotasController();
         $notasController->delete($_GET['id']);
         break;
+
+    //---------------------------------------------------------------------
+
+    // CRUD Profesores
+    case 'profesores':
+        $profesoresController = new ProfesoresController();
+        $profesoresController->index();
+        break;
+
+    case 'profesor_create':
+        $profesoresController = new ProfesoresController();
+        $profesoresController->create();
+        break;
+
+    case 'profesor_store':
+        $profesoresController = new ProfesoresController();
+        $profesoresController->store($_POST);
+        break;
+
+    case 'profesor_edit':
+        $profesoresController = new ProfesoresController();
+        $profesoresController->edit($_GET['id']);
+        break;
+
+    case 'profesor_update':
+        $profesoresController = new ProfesoresController();
+        $profesoresController->update($_GET['id'], $_POST);
+        break;
+
+    case 'profesor_delete':
+        $profesoresController = new ProfesoresController();
+        $profesoresController->delete($_GET['id']);
+        break;
+
+
+    // CRUD Profesor-Curso-Asignatura
+    case 'profesor_curso_asignatura':
+        $pcaController = new ProfesorCursoAsignaturaController();
+        $pcaController->index();
+        break;
+
+    case 'pca_create':
+        $pcaController = new ProfesorCursoAsignaturaController();
+        $pcaController->create();
+        break;
+
+    case 'pca_store':
+        $pcaController = new ProfesorCursoAsignaturaController();
+        $pcaController->store($_POST);
+        break;
+
+    case 'pca_edit':
+        $pcaController = new ProfesorCursoAsignaturaController();
+        $pcaController->edit($_GET['id']);
+        break;
+
+    case 'pca_update':
+        $pcaController = new ProfesorCursoAsignaturaController();
+        $pcaController->update($_GET['id'], $_POST);
+        break;
+
+    case 'pca_delete':
+        $pcaController = new ProfesorCursoAsignaturaController();
+        $pcaController->delete($_GET['id']);
+        break;
+    case 'pca_asignaturas_por_curso':
+        $pcaController = new ProfesorCursoAsignaturaController();
+        $pcaController->getAsignaturasPorCurso();
+        break;
+        
+
+
+    // Horarios por asignación
+    case 'horarios_pca':
+        $horariosController = new HorariosController();
+        $horariosController->indexPorAsignacion($_GET['pca_id']);
+        break;
+
+    case 'horario_store':
+        $horariosController = new HorariosController();
+        $horariosController->store($_POST);
+        break;
+
+    case 'horario_delete':
+        $horariosController = new HorariosController();
+        $horariosController->delete($_GET['id'], $_GET['pca_id']);
+        break;
+
+    // Suplencias
+    case 'suplencias':
+        $suplenciasController = new SuplenciasController();
+        $suplenciasController->index();
+        break;
+
+    case 'suplencia_store':
+        $suplenciasController = new SuplenciasController();
+        $suplenciasController->store($_POST);
+        break;
+
+    case 'suplencia_delete':
+        $suplenciasController = new SuplenciasController();
+        $suplenciasController->delete($_GET['id']);
+        break;
+
+    //---------------------------------------------------------------------
 
     default:
         echo "<h1>Ruta no encontrada</h1>";

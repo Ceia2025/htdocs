@@ -74,3 +74,11 @@ crud roles
 
 
 http://localhost:8080/app/public/index.php?action=notas_createGroup&curso_id=2&anio_id=3
+
+
+
+http://localhost:8080/app/public/index.php?action=antecedente_escolar_updateProfile
+
+documento institucionales
+reglamentos institucionales(preguntar a ingrid)
+muchas cgas xD

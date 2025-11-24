@@ -102,7 +102,7 @@ class AntecedenteEscolar
             ':pertenece_20' => $data['pertenece_20'] ?? 0,
             ':informe_20' => $data['informe_20'] ?? 0,
             ':embarazo' => $data['embarazo'] ?? 0,
-            ':semanas' => $data['semanas'] ?? null,
+            ':semanas' => (isset($data['semanas']) && $data['semanas'] !== "" ? intval($data['semanas']) : null),
             ':info_salud' => $data['info_salud'] ?? null,
             ':eva_psico' => $data['eva_psico'] ?? null,
             ':prob_apren' => $data['prob_apren'] ?? null,

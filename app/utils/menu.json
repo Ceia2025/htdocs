@@ -1,49 +1,9 @@
 {
   "administrador": [
     {
-      "title": "Gestión de usuarios Terminado",
-      "desc": "Controla los usuarios del sistema",
-      "url": "index.php?action=users"
-    },
-    {
-      "title": "Edición de Roles Terminado",
-      "desc": "Modificar permisos de usuarios",
-      "url": "index.php?action=roles"
-    },
-    {
-      "title": "Edición de Años Terminado",
+      "title": "Edición de Años",
       "desc": "Gestionar años académicos",
       "url": "index.php?action=anios"
-    },
-    {
-      "title": "Gestión de Cursos Terminado",
-      "desc": "Creación, edición y eliminación de cursos 1° 2° etc",
-      "url": "index.php?action=cursos"
-    },
-    {
-      "title": "Gestión de Asignaturas Terminado",
-      "desc": "Creación, edición y eliminación de Asignaturas nombre y desc",
-      "url": "index.php?action=asignaturas"
-    },
-    {
-      "title": "Curso Asignaturas Terminado",
-      "desc": "Asignar asignaturas a cursos",
-      "url": "index.php?action=curso_asignaturas"
-    },
-    {
-      "title": "Gestión de Alumnos (Solo ingreso)",
-      "desc": "Agregar, modificar o ver alumnos",
-      "url": "index.php?action=alumnos"
-    },
-    {
-      "title": "Alumno Emergencia Terminado",
-      "desc": "Se agregan contactos de emergencia de alumnos",
-      "url": "index.php?action=alum_emergencia"
-    },
-    {
-      "title": "Antecedentes familiares del alumno",
-      "desc": "Antecedentes familiares de los alumnos",
-      "url": "index.php?action=antecedentefamiliar"
     },
     {
       "title": "Matricula",
@@ -51,55 +11,36 @@
       "url": "index.php?action=alumnos_stepper"
     },
     {
-      "title": "Antecedentes escolares TEST",
-      "desc": "Antecedentes familiares de los alumnos",
-      "url": "index.php?action=antecedente_escolar"
-    },
-    {
-      "title": "Matricula (Crear)",
-      "desc": "Registrar calificaciones de alumnos",
-      "url": "#"
-    },
-    {
-      "title": " (Crear)",
-      "desc": "Registrar calificaciones de alumnos",
-      "url": "#"
-    },
-    {
-      "title": "Ingresar Notas (Crear)",
-      "desc": "Registrar calificaciones de alumnos",
-      "url": "#"
-    },
-    {
-      "title": "Planificaciones (Crear)",
-      "desc": "Subir y gestionar planificaciones de clases",
-      "url": "#"
-    },
-    {
-      "title": "Reportes (Crear)",
-      "desc": "Generar y ver reportes del sistema",
-      "url": "#"
-    },
-    {
-      "title": "Inventario",
-      "desc": "Inventario",
-      "url": "index.php?action=inventario_index"
-    },
-    {
-      "title": "Procedencias para inventario",
-      "desc": "Procedencias",
-      "url": "index.php?action=procedencias"
-    },
-    {
-      "title": "Individualizacion",
-      "desc": "En este apartado estan las categorias de items mas sus respectivos codigo",
-      "url": "index.php?action=categorizaciones"
-    },
-    {
       "title": "Mantenedor de matricula",
       "desc": "En este apartado estan las categorias de items mas sus respectivos codigo",
       "url": "index.php?action=matriculas"
+    },
+    {
+      "title": "ProfesoresTest",
+      "desc": "Profesores test",
+      "url": "index.php?action=profesores"
+    },
+    {
+      "title": "Curso asignatura test",
+      "desc": "Profesor y curso asignatiura test test",
+      "url": "index.php?action=profesor_curso_asignatura"
+    },
+    {
+      "title": "Manuales",
+      "desc": "Reglamentos institucionales",
+      "url": "index.php?action=dashboard"
     }
+
+
+
+
+
+
+
+
+
+
+    
   ],
   "docente": [
     {
