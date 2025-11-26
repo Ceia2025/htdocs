@@ -69,7 +69,6 @@ include __DIR__ . "/../layout/navbar.php";
                         <thead class="bg-gray-700 text-gray-200">
                             <tr>
                                 <th class="px-6 py-3">Alumno</th>
-                                <th class="px-6 py-3">RUT</th>
                                 <th class="px-6 py-3">Nombre Contacto</th>
                                 <th class="px-6 py-3">Teléfono</th>
                                 <th class="px-6 py-3">Dirección</th>
@@ -84,7 +83,6 @@ include __DIR__ . "/../layout/navbar.php";
                                         <td class="px-6 py-3">
                                             <?= htmlspecialchars($e['alumno_nombre'] . ' ' . $e['ape_paterno'] . ' ' . $e['ape_materno']) ?>
                                         </td>
-                                        <td class="px-6 py-3"><?= htmlspecialchars($e['rut'] ?? '-') ?></td>
                                         <td class="px-6 py-3"><?= htmlspecialchars($e['nombre_contacto']) ?></td>
                                         <td class="px-6 py-3"><?= htmlspecialchars($e['telefono']) ?></td>
                                         <td class="px-6 py-3"><?= htmlspecialchars($e['direccion']) ?></td>

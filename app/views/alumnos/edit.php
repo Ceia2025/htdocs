@@ -25,6 +25,54 @@ include __DIR__ . "/../layout/navbar.php";
     <div class="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
         <div class="bg-gray-700 p-8 rounded-2xl shadow-lg">
 
+
+        <!-- -->
+            <div class="md:col-span-2">
+
+
+                <?php if ($alumno['deleted_at']): ?>
+                    <div
+                        class="mt-8 w-full bg-gradient-to-r from-red-900/60 to-red-800/40 border border-red-500 rounded-xl p-6 text-red-200 shadow-lg">
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-6 w-full">
+                            <div class="flex items-center gap-4">
+                                <span class="text-5xl">🚫</span>
+                                <div>
+                                    <p class="text-lg font-semibold leading-tight">Este alumno fue retirado el</p>
+                                    <p class="text-xl font-bold text-red-300 mt-1">
+                                        <?= date('d/m/Y H:i', strtotime($alumno['deleted_at'])) ?>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end w-full md:w-auto">
+                                <a href="index.php?action=alumno_restore&id=<?= $alumno['id'] ?>"
+                                    class="text-center bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg text-white font-semibold shadow-md transition duration-200">
+                                    Reintegrar alumno
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div
+                        class="mt-8 w-full bg-gradient-to-r from-gray-800/100 to-gray-700 border border-gray-600 rounded-xl p-6 text-gray-200 shadow-lg">
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-6 w-full">
+                            <div class="flex items-center gap-4">
+                                <span class="text-green-400 text-5xl">✅</span>
+                                <p class="text-lg font-semibold leading-tight">Alumno activo actualmente.</p>
+                            </div>
+
+                            <div class="flex justify-end w-full md:w-auto">
+                                <a href="index.php?action=alumno_retire&id=<?= $alumno['id'] ?>"
+                                    class="text-center bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg text-white font-semibold shadow-md transition duration-200"
+                                    onclick="return confirm('¿Seguro que deseas marcar este alumno como retirado?')">
+                                    🚫 Marcar como retirado
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+
             <!-- ⚠️ acción corregida: update con id -->
             <form action="index.php?action=alumno_update&id=<?= htmlspecialchars($alumno['id']) ?>" method="POST"
                 class="space-y-6">
@@ -171,51 +219,22 @@ include __DIR__ . "/../layout/navbar.php";
 
                     <!-- Estado del alumno -->
 
-                    <div class="md:col-span-2">
 
 
-                        <?php if ($alumno['deleted_at']): ?>
-                            <div
-                                class="mt-8 w-full bg-gradient-to-r from-red-900/60 to-red-800/40 border border-red-500 rounded-xl p-6 text-red-200 shadow-lg">
-                                <div class="flex flex-col md:flex-row items-center justify-between gap-6 w-full">
-                                    <div class="flex items-center gap-4">
-                                        <span class="text-5xl">🚫</span>
-                                        <div>
-                                            <p class="text-lg font-semibold leading-tight">Este alumno fue retirado el</p>
-                                            <p class="text-xl font-bold text-red-300 mt-1">
-                                                <?= date('d/m/Y H:i', strtotime($alumno['deleted_at'])) ?>
-                                            </p>
-                                        </div>
-                                    </div>
 
-                                    <div class="flex justify-end w-full md:w-auto">
-                                        <a href="index.php?action=alumno_restore&id=<?= $alumno['id'] ?>"
-                                            class="text-center bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg text-white font-semibold shadow-md transition duration-200">
-                                            Reintegrar alumno
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php else: ?>
-                            <div
-                                class="mt-8 w-full bg-gradient-to-r from-gray-800/100 to-gray-700 border border-gray-600 rounded-xl p-6 text-gray-200 shadow-lg">
-                                <div class="flex flex-col md:flex-row items-center justify-between gap-6 w-full">
-                                    <div class="flex items-center gap-4">
-                                        <span class="text-green-400 text-5xl">✅</span>
-                                        <p class="text-lg font-semibold leading-tight">Alumno activo actualmente.</p>
-                                    </div>
 
-                                    <div class="flex justify-end w-full md:w-auto">
-                                        <a href="index.php?action=alumno_retire&id=<?= $alumno['id'] ?>"
-                                            class="text-center bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg text-white font-semibold shadow-md transition duration-200"
-                                            onclick="return confirm('¿Seguro que deseas marcar este alumno como retirado?')">
-                                            🚫 Marcar como retirado
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
                 </div>
 

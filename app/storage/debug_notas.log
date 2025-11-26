@@ -397,3 +397,17 @@ Array
 )
 
 --------------------
+Array
+(
+    [fecha] => 2025-11-24 14:52:49
+    [curso_id] => 2
+    [anio_id] => 3
+    [semestre] => 2
+    [asignatura_id] => 1
+    [notas_recibidas] => Array
+        (
+        )
+
+)
+
+--------------------

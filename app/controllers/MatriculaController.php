@@ -22,6 +22,14 @@ class MatriculaController
         $curso = $_GET['curso'] ?? null;
 
         $matriculas = $this->model->buscarMatriculas($nombre, $rut, $anio, $curso);
+
+        // 🔹 Cargar selects
+        $anioModel = new Anio();
+        $cursoModel = new Cursos();
+
+        $anios = $anioModel->getAll();
+        $cursos = $cursoModel->getAll();
+
         include '../views/matriculas/index.php';
     }
 

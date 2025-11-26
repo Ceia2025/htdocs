@@ -30,36 +30,56 @@ include __DIR__ . "/../layout/navbar.php";
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
                 <!-- 🔍 FORMULARIO DE BÚSQUEDA -->
-                <form method="GET" action="index.php" class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-6">
+                <form method="GET" action="index.php" class="bg-gray-800/60 backdrop-blur-md border border-gray-700 rounded-2xl p-6 
+             grid grid-cols-1 md:grid-cols-6 gap-4 shadow-xl">
+
                     <input type="hidden" name="action" value="matriculas">
 
+                    <!-- Nombre -->
                     <input type="text" name="nombre" placeholder="Nombre Alumno"
-                        value="<?= htmlspecialchars($_GET['nombre'] ?? '') ?>"
-                        class="rounded-lg border-gray-600 bg-gray-800 text-gray-100 px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        value="<?= htmlspecialchars($_GET['nombre'] ?? '') ?>" class="rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3
+               focus:ring-2 focus:ring-indigo-500 transition">
 
+                    <!-- RUT -->
                     <input type="text" name="rut" placeholder="RUT" value="<?= htmlspecialchars($_GET['rut'] ?? '') ?>"
-                        class="rounded-lg border-gray-600 bg-gray-800 text-gray-100 px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        class="rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3
+               focus:ring-2 focus:ring-indigo-500 transition">
 
-                    <input type="text" name="anio" placeholder="Año"
-                        value="<?= htmlspecialchars($_GET['anio'] ?? '') ?>"
-                        class="rounded-lg border-gray-600 bg-gray-800 text-gray-100 px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    <!-- Año -->
+                    <select name="anio" class="rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3
+               focus:ring-2 focus:ring-indigo-500 transition">
+                        <option value="">Año</option>
+                        <?php foreach ($anios as $a): ?>
+                            <option value="<?= $a['anio'] ?>" <?= ($_GET['anio'] ?? '') == $a['anio'] ? 'selected' : '' ?>>
+                                <?= $a['anio'] ?>
+                            </option>
+                        <?php endforeach ?>
+                    </select>
 
-                    <input type="text" name="curso" placeholder="Curso"
-                        value="<?= htmlspecialchars($_GET['curso'] ?? '') ?>"
-                        class="rounded-lg border-gray-600 bg-gray-800 text-gray-100 px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    <!-- Curso -->
+                    <select name="curso" class="rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3
+               focus:ring-2 focus:ring-indigo-500 transition">
+                        <option value="">Curso</option>
+                        <?php foreach ($cursos as $c): ?>
+                            <option value="<?= $c['nombre'] ?>" <?= ($_GET['curso'] ?? '') == $c['nombre'] ? 'selected' : '' ?>>
+                                <?= $c['nombre'] ?>
+                            </option>
+                        <?php endforeach ?>
+                    </select>
 
                     <!-- Botón Buscar -->
-                    <button type="submit"
-                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow px-4 py-2 transition duration-200">
+                    <button type="submit" class="bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700
+               text-white font-semibold rounded-xl shadow-lg px-4 py-3 transition">
                         Buscar
                     </button>
 
                     <!-- Botón Limpiar -->
-                    <a href="index.php?action=matriculas"
-                        class="text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg shadow px-4 py-2 transition duration-200">
+                    <a href="index.php?action=matriculas" class="text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold 
+               rounded-xl shadow px-4 py-3 transition">
                         Limpiar
                     </a>
                 </form>
+
 
 
                 <!-- BOTÓN CREAR -->

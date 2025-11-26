@@ -33,31 +33,45 @@ include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 ?>
 
-<header
-    class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
-    <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-white">Registro Completo de Alumno</h1>
+<header class="relative bg-gradient-to-r from-gray-900 to-gray-800 shadow-lg border-b border-gray-700">
+    <div class="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+        <h1 class="text-4xl font-extrabold tracking-tight text-white drop-shadow">
+            Registro Completo de Alumno
+        </h1>
+        <p class="text-gray-300 mt-2">Ingresa todos los datos requeridos en cada paso</p>
     </div>
 </header>
 
+
 <main class="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8 text-white">
-    <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl border border-gray-700">
+    <div
+        class="bg-gray-900/80 backdrop-blur-xl p-10 rounded-3xl shadow-2xl border border-gray-700/50 ring-1 ring-gray-600/20">
+
 
         <!-- Barra de progreso -->
         <div class="mb-10">
-            <div class="flex justify-between text-sm font-medium mb-2">
-                <span>Paso 1</span><span>Paso 2</span><span>Paso 3</span><span>Paso 4</span>
+            <div class="flex justify-between text-sm font-semibold text-gray-300 mb-3">
+                <span class="step-label">Paso 1</span>
+                <span class="step-label">Paso 2</span>
+                <span class="step-label">Paso 3</span>
+                <span class="step-label">Paso 4</span>
             </div>
-            <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
-                <div id="progress-bar" class="h-2 bg-indigo-600 transition-all duration-500 w-1/4"></div>
+
+            <div class="relative w-full h-3 bg-gray-700/60 rounded-full overflow-hidden shadow-inner">
+                <div id="progress-bar"
+                    class="absolute left-0 top-0 h-full bg-gradient-to-r from-indigo-500 to-blue-500 shadow-md transition-all duration-700 ease-out w-1/4">
+                </div>
             </div>
         </div>
+
 
         <form method="POST" action="index.php?action=alumnos_store_stepper" id="stepperForm" class="space-y-10">
 
             <!-- 🧾 PASO 1: DATOS DEL ALUMNO -->
-            <div class="step" data-step="1">
-                <h2 class="text-2xl font-bold mb-6 border-b border-gray-600 pb-2">1️⃣ Datos del Alumno</h2>
+            <div class="step transition-all duration-300 ease-out transform" data-step="1">
+                <h2
+                    class="text-3xl font-extrabold mb-6 pb-3 bg-gradient-to-r from-indigo-400 to-blue-400 text-transparent bg-clip-text drop-shadow">
+                    Datos del Alumno</h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -160,7 +174,7 @@ include __DIR__ . "/../layout/navbar.php";
                     </div>
 
                     <!-- Ciudad/Comuna -->
-                    <div class="mt-4">
+                    <div class="">
                         <label class="block text-sm font-medium text-gray-200">Ciudad / Comuna</label>
                         <select id="ciudad" name="ciudad"
                             class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none">
@@ -207,13 +221,20 @@ include __DIR__ . "/../layout/navbar.php";
                 </div>
 
                 <div class="flex justify-end pt-6">
-                    <button type="button" class="next-step btn-indigo">Siguiente ➡️</button>
+                    <button type="button" class="next-step inline-flex items-center gap-2 px-6 py-3 
+           bg-gradient-to-r from-indigo-600 to-blue-600 
+           hover:from-indigo-700 hover:to-blue-700 
+           text-white font-semibold rounded-xl 
+           shadow-md hover:shadow-lg hover:shadow-indigo-500/40
+           transition-all duration-200">Siguiente</button>
                 </div>
             </div>
 
             <!-- 🚑 PASO 2: CONTACTOS DE EMERGENCIA -->
-            <div class="step hidden" data-step="2">
-                <h2 class="text-2xl font-bold mb-6 border-b border-gray-600 pb-2">2️⃣ Contactos de Emergencia</h2>
+            <div class="step transition-all duration-300 ease-out transform hidden" data-step="2">
+                <h2
+                    class="text-3xl font-extrabold mb-6 pb-3 bg-gradient-to-r from-indigo-400 to-blue-400 text-transparent bg-clip-text drop-shadow">
+                    Contactos de Emergencia</h2>
 
 
 
@@ -260,17 +281,28 @@ include __DIR__ . "/../layout/navbar.php";
 
                 </div>
 
-                <button type="button" id="addEmergencia" class="mt-4 btn-blue">Agregar otro contacto</button>
+                <!-- 
+                    <button type="button" id="addEmergencia" class="mt-4 btn-blue">Agregar otro contacto</button>
+                    -->
 
                 <div class="flex justify-between pt-8">
-                    <button type="button" class="prev-step btn-gray">Anterior</button>
-                    <button type="button" class="next-step btn-indigo">Siguiente</button>
+                    <button type="button" class="px-6 py-2.5 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-500 hover:to-gray-600
+           text-white font-semibold rounded-xl shadow-lg transition duration-200 prev-step">Anterior</button>
+
+                    <button type="button" class="next-step inline-flex items-center gap-2 px-6 py-3 
+           bg-gradient-to-r from-indigo-600 to-blue-600 
+           hover:from-indigo-700 hover:to-blue-700 
+           text-white font-semibold rounded-xl 
+           shadow-md hover:shadow-lg hover:shadow-indigo-500/40
+           transition-all duration-200">Siguiente</button>
                 </div>
             </div>
 
             <!-- 👨‍👩‍👧 PASO 3: ANTECEDENTES FAMILIARES -->
-            <div class="step hidden" data-step="3">
-                <h2 class="text-2xl font-bold mb-6 border-b border-gray-600 pb-2">3️⃣ Antecedentes Familiares</h2>
+            <div class="step transition-all duration-300 ease-out transform hidden" data-step="3">
+                <h2
+                    class="text-3xl font-extrabold mb-6 pb-3 bg-gradient-to-r from-indigo-400 to-blue-400 text-transparent bg-clip-text drop-shadow">
+                    Antecedentes Familiares</h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Padre -->
@@ -313,15 +345,23 @@ include __DIR__ . "/../layout/navbar.php";
                 </div>
 
                 <div class="flex justify-between pt-8">
-                    <button type="button" class="prev-step btn-gray">Anterior</button>
-                    <button type="button" class="next-step btn-indigo">Siguiente</button>
+                    <button type="button" class="px-6 py-2.5 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-500 hover:to-gray-600
+           text-white font-semibold rounded-xl shadow-lg transition duration-200 prev-step">Anterior</button>
+                    <button type="button" class="next-step inline-flex items-center gap-2 px-6 py-3 
+           bg-gradient-to-r from-indigo-600 to-blue-600 
+           hover:from-indigo-700 hover:to-blue-700 
+           text-white font-semibold rounded-xl 
+           shadow-md hover:shadow-lg hover:shadow-indigo-500/40
+           transition-all duration-200">Siguiente</button>
                 </div>
 
             </div>
 
             <!-- 🏫 PASO 4: ANTECEDENTE ESCOLAR -->
-            <div class="step hidden" data-step="4">
-                <h2 class="text-2xl font-bold mb-6 border-b border-gray-600 pb-2">4️⃣ Antecedente Escolar</h2>
+            <div class="step transition-all duration-300 ease-out transform hidden" data-step="4">
+                <h2
+                    class="text-3xl font-extrabold mb-6 pb-3 bg-gradient-to-r from-indigo-400 to-blue-400 text-transparent bg-clip-text drop-shadow">
+                    Antecedente Escolar</h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Procedencia -->
@@ -481,8 +521,14 @@ include __DIR__ . "/../layout/navbar.php";
                 </div>
 
                 <div class="flex justify-between pt-8">
-                    <button type="button" class="prev-step btn-gray">⬅️ Anterior</button>
-                    <button type="submit" id="btnGuardar" class="btn-green">Guardar ✅</button>
+                    <button type="button" class="px-6 py-2.5 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-500 hover:to-gray-600
+           text-white font-semibold rounded-xl shadow-lg transition duration-200 prev-step">Anterior</button>
+                    <button type="submit" id="btnGuardar" class="btn-save inline-flex items-center gap-2 px-7 py-3 
+           bg-gradient-to-r from-green-600 to-emerald-600
+           hover:from-green-700 hover:to-emerald-700 
+           text-white font-semibold rounded-xl 
+           shadow-md hover:shadow-lg hover:shadow-green-500/40
+           transition-all duration-200">Guardar</button>
                 </div>
 
             </div>
@@ -490,8 +536,8 @@ include __DIR__ . "/../layout/navbar.php";
         </form>
 
         <div class="mt-8 flex items-center justify-center">
-            <a href="index.php?action=dashboard"
-                class="inline-block rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-gray-600">
+            <a href="index.php?action=dashboard" class="inline-block px-5 py-2.5 bg-gray-700 hover:bg-gray-600 
+           text-white font-semibold rounded-lg shadow transition">
                 Volver
             </a>
         </div>
@@ -499,26 +545,54 @@ include __DIR__ . "/../layout/navbar.php";
 </main>
 
 <style>
+    /* ✔ Animación para cada paso */
+    .step:not(.hidden) {
+        animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ✔ Inputs modernizados */
     .input-step {
-        @apply mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-3 py-2 focus:ring-indigo-500 focus:outline-none;
+        @apply mt-2 w-full rounded-xl bg-gray-900/80 border border-gray-700 text-white px-4 py-3 shadow-inner focus:ring-2 focus:ring-indigo-500 focus:outline-none transition duration-200;
     }
 
-    .btn-indigo {
-        @apply bg-indigo-600 hover:bg-indigo-700 px-6 py-2 rounded-lg font-semibold transition;
+    /* ✔ Estilo base para CUALQUIER botón navegable */
+    .btn-nav {
+        @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 shadow bg-gray-700 hover:bg-gray-600 text-white;
     }
 
-    .btn-gray {
-        @apply bg-gray-600 hover:bg-gray-500 px-6 py-2 rounded-lg font-semibold transition;
+    /* ✔ Botón SIGUIENTE — prioridad SUPERIOR */
+    .btn-next {
+        @apply bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-lg hover:shadow-indigo-500/40 text-white;
     }
 
-    .btn-blue {
-        @apply bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition;
+    /* ✔ Botón ANTERIOR */
+    .btn-prev {
+        @apply bg-gray-600/80 hover:bg-gray-500 text-white;
     }
 
-    .btn-green {
-        @apply bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-semibold transition;
+    /* ✔ Botón GUARDAR */
+    .btn-save {
+        @apply bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-green-500/40 text-white;
+    }
+
+    /* ✔ Footer entre pasos */
+    .step-footer {
+        @apply flex items-center justify-between mt-10 pt-6 border-t border-gray-700;
     }
 </style>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         let currentStep = 1;

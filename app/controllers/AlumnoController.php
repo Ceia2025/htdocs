@@ -185,18 +185,18 @@ class AlumnosController
                 $data['mayoredad'] = $this->calcularMayorEdad($data['fechanac']);
             }
 
-            // Convertir deleted_at vacío a NULL
-            if (isset($data['deleted_at']) && $data['deleted_at'] === '') {
-                $data['deleted_at'] = null;
-            }
+            // 🔥 Mantener el estado deleted_at actual (retirado/activo)
+            $alumnoActual = $this->alumnoModel->getById($id);
+            $data['deleted_at'] = $alumnoActual['deleted_at'];
 
-            // Llamada al modelo para actualizar
+            // Actualizar información normal
             $this->alumnoModel->update($id, $data);
         }
 
         header("Location: index.php?action=alumnos");
         exit;
     }
+
 
     //verificar si ya existe el rut del alumno
     public function checkRunExists()

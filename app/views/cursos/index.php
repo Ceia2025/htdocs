@@ -40,7 +40,6 @@ include __DIR__ . "/../layout/navbar.php";
                     <table class="min-w-full divide-y divide-gray-700">
                         <thead class="bg-gray-950/50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">ID</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Nombre del Curso</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Acciones</th>
                             </tr>
@@ -49,7 +48,6 @@ include __DIR__ . "/../layout/navbar.php";
                             <?php if (!empty($cursos)): ?>
                                 <?php foreach ($cursos as $curso): ?>
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100"><?= htmlspecialchars($curso['id']) ?></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100 capitalize"><?= htmlspecialchars($curso['nombre']) ?></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100 space-x-3">
                                             <a href="index.php?action=curso_edit&id=<?= $curso['id'] ?>"

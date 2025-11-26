@@ -74,8 +74,17 @@ include __DIR__ . "/../layout/navbar.php";
                                 $edad = $hoy->diff($fechaNac)->y;
                             }
                             ?>
-                            <tr onclick="window.location='index.php?action=alumno_profile&id=<?= $alumno['id'] ?>';"
-                                class="cursor-pointer hover:bg-gray-700 <?= !empty($alumno['deleted_at']) ? 'bg-red-950/30' : '' ?>">
+                            <tr onclick="window.location='index.php?action=alumno_profile&id=<?= $alumno['id'] ?>';" class="cursor-pointer transition-all duration-200 ease-out
+        <?= !empty($alumno['deleted_at'])
+            ?
+            // 🔴 Estilo para retirados
+            'bg-red-950/30 hover:bg-red-800/60 hover:border-red-500 hover:scale-[1.01] border border-red-900/40 shadow-red-900/40 hover:shadow-red-500/40 hover:shadow-md'
+            :
+            // 🔵 Estilo para activos
+            'bg-gray-900/20 hover:bg-gray-700/70 hover:border-gray-500/40 hover:scale-[1.01] border border-gray-700/40 shadow-gray-900/30 hover:shadow-gray-500/30 hover:shadow-md'
+            ?>">
+
+
 
                                 <td class="px-4 py-3 text-sm text-gray-100">
                                     <?= htmlspecialchars($alumno['run'] . '-' . $alumno['codver']) ?>
