@@ -36,10 +36,23 @@ class ProfesoresController
 
     public function update($id, $data)
     {
+        // Asegurar que el RUN esté correctamente formateado
+        if (!empty($data['run'])) {
+            // Aceptar "12.345.678-9" o "123456789" y normalizar
+            $data['run'] = strtoupper(trim($data['run']));
+            $data['run'] = str_replace(' ', '', $data['run']);
+        } else {
+            header("Location: index.php?action=profesor_edit&id=$id&error=run_vacio");
+            exit;
+        }
+
         $this->model->update($id, $data);
+
         header("Location: index.php?action=profesores");
         exit;
     }
+
+
 
     public function delete($id)
     {

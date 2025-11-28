@@ -27,7 +27,7 @@ include __DIR__ . "/../layout/navbar.php";
 
 
         <!-- -->
-            <div class="md:col-span-2">
+            <div class="md:col-span-2 mb-8">
 
 
                 <?php if ($alumno['deleted_at']): ?>

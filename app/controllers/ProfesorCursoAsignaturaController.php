@@ -15,18 +15,14 @@ class ProfesorCursoAsignaturaController
         $this->model = new ProfesorCursoAsignatura();
     }
 
-    /* ===========================
-       LISTADO
-    ============================ */
+    // LISTADO
     public function index()
     {
         $asignaciones = $this->model->getAll();
         require __DIR__ . '/../views/profesorCursoAsignatura/index.php';
     }
 
-    /* ===========================
-       CREAR
-    ============================ */
+    // CREAR
     public function create()
     {
         $profesorModel = new Profesor();
@@ -41,9 +37,7 @@ class ProfesorCursoAsignaturaController
         require __DIR__ . '/../views/profesorCursoAsignatura/create.php';
     }
 
-    /* ===========================
-       GUARDAR
-    ============================ */
+    // GUARDAR
     public function store($data)
     {
         if (empty($data['asignaturas']) || !is_array($data['asignaturas'])) {
@@ -68,9 +62,7 @@ class ProfesorCursoAsignaturaController
         exit;
     }
 
-    /* ===========================
-       AJAX: ASIGNATURAS POR CURSO
-    ============================ */
+    //AJAX POR CURSO
     public function getAsignaturasPorCurso()
     {
         $curso_id = $_GET['curso_id'] ?? null;
@@ -88,9 +80,7 @@ class ProfesorCursoAsignaturaController
         exit;
     }
 
-    /* ===========================
-       EDITAR
-    ============================ */
+    //EDITAR
     public function edit($id)
     {
         $asignacion = $this->model->getById($id);
@@ -115,9 +105,7 @@ class ProfesorCursoAsignaturaController
         require __DIR__ . '/../views/profesorCursoAsignatura/edit.php';
     }
 
-    /* ===========================
-       ACTUALIZAR
-    ============================ */
+    //ACTUALIZAR
     public function update($id, $data)
     {
         if (empty($data['asignaturas'])) {
@@ -150,9 +138,7 @@ class ProfesorCursoAsignaturaController
         exit;
     }
 
-    /* ===========================
-       ELIMINAR
-    ============================ */
+    //ELIMINAR
     public function delete($id)
     {
         $this->model->delete($id);
