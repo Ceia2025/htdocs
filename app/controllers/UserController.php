@@ -56,15 +56,17 @@ class UserController
 
     public function doLogin($data)
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
-        $login = $data['login']; // puede ser username o email
+        $login = $data['login'];
         $password = $data['password'];
 
         $user = $this->model->findByLogin($login);
 
         if ($user && password_verify($password, $user['password'])) {
-            // Guardamos info del usuario en la sesión
+
             $_SESSION['user'] = [
                 'id' => $user['id'],
                 'username' => $user['username'],
@@ -73,7 +75,7 @@ class UserController
                 'rol' => $user['rol']
             ];
 
-            header("Location: index.php?action=dashboard"); // redirige al dashboard
+            header("Location: index.php?action=dashboard");
             exit;
         } else {
             $error = "Usuario o contraseña incorrectos";
