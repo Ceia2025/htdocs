@@ -33,19 +33,6 @@ class MatriculaController
         include '../views/matriculas/index.php';
     }
 
-    //require __DIR__ . '/../views/matriculas/index.php';
-    //Index de busqueda de matricula
-    public function indexBusquedaMatricula()
-    {
-        $nombre = $_GET['nombre'] ?? null;
-        $rut = $_GET['rut'] ?? null;
-        $anio = $_GET['anio'] ?? null;
-        $curso = $_GET['curso'] ?? null;
-
-        $matriculas = $this->model->buscarMatriculas($nombre, $rut, $anio, $curso);
-        include 'views/matriculas/index.php';
-    }
-
     // Formulario crear
     public function create()
     {

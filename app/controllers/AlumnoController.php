@@ -55,14 +55,6 @@ class AlumnosController
         exit;
     }
 
-    public function storeStepperTest($data)
-    {
-        echo "<pre>";
-        print_r($data);
-        echo "</pre>";
-        exit;
-    }
-
     public function storeStepper($data)
     {
         $alumnoModel = new Alumno();
@@ -76,9 +68,10 @@ class AlumnosController
             exit;
         }
 
+        // 👉 Crear alumno principal
         $alumnoId = $alumnoModel->create($data);
 
-        // 🔹 Guardar contactos de emergencia
+        // 👉 Guardar contactos de emergencia
         if (!empty($data['emergencias'])) {
             $emergenciaModel = new AlumEmergencia();
             foreach ($data['emergencias'] as $e) {
@@ -92,7 +85,7 @@ class AlumnosController
             }
         }
 
-        // 🔹 Guardar antecedentes familiares
+        // 👉 Guardar antecedentes familiares
         if (!empty($data['padre']) || !empty($data['madre'])) {
             $familiarModel = new AntecedenteFamiliar();
             $familiarModel->create(
@@ -104,7 +97,7 @@ class AlumnosController
             );
         }
 
-        // 🔹 Guardar antecedente escolar
+        // 👉 Guardar antecedente escolar
         if (!empty($data['antecedente_escolar'])) {
             $escolarModel = new AntecedenteEscolar();
             $escolar = $data['antecedente_escolar'];
@@ -112,9 +105,22 @@ class AlumnosController
             $escolarModel->create($escolar);
         }
 
+        // ✅ NUEVO: Guardar matrícula desde el Paso 5 del stepper
+        if (!empty($data['curso_id']) && !empty($data['anio_id'])) {
+            $matriculaModel = new Matricula();
+            $matriculaModel->create([
+                'alumno_id' => $alumnoId,
+                'curso_id' => $data['curso_id'],
+                'anio_id' => $data['anio_id'],
+                // opcional: puedes no pasarla y usará date('Y-m-d') del modelo
+                'fecha_matricula' => date('Y-m-d'),
+            ]);
+        }
+
         header("Location: index.php?action=alumnos");
         exit;
     }
+
 
 
 
