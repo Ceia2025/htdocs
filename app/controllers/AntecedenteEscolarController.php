@@ -13,9 +13,17 @@ class AntecedenteEscolarController
     // Listar
     public function index()
     {
-        $antecedentes = $this->model->getAll();
+        $q = $_GET['q'] ?? '';
+
+        if (!empty($q)) {
+            $antecedentes = $this->model->search($q);
+        } else {
+            $antecedentes = $this->model->getAll();
+        }
+
         require __DIR__ . '/../views/antecedente_escolar/index.php';
     }
+
 
     // Mostrar formulario crear
     public function create()

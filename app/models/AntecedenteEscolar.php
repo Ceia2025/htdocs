@@ -14,10 +14,21 @@ class AntecedenteEscolar
 
     // Obtener todos
     public function getAll()
-    {
-        $stmt = $this->conn->query("SELECT * FROM {$this->table}");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+{
+    $sql = "SELECT ae.*, 
+                   a.nombre AS alumno_nombre,
+                   a.apepat,
+                   a.apemat,
+                   a.run
+            FROM antecedente_escolar ae
+            LEFT JOIN alumnos2 a ON ae.alumno_id = a.id
+            ORDER BY a.nombre ASC";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
     // Obtener por ID
     public function getById($id)
@@ -27,14 +38,7 @@ class AntecedenteEscolar
         $stmt->execute([":id" => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    /*
-        public function getByAlumnoId($alumnoId)
-        {
-            $sql = "SELECT * FROM {$this->table} WHERE alumno_id = :alumno_id LIMIT 1";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute([':alumno_id' => $alumnoId]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        }*/
+
     public function getByAlumnoId($alumno_id)
     {
         $sql = "SELECT * FROM antecedente_escolar WHERE alumno_id = :alumno_id LIMIT 1";
@@ -42,6 +46,44 @@ class AntecedenteEscolar
         $stmt->execute([':alumno_id' => $alumno_id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function search($runOrNombre)
+    {
+        // Normalizar RUN sin puntos ni guion
+        $clean = str_replace(['.', '-'], '', $runOrNombre);
+
+        $sql = "SELECT ae.*, 
+                   a.nombre AS alumno_nombre, 
+                   a.apepat, 
+                   a.apemat, 
+                   a.run
+            FROM antecedente_escolar ae
+            LEFT JOIN alumnos2 a ON ae.alumno_id = a.id
+            WHERE 1";
+
+        $params = [];
+
+        if (!empty($runOrNombre)) {
+            $sql .= " AND (
+                        REPLACE(REPLACE(a.run, '.', ''), '-', '') LIKE ?
+                        OR LOWER(a.nombre) LIKE LOWER(?)
+                        OR LOWER(a.apepat) LIKE LOWER(?)
+                        OR LOWER(a.apemat) LIKE LOWER(?)
+                   )";
+
+            $params[] = "%$clean%";
+            $params[] = "%$runOrNombre%";
+            $params[] = "%$runOrNombre%";
+            $params[] = "%$runOrNombre%";
+        }
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
 
     // Crear nuevo registro
     public function create($data)

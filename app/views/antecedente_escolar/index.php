@@ -25,8 +25,33 @@ include __DIR__ . "/../layout/navbar.php";
             </div>
         </header>
 
+
+
         <!-- MAIN -->
         <main>
+            <!-- BUSCADOR -->
+            <form method="GET" action="index.php" class="mb-6 bg-gray-800 p-4 rounded-xl flex gap-4 items-end">
+                <input type="hidden" name="action" value="antecedente_escolar">
+
+                <div class="flex-1">
+                    <label class="text-sm text-gray-300">Buscar alumno (RUN o Nombre)</label>
+                    <input type="text" name="q" id="searchInput" value="<?= htmlspecialchars($_GET['q'] ?? '') ?>"
+                        placeholder="Ej: 12.345.678 o Juan Pérez"
+                        class="mt-1 w-full rounded-lg bg-gray-700 border border-gray-600 text-white px-3 py-2">
+                </div>
+
+                <button type="submit"
+                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg">
+                    Buscar
+                </button>
+
+                <button type="button" id="clearSearch"
+                    class="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white font-semibold rounded-lg">
+                    Limpiar
+                </button>
+            </form>
+
+
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
                 <!-- BOTÓN CREAR -->
@@ -42,6 +67,10 @@ include __DIR__ . "/../layout/navbar.php";
                     <table class="min-w-full divide-y divide-gray-700">
                         <thead class="bg-gray-950/50">
                             <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Alumno
+                                </th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
                                     Último Curso
@@ -82,17 +111,26 @@ include __DIR__ . "/../layout/navbar.php";
                                 <?php foreach ($antecedentes as $a): ?>
                                     <tr class="hover:bg-gray-700/50 transition">
                                         <td class="px-6 py-4 text-sm text-gray-100">
-                                            <?= htmlspecialchars($a['ultimo_curso'] ?? '-') ?></td>
+                                            <?= htmlspecialchars(($a['alumno_nombre'] ?? '') . ' ' . ($a['apepat'] ?? '') . ' ' . ($a['apemat'] ?? '')) ?>
+                                            <br>
+                                            <span class="text-gray-400 text-xs"><?= htmlspecialchars($a['run'] ?? '') ?></span>
+                                        </td>
                                         <td class="px-6 py-4 text-sm text-gray-100">
-                                            <?= htmlspecialchars($a['ultimo_anio_cursado'] ?? '-') ?></td>
+                                            <?= htmlspecialchars($a['ultimo_curso'] ?? '-') ?>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-100">
+                                            <?= htmlspecialchars($a['ultimo_anio_cursado'] ?? '-') ?>
+                                        </td>
                                         <td class="px-6 py-4 text-sm text-gray-100 text-center">
-                                            <?= htmlspecialchars($a['cursos_repetidos'] ?? 0) ?></td>
+                                            <?= htmlspecialchars($a['cursos_repetidos'] ?? 0) ?>
+                                        </td>
                                         <td class="px-6 py-4 text-sm text-gray-100 text-center">
                                             <?= $a['pertenece_20'] ? '✅' : '❌' ?>
                                         </td>
-                                       
+
                                         <td class="px-6 py-4 text-sm text-gray-100">
-                                            <?= htmlspecialchars($a['prob_apren'] ?? '-') ?></td>
+                                            <?= htmlspecialchars($a['prob_apren'] ?? '-') ?>
+                                        </td>
                                         <td class="px-6 py-4 text-sm text-gray-100"><?= htmlspecialchars($a['pie'] ?? '-') ?>
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-100 text-center">
@@ -129,6 +167,12 @@ include __DIR__ . "/../layout/navbar.php";
             </div>
         </main>
     </div>
+    <script>
+        document.getElementById("clearSearch").addEventListener("click", function () {
+            document.getElementById("searchInput").value = "";
+            window.location.href = "index.php?action=antecedente_escolar";
+        });
+    </script>
 </body>
 
 <?php include __DIR__ . "/../layout/footer.php"; ?>

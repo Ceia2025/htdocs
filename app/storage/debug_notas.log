@@ -411,3 +411,31 @@ Array
 )
 
 --------------------
+Array
+(
+    [fecha] => 2025-12-02 12:22:29
+    [curso_id] => 6
+    [anio_id] => 3
+    [semestre] => 2
+    [asignatura_id] => 27
+    [notas_recibidas] => Array
+        (
+            [13] => Array
+                (
+                    [nota] => 3.3
+                    [matricula_id] => 17
+                    [deleted_at] => 
+                )
+
+            [10] => Array
+                (
+                    [nota] => 5.5
+                    [matricula_id] => 18
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------

@@ -83,7 +83,7 @@ include __DIR__ . "/../layout/navbar.php";
 
 
                 <!-- BOTÓN CREAR -->
-                <div class="mb-6 flex justify-end">
+                <div class="mb-6 mt-8 flex justify-end">
                     <a href="index.php?action=matricula_create"
                         class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow transition duration-200">
                         ➕ Nueva Matrícula

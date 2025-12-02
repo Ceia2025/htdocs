@@ -41,7 +41,6 @@ include __DIR__ . "/../layout/navbar.php";
                     <table class="min-w-full divide-y divide-gray-700">
                         <thead class="bg-gray-950/50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">ID</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Alumno</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Padre</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Nivel Padre</th>
@@ -54,7 +53,6 @@ include __DIR__ . "/../layout/navbar.php";
                             <?php if (!empty($antecedentes)): ?>
                                 <?php foreach ($antecedentes as $a): ?>
                                     <tr>
-                                        <td class="px-6 py-4 text-sm text-gray-100"><?= htmlspecialchars($a['id']) ?></td>
                                         <td class="px-6 py-4 text-sm text-gray-100"><?= htmlspecialchars($a['alumno_nombre']) ?></td>
                                         <td class="px-6 py-4 text-sm text-gray-100"><?= htmlspecialchars($a['padre']) ?></td>
                                         <td class="px-6 py-4 text-sm text-gray-100"><?= htmlspecialchars($a['nivel_ciclo_p']) ?></td>
