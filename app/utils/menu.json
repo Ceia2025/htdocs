@@ -29,18 +29,12 @@
       "title": "Manuales",
       "desc": "Reglamentos institucionales",
       "url": "index.php?action=dashboard"
+    },
+    {
+      "title": "Asistencias index",
+      "desc": "Ver y gestionar el registro de asistencia de los alumnos.",
+      "url": "index.php?action=asistencias"
     }
-
-
-
-
-
-
-
-
-
-
-    
   ],
   "docente": [
     {

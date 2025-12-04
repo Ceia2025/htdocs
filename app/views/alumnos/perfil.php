@@ -8,12 +8,14 @@ $nombre = $user['nombre'];
 $rol = $user['rol'];
 
 // Calcular edad
+/*
 $edad = null;
 if (!empty($alumno['fechanac'])) {
     $fechaNac = new DateTime($alumno['fechanac']);
     $hoy = new DateTime();
     $edad = $hoy->diff($fechaNac)->y;
-}
+}*/
+$edad = $this->calcularEdadAl30Junio($alumno['fechanac']);
 
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
@@ -40,7 +42,7 @@ include __DIR__ . "/../layout/navbar.php";
                     <p><strong>Fecha de Nacimiento:</strong>
                         <?= $alumno['fechanac'] ? (new DateTime($alumno['fechanac']))->format('d/m/Y') : 'No registrada' ?>
                     </p>
-                    <p><strong>Edad:</strong> <?= $edad !== null ? "$edad años" : "No registrada" ?></p>
+                    <p><strong>Edad:</strong> <?= $edad !== null ? "$edad años (calculada al 30 de junio)" : "No registrada" ?></p>
                     <p><strong>Sexo:</strong> <?= htmlspecialchars($alumno['sexo']) ?></p>
                     <p><strong>Email:</strong> <?= htmlspecialchars($alumno['email']) ?></p>
                     <p><strong>Teléfono:</strong> <?= htmlspecialchars($alumno['telefono']) ?></p>
@@ -217,11 +219,6 @@ include __DIR__ . "/../layout/navbar.php";
         </section>
 
 
-
-
-
-
-
         <!-- BOTONES -->
         <div class="flex justify-center mt-8 gap-4 w-full">
             <a href="index.php?action=alumnos"
@@ -233,6 +230,23 @@ include __DIR__ . "/../layout/navbar.php";
 
 
     </div>
+
+    <!-- BOTÓN FLOTANTE DESCARGAR PDF -->
+    <a href="index.php?action=alumno_pdf&id=<?= $alumno['id'] ?>" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3 
+          bg-green-600 hover:bg-green-700 text-white font-bold rounded-full 
+          shadow-2xl shadow-green-500/40 transition-all duration-300
+          hover:scale-105">
+
+        <!-- Ícono de colegio -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"
+            class="w-7 h-7">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l8.5 4.5v9L12 21l-8.5-4.5v-9L12 3z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12l8.5-4.5M12 12L3.5 7.5M12 12v9" />
+        </svg>
+
+        Descargar PDF
+    </a>
+
 </main>
 
 <?php include __DIR__ . "/../layout/footer.php"; ?>

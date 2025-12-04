@@ -20,6 +20,10 @@ require_once __DIR__ . '/../controllers/ProfesorCursoAsignaturaController.php';
 require_once __DIR__ . '/../controllers/HorariosController.php';
 require_once __DIR__ . '/../controllers/ProfesorCursoAsignaturaController.php';
 
+//Perifil academico de los alumnos
+require_once __DIR__ . '/../controllers/PerfilAcademicoAsistenciaController.php';
+$perfilAcademicoAsistencia = new PerfilAcademicoAsistenciaController();
+
 
 
 
@@ -94,10 +98,71 @@ switch ($action) {
         $userController->destroy($_GET['id']);
         break;
 
-    //Përfil academico
+    //Perfil academico
     case 'perfil_academico':
         $perfilController = new PerfilAcademicoController();
         $perfilController->show($_GET['id']);
+        break;
+
+    // CRUD Asistencias 
+    case 'asistencias':
+        // Muestra la vista general (index) de asistencias.
+        // URL: index.php?action=asistencias
+        $perfilAcademicoAsistencia->index();
+        break;
+
+    case 'asistencia_select_context': // NUEVA RUTA
+        // Muestra el formulario SOLO para seleccionar curso/año.
+        $perfilAcademicoAsistencia->showSelectionForm();
+        break;
+
+    case 'asistencia_create_form':
+        // Muestra el formulario de registro de asistencia (la tabla de alumnos).
+        // Recibe los parámetros GET de la selección previa.
+        $perfilAcademicoAsistencia->showCreateForm();
+        break;
+
+    case 'asistencia_store':
+        // Procesa el formulario para guardar los registros de asistencia.
+        // URL: index.php?action=asistencia_store (Se accede por POST desde un formulario)
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $perfilAcademicoAsistencia->create();
+        } else {
+            header("Location: index.php?action=asistencias");
+        }
+        break;
+
+    case 'asistencia_edit':
+        // Muestra el formulario para editar una asistencia específica.
+        // URL: index.php?action=asistencia_edit&id=X
+        $id = $_GET['id'] ?? null;
+        $perfilAcademicoAsistencia->edit($id);
+        break;
+
+    case 'asistencia_update':
+        // Procesa la actualización de un registro de asistencia.
+        // URL: index.php?action=asistencia_update&id=X (Se accede por POST desde un formulario)
+        $id = $_GET['id'] ?? null;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $perfilAcademicoAsistencia->update($id);
+        } else {
+            header("Location: index.php?action=asistencias");
+        }
+        break;
+
+    case 'asistencia_delete':
+        // Elimina un registro de asistencia.
+        // URL: index.php?action=asistencia_delete&id=X
+        $id = $_GET['id'] ?? null;
+        $perfilAcademicoAsistencia->delete($id);
+        break;
+
+    case 'alumno_perfil':
+        $alumnoId = $_GET['id'] ?? null;
+        // ... cargar datos del alumno ...
+        // ... y cargar el componente de asistencia
+        $perfilAcademicoAsistencia->getAsistenciaByAlumnoId($alumnoId);
+        // ... cargar otras secciones del perfil ...
         break;
 
     // CRUD Roles
@@ -214,6 +279,12 @@ switch ($action) {
         $controller = new AlumnosController();
         $controller->searchAjax();
         break;
+
+    case 'alumno_pdf':
+        // Ya está incluido AlumnoController.php y creada la instancia $alumnosController arriba
+        $alumnosController->pdf($_GET['id'] ?? null);
+        break;
+
 
     // Asignaturas
     case 'asignaturas':
@@ -642,7 +713,7 @@ switch ($action) {
         $pcaController = new ProfesorCursoAsignaturaController();
         $pcaController->getAsignaturasPorCurso();
         break;
-        
+
 
 
     // Horarios por asignación

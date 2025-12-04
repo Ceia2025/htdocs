@@ -1,6 +1,17 @@
 <?php
+// 1) MODELOS BÁSICOS
 require_once __DIR__ . '/../models/Alumno.php';
 require_once __DIR__ . '/../models/AntecedenteEscolar.php';
+require_once __DIR__ . '/../models/AlumEmergencia.php';
+
+// 2) DOMPDF SIN COMPOSER GLOBAL
+// Ajusta esta ruta si tu carpeta es distinta, pero por lo que mostraste debería ser esta:
+require_once __DIR__ . '/../libs/dompdf/vendor/autoload.php';
+
+// 3) USE de las clases de Dompdf (SIEMPRE aquí arriba, fuera de la clase)
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 
 
 class AlumnosController
@@ -269,6 +280,67 @@ class AlumnosController
         }
         exit;
     }
+
+
+    public function pdf($alumno_id)
+    {
+        if (empty($alumno_id)) {
+            die("ID de alumno no válido");
+        }
+
+        // Los modelos ya están cargados arriba, usamos directamente las clases
+        $alumnoModel = new Alumno();
+        $antecedenteModel = new AntecedenteEscolar();
+        $emergenciaModel = new AlumEmergencia();
+
+        // Obtener datos
+        $alumno = $alumnoModel->getById($alumno_id);
+        $escolar = $antecedenteModel->getByAlumnoId($alumno_id);
+        $contactos = $emergenciaModel->findByAlumno($alumno_id);
+        
+        $edadAl30Junio = $this->calcularEdadAl30Junio($alumno['fechanac']);
+        if (!$alumno) {
+            die("Alumno no encontrado");
+        }
+
+        // Cargar HTML del template del PDF
+        ob_start();
+        require __DIR__ . '/../views/alumnos/pdfPlaceHolder.php';
+        $html = ob_get_clean();
+
+        // Configurar Dompdf
+        $options = new Options();
+        $options->set('isRemoteEnabled', true);
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('letter', 'portrait');
+        $dompdf->render();
+
+        // Descargar PDF
+        $dompdf->stream("Alumno_{$alumno['run']}.pdf", ["Attachment" => true]);
+    }
+
+
+
+    private function calcularEdadAl30Junio($fechaNacimiento)
+    {
+        if (!$fechaNacimiento)
+            return null;
+
+        $fechaNac = new DateTime($fechaNacimiento);
+
+        // Fecha fija de corte: 30 de junio del año actual
+        $anioActual = date('Y');
+        $fechaCorte = new DateTime("$anioActual-06-30");
+
+        // Si el alumno nació después del 30 de junio de este año,
+        // restamos un año porque todavía no cumple.
+        $edad = $fechaCorte->diff($fechaNac)->y;
+
+        return $edad;
+    }
+
 
 
 

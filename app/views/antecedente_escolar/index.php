@@ -29,30 +29,33 @@ include __DIR__ . "/../layout/navbar.php";
 
         <!-- MAIN -->
         <main>
-            <!-- BUSCADOR -->
-            <form method="GET" action="index.php" class="mb-6 bg-gray-800 p-4 rounded-xl flex gap-4 items-end">
-                <input type="hidden" name="action" value="antecedente_escolar">
 
-                <div class="flex-1">
-                    <label class="text-sm text-gray-300">Buscar alumno (RUN o Nombre)</label>
-                    <input type="text" name="q" id="searchInput" value="<?= htmlspecialchars($_GET['q'] ?? '') ?>"
-                        placeholder="Ej: 12.345.678 o Juan Pérez"
-                        class="mt-1 w-full rounded-lg bg-gray-700 border border-gray-600 text-white px-3 py-2">
-                </div>
-
-                <button type="submit"
-                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg">
-                    Buscar
-                </button>
-
-                <button type="button" id="clearSearch"
-                    class="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white font-semibold rounded-lg">
-                    Limpiar
-                </button>
-            </form>
 
 
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+
+                <!-- BUSCADOR -->
+                <form method="GET" action="index.php" class="mb-6 bg-gray-800 p-4 rounded-xl flex gap-4 items-end">
+                    <input type="hidden" name="action" value="antecedente_escolar">
+
+                    <div class="flex-1">
+                        <label class="text-sm text-gray-300">Buscar alumno (RUN o Nombre)</label>
+                        <input type="text" name="q" id="searchInput" value="<?= htmlspecialchars($_GET['q'] ?? '') ?>"
+                            placeholder="Ej: 12.345.678 o Juan Pérez"
+                            class="mt-1 w-full rounded-lg bg-gray-700 border border-gray-600 text-white px-3 py-2">
+                    </div>
+
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg">
+                        Buscar
+                    </button>
+
+                    <button type="button" id="clearSearch"
+                        class="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white font-semibold rounded-lg">
+                        Limpiar
+                    </button>
+                </form>
+
 
                 <!-- BOTÓN CREAR -->
                 <div class="mb-6 flex justify-end">

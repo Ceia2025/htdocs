@@ -12,7 +12,7 @@ class Nota
         $this->conn = $db->open();
     }
 
-    // 🟣 Obtener nota por ID
+    // Obtener nota por ID
     public function getById($id)
     {
         $sql = "SELECT n.*, a.nombre AS asignatura_nombre,
@@ -28,7 +28,7 @@ class Nota
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // 🟣 Listado general
+    // Listado general
     public function getAll(): array
     {
         $sql = "SELECT n.*, a.nombre AS asignatura_nombre,
@@ -60,7 +60,7 @@ class Nota
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // 🟣 Notas por matrícula (todas)
+    // Notas por matrícula (todas)
     public function getByMatricula($matricula_id): array
     {
         $sql = "SELECT n.*, a.nombre AS asignatura_nombre
@@ -87,8 +87,7 @@ class Nota
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // 🟣 Crear múltiples notas (hasta 10 por alumno/asignatura/semestre)
-    // 🟣 Crear múltiples notas (hasta 10 por alumno/asignatura/semestre)
+    // Crear múltiples notas (hasta 10 por alumno/asignatura/semestre)
     public function createMultiple($curso_id, $anio_id, $asignatura_id, $fecha, $notas, $semestre)
     {
         $sql = "INSERT INTO {$this->table} (matricula_id, asignatura_id, semestre, nota, fecha)
