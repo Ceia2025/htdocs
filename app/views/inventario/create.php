@@ -24,24 +24,25 @@ include __DIR__ . "/../layout/navbar.php";
     <main>
         <div class="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
             <div class="bg-gray-700 p-8 rounded-2xl shadow-lg">
-                <form method="POST" action="index.php?action=inventario_store" class="space-y-6">
+                <form method="POST" action="index.php?action=inventario_store">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    <!-- Nivel Educativo -->
-                    <div>
-                        <label for="nivel_id" class="block text-sm font-medium text-gray-200">Nivel Educativo</label>
-                        <select name="nivel_id" id="nivel_id" required
-                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <!-- Nivel Educativo -->
+                            <div>
+                                <label for="nivel_id" class="block text-sm font-medium text-gray-200">Nivel Educativo</label>
+                                <select name="nivel_id" id="nivel_id" required
+                                class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <option value="">-- Seleccione --</option>
                             <?php foreach ($niveles as $nivel): ?>
                                 <option value="<?= $nivel['id'] ?>"><?= htmlspecialchars($nivel['nombre']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <!-- Individualización -->
-                    <div>
-                        <label for="nivel_id" class="block text-sm font-medium text-gray-200">Individualizacion</label>
-                        <select name="individualizacion_id" id="individualizacion_id"
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <!-- Individualización -->
+                        <div>
+                            <label for="nivel_id" class="block text-sm font-medium text-gray-200">Individualizacion</label>
+                            <select name="individualizacion_id" id="individualizacion_id"
                             class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                             required>
                             <option value="">-- Seleccione --</option>
@@ -49,75 +50,72 @@ include __DIR__ . "/../layout/navbar.php";
                                 <option value="<?= $ind['id'] ?>">
                                     <?= htmlspecialchars($ind['nombre'] . ' (' . $ind['codigo_general'] . '-' . $ind['codigo_especifico'] . ')') ?>
                                 </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-
-
-                    <!-- Categorización -->
-                    <div>
-                        <label for="categorizacion_id"
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        
+                        
+                        <!-- Categorización -->
+                        <div>
+                            <label for="categorizacion_id"
                             class="block text-sm font-medium text-gray-200">Categorización</label>
-                        <select name="categorizacion_id" id="categorizacion_id" required
+                            <select name="categorizacion_id" id="categorizacion_id" required
                             class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <option value="">-- Seleccione --</option>
                             <?php foreach ($categorizaciones as $cat): ?>
                                 <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['descripcion']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
                     <!-- Cantidad -->
-                    <div>
-                        <label for="cantidad" class="block text-sm font-medium text-gray-200">Cantidad</label>
-                        <input type="number" name="cantidad" id="cantidad" min="1" value="1" required
-                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                    </div>
+                    <input type="hidden" name="cantidad" value="1">
 
                     <!-- Estado -->
                     <div>
                         <label for="estado_id" class="block text-sm font-medium text-gray-200">Estado de
                             Conservación</label>
-                        <select name="estado_id" id="estado_id" required
+                            <select name="estado_id" id="estado_id" required
                             class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <option value="">-- Seleccione --</option>
                             <?php foreach ($estados as $estado): ?>
                                 <option value="<?= $estado['id'] ?>"><?= htmlspecialchars($estado['nombre']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <!-- Lugar Físico -->
-                    <div>
-                        <label for="lugar_id" class="block text-sm font-medium text-gray-200">Lugar Físico</label>
-                        <select name="lugar_id" id="lugar_id" required
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <!-- Lugar Físico -->
+                        <div>
+                            <label for="lugar_id" class="block text-sm font-medium text-gray-200">Lugar Físico</label>
+                            <select name="lugar_id" id="lugar_id" required
                             class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <option value="">-- Seleccione --</option>
                             <?php foreach ($lugares as $lugar): ?>
                                 <option value="<?= $lugar['id'] ?>"><?= htmlspecialchars($lugar['nombre']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <!-- Procedencia -->
-                    <div>
-                        <label for="procedencia_id" class="block text-sm font-medium text-gray-200">Procedencia</label>
-                        <select name="procedencia_id" id="procedencia_id" required
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <!-- Procedencia -->
+                        <div>
+                            <label for="procedencia_id" class="block text-sm font-medium text-gray-200">Procedencia</label>
+                            <select name="procedencia_id" id="procedencia_id" required
                             class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <option value="">-- Seleccione --</option>
                             <?php foreach ($procedencias as $proc): ?>
                                 <option value="<?= $proc['id'] ?>">
                                     <?= htmlspecialchars($proc['tipo'] . " - " . $proc['donador_fondo'] . " - " . $proc['fecha_adquisicion']) ?>
                                 </option>
-                            <?php endforeach; ?>
-                        </select>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        
                     </div>
 
-
-
                     <!-- Botones -->
-                    <div class="flex space-x-4">
+                    <div class="flex space-x-4 mt-8">
                         <button type="submit"
                             class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition duration-200 ease-in-out">
                             Guardar

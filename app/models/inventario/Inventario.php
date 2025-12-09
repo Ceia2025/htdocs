@@ -40,6 +40,8 @@ class Inventario
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    
+
 
     public function getById($id)
     {
@@ -114,8 +116,8 @@ class Inventario
     }
 
     public function getByLugarYCodigo($lugar, $codigo)
-{
-    $sql = "SELECT 
+    {
+        $sql = "SELECT 
                 inv.id,
                 ne.nombre AS nivel_educativo,
                 ind.nombre AS individualizacion,
@@ -137,14 +139,14 @@ class Inventario
             JOIN procedencia p ON inv.procedencia_id = p.id
             WHERE lf.nombre = :lugar AND ind.codigo_general = :codigo_general
             ORDER BY inv.id ASC";
-    
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute([
-        ':lugar' => $lugar,
-        ':codigo_general' => $codigo
-    ]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':lugar' => $lugar,
+            ':codigo_general' => $codigo
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 
     public function create($data)

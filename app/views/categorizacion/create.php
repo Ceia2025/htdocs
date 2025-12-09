@@ -43,16 +43,29 @@ include __DIR__ . "/../layout/navbar.php";
                                 <label for="nombre" class="block text-sm font-medium text-gray-200">Nombre</label>
                                 <input type="text" name="nombre" id="nombre" required autocomplete="off"
                                     class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                                    oninput="buscarNombre(this.value)">
+                                    oninput="validarNombre(this); buscarNombre(this.value)">
+
+                                <p id="errorNombre" class="text-red-400 text-xs mt-1 hidden">
+                                    ❌ No se permiten caracteres especiales (solo letras, números, espacios, guiones y
+                                    paréntesis).
+                                </p>
                                 <div id="sugerencias" class="bg-gray-800 rounded-lg mt-1 shadow-lg hidden"></div>
                             </div>
 
                             <div>
                                 <label for="codigo_general" class="block text-sm font-medium text-gray-200">Código
                                     General</label>
-                                <input type="text" name="codigo_general" id="codigo_general" required
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+
+                                <input type="text" name="codigo_general" id="codigo_general" required autocomplete="off"
+                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none uppercase"
+                                    oninput="validarCodigoGeneral(this)">
+
+                                <p id="errorCodigoGeneral" class="text-red-400 text-xs mt-1 hidden">
+                                    ❌ Solo se permiten letras, números y guiones. No se permiten espacios ni caracteres
+                                    especiales.
+                                </p>
                             </div>
+
 
                             <div>
                                 <label for="codigo_especifico" class="block text-sm font-medium text-gray-200">Código
@@ -127,6 +140,43 @@ include __DIR__ . "/../layout/navbar.php";
             const data = await response.json();
             document.getElementById('codigo_especifico').value = data.nuevo_codigo;
         }
+
+        function validarNombre(input) {
+            const errorDiv = document.getElementById('errorNombre');
+
+            // Solo permitir: letras, números, espacios, guiones, paréntesis y puntos.
+            const regex = /^[a-zA-ZÀ-ÿ0-9\s\-\(\)\.]+$/;
+
+            if (!regex.test(input.value)) {
+                // Eliminar caracteres prohibidos automáticamente
+                input.value = input.value.replace(/[^a-zA-Z0-9\s\-\(\)\.]/g, '');
+
+                // Mostrar mensaje
+                errorDiv.classList.remove('hidden');
+            } else {
+                // Ocultar mensaje si está todo bien
+                errorDiv.classList.add('hidden');
+            }
+        }
+
+        function validarCodigoGeneral(input) {
+            const errorDiv = document.getElementById('errorCodigoGeneral');
+
+            // Solo permitir: letras, números, guiones
+            const regex = /^[A-Za-z0-9-]+$/;
+
+            if (!regex.test(input.value)) {
+                // Eliminar caracteres no permitidos
+                input.value = input.value.replace(/[^A-Za-z0-9-]/g, '');
+
+                // Mostrar mensaje
+                errorDiv.classList.remove('hidden');
+            } else {
+                // Ocultar mensaje si el texto queda válido
+                errorDiv.classList.add('hidden');
+            }
+        }
+
     </script>
 
 </body>

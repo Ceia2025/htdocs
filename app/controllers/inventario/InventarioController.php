@@ -51,7 +51,7 @@ class InventarioController
         $procedencias = $procedenciasObj->getAll();
 
         $individualizacionesObj = new Individualizacion();
-        $individualizaciones = $individualizacionesObj->getAll();
+        $individualizaciones = $individualizacionesObj->getDisponibles();
 
         require_once __DIR__ . '/../../views/inventario/create.php';
     }

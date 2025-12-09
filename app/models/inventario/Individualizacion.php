@@ -20,6 +20,18 @@ class Individualizacion
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getDisponibles()
+    {
+        $sql = "SELECT * FROM individualizacion 
+            WHERE id NOT IN (
+                SELECT individualizacion_id FROM inventario
+            )
+            ORDER BY nombre ASC";
+
+        $stmt = $this->conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // Obtener por ID
     public function getById($id)
     {
