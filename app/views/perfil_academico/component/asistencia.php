@@ -1,91 +1,156 @@
 <?php
 /**
- * Componente de Asistencia para incrustar en el Perfil del Alumno.
- * Ruta: /views/perfil_academico/component/asistencia.php
- * Se asume que $asistenciasAlumno es proporcionada por el controlador.
+ * Calendario de Asistencia (Marzo–Diciembre)
+ * Se requiere que $asistenciasAlumno venga desde el controlador.
+ *
+ * Estructura esperada:
+ * $asistenciasAlumno = [
+ *   ['fecha' => '2024-03-05', 'presente' => 1, 'observaciones' => '' ],
+ *   ...
+ * ];
  */
 
-// Funciones de ayuda (se deben mover a un archivo de utilidades si se repiten)
-function formatFecha($fecha) {
-    if (!$fecha) return '';
-    return date('d/m/Y', strtotime($fecha));
-}
-
-function getEstadoAsistencia($presente) {
-    if ($presente == 1) {
-        return ['text' => 'Presente', 'color' => 'green', 'bg_class' => 'bg-green-600/40 text-green-200'];
+// Indexar asistencia por fecha para rápido acceso
+$asistenciaMap = [];
+if (isset($asistenciasAlumno)) {
+    foreach ($asistenciasAlumno as $a) {
+        $asistenciaMap[$a['fecha']] = $a;
     }
-    return ['text' => 'Ausente', 'color' => 'red', 'bg_class' => 'bg-red-600/40 text-red-200'];
 }
 
-// SIMULACIÓN DE DATOS si la variable $asistenciasAlumno no está definida
-if (!isset($asistenciasAlumno)) {
-    // Simular que solo se obtienen los datos de un alumno
-    $asistenciasAlumno = [
-        ['id' => 10, 'fecha' => '2024-10-01', 'curso_nombre' => '3° Básico A', 'anio_escolar' => 2024, 'presente' => 1, 'observaciones' => ''],
-        ['id' => 11, 'fecha' => '2024-10-02', 'curso_nombre' => '3° Básico A', 'anio_escolar' => 2024, 'presente' => 0, 'observaciones' => 'Cita médica'],
-        ['id' => 12, 'fecha' => '2024-10-03', 'curso_nombre' => '3° Básico A', 'anio_escolar' => 2024, 'presente' => 1, 'observaciones' => ''],
-    ];
+// Meses académicos Chile
+$meses = [
+    3 => "Marzo",
+    4 => "Abril",
+    5 => "Mayo",
+    6 => "Junio",
+    7 => "Julio",
+    8 => "Agosto",
+    9 => "Septiembre",
+    10 => "Octubre",
+    11 => "Noviembre",
+    12 => "Diciembre"
+];
+
+$semestres = [
+    "Primer Semestre" => [3, 4, 5, 6],
+    "Segundo Semestre" => [7, 8, 9, 10, 11, 12],
+];
+
+function getEstadoColor($presente)
+{
+    return match ($presente) {
+        1 => "bg-green-600/40 text-green-200",
+        0 => "bg-red-600/40 text-red-200",
+        default => "bg-gray-700 text-gray-300"
+    };
 }
+
 ?>
 
+<!-- CONTENEDOR PRINCIPAL -->
 <div class="mt-8">
-    <h3 class="text-xl font-semibold text-white mb-4 border-b border-indigo-500 pb-2">Historial de Asistencia</h3>
+    <h3 class="text-xl font-semibold text-white mb-6 border-b border-indigo-500 pb-2">
+        Asistencia por Calendario
+    </h3>
 
-    <div class="overflow-x-auto bg-gray-800 rounded-xl shadow-lg border border-gray-700">
-        <table class="min-w-full divide-y divide-gray-700">
-            <thead class="bg-gray-700/50">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Fecha</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Curso</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Estado</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Observaciones</th>
-                </tr>
-            </thead>
+    <div class="w-full">
+        <?php foreach ($semestres as $nombreSemestre => $mesesSemestre): ?>
 
-            <tbody class="divide-y divide-gray-700">
-                <?php if (!empty($asistenciasAlumno)): ?>
-                    <?php foreach ($asistenciasAlumno as $a): ?>
+            <!-- TÍTULO DEL SEMESTRE -->
+            <h4 class="text-lg text-indigo-300 font-bold mt-8 mb-4">
+                <?= $nombreSemestre ?>
+            </h4>
 
-                        <?php 
-                        $estado = getEstadoAsistencia($a['presente']); 
-                        $rowClass = $estado['color'] === 'green' 
-                            ? 'bg-gray-900/10 hover:bg-gray-900/30' 
-                            : 'bg-red-900/10 hover:bg-red-900/30';
-                        ?>
+            <div class="space-y-4">
 
-                        <tr class="<?= $rowClass ?> transition-all duration-300">
-                            
-                            <td class="px-6 py-4 text-sm text-gray-200 whitespace-nowrap">
-                                <?= htmlspecialchars(formatFecha($a['fecha'])) ?>
-                            </td>
+                <?php foreach ($mesesSemestre as $mes):
 
-                            <td class="px-6 py-4 text-sm text-gray-300 whitespace-nowrap">
-                                <?= htmlspecialchars($a['curso_nombre'] ?? 'N/A') ?>
-                            </td>
-                            
-                            <td class="px-6 py-4 text-sm">
-                                <span class="px-2 py-1 rounded-lg text-xs font-semibold whitespace-nowrap
-                                    <?= $estado['bg_class'] ?>">
-                                    <?= $estado['text'] ?>
-                                </span>
-                            </td>
-                            
-                            <td class="px-6 py-4 text-sm text-gray-400 italic">
-                                <?= htmlspecialchars($a['observaciones'] ?? 'Sin observaciones') ?>
-                            </td>
+                    $anio = date("Y");
+                    $primerDia = strtotime("$anio-$mes-01");
+                    $diasMes = date("t", $primerDia);
+                    $nombreMes = $meses[$mes];
 
-                        </tr>
-                    <?php endforeach; ?>
+                ?>
 
-                <?php else: ?>
-                    <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">
-                            No hay registros de asistencia para este alumno.
-                        </td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                <!-- ACORDEÓN DEL MES -->
+                <div x-data="{ open: false }" class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden">
+
+                    <!-- HEADER DEL ACORDEÓN -->
+                    <button
+                        @click="open = !open"
+                        class="w-full flex justify-between items-center px-4 py-3 bg-gray-700/40 hover:bg-gray-700/60 transition">
+                        
+                        <span class="text-indigo-300 font-semibold text-lg">
+                            <?= $nombreMes ?>
+                        </span>
+
+                        <svg x-bind:class="{'rotate-180': open}"
+                            class="w-5 h-5 text-indigo-300 transform transition-transform"
+                            fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    <!-- CONTENIDO DEL ACORDEÓN -->
+                    <div x-show="open" x-collapse class="px-4 py-3 bg-gray-800">
+
+                        <table class="w-full text-center border-collapse text-xs">
+                            <thead class="text-[11px] text-gray-400">
+                                <tr>
+                                    <th>Lun</th>
+                                    <th>Mar</th>
+                                    <th>Mié</th>
+                                    <th>Jue</th>
+                                    <th>Vie</th>
+                                    <th>Sáb</th>
+                                    <th>Dom</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="text-sm">
+
+                                <?php
+                                $diaSemana = date("N", $primerDia); // 1 (Lun) - 7 (Dom)
+                                echo "<tr>";
+
+                                // Espacios antes del día 1
+                                for ($i = 1; $i < $diaSemana; $i++) {
+                                    echo "<td></td>";
+                                }
+
+                                // Días del mes
+                                for ($dia = 1; $dia <= $diasMes; $dia++) {
+
+                                    $fechaActual = "$anio-$mes-" . str_pad($dia, 2, "0", STR_PAD_LEFT);
+                                    $registro = $asistenciaMap[$fechaActual] ?? null;
+                                    $estado = $registro["presente"] ?? null;
+                                    $claseColor = getEstadoColor($estado);
+
+                                    echo "<td class='p-1'>";
+                                    echo "<div class='rounded-md w-7 h-7 flex items-center justify-center mx-auto {$claseColor}'>";
+                                    echo $dia;
+                                    echo "</div>";
+                                    echo "</td>";
+
+                                    // Cambio de fila los domingos
+                                    if (date("N", strtotime($fechaActual)) == 7) {
+                                        echo "</tr><tr>";
+                                    }
+                                }
+
+                                echo "</tr>";
+                                ?>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+                <?php endforeach; ?>
+            </div>
+        <?php endforeach; ?>
     </div>
 </div>

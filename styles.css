@@ -1,0 +1,170 @@
+:root {
+    --azul: #005ca9;
+    --amarillo: #ffeb00;
+    --gris: #f4f6f8;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    background:
+        radial-gradient(circle at top left,
+            rgba(0, 92, 169, 0.35),
+            transparent 40%),
+        radial-gradient(circle at bottom right,
+            rgba(255, 235, 0, 0.25),
+            transparent 45%),
+        linear-gradient(135deg,
+            #001b33,
+            #002c52,
+            #001423);
+}
+
+.container {
+    background: white;
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.logo img {
+    max-width: 180px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: var(--azul);
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+h2 {
+    color: #555;
+    font-size: 20px;
+    margin-bottom: 25px;
+}
+
+.bienvenida {
+    font-size: 18px;
+    margin-bottom: 35px;
+    color: #333;
+}
+
+.acciones {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.acciones a {
+    background: linear-gradient(135deg,
+            #005ca9,
+            #0074d9);
+    color: white;
+    text-decoration: none;
+    padding: 14px 26px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+
+    box-shadow:
+        0 8px 20px rgba(0, 92, 169, 0.35);
+
+    transition: all 0.3s ease;
+}
+
+.acciones a:hover {
+    background: linear-gradient(135deg,
+            #ffeb00,
+            #ffd500);
+    color: #000;
+
+    transform: translateY(-2px);
+    box-shadow:
+        0 12px 25px rgba(255, 235, 0, 0.45);
+}
+
+footer {
+    margin-top: auto;
+    background: #002c52;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 14px;
+}
+
+/* ==========================
+   DISEÑO MÓVIL
+========================== */
+@media (max-width: 768px) {
+
+    .container {
+        margin: 30px 15px;
+        padding: 25px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    h2 {
+        font-size: 17px;
+    }
+
+    .bienvenida {
+        font-size: 16px;
+    }
+
+    /* 🔽 AQUÍ ESTÁ LA MAGIA */
+    .acciones {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .acciones a {
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    .logo img {
+        max-width: 140px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .acciones {
+        flex-wrap: wrap;
+    }
+
+    .acciones a {
+        flex: 1 1 45%;
+    }
+}
+
+@media (max-width: 600px) {
+    .acciones a {
+        flex: 1 1 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .acciones a {
+        padding: 18px;
+        font-size: 17px;
+        border-radius: 12px;
+    }
+}
