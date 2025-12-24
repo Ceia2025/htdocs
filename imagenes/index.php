@@ -72,7 +72,11 @@ $totalPaginas = max(1, ceil($total / $porPagina));
                     <img class="lazy" data-src="<?= $urlCarpeta . $img ?>" data-full="<?= $urlCarpeta . $img ?>"
                         alt="<?= htmlspecialchars($img) ?>" onclick="abrirModal(<?= $index ?>)">
                     <p><?= htmlspecialchars($img) ?></p>
-                    <a class="descargar" href="<?= $urlCarpeta . $img ?>" download>Descargar</a>
+                    <?php
+                    $nombreBase = pathinfo($img, PATHINFO_FILENAME);
+                    $urlOriginal = str_replace('/images/', '/original/', $urlCarpeta) . $img;
+                    ?>
+                    <a class="descargar" href="<?= $urlOriginal ?>" download>Descargar</a>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
@@ -109,11 +113,78 @@ $totalPaginas = max(1, ceil($total / $porPagina));
     </div>
 
     <script src="script.js"></script>
-    <form action="optimizar_lote.php" method="post" onsubmit="return confirm('¿Optimizar nuevas imágenes?');">
-        <button class="boton-pag">
+
+    <footer>
+        <form action="optimizar_lote.php" method="post" target="procesoOpt" onsubmit="return iniciarOpt();">
+            <button id="btnOptimizar" class="boton-pag" type="submit">
             🔄 Optimizar nuevas imágenes
-        </button>
-    </form>
+            </button>
+            <div id="progresoBox" style="display:none;max-width:360px;margin:20px auto;">
+                <div style="background:#eee;border-radius:12px;overflow:hidden;">
+                    <div id="barraProgreso"
+                        style="width:0%;height:20px;background:linear-gradient(135deg,#00b3ff,#0078ff);">
+                    </div>
+                </div>
+
+                <div id="textoProgreso" style="margin-top:8px;color:#fff;font-weight:600;">
+                    0%
+                </div>
+
+                <div id="tiempoRestante" style="margin-top:6px;color:#ddd;font-size:14px;"></div>
+
+                <button onclick="cancelarOpt()" class="boton-pag" style="margin-top:10px;background:#c0392b;">
+                    ❌ Cancelar
+                </button>
+            </div>
+
+            <iframe name="procesoOpt" style="display:none;"></iframe>
+        </form>
+
+        <p id="estadoOpt" style="margin-top:10px;color:#fff;display:none;">
+            ⏳ Optimizando imágenes, por favor espera...
+        </p>
+    </footer>
+    <script>
+        function iniciarOpt() {
+            document.getElementById('btnOptimizar').disabled = true;
+            document.getElementById('btnOptimizar').innerText = 'Procesando...';
+            document.getElementById('progresoBox').style.display = 'block';
+            return true;
+        }
+
+        function iniciarProgreso(total) {
+            actualizarProgreso(0, 0);
+        }
+
+        function actualizarProgreso(porcentaje, segundos) {
+            document.getElementById('barraProgreso').style.width = porcentaje + '%';
+            document.getElementById('textoProgreso').innerText = porcentaje + '%';
+
+            if (segundos > 0) {
+                const min = Math.floor(segundos / 60);
+                const sec = segundos % 60;
+                document.getElementById('tiempoRestante').innerText =
+                    `⏱ Tiempo restante aprox: ${min}m ${sec}s`;
+            }
+        }
+
+        function finalizarProgreso(optimizadas, total) {
+            document.getElementById('textoProgreso').innerText = '✅ Completado';
+            document.getElementById('tiempoRestante').innerText =
+                `📊 Optimizadas: ${optimizadas} / ${total}`;
+            document.getElementById('btnOptimizar').innerText = '✔ Optimizado';
+        }
+
+        function cancelarOpt() {
+            fetch('cancelar.php');
+            document.getElementById('tiempoRestante').innerText = '❌ Cancelando...';
+        }
+
+        function cancelado() {
+            document.getElementById('textoProgreso').innerText = '⛔ Cancelado';
+            document.getElementById('tiempoRestante').innerText = 'Proceso detenido';
+        }
+    </script>
 
 </body>
 

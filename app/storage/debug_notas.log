@@ -467,3 +467,24 @@ Array
 )
 
 --------------------
+Array
+(
+    [fecha] => 2025-12-22 19:28:41
+    [curso_id] => 5
+    [anio_id] => 3
+    [semestre] => 2
+    [asignatura_id] => 3
+    [notas_recibidas] => Array
+        (
+            [5] => Array
+                (
+                    [nota] => 2.2
+                    [matricula_id] => 16
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------

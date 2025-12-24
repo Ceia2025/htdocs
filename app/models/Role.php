@@ -6,19 +6,22 @@ class Role
     private $conn;
     private $table = "roles2";
 
-    public function __construct() {
+    public function __construct()
+    {
         $db = new Connection();
         $this->conn = $db->open();
     }
 
     // Obtener todos
-    public function getAll() {
+    public function getAll()
+    {
         $stmt = $this->conn->query("SELECT id, nombre FROM {$this->table}");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     //Ordenar por ID
-    public function getById($id) {
+    public function getById($id)
+    {
         $sql = "SELECT id, nombre FROM {$this->table} WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([":id" => $id]);
@@ -26,21 +29,26 @@ class Role
     }
 
     // Crear
-    public function create($nombre) {
+    public function create($nombre)
+    {
         $sql = "INSERT INTO {$this->table} (nombre) VALUES (:nombre)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([":nombre" => $nombre]);
     }
 
+
+
     // Actualizar
-    public function update($id, $nombre) {
+    public function update($id, $nombre)
+    {
         $sql = "UPDATE {$this->table} SET nombre = :nombre WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([":id" => $id, ":nombre" => $nombre]);
     }
 
     // Eliminar
-    public function delete($id) {
+    public function delete($id)
+    {
         $sql = "DELETE FROM {$this->table} WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([":id" => $id]);

@@ -16,24 +16,24 @@
       "url": "index.php?action=matriculas"
     },
     {
-      "title": "ProfesoresTest",
-      "desc": "Profesores test",
+      "title": "Profesores",
+      "desc": "Listado de profesores",
       "url": "index.php?action=profesores"
     },
     {
-      "title": "Curso asignatura test",
-      "desc": "Profesor y curso asignatiura test test",
+      "title": "Curso asignado a profesor ",
+      "desc": "Profesores asignados a sus respectivas asignaturas",
       "url": "index.php?action=profesor_curso_asignatura"
-    },
-    {
-      "title": "Manuales",
-      "desc": "Reglamentos institucionales",
-      "url": "index.php?action=dashboard"
     },
     {
       "title": "Asistencias index",
       "desc": "Ver y gestionar el registro de asistencia de los alumnos.",
       "url": "index.php?action=asistencias"
+    },
+    {
+      "title": "Manuales",
+      "desc": "Reglamentos institucionales",
+      "url": "index.php?action=dashboard"
     }
   ],
   "docente": [
