@@ -33,7 +33,7 @@ include __DIR__ . "/../layout/navbar.php";
                         <div>
                             <label class="block text-sm text-gray-300 mb-1">Profesor</label>
                             <select name="profesor_id" required
-                                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-gray-300">
+                                class="w-full bg-gray-900  border border-gray-700 rounded-lg px-3 py-2">
                                 <option class="text-gray-300" value="">Seleccione…</option>
                                 <?php foreach ($profesores as $p): ?>
                                     <option class="text-gray-300" value="<?= $p['id'] ?>">
@@ -47,10 +47,10 @@ include __DIR__ . "/../layout/navbar.php";
                         <div>
                             <label class="block text-sm text-gray-300 mb-1">Curso</label>
                             <select name="curso_id" id="curso_id" required
-                                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-gray-300">
-                                <option value="" class="text-gray-300">Seleccione…</option>
+                                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2">
+                                <option value="">Seleccione…</option>
                                 <?php foreach ($cursos as $c): ?>
-                                    <option value="<?= $c['id'] ?>" class="text-gray-300">
+                                    <option value="<?= $c['id'] ?>">
                                         <?= htmlspecialchars($c['nombre']) ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -61,10 +61,10 @@ include __DIR__ . "/../layout/navbar.php";
                         <div>
                             <label class="block text-sm text-gray-300 mb-1">Año Escolar</label>
                             <select name="anio_id" required
-                                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-gray-300">
-                                <option value="" class="text-gray-300">Seleccione…</option>
+                                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2">
+                                <option value="">Seleccione…</option>
                                 <?php foreach ($anios as $a): ?>
-                                    <option value="<?= $a['id'] ?>" class="text-gray-300"><?= $a['anio'] ?></option>
+                                    <option value="<?= $a['id'] ?>"><?= $a['anio'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -81,7 +81,7 @@ include __DIR__ . "/../layout/navbar.php";
 
                         <!-- GUARDAR -->
                         <button type="submit"
-                            class="w-full bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg font-semibold shadow text-white">
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg font-semibold shadow">
                             Guardar Asignación
                         </button>
 
