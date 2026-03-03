@@ -24,6 +24,9 @@ require_once __DIR__ . '/../controllers/ProfesorCursoAsignaturaController.php';
 require_once __DIR__ . '/../controllers/PerfilAcademicoAsistenciaController.php';
 $perfilAcademicoAsistencia = new PerfilAcademicoAsistenciaController();
 
+require_once __DIR__ . '/../controllers/AsistenciaController.php';
+$asistenciaController = new AsistenciaController($db);
+
 
 
 
@@ -113,7 +116,7 @@ switch ($action) {
 
     case 'asistencia_select_context': // NUEVA RUTA
         // Muestra el formulario SOLO para seleccionar curso/año.
-        $perfilAcademicoAsistencia->showSelectionForm();
+        //$perfilAcademicoAsistencia->showSelectionForm();
         break;
 
     case 'asistencia_create_form':
@@ -748,6 +751,16 @@ switch ($action) {
         $suplenciasController->delete($_GET['id']);
         break;
 
+
+    //---------------------------------------------------------------------
+
+    case 'form_asistencia_masiva':
+        $asistenciaController->formMasiva();
+        break;
+
+    case 'guardar_asistencia_masiva':
+        $asistenciaController->guardarMasiva();
+        break;
     //---------------------------------------------------------------------
 
     default:

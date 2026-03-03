@@ -34,6 +34,16 @@
       "title": "Manuales",
       "desc": "Reglamentos institucionales",
       "url": "index.php?action=dashboard"
+    },
+    {
+      "title": "teste asistencia",
+      "desc": "Reglamentos institucionales",
+      "url": "index.php?action=form_asistencia_masiva"
+    },
+    {
+      "title": "teste asistencia 2",
+      "desc": "Reglamentos institucionales",
+      "url": "index.php?action=guardar_asistencia_masiva"
     }
   ],
   "docente": [

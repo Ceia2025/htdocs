@@ -488,3 +488,73 @@ Array
 )
 
 --------------------
+Array
+(
+    [fecha] => 2025-12-29 15:34:41
+    [curso_id] => 9
+    [anio_id] => 2
+    [semestre] => 2
+    [asignatura_id] => 5
+    [notas_recibidas] => Array
+        (
+            [9] => Array
+                (
+                    [nota] => 6
+                    [matricula_id] => 15
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
+Array
+(
+    [fecha] => 2026-03-02 20:58:42
+    [curso_id] => 8
+    [anio_id] => 3
+    [semestre] => 1
+    [asignatura_id] => 3
+    [notas_recibidas] => Array
+        (
+            [6] => Array
+                (
+                    [nota] => 5.5
+                    [matricula_id] => 24
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
+Array
+(
+    [fecha] => 2026-03-02 21:13:22
+    [curso_id] => 8
+    [anio_id] => 3
+    [semestre] => 1
+    [asignatura_id] => 3
+    [notas_recibidas] => Array
+        (
+            [7] => Array
+                (
+                    [nota] => 6.4
+                    [matricula_id] => 25
+                    [deleted_at] => 
+                )
+
+            [6] => Array
+                (
+                    [nota] => 
+                    [matricula_id] => 24
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
