@@ -22,11 +22,11 @@ require_once __DIR__ . '/../controllers/ProfesorCursoAsignaturaController.php';
 
 //Perifil academico de los alumnos
 require_once __DIR__ . '/../controllers/PerfilAcademicoAsistenciaController.php';
-$perfilAcademicoAsistencia = new PerfilAcademicoAsistenciaController();
 
 require_once __DIR__ . '/../controllers/AsistenciaController.php';
-$asistenciaController = new AsistenciaController($db);
+$asistenciaController = new AsistenciaController();
 
+$perfilAcademicoAsistencia = new PerfilAcademicoAsistenciaController();
 
 
 
@@ -754,12 +754,23 @@ switch ($action) {
 
     //---------------------------------------------------------------------
 
+
+
+
+    case 'asistencia_cursos':
+        $asistenciaController->listarCursos();
+        break;
+
     case 'form_asistencia_masiva':
         $asistenciaController->formMasiva();
         break;
 
+    case 'resumen_curso':
+        $asistenciaController->resumenCurso();
+        break;
+
     case 'guardar_asistencia_masiva':
-        $asistenciaController->guardarMasiva();
+        $asistenciaController->guardarAsistenciaMasiva();
         break;
     //---------------------------------------------------------------------
 

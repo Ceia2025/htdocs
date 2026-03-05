@@ -44,6 +44,11 @@
       "title": "teste asistencia 2",
       "desc": "Reglamentos institucionales",
       "url": "index.php?action=guardar_asistencia_masiva"
+    },
+    {
+      "title": "Asistencia",
+      "desc": "Gestión de asistencia por curso",
+      "url": "index.php?action=asistencia_cursos"
     }
   ],
   "docente": [

@@ -1,13 +1,15 @@
 <?php
+require_once __DIR__ . '/../config/Connection.php';
 
 class Asistencia
 {
     private $conn;
     private $table = "alum_asistencia2";
 
-    public function __construct($db)
+    public function __construct()
     {
-        $this->conn = $db;
+        $db = new Connection();
+        $this->conn = $db->open();
     }
 
     /* ==========================================
@@ -30,7 +32,7 @@ class Asistencia
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
             ':curso_id' => $cursoId,
-            ':anio_id'  => $anioId
+            ':anio_id' => $anioId
         ]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -48,7 +50,7 @@ class Asistencia
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
             ':curso_id' => $cursoId,
-            ':anio_id'  => $anioId
+            ':anio_id' => $anioId
         ]);
 
         $matriculas = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -56,7 +58,7 @@ class Asistencia
         foreach ($matriculas as $m) {
 
             $matriculaId = $m['id'];
-            $presente    = $asistencias[$matriculaId] ?? 0;
+            $presente = $asistencias[$matriculaId] ?? 0;
 
             $insert = "INSERT INTO {$this->table}
                        (matricula_id, fecha, presente)
@@ -66,10 +68,27 @@ class Asistencia
             $stmtInsert = $this->conn->prepare($insert);
             $stmtInsert->execute([
                 ':matricula_id' => $matriculaId,
-                ':fecha'        => $fecha,
-                ':presente'     => $presente
+                ':fecha' => $fecha,
+                ':presente' => $presente
             ]);
         }
+    }
+
+    /* ==========================================
+       CURSOS CON MATRÍCULAS
+    ========================================== */
+    public function getCursosConMatricula($anioId)
+    {
+        $sql = "SELECT DISTINCT c.id, c.nombre
+            FROM cursos2 c
+            JOIN matriculas2 m ON m.curso_id = c.id
+            WHERE m.anio_id = :anio_id
+            ORDER BY c.nombre";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':anio_id' => $anioId]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /* ==========================================
@@ -89,9 +108,9 @@ class Asistencia
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
             ':curso_id' => $cursoId,
-            ':anio_id'  => $anioId,
-            ':inicio'   => $fechaInicio,
-            ':fin'      => $fechaFin
+            ':anio_id' => $anioId,
+            ':inicio' => $fechaInicio,
+            ':fin' => $fechaFin
         ]);
 
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -101,5 +120,49 @@ class Asistencia
         }
 
         return round(($data['total_presentes'] / $data['total_clases']) * 100, 2);
+    }
+
+    public function getAnioActualId()
+    {
+        $anioActual = (int) date("Y");
+
+        $sql = "SELECT id FROM anios2 WHERE anio = :anio LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':anio' => $anioActual]);
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row['id'] ?? null;
+    }
+
+    public function getAnios()
+    {
+        $sql = "SELECT id, anio 
+            FROM anios2 
+            WHERE anio >= 2025
+            ORDER BY anio DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function guardarAsistencia($alumnoId, $cursoId, $anioId, $fecha, $presente)
+    {
+        $sql = "INSERT INTO alum_asistencia2 
+            (alumno_id, curso_id, anio_id, fecha, presente)
+            VALUES (:alumno_id, :curso_id, :anio_id, :fecha, :presente)
+            ON DUPLICATE KEY UPDATE presente = :presente";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->execute([
+            ':alumno_id' => $alumnoId,
+            ':curso_id' => $cursoId,
+            ':anio_id' => $anioId,
+            ':fecha' => $fecha,
+            ':presente' => $presente
+        ]);
     }
 }
