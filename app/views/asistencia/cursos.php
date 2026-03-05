@@ -43,12 +43,12 @@ include __DIR__ . "/../layout/navbar.php";
                                 </h3>
 
                                 <div class="flex justify-between">
-                                    <a href="index.php?action=form_asistencia_masiva&curso_id=<?= $curso['id'] ?>&anio_id=1"
+                                    <a href="index.php?action=form_asistencia_masiva&curso_id=<?= $curso['id'] ?>&anio_id=<?= $anioId ?>"
                                         class="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded text-white text-sm">
                                         Tomar Asistencia
                                     </a>
 
-                                    <a href="index.php?action=resumen_curso&curso_id=<?= $curso['id'] ?>&anio_id=1"
+                                    <a href="index.php?action=resumen_curso&curso_id=<?= $curso['id'] ?>&anio_id=<?= $anioId ?>"
                                         class="bg-green-600 hover:bg-green-700 px-3 py-2 rounded text-white text-sm">
                                         Ver Resumen
                                     </a>

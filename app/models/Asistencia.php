@@ -38,41 +38,7 @@ class Asistencia
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /* ==========================================
-       GUARDAR ASISTENCIA MASIVA
-    ========================================== */
-    public function guardarAsistenciaMasiva($cursoId, $anioId, $fecha, $asistencias)
-    {
-        $sql = "SELECT id FROM matriculas2 
-                WHERE curso_id = :curso_id 
-                AND anio_id = :anio_id";
 
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            ':curso_id' => $cursoId,
-            ':anio_id' => $anioId
-        ]);
-
-        $matriculas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($matriculas as $m) {
-
-            $matriculaId = $m['id'];
-            $presente = $asistencias[$matriculaId] ?? 0;
-
-            $insert = "INSERT INTO {$this->table}
-                       (matricula_id, fecha, presente)
-                       VALUES (:matricula_id, :fecha, :presente)
-                       ON DUPLICATE KEY UPDATE presente = VALUES(presente)";
-
-            $stmtInsert = $this->conn->prepare($insert);
-            $stmtInsert->execute([
-                ':matricula_id' => $matriculaId,
-                ':fecha' => $fecha,
-                ':presente' => $presente
-            ]);
-        }
-    }
 
     /* ==========================================
        CURSOS CON MATRÍCULAS
@@ -148,19 +114,31 @@ class Asistencia
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function guardarAsistencia($alumnoId, $cursoId, $anioId, $fecha, $presente)
+    public function getCurso($cursoId)
     {
-        $sql = "INSERT INTO alum_asistencia2 
-            (alumno_id, curso_id, anio_id, fecha, presente)
-            VALUES (:alumno_id, :curso_id, :anio_id, :fecha, :presente)
-            ON DUPLICATE KEY UPDATE presente = :presente";
+        $sql = "SELECT id, nombre 
+            FROM cursos2
+            WHERE id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':id' => $cursoId
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function guardarAsistencia($matriculaId, $fecha, $presente)
+    {
+        $sql = "INSERT INTO alum_asistencia2 (matricula_id, fecha, presente)
+        VALUES (:matricula_id, :fecha, :presente)
+        ON DUPLICATE KEY UPDATE
+        presente = :presente";
 
         $stmt = $this->conn->prepare($sql);
 
         $stmt->execute([
-            ':alumno_id' => $alumnoId,
-            ':curso_id' => $cursoId,
-            ':anio_id' => $anioId,
+            ':matricula_id' => $matriculaId,
             ':fecha' => $fecha,
             ':presente' => $presente
         ]);

@@ -28,6 +28,7 @@ class AsistenciaController
         }
 
         $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
+        $curso = $this->model->getCurso($cursoId);
 
         require "../views/asistencia/masiva.php";
     }
@@ -75,24 +76,24 @@ class AsistenciaController
     }
 
     /* ==========================================
-       GUARDAR MASIVA
+       GUARDAR ASISTENCIA MASIVA
     ========================================== */
     public function guardarAsistenciaMasiva()
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            die("Método no permitido");
-        }
-
         $cursoId = $_POST['curso_id'];
         $anioId = $_POST['anio_id'];
         $fecha = $_POST['fecha'];
-        $asistencias = $_POST['asistencia'] ?? [];
 
-        foreach ($asistencias as $alumnoId => $presente) {
+        $presentes = $_POST['presentes'] ?? [];
+
+        $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
+
+        foreach ($alumnos as $alumno) {
+
+            $presente = in_array($alumno['matricula_id'], $presentes) ? 1 : 0;
+
             $this->model->guardarAsistencia(
-                $alumnoId,
-                $cursoId,
-                $anioId,
+                $alumno['matricula_id'],
                 $fecha,
                 $presente
             );
