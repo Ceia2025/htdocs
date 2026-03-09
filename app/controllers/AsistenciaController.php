@@ -101,4 +101,26 @@ class AsistenciaController
 
         header("Location: index.php?action=asistencia_cursos&anio_id=$anioId");
     }
+
+
+
+    /*
+    LIBRO DE CLASS
+    */
+
+    public function libroClases()
+    {
+
+        $cursoId = $_GET['curso_id'];
+        $anioId = $_GET['anio_id'];
+
+        $curso = $this->model->getCurso($cursoId);
+
+        $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
+
+        $asistencia = $this->model->getAsistenciaLibro($cursoId, $anioId);
+
+        require "../views/asistencia/libro_clases.php";
+
+    }
 }

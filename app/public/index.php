@@ -755,7 +755,9 @@ switch ($action) {
     //---------------------------------------------------------------------
 
 
-
+    case 'libro_clases':
+        $asistenciaController->libroClases();
+        break;
 
     case 'asistencia_cursos':
         $asistenciaController->listarCursos();
@@ -775,6 +777,8 @@ switch ($action) {
     //---------------------------------------------------------------------
 
     default:
-        echo "<h1>Ruta no encontrada</h1>";
+        echo "<h1>Ruta no encontrada papito</h1>
+        </br>
+        <h3>lal pipo</h3>";
         break;
 }
