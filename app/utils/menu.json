@@ -49,28 +49,78 @@
       "title": "Toma de Asistencia",
       "desc": "Gestión de asistencia por curso",
       "url": "index.php?action=asistencia_cursos"
+    },
+    {
+      "title": "Registro de Atrasos",
+      "desc": "Registrar atrasos de alumnos en portería",
+      "url": "index.php?action=atrasos_registro"
+    },
+    {
+      "title": "Atrasos por Curso",
+      "desc": "Ver y filtrar atrasos por curso y semestre",
+      "url": "index.php?action=atrasos_lista_curso"
     }
   ],
-  "docente": [
+  "administrativo": [
     {
-      "title": "Ingresar Notas",
-      "desc": "Registrar calificaciones de alumnos",
-      "url": "#"
+      "title": "Edición de Años",
+      "desc": "Gestionar años académicos",
+      "url": "index.php?action=anios"
     },
     {
-      "title": "Planificaciones",
-      "desc": "Subir y gestionar planificaciones de clases",
-      "url": "#"
+      "title": "Matricula",
+      "desc": "Antecedentes familiares de los alumnos",
+      "url": "index.php?action=alumnos_stepper"
     },
     {
-      "title": "Registro de Anotaciones",
-      "desc": "Control de observaciones y anotaciones de alumnos",
-      "url": "#"
+      "title": "Mantenedor de matricula",
+      "desc": "En este apartado estan las categorias de items mas sus respectivos codigo",
+      "url": "index.php?action=matriculas"
     },
     {
-      "title": "Control de Asistencia",
-      "desc": "Ver y registrar asistencia de alumnos",
-      "url": "#"
+      "title": "Profesores",
+      "desc": "Listado de profesores",
+      "url": "index.php?action=profesores"
+    },
+    {
+      "title": "Curso asignado a profesor ",
+      "desc": "Profesores asignados a sus respectivas asignaturas",
+      "url": "index.php?action=profesor_curso_asignatura"
+    },
+    {
+      "title": "Asistencias index",
+      "desc": "Ver y gestionar el registro de asistencia de los alumnos.",
+      "url": "index.php?action=asistencias"
+    },
+    {
+      "title": "Manuales",
+      "desc": "Reglamentos institucionales",
+      "url": "index.php?action=dashboard"
+    },
+    {
+      "title": "teste asistencia",
+      "desc": "Reglamentos institucionales",
+      "url": "index.php?action=form_asistencia_masiva"
+    },
+    {
+      "title": "teste asistencia 2",
+      "desc": "Reglamentos institucionales",
+      "url": "index.php?action=guardar_asistencia_masiva"
+    },
+    {
+      "title": "Toma de Asistencia",
+      "desc": "Gestión de asistencia por curso",
+      "url": "index.php?action=asistencia_cursos"
+    },
+    {
+      "title": "Registro de Atrasos",
+      "desc": "Registrar atrasos de alumnos en portería",
+      "url": "index.php?action=atrasos_registro"
+    },
+    {
+      "title": "Atrasos por Curso",
+      "desc": "Ver y filtrar atrasos por curso y semestre",
+      "url": "index.php?action=atrasos_lista_curso"
     }
   ],
   "registro": [

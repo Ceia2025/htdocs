@@ -14,6 +14,8 @@ require_once __DIR__ . '/../controllers/MatriculaController.php';
 require_once __DIR__ . '/../controllers/PerfilAcademicoController.php';
 require_once __DIR__ . '/../controllers/AntecedenteEscolarController.php';
 require_once __DIR__ . '/../controllers/NotasController.php';
+require_once __DIR__ . '/../controllers/AtrasoController.php';
+
 //Profesores
 require_once __DIR__ . '/../controllers/ProfesoresController.php';
 require_once __DIR__ . '/../controllers/ProfesorCursoAsignaturaController.php';
@@ -57,6 +59,7 @@ $alumnoemergencia = new AlumEmergenciaController();
 $antecedenteFamiliarController = new AntecedenteFamiliarController();
 $antecedenteEscolarController = new AntecedenteEscolarController();
 $matriculaController = new MatriculaController();
+$atrasoController = new AtrasoController();
 
 
 
@@ -263,7 +266,6 @@ switch ($action) {
         break;
 
     case 'check_run_exists':
-        require_once __DIR__ . '/../controllers/AlumnosController.php';
         $controller = new AlumnosController();
         $controller->checkRunExists();
         break;
@@ -775,6 +777,36 @@ switch ($action) {
         $asistenciaController->guardarAsistenciaMasiva();
         break;
     //---------------------------------------------------------------------
+
+    // Atrasos
+    case 'atrasos_registro':
+        $atrasoController->formRegistro();
+        break;
+
+    case 'atrasos_guardar':
+        $atrasoController->guardar();
+        break;
+
+    case 'atrasos_buscar_alumno':   // endpoint AJAX
+        $atrasoController->buscarAlumno();
+        break;
+
+    case 'atrasos_lista_curso':
+        $atrasoController->listarPorCurso();
+        break;
+
+    case 'atrasos_lista_alumno':
+        $atrasoController->listarPorAlumno();
+        break;
+
+    case 'atrasos_eliminar':
+        $atrasoController->eliminar();
+        break;
+
+    case 'atrasos_buscar_alumnos':   // con 's' al final — autocompletado
+        $atrasoController->buscarAlumnos();
+        break;
+    //----------------------------------------------------------------------    
 
     default:
         echo "<h1>Ruta no encontrada papito</h1>

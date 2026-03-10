@@ -7,14 +7,6 @@ $user = $_SESSION['user'];
 $nombre = $user['nombre'];
 $rol = $user['rol'];
 
-// Calcular edad
-/*
-$edad = null;
-if (!empty($alumno['fechanac'])) {
-    $fechaNac = new DateTime($alumno['fechanac']);
-    $hoy = new DateTime();
-    $edad = $hoy->diff($fechaNac)->y;
-}*/
 $edad = $this->calcularEdadAl30Junio($alumno['fechanac']);
 
 include __DIR__ . "/../layout/header.php";

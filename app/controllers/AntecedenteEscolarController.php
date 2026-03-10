@@ -34,6 +34,20 @@ class AntecedenteEscolarController
     // Guardar nuevo
     public function store($data)
     {
+        $enumFields = [
+            'ultimo_curso',
+            'prob_apren',
+            'pie',
+            'chile_solidario_cual',
+            'grupo_fonasa',
+            'isapre'
+        ];
+        foreach ($enumFields as $field) {
+            if (isset($data[$field]) && $data[$field] === '') {
+                $data[$field] = null;
+            }
+        }
+
         $this->model->create($data);
         header("Location: index.php?action=antecedente_escolar");
         exit;
@@ -102,19 +116,30 @@ class AntecedenteEscolarController
             exit;
         }
 
-        // Verificar si ya existe registro
+        // ✅ SANITIZAR: convertir strings vacíos a null para columnas ENUM
+        $enumFields = [
+            'ultimo_curso',
+            'prob_apren',
+            'pie',
+            'chile_solidario_cual',
+            'grupo_fonasa',
+            'isapre'
+        ];
+        foreach ($enumFields as $field) {
+            if (isset($data[$field]) && $data[$field] === '') {
+                $data[$field] = null;
+            }
+        }
+
         $existente = $this->model->getByAlumnoId($alumno_id);
 
         if ($existente && !empty($existente['id'])) {
-            // Actualizar
             $this->model->update($existente['id'], $data);
         } else {
-            // Crear nuevo
             $data['alumno_id'] = $alumno_id;
             $this->model->create($data);
         }
 
-        // Redirigir de vuelta al perfil
         header("Location: index.php?action=alumno_profile&id=" . urlencode($alumno_id));
         exit;
     }

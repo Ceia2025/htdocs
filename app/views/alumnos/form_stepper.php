@@ -7,7 +7,7 @@ $user   = $_SESSION['user'];
 $nombre = $user['nombre'];
 $rol    = $user['rol'];
 
-//-----------------------------------------
+//----------------------------------------- 
 // Conexión a BD
 $db   = new Connection();
 $conn = $db->open();
@@ -426,7 +426,7 @@ include __DIR__ . "/../layout/navbar.php";
                     </button>
                 </div>
             </div>
-
+ 
             <!-- ============================
                  PASO 4: ANTECEDENTE ESCOLAR
             ============================= -->

@@ -5,7 +5,7 @@ class Alumno
 {
     private $conn;
     private $table = "alumnos2";
-
+ 
     public function __construct()
     {
         $db = new Connection();
