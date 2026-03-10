@@ -579,7 +579,7 @@ include __DIR__ . "/../layout/navbar.php";
                         >
                             <option value="">Seleccionar...</option>
                             <?php
-                            $cs = ['Prioritario', 'Preferente', 'Incremento', 'Pro-Retención'];
+                            $cs = ['Ninguno', 'Prioritario', 'Preferente', 'Incremento', 'Pro-Retención'];
                             foreach ($cs as $v):
                                 ?>
                                 <option value="<?= $v ?>"><?= $v ?></option>

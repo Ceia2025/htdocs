@@ -34,7 +34,7 @@ $cursos = [
 ];
 $pa = ['Sin', 'Con', 'Desconocido'];
 $pie = ['Si', 'No', 'No se sabe'];
-$cs = ['Prioritario', 'Preferente', 'Incremento', 'Pro-Retención'];
+$cs = ['Ninguno', 'Prioritario', 'Preferente', 'Incremento', 'Pro-Retención'];
 $gf = ['Ninguno', 'A', 'B', 'C', 'D'];
 $isapres = [
     'Ninguno',
