@@ -595,7 +595,7 @@ include __DIR__ . "/../layout/navbar.php";
                             class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2"
                         >
                             <?php
-                            $gf = ['Ninguno', 'A', 'B', 'C', 'D'];
+                            $gf = ['Ninguno', 'A', 'B', 'C', 'D', 'No Sabe'];
                             foreach ($gf as $g):
                                 ?>
                                 <option value="<?= $g ?>"><?= $g ?></option>
@@ -879,7 +879,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function validateRun(value) {
             const numericValue = parseInt(value.replace(/\./g, ''), 10);
             if (isNaN(numericValue)) return false;
-            return numericValue >= 1000000 && numericValue <= 100000000;
+            return numericValue >= 1000000 && numericValue <= 109000000;
         }
 
         function calcularDV(rut) {

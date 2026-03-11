@@ -35,7 +35,7 @@ $cursos = [
 $pa = ['Sin', 'Con', 'Desconocido'];
 $pie = ['Si', 'No', 'No se sabe'];
 $cs = ['Ninguno', 'Prioritario', 'Preferente', 'Incremento', 'Pro-Retención'];
-$gf = ['Ninguno', 'A', 'B', 'C', 'D'];
+$gf = ['Ninguno', 'A', 'B', 'C', 'D', 'No Sabe'];
 $isapres = [
     'Ninguno',
     'BANCA MEDICA',
@@ -58,7 +58,7 @@ foreach ($enumFields as $field) {
 
 <header class="bg-gray-800 border-b border-gray-700">
     <div class="mx-auto max-w-5xl px-4 py-6">
-        <h1 class="text-3xl font-bold text-white">Editar Antecedente Escolar</h1>
+        <h1 class="text-3xl font-bold text-white">Editar Antecedente Escolarlal</h1>
     </div>
 </header>
 
@@ -206,13 +206,6 @@ foreach ($enumFields as $field) {
                             <?php endforeach; ?>
                         </select>
                     </div>
-
-                    <!-- Fonasa — VARCHAR 
-                    <div>
-                        <label class="text-gray-200 text-sm">Fonasaasda</label>
-                        <input type="text" name="fonasa" value="<?= htmlspecialchars($antecedente['fonasa'] ?? '') ?>"
-                            class="mt-2 w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2">
-                    </div>-->
 
                     <!-- Grupo Fonasa — ENUM con opción vacía -->
                     <div>
