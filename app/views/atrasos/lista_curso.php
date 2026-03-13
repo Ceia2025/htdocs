@@ -1,8 +1,13 @@
 <?php
 require_once __DIR__ . "/../../controllers/AuthController.php";
+
 $auth = new AuthController();
 $auth->checkAuth();
+
 $user = $_SESSION['user'];
+$nombre = $user['nombre'];
+$rol = $user['rol'];
+
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 
@@ -388,7 +393,8 @@ $maxS = max($sem1, $sem2, 1);
                                                         <?= htmlspecialchars($a['apepat'] . ' ' . $a['apemat']) ?>
                                                     </p>
                                                     <p class="text-xs text-gray-500 font-mono">
-                                                        <?= htmlspecialchars($a['run']) ?></p>
+                                                        <?= htmlspecialchars($a['run']) ?>
+                                                    </p>
                                                 </td>
                                                 <td class="px-3 py-3 text-xs text-gray-400">
                                                     <?= htmlspecialchars($a['curso'] ?? '—') ?>
@@ -462,7 +468,8 @@ $maxS = max($sem1, $sem2, 1);
                                         class="text-sm font-bold <?= $color ?> w-5 text-center flex-shrink-0"><?= $pos ?></span>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-white text-xs font-semibold truncate">
-                                            <?= htmlspecialchars($s['nombre']) ?></p>
+                                            <?= htmlspecialchars($s['nombre']) ?>
+                                        </p>
                                         <p class="text-xs text-gray-500 font-mono"><?= htmlspecialchars($s['run']) ?></p>
                                     </div>
                                     <div class="flex-shrink-0 text-right">

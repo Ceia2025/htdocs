@@ -1,8 +1,13 @@
 <?php
 require_once __DIR__ . "/../../controllers/AuthController.php";
+
 $auth = new AuthController();
 $auth->checkAuth();
+
 $user = $_SESSION['user'];
+$nombre = $user['nombre'];
+$rol = $user['rol'];
+
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 
