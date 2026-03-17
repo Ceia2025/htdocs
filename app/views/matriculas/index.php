@@ -80,6 +80,23 @@ include __DIR__ . "/../layout/navbar.php";
                     </a>
                 </form>
 
+                <!-- CONTADOR DE ESTUDIANTES -->
+<div class="mt-6 flex items-center gap-3">
+    <div class="inline-flex items-center gap-2 bg-gray-800/60 border border-gray-700 
+                rounded-xl px-5 py-3 shadow">
+        <span class="text-2xl font-bold text-indigo-400">
+            <?= count($matriculas) ?>
+        </span>
+        <span class="text-sm text-gray-300 font-medium">
+            <?= count($matriculas) === 1 ? 'alumno encontrado' : 'alumnos encontrados' ?>
+        </span>
+    </div>
+
+    <?php if (!empty($_GET['nombre']) || !empty($_GET['rut']) || !empty($_GET['anio']) || !empty($_GET['curso'])): ?>
+        <span class="text-xs text-gray-500 italic">— resultados del filtro aplicado</span>
+    <?php endif; ?>
+</div>
+
 
 
                 <!-- BOTÓN CREAR -->
