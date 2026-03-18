@@ -59,6 +59,11 @@
       "title": "Atrasos por Curso",
       "desc": "Ver y filtrar atrasos por curso y semestre",
       "url": "index.php?action=atrasos_lista_curso"
+    },
+    {
+      "title": "Anotaciones",
+      "desc": "Ver y filtrar atrasos por curso y semestre",
+      "url": "index.php?action=anotaciones"
     }
   ],
   "administrativo": [

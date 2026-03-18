@@ -241,6 +241,13 @@ class AlumnosController
             error_log("🧠 Retirando alumno con ID: $id");
             $fechaActual = date('Y-m-d H:i:s');
             $this->alumnoModel->markAsRetired($id, $fechaActual);
+
+            // Eliminar automáticamente todas sus matrículas
+            require_once __DIR__ . '/../models/Matricula.php';
+            $matriculaModel = new Matricula();
+            $matriculaModel->deleteByAlumno($id);
+
+            error_log("🗑️ Matrículas eliminadas para alumno ID: $id");
         } else {
             error_log("⚠️ ID vacío en retire()");
         }
@@ -297,7 +304,7 @@ class AlumnosController
         $alumno = $alumnoModel->getById($alumno_id);
         $escolar = $antecedenteModel->getByAlumnoId($alumno_id);
         $contactos = $emergenciaModel->findByAlumno($alumno_id);
-        
+
         $edadAl30Junio = $this->calcularEdadAl30Junio($alumno['fechanac']);
         if (!$alumno) {
             die("Alumno no encontrado");
@@ -339,6 +346,46 @@ class AlumnosController
         $edad = $fechaCorte->diff($fechaNac)->y;
 
         return $edad;
+    }
+
+
+    // Vista de alumnos agrupados por año y curso
+    public function listadoPorAnio()
+    {
+        $alumnoModel = new Alumno();
+        $anios = $alumnoModel->getAniosConMatriculas();
+
+        $anio_id = $_GET['anio_id'] ?? null;
+        $anioSeleccionado = null;
+        $alumnosPorCurso = [];
+        $totalActivos = 0;
+        $totalRetirados = 0;
+
+        if ($anio_id) {
+            $alumnos = $alumnoModel->getByAnioConCurso($anio_id);
+
+            // Buscar descripción del año seleccionado
+            foreach ($anios as $a) {
+                if ($a['id'] == $anio_id) {
+                    $anioSeleccionado = $a;
+                    break;
+                }
+            }
+
+            // Agrupar por curso
+            foreach ($alumnos as $alumno) {
+                $curso = $alumno['curso_nombre'];
+                $alumnosPorCurso[$curso][] = $alumno;
+
+                if (!empty($alumno['deleted_at'])) {
+                    $totalRetirados++;
+                } else {
+                    $totalActivos++;
+                }
+            }
+        }
+
+        include __DIR__ . "/../views/alumnos/listado_por_anio.php";
     }
 
 

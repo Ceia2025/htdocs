@@ -5,7 +5,7 @@ class Alumno
 {
     private $conn;
     private $table = "alumnos2";
- 
+
     public function __construct()
     {
         $db = new Connection();
@@ -252,7 +252,35 @@ class Alumno
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    // Obtener años que tienen matrículas registradas
+    public function getAniosConMatriculas()
+    {
+        $sql = "SELECT DISTINCT an.id, an.anio, an.descripcion
+            FROM anios2 an
+            INNER JOIN matriculas2 m ON m.anio_id = an.id
+            ORDER BY an.anio DESC";
+        $stmt = $this->conn->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
+    // Obtener alumnos de un año con su curso, ordenados por curso y apellido
+    public function getByAnioConCurso($anio_id)
+    {
+        $sql = "SELECT 
+                a.id, a.run, a.codver, a.nombre, a.apepat, a.apemat,
+                a.fechanac, a.sexo, a.email, a.telefono,
+                a.created_at, a.deleted_at,
+                c.id AS curso_id,
+                c.nombre AS curso_nombre
+            FROM alumnos2 a
+            INNER JOIN matriculas2 m ON m.alumno_id = a.id
+            INNER JOIN cursos2 c    ON c.id = m.curso_id
+            WHERE m.anio_id = :anio_id
+            ORDER BY c.nombre ASC, a.apepat ASC, a.apemat ASC, a.nombre ASC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':anio_id' => $anio_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 
     // Eliminar un alumno

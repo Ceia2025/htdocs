@@ -80,24 +80,46 @@ include __DIR__ . "/../layout/navbar.php";
                     </a>
                 </form>
 
-                <!-- CONTADOR DE ESTUDIANTES -->
-<div class="mt-6 flex items-center gap-3">
-    <div class="inline-flex items-center gap-2 bg-gray-800/60 border border-gray-700 
-                rounded-xl px-5 py-3 shadow">
-        <span class="text-2xl font-bold text-indigo-400">
-            <?= count($matriculas) ?>
-        </span>
-        <span class="text-sm text-gray-300 font-medium">
-            <?= count($matriculas) === 1 ? 'alumno encontrado' : 'alumnos encontrados' ?>
-        </span>
-    </div>
-
-    <?php if (!empty($_GET['nombre']) || !empty($_GET['rut']) || !empty($_GET['anio']) || !empty($_GET['curso'])): ?>
-        <span class="text-xs text-gray-500 italic">— resultados del filtro aplicado</span>
-    <?php endif; ?>
-</div>
-
-
+                <!-- CONTADORES -->
+                <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 mb-2">
+                    <!-- Total -->
+                    <div
+                        class="bg-gray-800/60 border border-gray-700 rounded-2xl px-6 py-4 flex items-center gap-4 shadow">
+                        <span class="text-4xl font-bold text-indigo-400"><?= count($matriculas) ?></span>
+                        <div>
+                            <p class="text-white font-semibold">Total matrículas</p>
+                            <p class="text-xs text-gray-400">
+                                <?php if (!empty($_GET['nombre']) || !empty($_GET['rut']) || !empty($_GET['anio']) || !empty($_GET['curso'])): ?>
+                                    Resultado del filtro aplicado
+                                <?php else: ?>
+                                    Sin filtros aplicados
+                                <?php endif ?>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Por curso (solo si hay filtro de curso) -->
+                    <?php if (!empty($_GET['curso'])): ?>
+                        <div
+                            class="bg-gray-800/60 border border-indigo-800 rounded-2xl px-6 py-4 flex items-center gap-4 shadow">
+                            <span class="text-4xl font-bold text-blue-400"><?= count($matriculas) ?></span>
+                            <div>
+                                <p class="text-white font-semibold">Curso filtrado</p>
+                                <p class="text-xs text-gray-400"><?= htmlspecialchars($_GET['curso']) ?></p>
+                            </div>
+                        </div>
+                    <?php endif ?>
+                    <!-- Por año (solo si hay filtro de año) -->
+                    <?php if (!empty($_GET['anio'])): ?>
+                        <div
+                            class="bg-gray-800/60 border border-purple-800 rounded-2xl px-6 py-4 flex items-center gap-4 shadow">
+                            <span class="text-4xl font-bold text-purple-400"><?= htmlspecialchars($_GET['anio']) ?></span>
+                            <div>
+                                <p class="text-white font-semibold">Año escolar</p>
+                                <p class="text-xs text-gray-400"><?= count($matriculas) ?> alumnos en este año</p>
+                            </div>
+                        </div>
+                    <?php endif ?>
+                </div>
 
                 <!-- BOTÓN CREAR -->
                 <div class="mb-6 mt-8 flex justify-end">

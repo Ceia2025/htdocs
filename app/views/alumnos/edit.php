@@ -26,7 +26,7 @@ include __DIR__ . "/../layout/navbar.php";
         <div class="bg-gray-700 p-8 rounded-2xl shadow-lg">
 
 
-        <!-- -->
+            <!-- -->
             <div class="md:col-span-2 mb-8">
 
 
@@ -64,7 +64,7 @@ include __DIR__ . "/../layout/navbar.php";
                             <div class="flex justify-end w-full md:w-auto">
                                 <a href="index.php?action=alumno_retire&id=<?= $alumno['id'] ?>"
                                     class="text-center bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg text-white font-semibold shadow-md transition duration-200"
-                                    onclick="return confirm('¿Seguro que deseas marcar este alumno como retirado?')">
+                                    onclick="return confirm('⚠️ ¿Seguro que deseas retirar a este alumno?\n\nEsta acción eliminará TODAS sus matrículas activas. Su ficha personal se conservará.')">
                                     🚫 Marcar como retirado
                                 </a>
                             </div>

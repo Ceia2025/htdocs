@@ -152,6 +152,14 @@ class Matricula
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Eliminar todas las matrículas de un alumno
+    public function deleteByAlumno($alumno_id)
+    {
+        $sql = "DELETE FROM {$this->table} WHERE alumno_id = :alumno_id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([':alumno_id' => $alumno_id]);
+    }
+
     // Eliminar matrícula
     public function delete($id)
     {

@@ -102,8 +102,10 @@
 
                     <div id="menu-alumnos"
                         class="dropdown hidden absolute left-0 mt-2 w-56 bg-gray-800 border border-gray-700 rounded-lg shadow-lg origin-top">
-                        <a href="index.php?action=alumnos"
+                        <a href="index.php?action=listado_por_anio"
                             class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Listado alumnos</a>
+                        <a href="index.php?action=alumnos"
+                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Ficha Escolar</a>
                         <a href="index.php?action=alum_emergencia"
                             class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Datos Emergencia</a>
                         <a href="index.php?action=antecedente_escolar"
@@ -188,7 +190,8 @@
                         stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
             </button>
             <div id="mobile-alumnos" class="hidden pl-6 space-y-2">
-                <a href="index.php?action=alumnos" class="block text-gray-300 py-1">Listado</a>
+                <a href="index.php?action=listado_por_anio" class="block text-gray-300 py-1">Listado</a>
+                <a href="index.php?action=alumnos" class="block text-gray-300 py-1">Ficha Escolar</a>
                 <a href="index.php?action=alum_emergencia" class="block text-gray-300 py-1">Emergencia</a>
                 <a href="index.php?action=antecedente_escolar" class="block text-gray-300 py-1">Escolares</a>
                 <a href="index.php?action=antecedentefamiliar" class="block text-gray-300 py-1">Familiares</a>

@@ -15,6 +15,8 @@ require_once __DIR__ . '/../controllers/PerfilAcademicoController.php';
 require_once __DIR__ . '/../controllers/AntecedenteEscolarController.php';
 require_once __DIR__ . '/../controllers/NotasController.php';
 require_once __DIR__ . '/../controllers/AtrasoController.php';
+require_once __DIR__ . '/../controllers/AnotacionController.php';
+
 
 //Profesores
 require_once __DIR__ . '/../controllers/ProfesoresController.php';
@@ -60,6 +62,7 @@ $antecedenteFamiliarController = new AntecedenteFamiliarController();
 $antecedenteEscolarController = new AntecedenteEscolarController();
 $matriculaController = new MatriculaController();
 $atrasoController = new AtrasoController();
+$anotacionController = new AnotacionController();
 
 
 
@@ -288,6 +291,10 @@ switch ($action) {
     case 'alumno_pdf':
         // Ya está incluido AlumnoController.php y creada la instancia $alumnosController arriba
         $alumnosController->pdf($_GET['id'] ?? null);
+        break;
+
+    case 'listado_por_anio':
+        $alumnosController->listadoPorAnio();
         break;
 
 
@@ -806,7 +813,32 @@ switch ($action) {
     case 'atrasos_buscar_alumnos':   // con 's' al final — autocompletado
         $atrasoController->buscarAlumnos();
         break;
-    //----------------------------------------------------------------------    
+    //----------------------------------------------------------------------
+    //Anotaciones
+    case 'anotaciones':
+        $anotacionController->index();
+        break;
+    case 'anotacion_create':
+        $anotacionController->create();
+        break;
+    case 'anotacion_store':
+        $anotacionController->store($_POST);
+        break;
+    case 'anotacion_ver':
+        $anotacionController->verAlumno();
+        break;
+    case 'anotacion_delete':
+        $anotacionController->delete($_GET['id'] ?? null);
+        break;
+    case 'anotacion_buscar_alumno':
+        $anotacionController->buscarAlumnoAjax();
+        break;
+    case 'anotacion_asignaturas':
+        $anotacionController->getAsignaturasAjax();
+        break;
+
+    //----------------------------------------------------------------------
+
 
     default:
         echo "<h1>Ruta no encontrada papito</h1>
