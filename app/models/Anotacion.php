@@ -55,6 +55,7 @@ class Anotacion
                     a.id, a.run, a.codver, a.nombre, a.apepat, a.apemat,
                     m.id AS matricula_id,
                     COUNT(an.id) AS total_anotaciones,
+                    SUM(an.tipo = 'Registro')  AS registros,
                     SUM(an.tipo = 'Positiva')  AS positivas,
                     SUM(an.tipo = 'Leve')      AS leves,
                     SUM(an.tipo = 'Grave')     AS graves,
@@ -140,9 +141,11 @@ class Anotacion
     public function create($data)
     {
         $sql = "INSERT INTO {$this->table}
-                (alumno_id, matricula_id, asignatura_id, contenido, tipo, semestre, fecha_anotacion, notificado_apoderado)
-                VALUES
-                (:alumno_id, :matricula_id, :asignatura_id, :contenido, :tipo, :semestre, :fecha_anotacion, :notificado_apoderado)";
+            (alumno_id, matricula_id, asignatura_id, contenido, tipo, semestre, 
+             fecha_anotacion, notificado_apoderado, accion_realizada)
+            VALUES
+            (:alumno_id, :matricula_id, :asignatura_id, :contenido, :tipo, :semestre,
+             :fecha_anotacion, :notificado_apoderado, :accion_realizada)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ':alumno_id' => $data['alumno_id'],
@@ -153,6 +156,7 @@ class Anotacion
             ':semestre' => $data['semestre'],
             ':fecha_anotacion' => $data['fecha_anotacion'] ?? date('Y-m-d'),
             ':notificado_apoderado' => $data['notificado_apoderado'] ?? 'No',
+            ':accion_realizada' => $data['accion_realizada'] ?? null,
         ]);
     }
 

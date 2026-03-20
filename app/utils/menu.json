@@ -6,45 +6,168 @@
       "url": "index.php?action=anios"
     },
     {
-      "title": "Matricula",
-      "desc": "Antecedentes familiares de los alumnos",
+      "title": "Nueva Matrícula",
+      "desc": "Registrar nuevo alumno al sistema",
       "url": "index.php?action=alumnos_stepper"
     },
     {
-      "title": "Mantenedor de matricula",
-      "desc": "En este apartado estan las categorias de items mas sus respectivos codigo",
+      "title": "Mantenedor de Matrículas",
+      "desc": "Gestionar matrículas existentes",
       "url": "index.php?action=matriculas"
+    },
+    {
+      "title": "Ficha de Alumnos",
+      "desc": "Listado completo de alumnos del sistema",
+      "url": "index.php?action=alumnos"
+    },
+    {
+      "title": "Listado por Año",
+      "desc": "Ver alumnos agrupados por curso y año escolar",
+      "url": "index.php?action=listado_por_anio"
+    },
+    {
+      "title": "Anotaciones",
+      "desc": "Registrar y ver anotaciones de alumnos",
+      "url": "index.php?action=anotaciones"
+    },
+    {
+      "title": "Toma de Asistencia",
+      "desc": "Gestión de asistencia por curso",
+      "url": "index.php?action=asistencia_cursos"
+    },
+    {
+      "title": "Registro de Atrasos",
+      "desc": "Registrar atrasos de alumnos en portería",
+      "url": "index.php?action=atrasos_registro"
+    },
+    {
+      "title": "Atrasos por Curso",
+      "desc": "Ver y filtrar atrasos por curso y semestre",
+      "url": "index.php?action=atrasos_lista_curso"
+    },
+    {
+      "title": "Profesores",
+      "desc": "Listado y gestión de profesores",
+      "url": "index.php?action=profesores"
+    },
+    {
+      "title": "Curso y Asignatura",
+      "desc": "Profesores asignados a sus respectivas asignaturas",
+      "url": "index.php?action=profesor_curso_asignatura"
+    },
+    {
+      "title": "Asistencias",
+      "desc": "Ver y gestionar el registro de asistencia",
+      "url": "index.php?action=asistencias"
+    },
+    {
+      "title": "Usuarios",
+      "desc": "Gestionar usuarios del sistema",
+      "url": "index.php?action=users"
+    },
+    {
+      "title": "Cursos",
+      "desc": "Gestionar cursos del colegio",
+      "url": "index.php?action=cursos"
+    },
+    {
+      "title": "Asignaturas",
+      "desc": "Gestionar asignaturas del colegio",
+      "url": "index.php?action=asignaturas"
+    },
+    {
+      "title": "Inventario",
+      "desc": "Gestión de inventario institucional",
+      "url": "index.php?action=inventario_index"
+    },
+    {
+      "title": "🧪 Test Asistencia",
+      "desc": "Formulario masivo de asistencia",
+      "url": "index.php?action=form_asistencia_masiva"
+    },
+    {
+      "title": "🧪 Test Asistencia 2",
+      "desc": "Guardar asistencia masiva",
+      "url": "index.php?action=guardar_asistencia_masiva"
+    }
+  ],
+  "administrativo": [
+    {
+      "title": "Nueva Matrícula",
+      "desc": "Registrar nuevo alumno al sistema",
+      "url": "index.php?action=alumnos_stepper"
+    },
+    {
+      "title": "Mantenedor de Matrículas",
+      "desc": "Gestionar matrículas existentes",
+      "url": "index.php?action=matriculas"
+    },
+    {
+      "title": "Ficha de Alumnos",
+      "desc": "Listado completo de alumnos",
+      "url": "index.php?action=alumnos"
+    },
+    {
+      "title": "Listado por Año",
+      "desc": "Ver alumnos agrupados por curso y año escolar",
+      "url": "index.php?action=listado_por_anio"
+    }
+  ],
+  "soporte": [
+    {
+      "title": "Usuarios",
+      "desc": "Ver y editar usuarios del sistema",
+      "url": "index.php?action=users"
+    },
+    {
+      "title": "Ficha de Alumnos",
+      "desc": "Listado completo de alumnos",
+      "url": "index.php?action=alumnos"
+    },
+    {
+      "title": "Matrículas",
+      "desc": "Ver matrículas registradas",
+      "url": "index.php?action=matriculas"
+    },
+    {
+      "title": "Inventario",
+      "desc": "Ver inventario institucional",
+      "url": "index.php?action=inventario_index"
+    }
+  ],
+  "direccion": [
+    {
+      "title": "Ficha de Alumnos",
+      "desc": "Listado completo de alumnos",
+      "url": "index.php?action=alumnos"
+    },
+    {
+      "title": "Listado por Año",
+      "desc": "Ver alumnos agrupados por curso y año escolar",
+      "url": "index.php?action=listado_por_anio"
+    },
+    {
+      "title": "Anotaciones",
+      "desc": "Ver anotaciones de alumnos",
+      "url": "index.php?action=anotaciones"
+    },
+    {
+      "title": "Asistencias",
+      "desc": "Ver registros de asistencia",
+      "url": "index.php?action=asistencias"
+    },
+    {
+      "title": "Atrasos por Curso",
+      "desc": "Ver atrasos por curso y semestre",
+      "url": "index.php?action=atrasos_lista_curso"
     },
     {
       "title": "Profesores",
       "desc": "Listado de profesores",
       "url": "index.php?action=profesores"
-    },
-    {
-      "title": "Curso asignado a profesor ",
-      "desc": "Profesores asignados a sus respectivas asignaturas",
-      "url": "index.php?action=profesor_curso_asignatura"
-    },
-    {
-      "title": "Asistencias index",
-      "desc": "Ver y gestionar el registro de asistencia de los alumnos.",
-      "url": "index.php?action=asistencias"
-    },
-    {
-      "title": "Manuales",
-      "desc": "Reglamentos institucionales",
-      "url": "index.php?action=dashboard"
-    },
-    {
-      "title": "teste asistencia",
-      "desc": "Reglamentos institucionales",
-      "url": "index.php?action=form_asistencia_masiva"
-    },
-    {
-      "title": "teste asistencia 2",
-      "desc": "Reglamentos institucionales",
-      "url": "index.php?action=guardar_asistencia_masiva"
-    },
+    }
+  ],
+  "inspector general": [
     {
       "title": "Toma de Asistencia",
       "desc": "Gestión de asistencia por curso",
@@ -62,61 +185,69 @@
     },
     {
       "title": "Anotaciones",
-      "desc": "Ver y filtrar atrasos por curso y semestre",
+      "desc": "Registrar y ver anotaciones de alumnos",
       "url": "index.php?action=anotaciones"
+    },
+    {
+      "title": "Ficha de Alumnos",
+      "desc": "Listado completo de alumnos",
+      "url": "index.php?action=alumnos"
     }
   ],
-  "administrativo": [
+  "docente": [
     {
-      "title": "Edición de Años",
-      "desc": "Gestionar años académicos",
-      "url": "index.php?action=anios"
-    },
-    {
-      "title": "Matricula",
-      "desc": "Antecedentes familiares de los alumnos",
-      "url": "index.php?action=alumnos_stepper"
-    },
-    {
-      "title": "Mantenedor de matricula",
-      "desc": "En este apartado estan las categorias de items mas sus respectivos codigo",
-      "url": "index.php?action=matriculas"
-    },
-    {
-      "title": "Profesores",
-      "desc": "Listado de profesores",
-      "url": "index.php?action=profesores"
-    },
-    {
-      "title": "Curso asignado a profesor ",
-      "desc": "Profesores asignados a sus respectivas asignaturas",
-      "url": "index.php?action=profesor_curso_asignatura"
-    },
-    {
-      "title": "Asistencias index",
-      "desc": "Ver y gestionar el registro de asistencia de los alumnos.",
+      "title": "Asistencias",
+      "desc": "Ver registros de asistencia",
       "url": "index.php?action=asistencias"
     },
     {
-      "title": "Manuales",
-      "desc": "Reglamentos institucionales",
-      "url": "index.php?action=dashboard"
+      "title": "Notas",
+      "desc": "Gestionar notas de alumnos",
+      "url": "index.php?action=notas"
+    }
+  ],
+  "asistente social": [
+    {
+      "title": "Ficha de Alumnos",
+      "desc": "Listado completo de alumnos",
+      "url": "index.php?action=alumnos"
     },
     {
-      "title": "teste asistencia",
-      "desc": "Reglamentos institucionales",
-      "url": "index.php?action=form_asistencia_masiva"
+      "title": "Anotaciones",
+      "desc": "Registrar y ver anotaciones de alumnos",
+      "url": "index.php?action=anotaciones"
     },
     {
-      "title": "teste asistencia 2",
-      "desc": "Reglamentos institucionales",
-      "url": "index.php?action=guardar_asistencia_masiva"
+      "title": "Listado por Año",
+      "desc": "Ver alumnos agrupados por curso y año escolar",
+      "url": "index.php?action=listado_por_anio"
+    }
+  ],
+  "registro de anotaciones": [
+    {
+      "title": "Anotaciones",
+      "desc": "Registrar y ver anotaciones de alumnos",
+      "url": "index.php?action=anotaciones"
     },
+    {
+      "title": "Ficha de Alumnos",
+      "desc": "Buscar alumnos para anotar",
+      "url": "index.php?action=alumnos"
+    }
+  ],
+  "registro asistencias": [
     {
       "title": "Toma de Asistencia",
       "desc": "Gestión de asistencia por curso",
       "url": "index.php?action=asistencia_cursos"
     },
+    {
+      "title": "Asistencias",
+      "desc": "Ver registros de asistencia",
+      "url": "index.php?action=asistencias"
+    }
+  ],
+  "registro atrasos y salidas": [
     {
       "title": "Registro de Atrasos",
       "desc": "Registrar atrasos de alumnos en portería",
@@ -126,20 +257,6 @@
       "title": "Atrasos por Curso",
       "desc": "Ver y filtrar atrasos por curso y semestre",
       "url": "index.php?action=atrasos_lista_curso"
-    }
-  ],
-  "registro": [
-    {
-      "title": "Registro de Anotaciones",
-      "desc": "Control de observaciones y anotaciones de alumnos",
-      "url": "#"
-    }
-  ],
-  "asistencia": [
-    {
-      "title": "Control de Asistencia",
-      "desc": "Ver y registrar asistencia de alumnos",
-      "url": "#"
     }
   ]
 }

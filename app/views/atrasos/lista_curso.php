@@ -424,17 +424,19 @@ $maxS = max($sem1, $sem2, 1);
                                                 <td class="px-3 py-3 text-xs text-gray-500 max-w-[140px] truncate">
                                                     <?= $a['observacion'] ? htmlspecialchars($a['observacion']) : '—' ?>
                                                 </td>
-                                                <td class="px-3 py-3 text-right">
-                                                    <a href="index.php?action=atrasos_eliminar&id=<?= $a['id'] ?>&redirect=atrasos_lista_curso&curso_id=<?= $cursoIdActivo ?>&anio_id=<?= $anioIdActivo ?>&semestre=<?= $semestreActivo ?>"
+                                                <!--
+                                                    <td class="px-3 py-3 text-right">
+                                                        <a href="index.php?action=atrasos_eliminar&id=<?= $a['id'] ?>&redirect=atrasos_lista_curso&curso_id=<?= $cursoIdActivo ?>&anio_id=<?= $anioIdActivo ?>&semestre=<?= $semestreActivo ?>"
                                                         onclick="return confirm('¿Eliminar este atraso?')"
                                                         class="text-gray-600 hover:text-red-400 transition p-1">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                            viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                        </svg>
-                                                    </a>
-                                                </td>
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </a>
+                                            </td>
+                                            -->
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>

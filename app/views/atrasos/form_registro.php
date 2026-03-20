@@ -108,7 +108,7 @@ $guardado = $_GET['guardado'] ?? 0;
                                 </label>
                                 <input type="time" name="hora_llegada" id="campo-hora"
                                     value="<?= date('H:i') ?>"
-                                    max="<?= date('H:i') ?>"
+                                    
                                     class="w-full bg-gray-900 text-white text-sm border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent cursor-pointer">
                             </div>
 
@@ -231,13 +231,15 @@ $guardado = $_GET['guardado'] ?? 0;
                             <?php endif; ?>
 
                             <!-- Eliminar -->
-                            <a href="index.php?action=atrasos_eliminar&id=<?= $a['id'] ?>&redirect=atrasos_registro&fecha=<?= $fechaHoy ?>"
-                               onclick="return confirm('¿Eliminar este registro?')"
-                               class="text-gray-600 hover:text-red-400 transition p-1 rounded">
+                            <!-- 
+                                <a href="index.php?action=atrasos_eliminar&id=<?= $a['id'] ?>&redirect=atrasos_registro&fecha=<?= $fechaHoy ?>"
+                                onclick="return confirm('¿Eliminar este registro?')"
+                                class="text-gray-600 hover:text-red-400 transition p-1 rounded">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                 </svg>
                             </a>
+                            -->
                         </div>
                     </div>
                     <?php endforeach; ?>
@@ -343,13 +345,15 @@ document.addEventListener('click', function(e) {
     }
 });
 
+/*
 function actualizarMaxHora() {
     const ahora = new Date();
     const hh = String(ahora.getHours()).padStart(2, '0');
     const mm = String(ahora.getMinutes()).padStart(2, '0');
     document.getElementById('campo-hora').max = `${hh}:${mm}`;
 }
-setInterval(actualizarMaxHora, 60000);
+setInterval(actualizarMaxHora, 60000);*/
+
 </script>
 
 <?php include __DIR__ . "/../layout/footer.php"; ?>

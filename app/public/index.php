@@ -65,7 +65,13 @@ $atrasoController = new AtrasoController();
 $anotacionController = new AnotacionController();
 
 
+//Verificacion de login para usuarios
+$action = $_GET['action'] ?? 'login';
+$auth = new AuthController();
 
+// ── CONTROL DE PERMISOS GLOBAL ──────────────────────────
+$auth->checkPermiso($action);
+// ────────────────────────────────────────────────────────
 
 
 switch ($action) {

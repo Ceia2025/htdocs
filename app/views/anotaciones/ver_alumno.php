@@ -19,12 +19,20 @@ include __DIR__ . "/../layout/navbar.php";
 
         <!-- CONTADORES -->
         <?php
-        $totales = ['Positiva' => 0, 'Leve' => 0, 'Grave' => 0, 'Gravísima' => 0];
+        $totales = ['Registro' => 0, 'Positiva' => 0, 'Leve' => 0, 'Grave' => 0, 'Gravísima' => 0];
         foreach ($anotaciones as $an)
             $totales[$an['tipo']]++;
         $total = count($anotaciones);
         ?>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+            <div class="bg-gray-800/60 border border-blue-800 rounded-2xl px-5 py-4 flex items-center gap-3 shadow">
+                <span class="text-3xl font-bold text-blue-400">
+                    <?= $totales['Registro'] ?>
+                </span>
+                <div>
+                    <p class="text-white font-semibold text-sm">Registros</p>
+                </div>
+            </div>
             <div class="bg-gray-800/60 border border-green-800 rounded-2xl px-5 py-4 flex items-center gap-3 shadow">
                 <span class="text-3xl font-bold text-green-400">
                     <?= $totales['Positiva'] ?>
@@ -77,6 +85,7 @@ include __DIR__ . "/../layout/navbar.php";
             <div class="space-y-4">
                 <?php
                 $colores = [
+                    'Registro' => ['border' => 'border-blue-700', 'badge' => 'bg-blue-900/40 border-blue-500 text-blue-300', 'icon' => '📋'],
                     'Positiva' => ['border' => 'border-green-700', 'badge' => 'bg-green-900/40 border-green-500 text-green-300', 'icon' => '✅'],
                     'Leve' => ['border' => 'border-yellow-700', 'badge' => 'bg-yellow-900/40 border-yellow-500 text-yellow-300', 'icon' => '⚠️'],
                     'Grave' => ['border' => 'border-orange-700', 'badge' => 'bg-orange-900/40 border-orange-500 text-orange-300', 'icon' => '🔶'],
@@ -121,11 +130,11 @@ include __DIR__ . "/../layout/navbar.php";
                                 <span>📅
                                     <?= (new DateTime($an['fecha_anotacion']))->format('d/m/Y') ?>
                                 </span>
-                                <!--
-                                <a href="index.php?action=anotacion_delete&id=<?= $an['id'] ?>&anio_id=<?= $anio_id ?>&curso_id=<?= $curso_id ?>"
-                                    onclick="return confirm('¿Eliminar esta anotación?')"
-                                    class="text-red-400 hover:text-red-300 font-medium">🗑️ Eliminar</a>
-                                -->
+                                <?php if (AuthController::puede('anotacion_delete')): ?>
+                                    <a href="index.php?action=anotacion_delete&id=<?= $an['id'] ?>&anio_id=<?= $anio_id ?>&curso_id=<?= $curso_id ?>"
+                                        onclick="return confirm('¿Eliminar esta anotación?')"
+                                        class="text-red-400 hover:text-red-300 font-medium">🗑️ Eliminar</a>
+                                <?php endif ?>
 
                             </div>
                         </div>
@@ -134,6 +143,16 @@ include __DIR__ . "/../layout/navbar.php";
                         <p class="text-gray-200 text-sm leading-relaxed">
                             <?= nl2br(htmlspecialchars($an['contenido'])) ?>
                         </p>
+
+                        <!-- Acción realizada -->
+                        <?php if (!empty($an['accion_realizada'])): ?>
+                            <div class="mt-3 pt-3 border-t border-gray-700/50 flex items-start gap-2">
+                                <span class="text-xs text-gray-400 font-medium min-w-fit">⚡ Acción:</span>
+                                <span class="text-xs text-gray-300">
+                                    <?= htmlspecialchars($an['accion_realizada']) ?>
+                                </span>
+                            </div>
+                        <?php endif ?>
                     </div>
                 <?php endforeach ?>
             </div>

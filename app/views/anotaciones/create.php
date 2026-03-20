@@ -75,9 +75,40 @@ include __DIR__ . "/../layout/navbar.php";
                     <select name="asignatura_id" id="sel_asignatura" required
                         class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition">
                         <option value="">Seleccionar asignatura...</option>
-                        <?php foreach ($asignaturas as $as): ?>
-                            <option value="<?= $as['id'] ?>"><?= htmlspecialchars($as['nombre']) ?></option>
+
+                        <?php
+                        $especiales = ['Convivencia Escolar', 'Inspectoría'];
+                        $normales = [];
+                        $destacadas = [];
+
+                        foreach ($asignaturas as $as) {
+                            if (in_array(trim($as['nombre']), $especiales)) {
+                                $destacadas[] = $as;
+                            } else {
+                                $normales[] = $as;
+                            }
+                        }
+                        ?>
+
+                        <!-- Asignaturas normales -->
+                        <?php foreach ($normales as $as): ?>
+                            <option value="<?= $as['id'] ?>">
+                                <?= htmlspecialchars($as['nombre']) ?>
+                            </option>
                         <?php endforeach ?>
+
+                        <!-- Separador + especiales al final -->
+                        <?php if (!empty($destacadas)): ?>
+                            <optgroup label="─── Gestión y Convivencia ───">
+                                <?php foreach ($destacadas as $as): ?>
+                                    <option value="<?= $as['id'] ?>">
+                                        ⭐
+                                        <?= htmlspecialchars($as['nombre']) ?>
+                                    </option>
+                                <?php endforeach ?>
+                            </optgroup>
+                        <?php endif ?>
+
                     </select>
                 </div>
 
@@ -87,6 +118,7 @@ include __DIR__ . "/../layout/navbar.php";
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                         <?php
                         $tipos = [
+                            'Registro' => ['color' => 'blue', 'icon' => '📋'],
                             'Positiva' => ['color' => 'green', 'icon' => '✅'],
                             'Leve' => ['color' => 'yellow', 'icon' => '⚠️'],
                             'Grave' => ['color' => 'orange', 'icon' => '🔶'],
@@ -139,6 +171,17 @@ include __DIR__ . "/../layout/navbar.php";
                         </span>
                     </div>
                 </div>
+                <!-- ACCIÓN REALIZADA -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-200 mb-1">
+                        Acción Realizada
+                        <span class="text-gray-500 font-normal text-xs ml-1">(opcional)</span>
+                    </label>
+                    <input type="text" name="accion_realizada" maxlength="500"
+                        placeholder="Ej: Se llamó al apoderado, se envió citación..." class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3 
+               focus:ring-2 focus:ring-indigo-500 transition">
+                </div>
+
                 <!-- NOTIFICADO APODERADO -->
                 <div class="flex items-center gap-3">
                     <input type="checkbox" name="notificado_apoderado" id="notif" value="Si"

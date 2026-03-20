@@ -9,8 +9,35 @@ $rol = $user['rol'];
 $nombre = $user['nombre'];
 
 include __DIR__ . "/layout/header.php";
+?>
+<?php if (!empty($_SESSION['error_acceso'])): ?>
+    <div id="toast-acceso" class="fixed top-6 right-6 z-50 flex items-center gap-3 bg-gray-900 border border-red-600 text-red-300 
+           rounded-2xl px-5 py-4 shadow-2xl shadow-red-900/40 transition-all duration-500 max-w-sm">
+        <span class="text-2xl">🚫</span>
+        <p class="text-sm font-medium"><?= htmlspecialchars($_SESSION['error_acceso']) ?></p>
+        <button onclick="cerrarToast()" class="ml-auto text-gray-500 hover:text-white text-lg leading-none">✕</button>
+    </div>
+    <script>
+        // Desaparece automáticamente a los 4 segundos
+        setTimeout(() => cerrarToast(), 4000);
+
+        function cerrarToast() {
+            const t = document.getElementById('toast-acceso');
+            if (!t) return;
+            t.style.opacity = '0';
+            t.style.transform = 'translateY(-10px)';
+            setTimeout(() => t.remove(), 400);
+        }
+    </script>
+    <?php unset($_SESSION['error_acceso']); ?>
+<?php endif ?>
+
+<?php
 include __DIR__ . "/layout/navbar.php";
 ?>
+
+
+
 
 <style>
     @keyframes fadeIn {
