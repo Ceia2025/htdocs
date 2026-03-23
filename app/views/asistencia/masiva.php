@@ -49,16 +49,116 @@ include __DIR__ . "/../layout/navbar.php";
                         <div class="flex flex-wrap items-center gap-3 px-5 py-4 border-b border-gray-700">
 
                             <!-- Fecha -->
-                            <div class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <label class="text-sm font-medium text-gray-300">Fecha</label>
-                                <input type="date" name="fecha" value="<?= date('Y-m-d') ?>" max="<?= date('Y-m-d') ?>"
-                                    class="bg-gray-900 text-white text-sm border border-gray-600 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer">
+                            <!-- Fecha con calendario custom -->
+                            <div class="flex items-start gap-2 w-full flex-col">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <label class="text-sm font-medium text-gray-300">Fecha</label>
+                                    <button type="button" id="btn-fecha"
+                                        class="bg-gray-900 text-white text-sm border border-gray-600 rounded-lg px-3 py-1.5 
+                   hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition min-w-[130px] text-left">
+                                        📅 <span id="fecha-display"><?= date('d/m/Y') ?></span>
+                                    </button>
+                                    <input type="hidden" name="fecha" id="campo-fecha" value="<?= date('Y-m-d') ?>">
+                                </div>
+
+                                <!-- Aviso de semestre -->
+                                <div id="aviso-semestre" class="hidden px-4 py-2 bg-red-900/40 border border-red-700 
+         text-red-300 text-xs rounded-lg flex items-center gap-2">
+                                    <span>⚠️</span>
+                                    <span id="aviso-semestre-texto"></span>
+                                </div>
+
+                                <!-- CALENDARIO CUSTOM -->
+                                <div id="calendario" class="hidden absolute z-50 mt-1 bg-gray-900 border border-gray-700 
+         rounded-2xl shadow-2xl p-4 w-80">
+
+                                    <!-- Nav mes -->
+                                    <div class="flex items-center justify-between mb-3">
+                                        <button type="button" id="mes-prev"
+                                            class="p-1.5 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-white transition">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 19l-7-7 7-7" />
+                                            </svg>
+                                        </button>
+                                        <span id="mes-titulo" class="text-sm font-semibold text-white"></span>
+                                        <button type="button" id="mes-next"
+                                            class="p-1.5 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-white transition">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    <!-- Cabecera días -->
+                                    <div class="grid grid-cols-7 mb-1">
+                                        <?php foreach (['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do'] as $d): ?>
+                                            <div class="text-center text-xs font-semibold 
+                    <?= in_array($d, ['Sá', 'Do']) ? 'text-gray-600' : 'text-gray-400' ?> py-1">
+                                                <?= $d ?>
+                                            </div>
+                                        <?php endforeach ?>
+                                    </div>
+
+                                    <!-- Grid días -->
+                                    <div id="grid-dias" class="grid grid-cols-7 gap-0.5"></div>
+
+                                    <!-- Leyenda -->
+                                    <div
+                                        class="mt-3 pt-3 border-t border-gray-800 flex items-center gap-4 text-xs text-gray-500">
+                                        <div class="flex items-center gap-1.5">
+                                            <div class="w-3 h-3 rounded-full bg-indigo-600"></div>
+                                            Con asistencia
+                                        </div>
+                                        <div class="flex items-center gap-1.5">
+                                            <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                                            Seleccionado
+                                        </div>
+                                        <div class="flex items-center gap-1.5">
+                                            <div class="w-3 h-3 rounded-sm bg-gray-800 border border-gray-700"></div>
+                                            No hábil
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
+
+
+                            <!-- lalalalalal -->
+
+                            <!-- Aviso de semestre -->
+                            <div id="aviso-semestre" class="hidden w-full mt-2 px-4 py-2 bg-red-900/40 border border-red-700 
+     text-red-300 text-xs rounded-lg flex items-center gap-2">
+                                <span>⚠️</span>
+                                <span id="aviso-semestre-texto"></span>
+                            </div>
+
+
+                            <!-- Indicador días con asistencia 
+                            <?php if (!empty($fechasConAsistencia)): ?>
+                                <div class="w-full mt-2 px-4 py-2 bg-gray-900/60 border border-gray-700 rounded-lg">
+                                    <p class="text-xs text-gray-500 mb-1.5 font-medium uppercase tracking-wider">
+                                        📋 Días con asistencia registrada (<?= count($fechasConAsistencia) ?>)
+                                    </p>
+                                    <div class="flex flex-wrap gap-1.5">
+                                        <?php foreach ($fechasConAsistencia as $fd): ?>
+                                            <button type="button"
+                                            onclick="document.getElementById('campo-fecha').value='<?= $fd ?>'; validarFecha();"
+                                            class="text-xs px-2 py-1 rounded-md bg-indigo-900/40 border border-indigo-700/50 
+                                            text-indigo-300 hover:bg-indigo-700/50 transition font-mono">
+                                            <?= (new DateTime($fd))->format('d/m') ?>
+                                        </button>
+                                        <?php endforeach ?>
+                                    </div>
+                                </div>
+                                <?php endif ?>
+                                -->
 
                             <!-- Divisor -->
                             <div class="hidden sm:block w-px h-5 bg-gray-600"></div>
@@ -155,12 +255,190 @@ include __DIR__ . "/../layout/navbar.php";
 
 <script>
     const totalAlumnos = <?= count($alumnos ?? []) ?>;
+    const SEM1_INICIO = '<?= $fechasAnio['sem1_inicio'] ?? '' ?>';
+    const SEM1_FIN = '<?= $fechasAnio['sem1_fin'] ?? '' ?>';
+    const SEM2_INICIO = '<?= $fechasAnio['sem2_inicio'] ?? '' ?>';
+    const SEM2_FIN = '<?= $fechasAnio['sem2_fin'] ?? '' ?>';
+    const HOY = '<?= date('Y-m-d') ?>';
+    const FECHAS_CON_ASISTENCIA = new Set(<?= json_encode($fechasConAsistencia ?? []) ?>);
 
+    const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+    let calendarioAbierto = false;
+    let mesActual, anioActual;
+
+    // ── Inicializar con fecha de hoy ──
+    (function () {
+        const hoy = new Date(HOY + 'T00:00:00');
+        mesActual = hoy.getMonth();
+        anioActual = hoy.getFullYear();
+    })();
+
+    // ── Abrir/cerrar calendario ──
+    document.getElementById('btn-fecha').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const cal = document.getElementById('calendario');
+        calendarioAbierto = !calendarioAbierto;
+        cal.classList.toggle('hidden', !calendarioAbierto);
+        if (calendarioAbierto) renderCalendario();
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#calendario') && !e.target.closest('#btn-fecha')) {
+            document.getElementById('calendario').classList.add('hidden');
+            calendarioAbierto = false;
+        }
+    });
+
+    // ── Navegación de meses ──
+    document.getElementById('mes-prev').addEventListener('click', () => {
+        mesActual--;
+        if (mesActual < 0) { mesActual = 11; anioActual--; }
+        renderCalendario();
+    });
+    document.getElementById('mes-next').addEventListener('click', () => {
+        mesActual++;
+        if (mesActual > 11) { mesActual = 0; anioActual++; }
+        renderCalendario();
+    });
+
+    // ── Renderizar calendario ──
+    function renderCalendario() {
+        document.getElementById('mes-titulo').textContent = `${MESES[mesActual]} ${anioActual}`;
+
+        const grid = document.getElementById('grid-dias');
+        const fechaSel = document.getElementById('campo-fecha').value;
+        grid.innerHTML = '';
+
+        // Primer día del mes (ajustado a lunes=0)
+        const primerDia = new Date(anioActual, mesActual, 1);
+        let offset = primerDia.getDay() - 1;
+        if (offset < 0) offset = 6;
+
+        // Espacios vacíos
+        for (let i = 0; i < offset; i++) {
+            grid.appendChild(crearCelda(''));
+        }
+
+        // Días del mes
+        const diasEnMes = new Date(anioActual, mesActual + 1, 0).getDate();
+        for (let d = 1; d <= diasEnMes; d++) {
+            const fecha = `${anioActual}-${String(mesActual + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const diaSemana = new Date(fecha + 'T00:00:00').getDay(); // 0=dom, 6=sab
+            const esFinSemana = diaSemana === 0 || diaSemana === 6;
+            const esFuturo = fecha > HOY;
+            const enSemestre = estaEnSemestre(fecha);
+            const tieneAsist = FECHAS_CON_ASISTENCIA.has(fecha);
+            const esSeleccion = fecha === fechaSel;
+            const esHoy = fecha === HOY;
+
+            grid.appendChild(crearCelda(d, fecha, {
+                esFinSemana, esFuturo, enSemestre, tieneAsist, esSeleccion, esHoy
+            }));
+        }
+    }
+
+    function crearCelda(dia, fecha = null, opts = {}) {
+        const el = document.createElement('div');
+        el.className = 'relative flex items-center justify-center h-8 w-full rounded-lg text-xs font-medium transition select-none';
+
+        if (!dia) {
+            return el; // celda vacía
+        }
+
+        const { esFinSemana, esFuturo, enSemestre, tieneAsist, esSeleccion, esHoy } = opts;
+        const bloqueado = esFinSemana || esFuturo || !enSemestre;
+
+        if (esSeleccion) {
+            el.className += ' bg-blue-600 text-white ring-2 ring-blue-400 ring-offset-1 ring-offset-gray-900';
+        } else if (tieneAsist && !bloqueado) {
+            el.className += ' bg-indigo-700/70 text-indigo-200 hover:bg-indigo-600 cursor-pointer';
+        } else if (bloqueado) {
+            el.className += ' text-gray-700 cursor-not-allowed';
+        } else {
+            el.className += ' text-gray-300 hover:bg-gray-700 cursor-pointer';
+            if (esHoy) el.className += ' ring-1 ring-blue-500';
+        }
+
+        el.textContent = dia;
+
+        // Punto indicador de asistencia registrada
+        if (tieneAsist && !esSeleccion) {
+            const punto = document.createElement('div');
+            punto.className = 'absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-indigo-400';
+            el.appendChild(punto);
+        }
+
+        if (!bloqueado) {
+            el.addEventListener('click', () => {
+                seleccionarFecha(fecha);
+                document.getElementById('calendario').classList.add('hidden');
+                calendarioAbierto = false;
+            });
+        }
+
+        return el;
+    }
+
+    // ── Seleccionar fecha ──
+    function seleccionarFecha(fecha) {
+        document.getElementById('campo-fecha').value = fecha;
+        const [y, m, d] = fecha.split('-');
+        document.getElementById('fecha-display').textContent = `${d}/${m}/${y}`;
+
+        // Re-render para actualizar selección visual
+        const fechaObj = new Date(fecha + 'T00:00:00');
+        mesActual = fechaObj.getMonth();
+        anioActual = fechaObj.getFullYear();
+        if (calendarioAbierto) renderCalendario();
+
+        validarFecha();
+    }
+
+    // ── Validar fecha ──
+    function estaEnSemestre(fecha) {
+        if (!fecha) return false;
+        const enSem1 = SEM1_INICIO && SEM1_FIN && fecha >= SEM1_INICIO && fecha <= SEM1_FIN;
+        const enSem2 = SEM2_INICIO && SEM2_FIN && fecha >= SEM2_INICIO && fecha <= SEM2_FIN;
+        return enSem1 || enSem2;
+    }
+
+    function validarFecha() {
+        const fecha = document.getElementById('campo-fecha').value;
+        const aviso = document.getElementById('aviso-semestre');
+        const texto = document.getElementById('aviso-semestre-texto');
+        const btnGuardar = document.querySelector('button[type="submit"]');
+
+        const fechaObj = new Date(fecha + 'T00:00:00');
+        const diaSemana = fechaObj.getDay();
+        const esFinSemana = diaSemana === 0 || diaSemana === 6;
+        const esFuturo = fecha > HOY;
+        const valida = !esFinSemana && !esFuturo && estaEnSemestre(fecha);
+
+        if (!valida) {
+            let msg = 'Fecha fuera del período escolar.';
+            if (esFuturo) msg = 'No puedes registrar asistencia en una fecha futura.';
+            if (esFinSemana) msg = 'Los fines de semana no son días hábiles.';
+
+            texto.textContent = msg;
+            aviso.classList.remove('hidden');
+            btnGuardar.disabled = true;
+            btnGuardar.classList.add('opacity-40', 'cursor-not-allowed');
+            btnGuardar.classList.remove('hover:bg-green-500');
+        } else {
+            aviso.classList.add('hidden');
+            btnGuardar.disabled = false;
+            btnGuardar.classList.remove('opacity-40', 'cursor-not-allowed');
+            btnGuardar.classList.add('hover:bg-green-500');
+        }
+    }
+
+    // ── Contador presentes ──
     function actualizarContador() {
         const presentes = document.querySelectorAll('.presente:checked').length;
         const el = document.getElementById('contador');
         el.textContent = `${presentes} / ${totalAlumnos} presentes`;
-
         if (presentes === totalAlumnos) {
             el.className = 'text-xs font-semibold px-3 py-1.5 rounded-full bg-green-900/40 border border-green-700/50 text-green-400';
         } else if (presentes === 0) {
@@ -175,8 +453,10 @@ include __DIR__ . "/../layout/navbar.php";
         actualizarContador();
     }
 
-    // Inicializar contador
-    document.addEventListener('DOMContentLoaded', actualizarContador);
+    document.addEventListener('DOMContentLoaded', () => {
+        actualizarContador();
+        validarFecha();
+    });
 </script>
 
 <?php include __DIR__ . "/../layout/footer.php"; ?>

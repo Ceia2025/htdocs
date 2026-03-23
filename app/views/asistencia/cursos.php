@@ -2,70 +2,99 @@
 require_once __DIR__ . "/../../controllers/AuthController.php";
 
 $auth = new AuthController();
-$auth->checkAuth(); // obliga a tener sesión iniciada
+$auth->checkAuth();
 
-$user = $_SESSION['user']; // usuario logueado
+$user = $_SESSION['user'];
 $nombre = $user['nombre'];
 $rol = $user['rol'];
 
-// Incluir layout
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 ?>
 
-<body class="h-full">
+<body class="h-full bg-gray-900">
     <div class="min-h-full">
+
         <!-- HEADER -->
-        <header
-            class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
-            <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold tracking-tight text-white">Tomar</h1>
+        <header class="bg-gray-800 border-b border-white/10">
+            <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-0.5">Asistencia</p>
+                    <h1 class="text-2xl font-bold text-white">Seleccionar Curso</h1>
+                    <p class="text-sm text-gray-400 mt-0.5">Elige un curso para tomar asistencia o ver el resumen</p>
+                </div>
+                <a href="index.php?action=dashboard"
+                    class="flex items-center gap-2 text-sm text-gray-400 hover:text-white border border-gray-600 hover:border-gray-400 px-4 py-2 rounded-lg transition">
+                    ⬅️ Dashboard
+                </a>
             </div>
         </header>
-        <main>
-            <div class="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
 
+        <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
 
+            <?php if (empty($cursos)): ?>
+                <div class="text-center py-20 text-gray-500">
+                    <p class="text-5xl mb-4">📋</p>
+                    <p class="text-lg font-medium">No hay cursos disponibles para este año.</p>
+                </div>
+            <?php else: ?>
 
+                <!-- Contador -->
+                <div class="flex items-center justify-between mb-6">
+                    <p class="text-sm text-gray-400">
+                        <span class="text-white font-semibold"><?= count($cursos) ?></span> cursos disponibles
+                    </p>
+                </div>
 
+                <!-- Grid de cursos -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <?php foreach ($cursos as $curso): ?>
+                        <div class="group bg-gray-800 border border-gray-700 hover:border-indigo-500 
+                                rounded-2xl overflow-hidden shadow transition-all duration-200 
+                                hover:shadow-indigo-500/10 hover:shadow-lg">
 
-                <div class="max-w-6xl mx-auto mt-8 bg-gray-800 p-6 rounded-xl shadow-lg">
-                    <h2 class="text-2xl font-bold text-white mb-6">
-                        📚 Seleccionar Curso
-                    </h2>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <?php foreach ($cursos as $curso): ?>
-
-                            <div class="bg-gray-700 p-5 rounded-lg shadow hover:bg-gray-600 transition">
-                                <h3 class="text-lg font-semibold text-white mb-3">
-                                    <?= $curso['nombre'] ?>
-                                </h3>
-
-                                <div class="flex justify-between">
-                                    <a href="index.php?action=form_asistencia_masiva&curso_id=<?= $curso['id'] ?>&anio_id=<?= $anioId ?>"
-                                        class="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded text-white text-sm">
-                                        Tomar Asistencia
-                                    </a>
-
-                                    <a href="index.php?action=resumen_curso&curso_id=<?= $curso['id'] ?>&anio_id=<?= $anioId ?>"
-                                        class="bg-green-600 hover:bg-green-700 px-3 py-2 rounded text-white text-sm">
-                                        Ver Resumen
-                                    </a>
+                            <!-- Cabecera de la tarjeta -->
+                            <div class="px-5 py-4 border-b border-gray-700 flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-indigo-600/20 border border-indigo-600/30 
+                                        flex items-center justify-center flex-shrink-0">
+                                    <span class="text-indigo-400 text-lg">🎓</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <h3 class="text-white font-bold text-base truncate">
+                                        <?= htmlspecialchars($curso['nombre']) ?>
+                                    </h3>
+                                    
                                 </div>
                             </div>
 
-                        <?php endforeach; ?>
-                    </div>
+                            <!-- Acciones -->
+                            <div class="px-5 py-4 grid grid-cols-2 gap-3">
+                                <a href="index.php?action=form_asistencia_masiva&curso_id=<?= $curso['id'] ?>&anio_id=<?= $anioId ?>"
+                                    class="flex flex-col items-center gap-1.5 bg-indigo-600/10 hover:bg-indigo-600/20 
+                                      border border-indigo-600/30 hover:border-indigo-500 
+                                      text-indigo-300 hover:text-indigo-200
+                                      px-3 py-3 rounded-xl transition text-center">
+                                    <span class="text-xl">✏️</span>
+                                    <span class="text-xs font-semibold">Tomar Asistencia</span>
+                                </a>
 
+                                <a href="index.php?action=resumen_curso&curso_id=<?= $curso['id'] ?>&anio_id=<?= $anioId ?>"
+                                    class="flex flex-col items-center gap-1.5 bg-green-600/10 hover:bg-green-600/20 
+                                      border border-green-600/30 hover:border-green-500 
+                                      text-green-300 hover:text-green-200
+                                      px-3 py-3 rounded-xl transition text-center">
+                                    <span class="text-xl">📊</span>
+                                    <span class="text-xs font-semibold">Ver Resumen</span>
+                                </a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
 
-                
+            <?php endif; ?>
 
-            </div>
         </main>
-
-
+    </div>
 </body>
 
 <?php include __DIR__ . "/../layout/footer.php"; ?>

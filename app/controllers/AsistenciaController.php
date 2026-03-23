@@ -29,6 +29,8 @@ class AsistenciaController
 
         $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
         $curso = $this->model->getCurso($cursoId);
+        $fechasAnio = $this->model->getFechasAnio($anioId);
+        $fechasConAsistencia = $this->model->getFechasConAsistencia($cursoId, $anioId);
 
         require "../views/asistencia/masiva.php";
     }
@@ -101,26 +103,29 @@ class AsistenciaController
 
         header("Location: index.php?action=asistencia_cursos&anio_id=$anioId");
     }
-
-
-
     /*
     LIBRO DE CLASS
     */
-
     public function libroClases()
     {
+        $cursoId = $_GET['curso_id'] ?? null;
+        $anioId = $_GET['anio_id'] ?? null;
 
-        $cursoId = $_GET['curso_id'];
-        $anioId = $_GET['anio_id'];
+        if (!$cursoId || !$anioId) {
+            die("Faltan parámetros.");
+        }
 
         $curso = $this->model->getCurso($cursoId);
-
         $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
-
         $asistencia = $this->model->getAsistenciaLibro($cursoId, $anioId);
+        $fechasAnio = $this->model->getFechasAnio($anioId);
+
+        // Validar que el año tenga fechas configuradas
+        if (empty($fechasAnio['sem1_inicio'])) {
+            die("⚠️ El año seleccionado no tiene fechas de semestres configuradas. 
+             <a href='index.php?action=anio_edit&id=$anioId'>Configurar ahora</a>");
+        }
 
         require "../views/asistencia/libro_clases.php";
-
     }
 }

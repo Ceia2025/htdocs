@@ -17,13 +17,13 @@ include __DIR__ . "/../layout/navbar.php";
 $semestres = [
     [
         'nombre' => '1° Semestre',
-        'inicio' => '2026-03-04',
-        'fin' => '2026-06-18',
+        'inicio' => $fechasAnio['sem1_inicio'],
+        'fin' => $fechasAnio['sem1_fin'],
     ],
     [
         'nombre' => '2° Semestre',
-        'inicio' => '2026-07-06',
-        'fin' => '2026-11-24',
+        'inicio' => $fechasAnio['sem2_inicio'],
+        'fin' => $fechasAnio['sem2_fin'],
     ],
 ];
 
@@ -129,13 +129,23 @@ $mesActual = date("Y-m");
                                     $esMesActual = ($mesKey === $mesActual);
 
                                     // Calcular presentes/ausentes del mes para el resumen
-                                    $totalCeldas = count($alumnos) * count($fechas);
+                                    $totalCeldas = 0;
                                     $totalPresentes = 0;
                                     foreach ($alumnos as $alumno) {
+                                        $fechaMatricula = !empty($alumno['fecha_matricula'])
+                                            ? new DateTime($alumno['fecha_matricula'])
+                                            : null;
+
                                         foreach ($fechas as $fecha) {
+                                            if ($fechaMatricula && $fecha < $fechaMatricula)
+                                                continue;
+
                                             $f = $fecha->format("Y-m-d");
-                                            if (($asistencia[$alumno['matricula_id']][$f] ?? null) == 1) {
-                                                $totalPresentes++;
+                                            $v = $asistencia[$alumno['matricula_id']][$f] ?? null;
+                                            if ($v !== null) {
+                                                $totalCeldas++;
+                                                if ($v == 1)
+                                                    $totalPresentes++;
                                             }
                                         }
                                     }
@@ -195,7 +205,14 @@ $mesActual = date("Y-m");
                                                         // Calcular % individual del mes
                                                         $presAlumno = 0;
                                                         $totalAlumno = 0;
+                                                        $fechaMatricula = !empty($alumno['fecha_matricula'])
+                                                            ? new DateTime($alumno['fecha_matricula'])
+                                                            : null;
+
                                                         foreach ($fechas as $fecha) {
+                                                            if ($fechaMatricula && $fecha < $fechaMatricula)
+                                                                continue;
+
                                                             $f = $fecha->format("Y-m-d");
                                                             $v = $asistencia[$alumno['matricula_id']][$f] ?? null;
                                                             if ($v !== null) {
@@ -216,9 +233,14 @@ $mesActual = date("Y-m");
                                                                 <?php
                                                                 $f = $fecha->format("Y-m-d");
                                                                 $v = $asistencia[$alumno['matricula_id']][$f] ?? null;
+                                                                $antesDeMatricula = $fechaMatricula && $fecha < $fechaMatricula;
                                                                 ?>
-                                                                <td class="text-center p-1">
-                                                                    <?php if ($v === "1" || $v === 1): ?>
+                                                                <td
+                                                                    class="text-center p-1 <?= $antesDeMatricula ? 'bg-gray-900/40' : '' ?>">
+                                                                    <?php if ($antesDeMatricula): ?>
+                                                                        <span class="text-gray-700 text-xs"
+                                                                            title="Antes de la matrícula">·</span>
+                                                                    <?php elseif ($v === "1" || $v === 1): ?>
                                                                         <span class="text-green-400 text-base">✔</span>
                                                                     <?php elseif ($v === "0" || $v === 0): ?>
                                                                         <span class="text-red-400 text-base">✖</span>

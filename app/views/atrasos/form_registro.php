@@ -71,7 +71,7 @@ $guardado = $_GET['guardado'] ?? 0;
                                     class="w-full bg-gray-900 text-white text-sm border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent placeholder-gray-600">
                                <!-- Lista de sugerencias -->
                                     <div id="sugerencias"
-                                         class="hidden absolute z-50 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg overflow-hidden shadow-xl">
+                                         class="hidden absolute z-50 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-xl overflow-y-auto max-h-72">
                                     </div>
                             </div>
                             <div id="error-run" class="hidden mt-2 text-xs text-red-400 font-medium"></div>
@@ -238,8 +238,8 @@ $guardado = $_GET['guardado'] ?? 0;
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                 </svg>
+                                -->
                             </a>
-                            -->
                         </div>
                     </div>
                     <?php endforeach; ?>

@@ -44,19 +44,56 @@ include __DIR__ . "/../layout/navbar.php";
                     <table class="min-w-full divide-y divide-gray-700">
                         <thead class="bg-gray-950/50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">ID</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Año</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Descripción</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Acciones</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    ID</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Año</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Descripción</th>
+                                <!-- En el thead, agrega después de Descripción: -->
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    1° Semestre</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    2° Semestre</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                    Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="bg-gray-500/30 divide-y divide-gray-600">
                             <?php if (!empty($anios)): ?>
                                 <?php foreach ($anios as $anio): ?>
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100"><?= htmlspecialchars($anio['id']) ?></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100"><?= htmlspecialchars($anio['anio']) ?></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100"><?= htmlspecialchars($anio['descripcion']) ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
+                                            <?= htmlspecialchars($anio['id']) ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
+                                            <?= htmlspecialchars($anio['anio']) ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
+                                            <?= htmlspecialchars($anio['descripcion']) ?>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-100">
+                                            <?php if (!empty($anio['sem1_inicio'])): ?>
+                                                <?= (new DateTime($anio['sem1_inicio']))->format('d/m/Y') ?> -
+                                                <?= (new DateTime($anio['sem1_fin']))->format('d/m/Y') ?>
+                                            <?php else: ?>
+                                                <span class="text-yellow-500 text-xs">⚠️ Sin fechas</span>
+                                            <?php endif ?>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-100">
+                                            <?php if (!empty($anio['sem2_inicio'])): ?>
+                                                <?= (new DateTime($anio['sem2_inicio']))->format('d/m/Y') ?> -
+                                                <?= (new DateTime($anio['sem2_fin']))->format('d/m/Y') ?>
+                                            <?php else: ?>
+                                                <span class="text-yellow-500 text-xs">⚠️ Sin fechas</span>
+                                            <?php endif ?>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100 space-x-3">
                                             <a href="index.php?action=anio_edit&id=<?= $anio['id'] ?>"
                                                 class="text-indigo-400 hover:text-indigo-300 font-medium">✏️ Editar</a>
@@ -68,7 +105,8 @@ include __DIR__ . "/../layout/navbar.php";
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-300">No hay años registrados.</td>
+                                    <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-300">No hay años
+                                        registrados.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>

@@ -13,10 +13,10 @@ include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 ?>
 
-<body class="h-full">
+
+<body class="h-full bg-gray-900">
     <div class="min-h-full">
 
-        <!-- HEADER -->
         <header
             class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -24,55 +24,103 @@ include __DIR__ . "/../layout/navbar.php";
             </div>
         </header>
 
-        <!-- MAIN -->
         <main>
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:px-8">
+                <form method="post" action="index.php?action=anio_update&id=<?= $anio['id'] ?>" class="space-y-6">
 
-                <!-- FORMULARIO -->
-                <div class="flex items-center justify-center">
-                    <div class="bg-gray-700 p-6 rounded-2xl shadow-lg w-full max-w-md">
-                        <h2 class="text-2xl font-bold text-white mb-6 text-center">Actualizar Año</h2>
+                    <!-- Datos generales -->
+                    <div class="bg-gray-800 border border-gray-700 rounded-2xl p-6 space-y-4">
+                        <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wider">Datos Generales</h2>
 
-                        <form method="post" action="index.php?action=anio_update&id=<?= $anio['id'] ?>" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-200 mb-1">Año</label>
+                            <input type="number" name="anio" required min="2020" max="2099"
+                                value="<?= htmlspecialchars($anio['anio']) ?>" class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 
+                                   px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition">
+                        </div>
 
-                            <!-- Campo Año -->
-                            <div>
-                                <label for="anio" class="block text-sm font-medium text-gray-200">Año</label>
-                                <input type="text" name="anio" id="anio" 
-                                    value="<?= htmlspecialchars($anio['anio']) ?>" required
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-4 py-2 
-                                    focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-
-                            <!-- Campo Descripción -->
-                            <div>
-                                <label for="descripcion" class="block text-sm font-medium text-gray-200">Descripción</label>
-                                <textarea name="descripcion" id="descripcion" rows="4"
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-4 py-2 
-                                    focus:ring-2 focus:ring-indigo-500 focus:outline-none"><?= htmlspecialchars($anio['descripcion']) ?></textarea>
-                            </div>
-
-                            <!-- Botón -->
-                            <button type="submit" 
-                                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg 
-                                transition duration-200 ease-in-out">
-                                Actualizar
-                            </button>
-                        </form>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-200 mb-1">
+                                Descripción
+                                <span class="text-gray-500 font-normal text-xs ml-1">(opcional)</span>
+                            </label>
+                            <textarea name="descripcion" rows="2"
+                                class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 
+                                   px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition resize-none"><?= htmlspecialchars($anio['descripcion'] ?? '') ?></textarea>
+                        </div>
                     </div>
-                </div>
 
-                <!-- VOLVER -->
-                <div class="mt-8 flex items-center justify-center">
-                    <a href="index.php?action=anios"
-                        class="inline-block rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-gray-600">
-                        Volver
-                    </a>
-                </div>
+                    <!-- Fechas de semestres -->
+                    <div class="bg-gray-800 border border-gray-700 rounded-2xl p-6 space-y-4">
+                        <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                            📅 Fechas del Año Escolar
+                        </h2>
+
+                        <?php if (empty($anio['sem1_inicio'])): ?>
+                            <div
+                                class="flex items-center gap-2 bg-yellow-900/30 border border-yellow-700 rounded-xl px-4 py-3">
+                                <span class="text-yellow-400">⚠️</span>
+                                <p class="text-yellow-300 text-sm">Este año no tiene fechas configuradas. El libro de clases
+                                    no funcionará hasta que las agregues.</p>
+                            </div>
+                        <?php endif ?>
+
+                        <!-- 1° Semestre -->
+                        <div>
+                            <p class="text-xs text-indigo-400 uppercase tracking-wider font-semibold mb-2">1° Semestre
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs text-gray-400 mb-1">Fecha de Inicio</label>
+                                    <input type="date" name="sem1_inicio"
+                                        value="<?= htmlspecialchars($anio['sem1_inicio'] ?? '') ?>" class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 
+                                           px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-400 mb-1">Fecha de Término</label>
+                                    <input type="date" name="sem1_fin"
+                                        value="<?= htmlspecialchars($anio['sem1_fin'] ?? '') ?>" class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 
+                                           px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2° Semestre -->
+                        <div>
+                            <p class="text-xs text-indigo-400 uppercase tracking-wider font-semibold mb-2">2° Semestre
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs text-gray-400 mb-1">Fecha de Inicio</label>
+                                    <input type="date" name="sem2_inicio"
+                                        value="<?= htmlspecialchars($anio['sem2_inicio'] ?? '') ?>" class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 
+                                           px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-400 mb-1">Fecha de Término</label>
+                                    <input type="date" name="sem2_fin"
+                                        value="<?= htmlspecialchars($anio['sem2_fin'] ?? '') ?>" class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 
+                                           px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="flex gap-4">
+                        <button type="submit" class="w-full bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 
+                               text-white font-semibold rounded-xl py-3 shadow-lg transition">
+                            Guardar Cambios
+                        </button>
+                        <a href="index.php?action=anios"
+                            class="w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-xl py-3 transition">
+                            Cancelar
+                        </a>
+                    </div>
+                </form>
             </div>
         </main>
     </div>
 </body>
 
 <?php include __DIR__ . "/../layout/footer.php"; ?>
-

@@ -12,22 +12,48 @@ class Asistencia
         $this->conn = $db->open();
     }
 
+    public function getFechasAnio($anioId)
+    {
+        $sql = "SELECT anio, sem1_inicio, sem1_fin, sem2_inicio, sem2_fin
+            FROM anios2
+            WHERE id = :id
+            LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':id' => $anioId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Fechas que ya tienen asistencia registrada para un curso
+    public function getFechasConAsistencia($cursoId, $anioId)
+    {
+        $sql = "SELECT DISTINCT a.fecha
+            FROM alum_asistencia2 a
+            JOIN matriculas2 m ON m.id = a.matricula_id
+            WHERE m.curso_id = :curso_id
+            AND m.anio_id = :anio_id
+            ORDER BY a.fecha ASC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':curso_id' => $cursoId, ':anio_id' => $anioId]);
+        return array_column($stmt->fetchAll(PDO::FETCH_ASSOC), 'fecha');
+    }
+
     /* ==========================================
        OBTENER ALUMNOS POR CURSO (PARA MASIVA)
     ========================================== */
     public function getAlumnosPorCurso($cursoId, $anioId)
     {
         $sql = "SELECT 
-                    m.id as matricula_id,
-                    a.nombre,
-                    a.apepat,
-                    a.apemat
-                FROM matriculas2 m
-                JOIN alumnos2 a ON a.id = m.alumno_id
-                WHERE m.curso_id = :curso_id
-                AND m.anio_id = :anio_id
-                AND a.deleted_at IS NULL
-                ORDER BY a.apepat, a.apemat";
+                m.id as matricula_id,
+                m.fecha_matricula,
+                a.nombre,
+                a.apepat,
+                a.apemat
+            FROM matriculas2 m
+            JOIN alumnos2 a ON a.id = m.alumno_id
+            WHERE m.curso_id = :curso_id
+            AND m.anio_id = :anio_id
+            AND a.deleted_at IS NULL
+            ORDER BY a.apepat, a.apemat";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -37,7 +63,6 @@ class Asistencia
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
 
 
     /* ==========================================
