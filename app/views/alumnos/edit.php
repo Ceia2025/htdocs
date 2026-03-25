@@ -217,6 +217,14 @@ include __DIR__ . "/../layout/navbar.php";
                         </select>
                     </div>
 
+                    <!-- Fecha de creación -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-200">Fecha de creación</label>
+                        <input type="datetime-local" name="created_at"
+                            value="<?= !empty($alumno['created_at']) ? date('Y-m-d\TH:i', strtotime($alumno['created_at'])) : '' ?>"
+                            class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2">
+                    </div>
+
                     <!-- Estado del alumno -->
 
 

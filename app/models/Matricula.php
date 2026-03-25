@@ -131,7 +131,7 @@ class Matricula
             ':alumno_id' => $data['alumno_id'],
             ':curso_id' => $data['curso_id'],
             ':anio_id' => $data['anio_id'],
-            ':fecha_matricula' => $data['fecha_matricula'] ?? date('Y-m-d')
+            ':fecha_matricula' => !empty($data['fecha_matricula']) ? $data['fecha_matricula'] : null
         ]);
     }
 

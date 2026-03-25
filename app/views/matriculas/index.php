@@ -129,63 +129,90 @@ include __DIR__ . "/../layout/navbar.php";
                     </a>
                 </div>
 
-                <!-- TABLA -->
-                <div class="overflow-x-auto bg-gray-900 rounded-3xl shadow-lg">
-                    <table class="min-w-full divide-y divide-gray-700">
-                        <thead class="bg-gray-950/50">
+
+                <!-- TABLA  2-->
+                <div class="mt-6 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg">
+
+                    <table class="min-w-full text-sm">
+
+                        <thead class="bg-slate-950 text-slate-400 uppercase text-xs">
                             <tr>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    Alumno</th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    Curso</th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    Año</th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    Fecha Matrícula</th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    Acciones</th>
+                                <th class="px-5 py-3 text-left">Alumno</th>
+                                <th class="px-5 py-3 text-left">Curso</th>
+                                <th class="px-5 py-3 text-left">Año</th>
+                                <th class="px-5 py-3 text-left">Fecha</th>
+                                <th class="px-5 py-3 text-center">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-gray-500/30 divide-y divide-gray-600">
-                            <?php if (!empty($matriculas)): ?>
-                                <?php foreach ($matriculas as $m): ?>
-                                    <tr>
-                                        <td class="px-6 py-4 text-sm text-gray-100">
-                                            <?= htmlspecialchars($m['alumno_nombre'] ?? $m['nombre_completo'] ?? '') ?>
-                                        </td>
-                                        <td class="px-6 py-4 text-sm text-gray-100">
-                                            <?= htmlspecialchars($m['curso_nombre'] ?? $m['curso'] ?? '') ?>
-                                        </td>
-                                        <td class="px-6 py-4 text-sm text-gray-100">
-                                            <?= htmlspecialchars($m['anio_escolar'] ?? $m['anio'] ?? '') ?>
-                                        </td>
-                                        <td class="px-6 py-4 text-sm text-gray-100">
-                                            <?= htmlspecialchars($m['fecha_matricula']) ?>
-                                        </td>
-                                        <td class="px-6 py-4 text-sm text-gray-100 space-x-3">
-                                            <a href="index.php?action=perfil_academico&id=<?= $m['id'] ?>"
-                                                class="text-green-400 hover:text-green-300 font-medium">Ver Perfil</a>
-                                            <a href="index.php?action=matricula_edit&id=<?= $m['id'] ?>"
-                                                class="text-indigo-400 hover:text-indigo-300 font-medium">Editar</a>
+
+                        <tbody class="divide-y divide-slate-800">
+
+                            <?php foreach ($matriculas as $m):
+                                $nombre = $m['alumno_nombre'] ?? $m['nombre_completo'] ?? '';
+                                $iniciales = strtoupper(substr($nombre, 0, 2));
+                                ?>
+
+                                <tr class="hover:bg-slate-800/50 transition">
+
+                                    <!-- Alumno -->
+                                    <td class="px-5 py-4">
+                                        <div class="flex items-center gap-3">
+
+                                            <div class="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/30
+                                            flex items-center justify-center text-xs font-bold text-indigo-400">
+                                                <?= $iniciales ?>
+                                            </div>
+
+                                            <span class="font-semibold text-white">
+                                                <?= htmlspecialchars($nombre) ?>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-100">
+                                        <?= htmlspecialchars($m['curso_nombre'] ?? $m['curso'] ?? '') ?>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-100">
+                                        <?= htmlspecialchars($m['anio_escolar'] ?? $m['anio'] ?? '') ?>
+                                    </td>
+
+                                    <td class="px-6 py-4 text-sm text-gray-100">
+                                        <?= htmlspecialchars($m['fecha_matricula']) ?>
+                                    </td>
+
+
+                                    <!-- ACCIONES -->
+                                    <td class="px-5 py-4 text-center">
+                                        <div class="flex justify-center gap-2">
+
+                                            <a href="index.php?action=perfil_academico&id=<?= $m['id'] ?>" class="px-3 py-1.5 rounded-lg text-xs font-semibold
+                                           bg-emerald-500/10 text-emerald-400 border border-emerald-500/20
+                                           hover:bg-emerald-500/20">
+                                                Ver
+                                            </a>
+
+                                            <a href="index.php?action=matricula_edit&id=<?= $m['id'] ?>" class="px-3 py-1.5 rounded-lg text-xs font-semibold
+                                           bg-indigo-500/10 text-indigo-400 border border-indigo-500/20
+                                           hover:bg-indigo-500/20">
+                                                Editar
+                                            </a>
+
                                             <a href="index.php?action=matricula_delete&id=<?= $m['id'] ?>"
-                                                onclick="return confirm('¿Seguro que deseas eliminar esta matrícula?');"
-                                                class="text-red-400 hover:text-red-300 font-medium">Eliminar</a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-300">No hay matrículas
-                                        registradas.</td>
+                                                onclick="return confirm('¿Eliminar matrícula?')" class="px-3 py-1.5 rounded-lg text-xs font-semibold
+                                           bg-rose-500/10 text-rose-400 border border-rose-500/20
+                                           hover:bg-rose-500/20">
+                                                Eliminar
+                                            </a>
+
+                                        </div>
+                                    </td>
+
                                 </tr>
-                            <?php endif; ?>
+
+                            <?php endforeach; ?>
+
                         </tbody>
                     </table>
+
                 </div>
 
                 <!-- VOLVER -->

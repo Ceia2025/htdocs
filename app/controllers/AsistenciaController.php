@@ -91,17 +91,13 @@ class AsistenciaController
         $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
 
         foreach ($alumnos as $alumno) {
-
             $presente = in_array($alumno['matricula_id'], $presentes) ? 1 : 0;
-
-            $this->model->guardarAsistencia(
-                $alumno['matricula_id'],
-                $fecha,
-                $presente
-            );
+            $this->model->guardarAsistencia($alumno['matricula_id'], $fecha, $presente);
         }
 
-        header("Location: index.php?action=asistencia_cursos&anio_id=$anioId");
+        // Volver a la misma vista con mensaje de éxito
+        header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId&guardado=1");
+        exit;
     }
     /*
     LIBRO DE CLASS

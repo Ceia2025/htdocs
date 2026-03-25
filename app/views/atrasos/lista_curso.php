@@ -257,7 +257,7 @@ $maxS = max($sem1, $sem2, 1);
                                     <span class="text-sm font-bold <?= $colores[$i] ?> w-4 flex-shrink-0"><?= $i + 1 ?></span>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-white text-xs font-semibold truncate">
-                                            <?= htmlspecialchars($al['apepat'] . ' ' . $al['apemat']) ?>
+                                            <?= htmlspecialchars($al['apepat'] . ' ' . $al['apemat'] . ', '. $al['nombre']) ?>
                                         </p>
                                         <p class="text-xs text-gray-500"><?= htmlspecialchars($al['curso']) ?></p>
                                     </div>

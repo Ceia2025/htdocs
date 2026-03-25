@@ -273,6 +273,19 @@ $mesActual = date("Y-m");
 
                 </div><!-- fin acordeones -->
 
+
+                <div class="flex items-center justify-end gap-4" style="margin-top: 8px">
+
+                    <!-- Botón volver -->
+                    <a href="index.php?action=asistencia_cursos&anio_id=<?= $_GET['anio_id'] ?>" class="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white 
+                   font-semibold px-6 py-3 rounded-xl transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Volver a cursos
+                    </a>
+
+                </div>
             </div>
         </main>
     </div>

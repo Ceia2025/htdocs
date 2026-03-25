@@ -149,7 +149,8 @@ class Alumno
                     fechanac = :fechanac, mayoredad = :mayoredad, numerohijos = :numerohijos,
                     telefono = :telefono, email = :email, sexo = :sexo,
                     nacionalidades = :nacionalidades, region = :region,
-                    ciudad = :ciudad, direccion = :direccion, cod_etnia = :cod_etnia, deleted_at = :deleted_at
+                    ciudad = :ciudad, direccion = :direccion, cod_etnia = :cod_etnia,
+                    deleted_at = :deleted_at, created_at = :created_at
                 WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
@@ -172,6 +173,7 @@ class Alumno
             ":direccion" => $data['direccion'] ?? null, // <-- NUEVO
             ":cod_etnia" => $data['cod_etnia'],
             ":deleted_at" => $data['deleted_at'],
+            ":created_at" => !empty($data['created_at']) ? $data['created_at'] : null,
         ]);
     }
 

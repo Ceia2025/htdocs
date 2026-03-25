@@ -12,6 +12,26 @@ include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 ?>
 
+<?php if (!empty($_GET['guardado'])): ?>
+    <div id="toast-ok" class="fixed top-10 right-10 z-50 flex items-center gap-3 bg-gray-900 border border-green-600 
+           text-green-300 rounded-2xl px-10 py-10 shadow-2xl shadow-green-900/40 
+           transition-all duration-500 max-w-sm">
+        <span class="text-2xl">✅</span>
+        <p class="text-xl font-medium">Asistencia guardada correctamente.</p>
+        <button onclick="cerrarToast()" class="ml-auto text-gray-500 hover:text-white text-lg leading-none">✕</button>
+    </div>
+    <script>
+        setTimeout(() => cerrarToast(), 4000);
+        function cerrarToast() {
+            const t = document.getElementById('toast-ok');
+            if (!t) return;
+            t.style.opacity = '0';
+            t.style.transform = 'translateY(-10px)';
+            setTimeout(() => t.remove(), 400);
+        }
+    </script>
+<?php endif ?>
+
 <body class="h-full bg-gray-900">
     <div class="min-h-full">
 
@@ -235,17 +255,30 @@ include __DIR__ . "/../layout/navbar.php";
 
                     <!-- Botón guardar -->
                     <?php if (!empty($alumnos)): ?>
-                        <div class="flex justify-end">
-                            <button type="submit"
-                                class="flex items-center gap-2 bg-green-600 hover:bg-green-500 active:bg-green-700 text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-green-900/30">
+                        <div class="flex items-center justify-between gap-4">
+
+                            <!-- Botón volver -->
+                            <a href="index.php?action=asistencia_cursos&anio_id=<?= $_GET['anio_id'] ?>" class="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white 
+                   font-semibold px-6 py-3 rounded-xl transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 19l-7-7 7-7" />
+                                </svg>
+                                Volver a cursos
+                            </a>
+
+                            <!-- Botón guardar -->
+                            <button type="submit" class="flex items-center gap-2 bg-green-600 hover:bg-green-500 active:bg-green-700 
+                   text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-green-900/30">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                         d="M5 13l4 4L19 7" />
                                 </svg>
                                 Guardar Asistencia
                             </button>
+
                         </div>
-                    <?php endif; ?>
+                    <?php endif ?>
 
                 </form>
             </div>

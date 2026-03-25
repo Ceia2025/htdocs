@@ -46,9 +46,6 @@ include __DIR__ . "/../layout/navbar.php";
                             <tr>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                                    ID</th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
                                     Año</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
@@ -69,9 +66,6 @@ include __DIR__ . "/../layout/navbar.php";
                             <?php if (!empty($anios)): ?>
                                 <?php foreach ($anios as $anio): ?>
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
-                                            <?= htmlspecialchars($anio['id']) ?>
-                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
                                             <?= htmlspecialchars($anio['anio']) ?>
                                         </td>

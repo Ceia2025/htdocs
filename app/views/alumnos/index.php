@@ -41,114 +41,112 @@ include __DIR__ . "/../layout/navbar.php";
                 <thead class="bg-gray-950/50">
                     <tr>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                            RUN</th>
-
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                            Edad</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
                             Nombre Completo</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                            Contacto</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
                             Fecha Nac.</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                            Sexo</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                            Email</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                            Teléfono</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                            Incorporación</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-                            Fecha Retiro</th>
+                            Estado</th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
                             Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="bg-gray-500/30 divide-y divide-gray-600">
-                    <?php if (!empty($alumnos)): ?>
-                        <?php foreach ($alumnos as $alumno): ?>
-                            <?php
-                            $edad = null;
-                            if (!empty($alumno['fechanac'])) {
-                                $fechaNac = new DateTime($alumno['fechanac']);
-                                $hoy = new DateTime();
-                                $edad = $hoy->diff($fechaNac)->y;
-                            }
-                            ?>
-                            <tr onclick="window.location='index.php?action=alumno_profile&id=<?= $alumno['id'] ?>';" class="cursor-pointer transition-all duration-200 ease-out
-        <?= !empty($alumno['deleted_at'])
-            ?
-            // 🔴 Estilo para retirados
-            'bg-red-950/30 hover:bg-red-800/60 hover:border-red-500 hover:scale-[1.01] border border-red-900/40 shadow-red-900/40 hover:shadow-red-500/40 hover:shadow-md'
-            :
-            // 🔵 Estilo para activos
-            'bg-gray-900/20 hover:bg-gray-700/70 hover:border-gray-500/40 hover:scale-[1.01] border border-gray-700/40 shadow-gray-900/30 hover:shadow-gray-500/30 hover:shadow-md'
-            ?>">
+                <tbody class="divide-y divide-gray-800">
+                    <?php foreach ($alumnos as $alumno):
+                        $edad = null;
+                        if (!empty($alumno['fechanac'])) {
+                            $fechaNac = new DateTime($alumno['fechanac']);
+                            $hoy = new DateTime();
+                            $edad = $hoy->diff($fechaNac)->y;
+                        }
 
+                        $iniciales = strtoupper(
+                            substr($alumno['nombre'] ?? '', 0, 1) .
+                            substr($alumno['apepat'] ?? '', 0, 1)
+                        );
+                        ?>
+                        <tr class="hover:bg-gray-800/50 transition group cursor-pointer"
+                            onclick="window.location='index.php?action=alumno_profile&id=<?= $alumno['id'] ?>';">
 
+                            <!-- 👤 Alumno -->
+                            <td class="px-5 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-indigo-600/20 border border-indigo-600/30 
+                flex items-center justify-center text-indigo-400 text-xs font-bold">
+                                        <?= $iniciales ?>
+                                    </div>
 
-                                <td class="px-4 py-3 text-sm text-gray-100">
-                                    <?= htmlspecialchars($alumno['run'] . '-' . $alumno['codver']) ?>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-100">
-                                    <?= $edad !== null ? $edad . " años" : "No registrada" ?>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-100 capitalize">
-                                    <?= htmlspecialchars($alumno['nombre'] . " " . $alumno['apepat'] . " " . $alumno['apemat']) ?>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-100">
-                                    <p>
-                                        <?php if (!empty($alumno['fechanac'])): ?>
-                                            <?= (new DateTime($alumno['fechanac']))->format('d/m/Y') ?>
-                                        <?php else: ?>
-                                            No registrada
-                                        <?php endif; ?>
-                                    </p>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['sexo']) ?>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['email']) ?>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($alumno['telefono']) ?>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-100">
-                                    <p>
-                                        <?php if (!empty($alumno['created_at'])): ?>
-                                            <?= (new DateTime($alumno['created_at']))->format('d/m/Y') ?>
-                                        <?php else: ?>
-                                            No registrada
-                                        <?php endif; ?>
-                                    </p>
-                                </td>
-                                <td class="px-4 py-3 text-sm">
-                                    <?php if (!empty($alumno['deleted_at'])): ?>
-                                        <span
-                                            class="inline-flex items-center px-2 py-1 bg-red-900/40 border border-red-500 text-red-300 rounded-md text-xs font-semibold">
-                                            Retirado<br>
-                                            <?= (new DateTime($alumno['deleted_at']))->format('d/m/Y') ?>
-                                        </span>
-                                    <?php else: ?>
-                                        <span
-                                            class="inline-flex items-center px-2 py-1 bg-green-900/40 border border-green-500 text-green-300 rounded-md text-xs font-semibold">
-                                            ✅ Activo
-                                        </span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-100 space-x-3">
-                                    <a href="index.php?action=alumno_edit&id=<?= $alumno['id'] ?>"
-                                        class="text-indigo-400 hover:text-indigo-300 font-medium">Editar</a>
-                                    <a href="index.php?action=alumno_delete&id=<?= $alumno['id'] ?>"
-                                        onclick="return confirm('¿Eliminar este alumno?')"
-                                        class="text-red-400 hover:text-red-300 font-medium">Eliminar</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="12" class="px-6 py-4 text-center text-sm text-gray-300">
-                                No hay alumnos registrados
+                                    <div>
+                                        <p class="text-sm font-semibold text-white capitalize">
+                                            <?= htmlspecialchars($alumno['nombre'] . " " . $alumno['apepat'] . " " . $alumno['apemat']) ?>
+                                        </p>
+                                        <p class="text-xs text-gray-500 font-mono">
+                                            <?= htmlspecialchars($alumno['run'] . '-' . $alumno['codver']) ?>
+                                        </p>
+                                        <p class="text-xs text-gray-400">
+                                            <?= $edad ? $edad . " años" : "Edad no registrada" ?>
+                                        </p>
+                                    </div>
+                                </div>
                             </td>
+
+                            <!-- 📞 Contacto -->
+                            <td class="px-5 py-4">
+                                <p class="text-sm text-gray-300"><?= htmlspecialchars($alumno['email']) ?></p>
+                                <p class="text-xs text-gray-500 mt-0.5">
+                                    <?= !empty($alumno['telefono']) ? '📞 ' . htmlspecialchars($alumno['telefono']) : '<span class="italic">Sin teléfono</span>' ?>
+                                </p>
+                            </td>
+
+                            <!-- 📅 Fechas -->
+                            <td class="px-5 py-4 text-sm text-gray-300">
+                                <p>
+                                    🎂
+                                    <?= !empty($alumno['fechanac']) ? (new DateTime($alumno['fechanac']))->format('d/m/Y') : 'No registrada' ?>
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    📌 Ingreso:
+                                    <?= !empty($alumno['created_at']) ? (new DateTime($alumno['created_at']))->format('d/m/Y') : '—' ?>
+                                </p>
+                            </td>
+
+                            <!-- Estado -->
+                            <td class="px-5 py-4">
+                                <?php if (!empty($alumno['deleted_at'])): ?>
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg border text-xs font-semibold 
+                bg-red-900/40 border-red-500 text-red-300">
+                                        ❌ Retirado<br>
+                                        <?= (new DateTime($alumno['deleted_at']))->format('d/m/Y') ?>
+                                    </span>
+                                <?php else: ?>
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg border text-xs font-semibold 
+                bg-green-900/40 border-green-500 text-green-300">
+                                        ✅ Activo
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+
+                            <!-- Acciones -->
+                            <td class="px-5 py-4 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a href="index.php?action=alumno_edit&id=<?= $alumno['id'] ?>" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg
+                bg-indigo-700/30 hover:bg-indigo-700/60 border border-indigo-600/40
+                text-indigo-300 text-xs font-semibold transition">
+                                        ✏️ Editar
+                                    </a>
+
+                                    <a href="index.php?action=alumno_delete&id=<?= $alumno['id'] ?>"
+                                        onclick="return confirm('¿Eliminar este alumno?')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg
+                bg-red-900/30 hover:bg-red-900/60 border border-red-700/40
+                text-red-400 text-xs font-semibold transition">
+                                        🗑️ Eliminar
+                                    </a>
+                                </div>
+                            </td>
+
                         </tr>
-                    <?php endif; ?>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
