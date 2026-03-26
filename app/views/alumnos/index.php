@@ -30,7 +30,7 @@ include __DIR__ . "/../layout/navbar.php";
 
             <a href="index.php?action=alumnos_stepper"
                 class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow transition duration-200">
-                Nuevo Alumno
+                Nueva Ficha de Alumno
             </a>
         </div>
 

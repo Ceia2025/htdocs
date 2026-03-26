@@ -1,13 +1,13 @@
 {
   "administrador": [
     {
-      "title": "Edición de Años",
-      "desc": "Gestionar años académicos",
+      "title": "Años Académicos ",
+      "desc": "En este Apartado se agregan años escolares, junto a el inicio y fin del semestre",
       "url": "index.php?action=anios"
     },
     {
-      "title": "Nueva Matrícula",
-      "desc": "Registrar nuevo alumno al sistema",
+      "title": "Nueva Ficha",
+      "desc": "Creación de fichas escolares y de antecedentes",
       "url": "index.php?action=alumnos_stepper"
     },
     {
@@ -17,68 +17,53 @@
     },
     {
       "title": "Ficha de Alumnos",
-      "desc": "Listado completo de alumnos del sistema",
+      "desc": "Nómina de fichas de estudiantes registrados",
       "url": "index.php?action=alumnos"
     },
     {
-      "title": "Listado por Año",
-      "desc": "Ver alumnos agrupados por curso y año escolar",
-      "url": "index.php?action=listado_por_anio"
-    },
-    {
-      "title": "Anotaciones",
-      "desc": "Registrar y ver anotaciones de alumnos",
+      "title": "Gestión de Anotaciones",
+      "desc": "Administración y consulta de anotaciones por alumno",
       "url": "index.php?action=anotaciones"
     },
     {
-      "title": "Toma de Asistencia",
-      "desc": "Gestión de asistencia por curso",
+      "title": "Control de Asistencia",
+      "desc": "Gestión de asistencia por nivel y curso",
       "url": "index.php?action=asistencia_cursos"
     },
     {
-      "title": "Registro de Atrasos",
-      "desc": "Registrar atrasos de alumnos en portería",
+      "title": "Registro de Atrasos Estudiantiles",
+      "desc": "Control de acceso y puntualidad por portería",
       "url": "index.php?action=atrasos_registro"
     },
     {
-      "title": "Atrasos por Curso",
-      "desc": "Ver y filtrar atrasos por curso y semestre",
+      "title": "Reporte de Atrasos por Curso",
+      "desc": "Consulta y filtrado por periodo académico",
       "url": "index.php?action=atrasos_lista_curso"
     },
     {
-      "title": "Profesores",
-      "desc": "Listado y gestión de profesores",
+      "title": "Cuerpo Docente",
+      "desc": "Nómina y gestión administrativa de profesores",
       "url": "index.php?action=profesores"
     },
     {
-      "title": "Curso y Asignatura",
-      "desc": "Profesores asignados a sus respectivas asignaturas",
+      "title": "Carga Académica",
+      "desc": "Asignación de docentes por curso y asignatura",
       "url": "index.php?action=profesor_curso_asignatura"
     },
     {
-      "title": "Asistencias",
+      "title": "🧪 Test Asistencias",
       "desc": "Ver y gestionar el registro de asistencia",
       "url": "index.php?action=asistencias"
     },
     {
-      "title": "Usuarios",
-      "desc": "Gestionar usuarios del sistema",
-      "url": "index.php?action=users"
-    },
-    {
-      "title": "Cursos",
-      "desc": "Gestionar cursos del colegio",
+      "title": "Administración de Cursos",
+      "desc": "Gestión integral de grupos y niveles educativos",
       "url": "index.php?action=cursos"
     },
     {
-      "title": "Asignaturas",
-      "desc": "Gestionar asignaturas del colegio",
+      "title": "Plan de Estudios",
+      "desc": "Gestión y configuración de asignaturas vigentes",
       "url": "index.php?action=asignaturas"
-    },
-    {
-      "title": "Inventario",
-      "desc": "Gestión de inventario institucional",
-      "url": "index.php?action=inventario_index"
     },
     {
       "title": "🧪 Test Asistencia",
@@ -93,8 +78,8 @@
   ],
   "administrativo": [
     {
-      "title": "Nueva Matrícula",
-      "desc": "Registrar nuevo alumno al sistema",
+      "title": "Nueva Ficha",
+      "desc": "Creación de fichas escolares y de antecedentes",
       "url": "index.php?action=alumnos_stepper"
     },
     {
@@ -104,99 +89,79 @@
     },
     {
       "title": "Ficha de Alumnos",
-      "desc": "Listado completo de alumnos",
+      "desc": "Nómina de fichas de estudiantes registrados",
       "url": "index.php?action=alumnos"
-    },
-    {
-      "title": "Listado por Año",
-      "desc": "Ver alumnos agrupados por curso y año escolar",
-      "url": "index.php?action=listado_por_anio"
     }
   ],
   "soporte": [
     {
-      "title": "Usuarios",
-      "desc": "Ver y editar usuarios del sistema",
-      "url": "index.php?action=users"
-    },
-    {
       "title": "Ficha de Alumnos",
-      "desc": "Listado completo de alumnos",
+      "desc": "Nómina de fichas de estudiantes registrados",
       "url": "index.php?action=alumnos"
     },
     {
       "title": "Matrículas",
       "desc": "Ver matrículas registradas",
       "url": "index.php?action=matriculas"
-    },
-    {
-      "title": "Inventario",
-      "desc": "Ver inventario institucional",
-      "url": "index.php?action=inventario_index"
     }
   ],
   "direccion": [
     {
       "title": "Ficha de Alumnos",
-      "desc": "Listado completo de alumnos",
+      "desc": "Nómina de fichas de estudiantes registrados",
       "url": "index.php?action=alumnos"
     },
     {
-      "title": "Listado por Año",
-      "desc": "Ver alumnos agrupados por curso y año escolar",
-      "url": "index.php?action=listado_por_anio"
-    },
-    {
-      "title": "Anotaciones",
-      "desc": "Ver anotaciones de alumnos",
+      "title": "Gestión de Anotaciones",
+      "desc": "Administración y consulta de anotaciones por alumno",
       "url": "index.php?action=anotaciones"
     },
     {
-      "title": "Asistencias",
+      "title": "🧪 Test Asistencias",
       "desc": "Ver registros de asistencia",
       "url": "index.php?action=asistencias"
     },
     {
-      "title": "Atrasos por Curso",
-      "desc": "Ver atrasos por curso y semestre",
+      "title": "Reporte de Atrasos por Curso",
+      "desc": "Consulta y filtrado por periodo académico",
       "url": "index.php?action=atrasos_lista_curso"
     },
     {
-      "title": "Profesores",
-      "desc": "Listado de profesores",
+      "title": "Cuerpo Docente",
+      "desc": "Nómina y gestión administrativa de profesores",
       "url": "index.php?action=profesores"
     }
   ],
   "inspector general": [
     {
-      "title": "Toma de Asistencia",
-      "desc": "Gestión de asistencia por curso",
+      "title": "Control de Asistencia",
+      "desc": "Gestión de asistencia por nivel y curso",
       "url": "index.php?action=asistencia_cursos"
     },
     {
-      "title": "Registro de Atrasos",
-      "desc": "Registrar atrasos de alumnos en portería",
+      "title": "Registro de Atrasos Estudiantiles",
+      "desc": "Control de acceso y puntualidad por portería",
       "url": "index.php?action=atrasos_registro"
     },
     {
-      "title": "Atrasos por Curso",
-      "desc": "Ver y filtrar atrasos por curso y semestre",
+      "title": "Reporte de Atrasos por Curso",
+      "desc": "Consulta y filtrado por periodo académico",
       "url": "index.php?action=atrasos_lista_curso"
     },
     {
-      "title": "Anotaciones",
-      "desc": "Registrar y ver anotaciones de alumnos",
+      "title": "Gestión de Anotaciones",
+      "desc": "Administración y consulta de anotaciones por alumno",
       "url": "index.php?action=anotaciones"
     },
     {
       "title": "Ficha de Alumnos",
-      "desc": "Listado completo de alumnos",
+      "desc": "Nómina de fichas de estudiantes registrados",
       "url": "index.php?action=alumnos"
     }
   ],
   "docente": [
     {
-      "title": "Asistencias",
+      "title": "🧪 Test Asistencias",
       "desc": "Ver registros de asistencia",
       "url": "index.php?action=asistencias"
     },
@@ -209,53 +174,48 @@
   "asistente social": [
     {
       "title": "Ficha de Alumnos",
-      "desc": "Listado completo de alumnos",
+      "desc": "Nómina de fichas de estudiantes registrados",
       "url": "index.php?action=alumnos"
     },
     {
-      "title": "Anotaciones",
-      "desc": "Registrar y ver anotaciones de alumnos",
+      "title": "Gestión de Anotaciones",
+      "desc": "Administración y consulta de anotaciones por alumno",
       "url": "index.php?action=anotaciones"
-    },
-    {
-      "title": "Listado por Año",
-      "desc": "Ver alumnos agrupados por curso y año escolar",
-      "url": "index.php?action=listado_por_anio"
     }
   ],
   "registro de anotaciones": [
     {
-      "title": "Anotaciones",
-      "desc": "Registrar y ver anotaciones de alumnos",
+      "title": "Gestión de Anotaciones",
+      "desc": "Administración y consulta de anotaciones por alumno",
       "url": "index.php?action=anotaciones"
     },
     {
       "title": "Ficha de Alumnos",
-      "desc": "Buscar alumnos para anotar",
+      "desc": "Nómina de fichas de estudiantes registrados",
       "url": "index.php?action=alumnos"
     }
   ],
   "registro asistencias": [
     {
-      "title": "Toma de Asistencia",
-      "desc": "Gestión de asistencia por curso",
+      "title": "Control de Asistencia",
+      "desc": "Gestión de asistencia por nivel y curso",
       "url": "index.php?action=asistencia_cursos"
     },
     {
-      "title": "Asistencias",
+      "title": "🧪 Test Asistencias",
       "desc": "Ver registros de asistencia",
       "url": "index.php?action=asistencias"
     }
   ],
   "registro atrasos y salidas": [
     {
-      "title": "Registro de Atrasos",
-      "desc": "Registrar atrasos de alumnos en portería",
+      "title": "Registro de Atrasos Estudiantiles",
+      "desc": "Control de acceso y puntualidad por portería",
       "url": "index.php?action=atrasos_registro"
     },
     {
-      "title": "Atrasos por Curso",
-      "desc": "Ver y filtrar atrasos por curso y semestre",
+      "title": "Reporte de Atrasos por Curso",
+      "desc": "Consulta y filtrado por periodo académico",
       "url": "index.php?action=atrasos_lista_curso"
     }
   ]
