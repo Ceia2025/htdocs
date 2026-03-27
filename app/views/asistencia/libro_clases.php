@@ -227,7 +227,9 @@ $mesActual = date("Y-m");
                                                         ?>
                                                         <tr class="border-t border-gray-700 hover:bg-gray-750">
                                                             <td class="p-2 font-semibold sticky left-0 bg-gray-800 z-10">
-                                                                <?= htmlspecialchars($alumno['apepat'] . " " . $alumno['apemat']) ?>
+                                                                <?= htmlspecialchars($alumno['apepat'] . " " . $alumno['apemat']) ?><br>
+                                                                <p style="color: #969292"><?= htmlspecialchars($alumno['nombre']) ?>
+                                                                </p>
                                                             </td>
                                                             <?php foreach ($fechas as $fecha): ?>
                                                                 <?php
@@ -241,9 +243,31 @@ $mesActual = date("Y-m");
                                                                         <span class="text-gray-700 text-xs"
                                                                             title="Antes de la matrícula">·</span>
                                                                     <?php elseif ($v === "1" || $v === 1): ?>
-                                                                        <span class="text-green-400 text-base">✔</span>
+                                                                        <span class="text-green-400 text-base">
+                                                                            <span class="text-green-500 text-base">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                    width="20"
+                                                                                    height="20" viewBox="0 0 48 48" stroke-width="6"
+                                                                                    stroke="currentColor" fill="none" stroke-linecap="round"
+                                                                                    stroke-linejoin="round">
+                                                                                    <path d="M10 24L20 34L38 14"></path>
+                                                                                </svg>
+                                                                            </span>
+                                                                        </span>
                                                                     <?php elseif ($v === "0" || $v === 0): ?>
-                                                                        <span class="text-red-400 text-base">✖</span>
+                                                                        <span class="text-red-400 text-base">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" 
+                                                                                width="20" 
+                                                                                height="20" 
+                                                                                viewBox="0 0 48 48" 
+                                                                                stroke-width="6" 
+                                                                                stroke="currentColor" 
+                                                                                fill="none" 
+                                                                                stroke-linecap="round" 
+                                                                                stroke-linejoin="round">
+                                                                                <path d="M12 12L36 36M36 12L12 36"></path>
+                                                                            </svg>
+                                                                        </span>
                                                                     <?php else: ?>
                                                                         <span class="text-gray-600">—</span>
                                                                     <?php endif; ?>
