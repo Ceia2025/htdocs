@@ -45,6 +45,7 @@ class Asistencia
         $sql = "SELECT 
                 m.id as matricula_id,
                 m.fecha_matricula,
+                m.numero_lista,
                 a.nombre,
                 a.apepat,
                 a.apemat
@@ -53,7 +54,11 @@ class Asistencia
             WHERE m.curso_id = :curso_id
             AND m.anio_id = :anio_id
             AND a.deleted_at IS NULL
-            ORDER BY a.apepat, a.apemat";
+            ORDER BY 
+                CASE WHEN m.numero_lista IS NULL THEN 1 ELSE 0 END,
+                m.numero_lista ASC,
+                a.apepat ASC, 
+                a.apemat ASC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([

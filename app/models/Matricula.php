@@ -121,9 +121,10 @@ class Matricula
     {
         $sql = "UPDATE {$this->table} 
                 SET alumno_id = :alumno_id,
-                    curso_id = :curso_id,
-                    anio_id = :anio_id,
-                    fecha_matricula = :fecha_matricula
+                curso_id = :curso_id,
+                anio_id = :anio_id,
+                fecha_matricula = :fecha_matricula,
+                numero_lista = :numero_lista
                 WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
@@ -131,7 +132,46 @@ class Matricula
             ':alumno_id' => $data['alumno_id'],
             ':curso_id' => $data['curso_id'],
             ':anio_id' => $data['anio_id'],
-            ':fecha_matricula' => !empty($data['fecha_matricula']) ? $data['fecha_matricula'] : null
+            ':fecha_matricula' => !empty($data['fecha_matricula']) ? $data['fecha_matricula'] : null,
+            ':numero_lista' => $data['numero_lista'] !== '' ? $data['numero_lista'] : null
+        ]);
+    }
+
+    // Obtener alumnos de un curso con su número de lista
+    public function getAlumnosConNumeroLista($cursoId, $anioId)
+    {
+        $sql = "SELECT 
+                m.id as matricula_id,
+                m.numero_lista,
+                a.nombre,
+                a.apepat,
+                a.apemat,
+                a.run
+            FROM matriculas2 m
+            JOIN alumnos2 a ON a.id = m.alumno_id
+            WHERE m.curso_id = :curso_id
+            AND m.anio_id   = :anio_id
+            AND a.deleted_at IS NULL
+            ORDER BY 
+                CASE WHEN m.numero_lista IS NULL THEN 1 ELSE 0 END,
+                m.numero_lista ASC,
+                a.apepat ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':curso_id' => $cursoId, ':anio_id' => $anioId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Actualizar número de lista de una matrícula
+    public function updateNumeroLista($matriculaId, $numero)
+    {
+        $sql = "UPDATE {$this->table} 
+            SET numero_lista = :numero 
+            WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':numero' => $numero ?: null,
+            ':id' => $matriculaId
         ]);
     }
 

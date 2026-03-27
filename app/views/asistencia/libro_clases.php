@@ -82,7 +82,7 @@ $mesActual = date("Y-m");
         </header>
 
         <main>
-            <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
 
                 <!-- Info del curso -->
                 <div class="flex items-center justify-between mb-6">
@@ -186,6 +186,9 @@ $mesActual = date("Y-m");
                                             <table class="w-full text-white bg-gray-800 text-sm">
                                                 <thead>
                                                     <tr class="border-b border-gray-600">
+                                                        <th
+                                                            class="p-2 text-center sticky left-0 bg-gray-800 min-w-[40px] z-10 text-gray-500 text-xs">
+                                                            #</th>
                                                         <th class="p-2 text-left sticky left-0 bg-gray-800 min-w-[180px] z-10">
                                                             Alumno
                                                         </th>
@@ -226,11 +229,18 @@ $mesActual = date("Y-m");
                                                             : null;
                                                         ?>
                                                         <tr class="border-t border-gray-700 hover:bg-gray-750">
-                                                            <td class="p-2 font-semibold sticky left-0 bg-gray-800 z-10">
+                                                            <td class="p-2 text-center sticky left-0 bg-gray-800 z-10 text-xs font-bold 
+           <?= $alumno['numero_lista'] ? 'text-indigo-400' : 'text-gray-600' ?>">
+                                                                <?= $alumno['numero_lista'] ?? '—' ?>
+                                                            </td>
+                                                            <td class="p-2 font-semibold sticky left-10 bg-gray-800 z-10">
                                                                 <?= htmlspecialchars($alumno['apepat'] . " " . $alumno['apemat']) ?><br>
-                                                                <p style="color: #969292"><?= htmlspecialchars($alumno['nombre']) ?>
+                                                                <p style="color: #969292">
+                                                                    <?= htmlspecialchars($alumno['nombre']) ?>
                                                                 </p>
                                                             </td>
+
+
                                                             <?php foreach ($fechas as $fecha): ?>
                                                                 <?php
                                                                 $f = $fecha->format("Y-m-d");
@@ -245,9 +255,8 @@ $mesActual = date("Y-m");
                                                                     <?php elseif ($v === "1" || $v === 1): ?>
                                                                         <span class="text-green-400 text-base">
                                                                             <span class="text-green-500 text-base">
-                                                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                    width="20"
-                                                                                    height="20" viewBox="0 0 48 48" stroke-width="6"
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="22"
+                                                                                    height="22" viewBox="0 0 48 48" stroke-width="6"
                                                                                     stroke="currentColor" fill="none" stroke-linecap="round"
                                                                                     stroke-linejoin="round">
                                                                                     <path d="M10 24L20 34L38 14"></path>
@@ -256,15 +265,9 @@ $mesActual = date("Y-m");
                                                                         </span>
                                                                     <?php elseif ($v === "0" || $v === 0): ?>
                                                                         <span class="text-red-400 text-base">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" 
-                                                                                width="20" 
-                                                                                height="20" 
-                                                                                viewBox="0 0 48 48" 
-                                                                                stroke-width="6" 
-                                                                                stroke="currentColor" 
-                                                                                fill="none" 
-                                                                                stroke-linecap="round" 
-                                                                                stroke-linejoin="round">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                                                                viewBox="0 0 48 48" stroke-width="6" stroke="currentColor"
+                                                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                                                 <path d="M12 12L36 36M36 12L12 36"></path>
                                                                             </svg>
                                                                         </span>

@@ -128,6 +128,12 @@ include __DIR__ . "/../layout/navbar.php";
                         ➕ Nueva Matrícula
                     </a>
                 </div>
+                
+                <a href="index.php?action=matricula_numero_lista&curso_id=...&anio_id=..."
+    class="inline-flex items-center px-4 py-2 bg-indigo-700 hover:bg-indigo-600 
+           text-white font-semibold rounded-lg shadow transition">
+    📋 Números de Lista
+</a>
 
 
                 <!-- TABLA  2-->

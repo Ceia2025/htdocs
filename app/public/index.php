@@ -303,6 +303,14 @@ switch ($action) {
         $alumnosController->listadoPorAnio();
         break;
 
+    case 'matricula_numero_lista':
+        $matriculaController->numeroLista();
+        break;
+
+    case 'matricula_guardar_lista':
+        $matriculaController->guardarNumeroLista();
+        break;
+
 
     // Asignaturas
     case 'asignaturas':

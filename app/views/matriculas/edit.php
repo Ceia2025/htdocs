@@ -79,6 +79,16 @@ include __DIR__ . "/../layout/navbar.php";
                             </select>
                         </div>
 
+                        <!-- Número de lista -->
+                        <div>
+                            <label for="numero_lista" class="block text-sm font-medium text-gray-200">
+                                Número de Lista
+                            </label>
+                            <input type="number" name="numero_lista" id="numero_lista" min="1"
+                                value="<?= isset($matricula['numero_lista']) ? $matricula['numero_lista'] : '' ?>"
+                                class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                        
                         <button type="submit"
                             class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition duration-200 ease-in-out">
                             Actualizar

@@ -225,24 +225,37 @@ include __DIR__ . "/../layout/navbar.php";
                             </div>
                         <?php else: ?>
                             <!-- Cabecera tabla -->
-                            <div class="grid grid-cols-[1fr_auto] items-center px-5 py-2.5 bg-gray-900/50">
+                            <div class="grid grid-cols-[40px_1fr_auto] items-center px-5 py-2.5 bg-gray-900/50">
+                                <span
+                                    class="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">#</span>
                                 <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Alumno</span>
                                 <span
                                     class="text-xs font-semibold uppercase tracking-wider text-gray-500 w-20 text-center">Presente</span>
                             </div>
 
+
                             <!-- Filas -->
                             <?php foreach ($alumnos as $i => $alumno): ?>
-                                <label
-                                    class="grid grid-cols-[1fr_auto] items-center px-5 py-3.5 border-t border-gray-700/60 hover:bg-gray-700/30 cursor-pointer transition group">
+                                <label class="grid grid-cols-[40px_1fr_auto] items-center px-5 py-3.5 border-t border-gray-700/60 
+                  hover:bg-gray-700/30 cursor-pointer transition group">
+
+                                    <!-- Número de lista -->
+                                    <div class="text-center">
+                                        <span
+                                            class="text-xs font-bold <?= $alumno['numero_lista'] ? 'text-indigo-400' : 'text-gray-600' ?>">
+                                            <?= $alumno['numero_lista'] ?? '—' ?>
+                                        </span>
+                                    </div>
+
+                                    <!-- Nombre -->
                                     <div>
                                         <span class="text-sm font-semibold text-white">
                                             <?= htmlspecialchars($alumno['apepat'] . " " . $alumno['apemat']) ?>
                                         </span>
-                                        <span class="text-sm text-gray-400">,
-                                            <?= htmlspecialchars($alumno['nombre']) ?>
-                                        </span>
+                                        <span class="text-sm text-gray-400">, <?= htmlspecialchars($alumno['nombre']) ?></span>
                                     </div>
+
+                                    <!-- Checkbox -->
                                     <div class="w-20 flex justify-center">
                                         <input type="checkbox" class="presente w-5 h-5 rounded accent-green-500 cursor-pointer"
                                             name="presentes[]" value="<?= $alumno['matricula_id'] ?>" checked
