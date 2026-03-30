@@ -113,6 +113,7 @@ class AsistenciaController
 
         $asistenciaModel = new Asistencia();
         $detalle = $asistenciaModel->getResumenAsistenciaCurso($curso_id, $anio_id);
+        
 
         if (!$detalle) {
             die("No hay datos de asistencia para el Curso ID: $curso_id en el Año ID: $anio_id");

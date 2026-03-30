@@ -11,13 +11,22 @@ $rol = $user['rol'];
 // Incluir layout
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
+
+
+//Incluir el nombre del curso, MODIFICAR EN EL FUTOR, YA QUE ACÁ NO DEBERIA ESTR, SOLO SE PUSO POR ERROR EN EL CONTROLADOR XD
+$asistenciaModel = new Asistencia();
+$cursoInfo = $asistenciaModel->getCurso($_GET['curso_id'] ?? 0);
+$nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
 ?>
 
 <!-- MAIN -->
 <header
     class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
     <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-white">Alumnos</h1>
+        <h1 class="text-3xl font-bold tracking-tight text-white">Alumnos:
+            <span class="text-blue-400"><?= htmlspecialchars($cursoInfo['nombre'] ?? 'Sin Nombre') ?></span>
+
+        </h1>
     </div>
 </header>
 <main>
@@ -46,7 +55,7 @@ include __DIR__ . "/../layout/navbar.php";
                         <th class="px-4 py-3">Alumno</th>
                         <th class="px-4 py-3 text-center">Clases</th>
                         <th class="px-4 py-3 text-center">Presentes</th>
-                        <th class="px-4 py-3 text-center">Porcertanje hasta la fecha</th>
+                        <th class="px-4 py-3 text-center">Porcentaje hasta la fecha</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-700">
