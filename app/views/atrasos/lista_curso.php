@@ -387,10 +387,13 @@ $maxS = max($sem1, $sem2, 1);
                                     <tbody id="tbody-atrasos">
                                         <?php foreach ($atrasos as $a): ?>
                                             <tr class="fila-atraso border-t border-gray-700/60 hover:bg-gray-700/20 transition"
-                                                data-nombre="<?= strtolower($a['apepat'] . ' ' . $a['apemat'] . ' ' . $a['nombre']) ?>">
+                                                data-nombre="<?= strtolower($a['apepat'] . ' ' . $a['apemat']) ?>">
                                                 <td class="px-4 py-3">
                                                     <p class="text-white font-semibold leading-tight">
                                                         <?= htmlspecialchars($a['apepat'] . ' ' . $a['apemat']) ?>
+                                                    </p>
+                                                    <p class=" font-semibold text-gray-500 font-mono">
+                                                        <?= htmlspecialchars($a['nombre']) ?>
                                                     </p>
                                                     <p class="text-xs text-gray-500 font-mono">
                                                         <?= htmlspecialchars($a['run']) ?>

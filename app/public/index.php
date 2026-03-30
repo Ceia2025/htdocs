@@ -797,6 +797,12 @@ switch ($action) {
     case 'guardar_asistencia_masiva':
         $asistenciaController->guardarAsistenciaMasiva();
         break;
+
+    case 'asistencia_pdf':
+        $anio_id = $_GET['anio_id'] ?? null;
+        $curso_id = $_GET['curso_id'] ?? null; // <--- Agregamos esto
+        $asistenciaController->asistencia_pdf($anio_id, $curso_id);
+        break;
     //---------------------------------------------------------------------
 
     // Atrasos

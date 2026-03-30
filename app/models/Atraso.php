@@ -172,6 +172,63 @@ class Atraso
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getResumenAsistenciaCurso($cursoId, $anioId)
+    {
+        $sql = "
+    SELECT 
+        m.id as matricula_id,
+        al.nombre,
+        al.apepat,
+        al.apemat,
+
+        COUNT(a.id) as total_clases,
+
+        SUM(CASE 
+        WHEN a.presente = 1 THEN 1 
+        ELSE 0 
+        END) as total_presentes 
+
+    FROM matriculas2 m
+
+    JOIN alumnos2 al
+        ON al.id = m.alumno_id
+
+    LEFT JOIN alum_asistencia2 a
+        ON a.matricula_id = m.id
+
+    WHERE m.curso_id = :curso_id
+    AND m.anio_id = :anio_id
+    AND al.deleted_at IS NULL
+
+    GROUP BY m.id
+
+    ORDER BY al.apepat, al.apemat
+    ";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->execute([
+            ':curso_id' => $cursoId,
+            ':anio_id' => $anioId
+        ]);
+
+        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // 🔥 AQUÍ calculas el porcentaje
+        foreach ($resultados as $key => $row) {
+            $totalClases = (int) ($row['total_clases'] ?? 0);
+            $presentes = (int) ($row['presentes'] ?? 0);      // 👈 cambiar aquí
+
+            if ($totalClases > 0) {
+                $resultados[$key]['porcentaje'] = round(($presentes / $totalClases) * 100, 2);
+            } else {
+                $resultados[$key]['porcentaje'] = 0;
+            }
+        }
+
+        return $resultados;
+    }
+
     /* ==========================================
        ELIMINAR ATRASO
     ========================================== */

@@ -251,4 +251,32 @@ class Asistencia
         return $data;
 
     }
+
+    public function getDetalleAsistenciaPorAnio($anioId)
+    {
+        $sql = "SELECT 
+                m.id as matricula_id,
+                al.nombre,
+                al.apepat,
+                al.apemat,
+                c.nombre as nombre_curso,
+                a.fecha,
+                a.presente
+            FROM alum_asistencia2 a
+            JOIN matriculas2 m ON m.id = a.matricula_id
+            JOIN alumnos2 al ON al.id = m.alumno_id
+            JOIN cursos2 c ON c.id = m.curso_id
+            WHERE m.anio_id = :anio_id
+            AND al.deleted_at IS NULL
+            ORDER BY c.nombre ASC, al.apepat ASC, a.fecha ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':anio_id' => $anioId]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
+
 }

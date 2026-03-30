@@ -57,6 +57,11 @@ class AsistenciaController
             $fin
         );
 
+        $detalle = $this->model->getResumenAsistenciaCurso(
+            $cursoId,
+            $anioId
+        );
+
         require "../views/asistencia/resumen_curso.php";
     }
 
@@ -95,10 +100,49 @@ class AsistenciaController
             $this->model->guardarAsistencia($alumno['matricula_id'], $fecha, $presente);
         }
 
-        // Volver a la misma vista con mensaje de éxito
         header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId&guardado=1");
         exit;
     }
+
+    // Ejemplo simplificado dentro de tu controlador
+    public function asistencia_pdf($anio_id, $curso_id)
+    {
+        if (empty($anio_id) || empty($curso_id)) {
+            die("Faltan parámetros: Año ID o Curso ID");
+        }
+
+        $asistenciaModel = new Asistencia();
+        $detalle = $asistenciaModel->getResumenAsistenciaCurso($curso_id, $anio_id);
+
+        if (!$detalle) {
+            die("No hay datos de asistencia para el Curso ID: $curso_id en el Año ID: $anio_id");
+        }
+
+        ob_start();
+        require __DIR__ . '/../views/asistencia/asistencia_reporte_pdf.php';
+        $html = ob_get_clean();
+
+        if (ob_get_length())
+            ob_end_clean();
+
+        try {
+            $options = new \Dompdf\Options();
+            $options->set('isRemoteEnabled', true);
+            $options->set('defaultFont', 'DejaVu Sans');
+
+            $dompdf = new \Dompdf\Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('letter', 'portrait');
+            $dompdf->render();
+
+            header('Content-Type: application/pdf');
+            $dompdf->stream("Reporte_Asistencia.pdf", ["Attachment" => true]);
+            exit;
+        } catch (Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
     /*
     LIBRO DE CLASS
     */
