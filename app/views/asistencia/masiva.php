@@ -65,10 +65,18 @@ include __DIR__ . "/../layout/navbar.php";
                     <!-- Card fecha + acciones -->
                     <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden mb-5">
 
+                        <?php if ($esEdicion): ?>
+                            <div class="flex items-center gap-2 px-5 py-2.5 bg-yellow-900/30 border-b border-yellow-700/40">
+                                <span class="text-yellow-400 text-sm">✏️</span>
+                                <p class="text-xs text-yellow-300 font-medium">
+                                    Estás <strong>modificando</strong> una asistencia ya registrada para esta fecha.
+                                </p>
+                            </div>
+                        <?php endif ?>
+
                         <!-- Fila: fecha y botones de selección -->
                         <div class="flex flex-wrap items-center gap-3 px-5 py-4 border-b border-gray-700">
 
-                            <!-- Fecha -->
                             <!-- Fecha con calendario custom -->
                             <div class="flex items-start gap-2 w-full flex-col">
                                 <div class="flex items-center gap-2">
@@ -81,9 +89,9 @@ include __DIR__ . "/../layout/navbar.php";
                                     <button type="button" id="btn-fecha"
                                         class="bg-gray-900 text-white text-sm border border-gray-600 rounded-lg px-3 py-1.5 
                    hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition min-w-[130px] text-left">
-                                        📅 <span id="fecha-display"><?= date('d/m/Y') ?></span>
+                                        📅 <span id="fecha-display"><?= date('d/m/Y', strtotime($fecha)) ?></span>
                                     </button>
-                                    <input type="hidden" name="fecha" id="campo-fecha" value="<?= date('Y-m-d') ?>">
+                                    <input type="hidden" name="fecha" id="campo-fecha" value="<?= $fecha ?>">
                                 </div>
 
                                 <!-- Aviso de semestre -->
@@ -150,7 +158,6 @@ include __DIR__ . "/../layout/navbar.php";
 
 
 
-                            <!-- lalalalalal -->
 
                             <!-- Aviso de semestre -->
                             <div id="aviso-semestre" class="hidden w-full mt-2 px-4 py-2 bg-red-900/40 border border-red-700 
@@ -257,9 +264,14 @@ include __DIR__ . "/../layout/navbar.php";
 
                                     <!-- Checkbox -->
                                     <div class="w-20 flex justify-center">
+                                        <?php
+                                        // Si hay edición: usar el valor guardado; si es nuevo: marcar todos presentes
+                                        $estaPresente = $esEdicion
+                                            ? ($asistenciaExistente[$alumno['matricula_id']] ?? 0) === 1
+                                            : true;
+                                        ?>
                                         <input type="checkbox" class="presente w-5 h-5 rounded accent-green-500 cursor-pointer"
-                                            name="presentes[]" value="<?= $alumno['matricula_id'] ?>" checked
-                                            onchange="actualizarContador()">
+                                            name="presentes[]" value="<?= $alumno['matricula_id'] ?>" <?= $estaPresente ? 'checked' : '' ?> onchange="actualizarContador()">
                                     </div>
                                 </label>
                             <?php endforeach; ?>
@@ -314,11 +326,13 @@ include __DIR__ . "/../layout/navbar.php";
     let calendarioAbierto = false;
     let mesActual, anioActual;
 
-    // ── Inicializar con fecha de hoy ──
+    // DESPUÉS
+    const FECHA_ACTIVA = '<?= $fecha ?>'; // viene del controlador
+
     (function () {
-        const hoy = new Date(HOY + 'T00:00:00');
-        mesActual = hoy.getMonth();
-        anioActual = hoy.getFullYear();
+        const fechaInicial = new Date(FECHA_ACTIVA + 'T00:00:00');
+        mesActual = fechaInicial.getMonth();
+        anioActual = fechaInicial.getFullYear();
     })();
 
     // ── Abrir/cerrar calendario ──
@@ -433,13 +447,17 @@ include __DIR__ . "/../layout/navbar.php";
         const [y, m, d] = fecha.split('-');
         document.getElementById('fecha-display').textContent = `${d}/${m}/${y}`;
 
-        // Re-render para actualizar selección visual
         const fechaObj = new Date(fecha + 'T00:00:00');
         mesActual = fechaObj.getMonth();
         anioActual = fechaObj.getFullYear();
         if (calendarioAbierto) renderCalendario();
 
         validarFecha();
+
+        // ── NUEVO: recargar página con la fecha seleccionada ──
+        const params = new URLSearchParams(window.location.search);
+        params.set('fecha', fecha);
+        window.location.href = window.location.pathname + '?' + params.toString();
     }
 
     // ── Validar fecha ──

@@ -276,6 +276,31 @@ class Asistencia
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // En Asistencia.php
+    public function getAsistenciaPorFecha($cursoId, $anioId, $fecha)
+    {
+        $sql = "SELECT a.matricula_id, a.presente
+            FROM alum_asistencia2 a
+            JOIN matriculas2 m ON m.id = a.matricula_id
+            WHERE m.curso_id = :curso_id
+            AND m.anio_id = :anio_id
+            AND a.fecha = :fecha";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':curso_id' => $cursoId,
+            ':anio_id' => $anioId,
+            ':fecha' => $fecha
+        ]);
+
+        // Retorna un mapa: matricula_id => presente (1 o 0)
+        $resultado = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $resultado[$row['matricula_id']] = (int) $row['presente'];
+        }
+        return $resultado;
+    }
+
 
 
 

@@ -19,18 +19,19 @@ class AsistenciaController
         $anioId = $_GET['anio_id'] ?? null;
         $fecha = $_GET['fecha'] ?? date("Y-m-d");
 
-        if (!$cursoId || !$anioId) {
+        if (!$cursoId || !$anioId)
             die("Faltan parámetros.");
-        }
-
-        if ($fecha > date("Y-m-d")) {
+        if ($fecha > date("Y-m-d"))
             die("No se puede registrar asistencia futura.");
-        }
 
         $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
         $curso = $this->model->getCurso($cursoId);
         $fechasAnio = $this->model->getFechasAnio($anioId);
         $fechasConAsistencia = $this->model->getFechasConAsistencia($cursoId, $anioId);
+
+        // ── NUEVO: cargar asistencia previa si ya existe para esta fecha ──
+        $asistenciaExistente = $this->model->getAsistenciaPorFecha($cursoId, $anioId, $fecha);
+        $esEdicion = !empty($asistenciaExistente);
 
         require "../views/asistencia/masiva.php";
     }
@@ -113,7 +114,7 @@ class AsistenciaController
 
         $asistenciaModel = new Asistencia();
         $detalle = $asistenciaModel->getResumenAsistenciaCurso($curso_id, $anio_id);
-        
+
 
         if (!$detalle) {
             die("No hay datos de asistencia para el Curso ID: $curso_id en el Año ID: $anio_id");
