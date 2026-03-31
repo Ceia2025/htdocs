@@ -551,4 +551,14 @@ class Atraso
             'porSemana' => $porSemana,
         ];
     }
+
+    public function actualizarHora(int $id, string $horaLlegada, string $fecha): bool
+    {
+        $stmt = $this->conn->prepare(
+            "UPDATE alum_atrasos SET hora_llegada = :hora, fecha = :fecha WHERE id = :id"
+        );
+        return $stmt->execute([':hora' => $horaLlegada, ':fecha' => $fecha, ':id' => $id]);
+    }
+
+
 }

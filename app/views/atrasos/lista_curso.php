@@ -49,7 +49,12 @@ $maxSemana = !empty($resumen['porSemana']) ? max(array_column($resumen['porSeman
 $sem1 = count(array_filter($atrasos, fn($a) => $a['semestre'] == 1));
 $sem2 = count(array_filter($atrasos, fn($a) => $a['semestre'] == 2));
 $maxS = max($sem1, $sem2, 1);
-?>
+
+var_dump($user['rol'])
+
+    ?>
+
+
 
 <body class="h-full bg-gray-900">
     <div class="min-h-full">
@@ -257,7 +262,7 @@ $maxS = max($sem1, $sem2, 1);
                                     <span class="text-sm font-bold <?= $colores[$i] ?> w-4 flex-shrink-0"><?= $i + 1 ?></span>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-white text-xs font-semibold truncate">
-                                            <?= htmlspecialchars($al['apepat'] . ' ' . $al['apemat'] . ', '. $al['nombre']) ?>
+                                            <?= htmlspecialchars($al['apepat'] . ' ' . $al['apemat'] . ', ' . $al['nombre']) ?>
                                         </p>
                                         <p class="text-xs text-gray-500"><?= htmlspecialchars($al['curso']) ?></p>
                                     </div>
@@ -427,18 +432,39 @@ $maxS = max($sem1, $sem2, 1);
                                                 <td class="px-3 py-3 text-xs text-gray-500 max-w-[140px] truncate">
                                                     <?= $a['observacion'] ? htmlspecialchars($a['observacion']) : '—' ?>
                                                 </td>
+                                                <td class="px-3 py-3 text-right">
+                                                    <div class="flex items-center justify-end gap-2">
+
+
+                                                        <?php if ($rol === "administrador"): ?>
+
+                                                            <button type="button"
+                                                                onclick="abrirModalHora(<?= $a['id'] ?>, '<?= substr($a['hora_llegada'], 0, 5) ?>', '<?= $a['fecha'] ?>')"
+                                                                class="text-gray-600 hover:text-amber-400 transition p-1"
+                                                                title="Editar hora y fecha">
+                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                    viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828 
+                a4 4 0 01-1.414.828l-3 1 1-3a4 4 0 01.828-1.414z" />
+                                                                </svg>
+                                                            </button>
+
+                                                            <a href="index.php?action=atrasos_eliminar&id=<?= $a['id'] ?>&redirect=atrasos_lista_curso&curso_id=<?= $cursoIdActivo ?>&anio_id=<?= $anioIdActivo ?>&semestre=<?= $semestreActivo ?>"
+                                                                onclick="return confirm('¿Eliminar este atraso?')"
+                                                                class="text-gray-600 hover:text-red-400 transition p-1">
+                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                    viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                                </svg>
+                                                            </a>
+
+                                                        <?php endif; ?>
+
+                                                    </div>
+                                                </td>
                                                 <!--
-                                                    <td class="px-3 py-3 text-right">
-                                                        <a href="index.php?action=atrasos_eliminar&id=<?= $a['id'] ?>&redirect=atrasos_lista_curso&curso_id=<?= $cursoIdActivo ?>&anio_id=<?= $anioIdActivo ?>&semestre=<?= $semestreActivo ?>"
-                                                        onclick="return confirm('¿Eliminar este atraso?')"
-                                                        class="text-gray-600 hover:text-red-400 transition p-1">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                </a>
-                                            </td>
                                             -->
                                             </tr>
                                         <?php endforeach; ?>
@@ -510,6 +536,93 @@ $maxS = max($sem1, $sem2, 1);
 
         </main>
     </div>
+    <!-- ── MODAL EDITAR HORA ── -->
+    <div id="modal-hora" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="cerrarModalHora()"></div>
+
+        <!-- Caja del modal -->
+        <div class="relative bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl p-6 w-80 z-10">
+
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-5">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-amber-400 mb-0.5">
+                        Atraso
+                    </p>
+                    <h3 class="text-lg font-bold text-white">Editar hora</h3>
+                </div>
+                <button onclick="cerrarModalHora()"
+                    class="text-gray-500 hover:text-white transition p-1 rounded-lg hover:bg-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Form -->
+            <form method="POST" action="index.php?action=atrasos_actualizar_hora">
+                <input type="hidden" name="id" id="modal-id">
+                <input type="hidden" name="curso_id" value="<?= $cursoIdActivo ?>">
+                <input type="hidden" name="anio_id" value="<?= $anioIdActivo ?>">
+                <input type="hidden" name="semestre" value="<?= $semestreActivo ?>">
+
+                <!-- ── NUEVO: fecha ── -->
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                        Fecha
+                    </label>
+                    <input type="date" name="fecha" id="modal-fecha-input" class="w-full bg-gray-900 text-white text-lg font-mono border border-gray-600 
+                   rounded-xl px-4 py-3 focus:outline-none focus:ring-2 
+                   focus:ring-amber-500 focus:border-transparent">
+                </div>
+
+                <!-- hora (sin cambios) -->
+                <div class="mb-5">
+                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                        Hora de llegada
+                    </label>
+                    <input type="time" name="hora_llegada" id="modal-hora-input" class="w-full bg-gray-900 text-white text-lg font-mono border border-gray-600 
+                   rounded-xl px-4 py-3 focus:outline-none focus:ring-2 
+                   focus:ring-amber-500 focus:border-transparent">
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" onclick="cerrarModalHora()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold 
+                   py-2.5 rounded-xl transition text-sm">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-1 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 
+                   text-gray-900 font-bold py-2.5 rounded-xl transition text-sm">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+
+        function abrirModalHora(id, hora, fecha) {
+            document.getElementById('modal-id').value = id;
+            document.getElementById('modal-hora-input').value = hora;
+            document.getElementById('modal-fecha-input').value = fecha;
+            document.getElementById('modal-hora').classList.remove('hidden');
+        }
+
+        function cerrarModalHora() {
+            document.getElementById('modal-hora').classList.add('hidden');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') cerrarModalHora();
+        });
+    </script>
+
+
+
 </body>
 
 <script>

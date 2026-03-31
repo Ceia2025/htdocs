@@ -833,6 +833,10 @@ switch ($action) {
     case 'atrasos_buscar_alumnos':   // con 's' al final — autocompletado
         $atrasoController->buscarAlumnos();
         break;
+
+    case 'atrasos_actualizar_hora':
+        $atrasoController->actualizarHora();
+        break;
     //----------------------------------------------------------------------
     //Anotaciones
     case 'anotaciones':

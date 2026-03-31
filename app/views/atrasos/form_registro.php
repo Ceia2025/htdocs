@@ -273,7 +273,8 @@ $guardado = $_GET['guardado'] ?? 0;
 </div>
 </body>
 
-<script>let debounceTimer = null;
+<script>
+let debounceTimer = null;
 
 document.getElementById('buscar-run').addEventListener('input', function() {
     const q = this.value.trim();
@@ -345,14 +346,6 @@ document.addEventListener('click', function(e) {
     }
 });
 
-/*
-function actualizarMaxHora() {
-    const ahora = new Date();
-    const hh = String(ahora.getHours()).padStart(2, '0');
-    const mm = String(ahora.getMinutes()).padStart(2, '0');
-    document.getElementById('campo-hora').max = `${hh}:${mm}`;
-}
-setInterval(actualizarMaxHora, 60000);*/
 
 </script>
 

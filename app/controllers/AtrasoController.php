@@ -166,4 +166,25 @@ class AtrasoController
         echo json_encode($resultados);
         exit;
     }
+
+    public function actualizarHora()
+    {
+        $id = (int) ($_POST['id'] ?? 0);
+        $horaLlegada = $_POST['hora_llegada'] ?? '';
+        $fecha = $_POST['fecha'] ?? '';
+
+        if ($id && $horaLlegada && $fecha) {
+            $this->model->actualizarHora($id, $horaLlegada, $fecha);
+        }
+
+        $params = http_build_query(array_filter([
+            'action' => 'atrasos_lista_curso',
+            'curso_id' => $_POST['curso_id'] ?? '',
+            'anio_id' => $_POST['anio_id'] ?? '',
+            'semestre' => $_POST['semestre'] ?? '',
+        ]));
+
+        header("Location: index.php?$params");
+        exit;
+    }
 }
