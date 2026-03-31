@@ -837,6 +837,14 @@ switch ($action) {
     case 'atrasos_actualizar_hora':
         $atrasoController->actualizarHora();
         break;
+
+    case 'atrasos_pdf':
+        $atrasoController->atrasos_pdf();
+        break;
+
+    case 'atraso_alumno_pdf':
+        $atrasoController->atraso_alumno_pdf();
+        break;
     //----------------------------------------------------------------------
     //Anotaciones
     case 'anotaciones':

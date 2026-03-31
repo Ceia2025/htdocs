@@ -187,4 +187,130 @@ class AtrasoController
         header("Location: index.php?$params");
         exit;
     }
+
+    public function atrasos_pdf()
+    {
+        $anioId = isset($_GET['anio_id']) && $_GET['anio_id'] !== '' ? (int) $_GET['anio_id'] : null;
+        $cursoId = isset($_GET['curso_id']) && $_GET['curso_id'] !== '' ? (int) $_GET['curso_id'] : null;
+        $semestre = isset($_GET['semestre']) && $_GET['semestre'] !== '' ? (int) $_GET['semestre'] : null;
+        $fechaDesde = $_GET['fecha_desde'] ?? null;
+        $fechaHasta = $_GET['fecha_hasta'] ?? null;
+        $semana = $_GET['semana'] ?? null;
+
+        if (!$anioId)
+            $anioId = $this->model->getAnioActualId();
+
+        // Resolver semana → rango de fechas (igual que en listarPorCurso)
+        if ($semana && !$fechaDesde) {
+            [$anioSem, $numSem] = explode('-W', $semana);
+            $dt = new DateTime();
+            $dt->setISODate((int) $anioSem, (int) $numSem, 1);
+            $fechaDesde = $dt->format('Y-m-d');
+            $dt->modify('+4 days');
+            $fechaHasta = $dt->format('Y-m-d');
+        }
+
+        $atrasos = $this->model->getByCursoFiltrado($cursoId, $anioId, $semestre, $fechaDesde, $fechaHasta);
+        $resumen = $this->model->getResumenGeneral($anioId, $cursoId, $semestre, $fechaDesde, $fechaHasta);
+
+        // Construir texto de filtros activos para mostrar en el PDF
+        $partesFiltro = [];
+        if ($cursoId) {
+            $cursos = $this->model->getCursosConMatricula($anioId);
+            foreach ($cursos as $c) {
+                if ($c['id'] == $cursoId) {
+                    $partesFiltro[] = 'Curso: ' . $c['nombre'];
+                    break;
+                }
+            }
+        }
+        if ($semestre)
+            $partesFiltro[] = 'Semestre: ' . $semestre . '°';
+        if ($fechaDesde)
+            $partesFiltro[] = 'Desde: ' . date('d/m/Y', strtotime($fechaDesde));
+        if ($fechaHasta)
+            $partesFiltro[] = 'Hasta: ' . date('d/m/Y', strtotime($fechaHasta));
+        if ($semana)
+            $partesFiltro[] = 'Semana: ' . $semana;
+        $filtrosTexto = !empty($partesFiltro) ? implode(' · ', $partesFiltro) : '';
+
+        ob_start();
+        require __DIR__ . '/../views/atrasos/atrasos_reporte_pdf.php';
+        $html = ob_get_clean();
+
+        if (ob_get_length())
+            ob_end_clean();
+
+        try {
+            $options = new \Dompdf\Options();
+            $options->set('isRemoteEnabled', true);
+            $options->set('defaultFont', 'DejaVu Sans');
+
+            $dompdf = new \Dompdf\Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('letter', 'portrait');
+            $dompdf->render();
+
+            header('Content-Type: application/pdf');
+            $dompdf->stream("Reporte_Atrasos.pdf", ["Attachment" => true]);
+            exit;
+        } catch (Exception $e) {
+            die("Error al generar PDF: " . $e->getMessage());
+        }
+    }
+
+    public function atraso_alumno_pdf()
+    {
+        $matriculaId = (int) ($_GET['matricula_id'] ?? 0);
+        $anioId = (int) ($_GET['anio_id'] ?? 0);
+
+        if (!$matriculaId || !$anioId)
+            die("Faltan parámetros.");
+
+        $atrasos = $this->model->getByMatriculaYAnio($matriculaId, $anioId);
+
+        if (empty($atrasos))
+            die("No hay atrasos registrados para este alumno.");
+
+        $alumno = [
+            'nombre' => $atrasos[0]['nombre'],
+            'apepat' => $atrasos[0]['apepat'],
+            'apemat' => $atrasos[0]['apemat'],
+            'run' => $atrasos[0]['run'],
+            'curso' => $atrasos[0]['curso'],
+        ];
+
+        $resumenAlumno = [
+            'total' => count($atrasos),
+            'justificados' => count(array_filter($atrasos, fn($a) => $a['justificado'] == 1)),
+            'injustificados' => count(array_filter($atrasos, fn($a) => $a['justificado'] == 0)),
+            'sem1' => count(array_filter($atrasos, fn($a) => $a['semestre'] == 1)),
+            'sem2' => count(array_filter($atrasos, fn($a) => $a['semestre'] == 2)),
+        ];
+
+        ob_start();
+        require __DIR__ . '/../views/atrasos/atraso_alumno_pdf.php';
+        $html = ob_get_clean();
+
+        if (ob_get_length())
+            ob_end_clean();
+
+        try {
+            $options = new \Dompdf\Options();
+            $options->set('isRemoteEnabled', true);
+            $options->set('defaultFont', 'DejaVu Sans');
+
+            $dompdf = new \Dompdf\Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('letter', 'portrait');
+            $dompdf->render();
+
+            $nombreArchivo = 'Atrasos_' . $alumno['apepat'] . '_' . $alumno['apemat'] . '.pdf';
+            header('Content-Type: application/pdf');
+            $dompdf->stream($nombreArchivo, ["Attachment" => true]);
+            exit;
+        } catch (Exception $e) {
+            die("Error al generar PDF: " . $e->getMessage());
+        }
+    }
 }

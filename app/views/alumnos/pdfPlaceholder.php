@@ -389,7 +389,8 @@ $anioFicha = !empty($alumno['created_at'])
 
 <!-- ══ FOOTER ══ -->
 <div class="footer">
-    Documento generado automáticamente el <?= date('d/m/Y H:i') ?> — Sistema SAAT · C.E.I.A. Parral
+    Documento generado automáticamente el <?= date('d/m/Y') ?> — Sistema SAAT · C.E.I.A. Parral</br>
+    <p>Desarrollado por <span> Daniel Scarlazzetta</span></p>
 </div>
 
 </body>

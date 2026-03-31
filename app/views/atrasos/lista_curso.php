@@ -49,10 +49,7 @@ $maxSemana = !empty($resumen['porSemana']) ? max(array_column($resumen['porSeman
 $sem1 = count(array_filter($atrasos, fn($a) => $a['semestre'] == 1));
 $sem2 = count(array_filter($atrasos, fn($a) => $a['semestre'] == 2));
 $maxS = max($sem1, $sem2, 1);
-
-var_dump($user['rol'])
-
-    ?>
+?>
 
 
 
@@ -432,9 +429,20 @@ var_dump($user['rol'])
                                                 <td class="px-3 py-3 text-xs text-gray-500 max-w-[140px] truncate">
                                                     <?= $a['observacion'] ? htmlspecialchars($a['observacion']) : '—' ?>
                                                 </td>
-                                                <td class="px-3 py-3 text-right">
+                                                <td class="px-3 py-2 text-right">
                                                     <div class="flex items-center justify-end gap-2">
 
+                                                        <a href="index.php?action=atraso_alumno_pdf&matricula_id=<?= $a['matricula_id'] ?>&anio_id=<?= $anioIdActivo ?>"
+                                                            target="_blank"
+                                                            class="text-gray-600 hover:text-red-400 transition p-1"
+                                                            title="Descargar PDF del alumno">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                                            </svg>
+                                                        </a>
 
                                                         <?php if ($rol === "administrador"): ?>
 
@@ -603,6 +611,16 @@ var_dump($user['rol'])
         </div>
     </div>
 
+    <!-- Botón exportar PDF — pegar cerca del header de la vista -->
+    <a id="btnExportarPdf"
+        href="index.php?action=atrasos_pdf&anio_id=<?= $anioId ?>&curso_id=<?= $cursoIdActivo ?>&semestre=<?= $semestreActivo ?>&fecha_desde=<?= htmlspecialchars($_GET['fecha_desde'] ?? '') ?>&fecha_hasta=<?= htmlspecialchars($_GET['fecha_hasta'] ?? '') ?>&semana=<?= htmlspecialchars($_GET['semana'] ?? '') ?>"
+        class="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-full shadow-2xl transition-all hover:scale-105">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        <span>Exportar Reporte</span>
+    </a>
     <script>
 
         function abrirModalHora(id, hora, fecha) {

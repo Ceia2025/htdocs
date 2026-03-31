@@ -560,5 +560,39 @@ class Atraso
         return $stmt->execute([':hora' => $horaLlegada, ':fecha' => $fecha, ':id' => $id]);
     }
 
+    public function getByMatriculaYAnio(int $matriculaId, int $anioId): array
+    {
+        $sql = "
+        SELECT
+            at.id,
+            at.fecha,
+            at.hora_llegada,
+            at.justificado,
+            at.observacion,
+            at.semestre,
+            al.nombre,
+            al.apepat,
+            al.apemat,
+            al.run,
+            c.nombre AS curso
+        FROM alum_atrasos at
+        JOIN matriculas2 m  ON m.id  = at.matricula_id
+        JOIN alumnos2   al  ON al.id = m.alumno_id
+        JOIN cursos2    c   ON c.id  = m.curso_id
+        WHERE at.matricula_id = :matricula_id
+        AND   m.anio_id       = :anio_id
+        AND   al.deleted_at IS NULL
+        ORDER BY at.fecha ASC, at.hora_llegada ASC
+    ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':matricula_id' => $matriculaId,
+            ':anio_id' => $anioId,
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 }

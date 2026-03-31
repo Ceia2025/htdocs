@@ -131,6 +131,16 @@ $anioFicha = date('Y');
         .rojo {
             color: #b91c1c;
         }
+
+        /* ── FOOTER ── */
+        .footer {
+            margin-top: 12px;
+            padding-top: 6px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 8.5px;
+            color: #94a3b8;
+            text-align: right;
+        }
     </style>
 </head>
 
@@ -199,7 +209,11 @@ $anioFicha = date('Y');
             <?php endforeach; ?>
         </tbody>
     </table>
-
+    <div class="footer">
+        Documento generado automáticamente el
+        <?= date('d/m/Y') ?> — Sistema SAAT · C.E.I.A. Parral</br>
+        <p>Desarrollado por <span> Daniel Scarlazzetta</span></p>
+    </div>
 </body>
 
 </html>
