@@ -181,6 +181,8 @@ class Asistencia
         $sql = "
     SELECT 
         m.id as matricula_id,
+        m.numero_lista,
+        m.fecha_matricula,
         al.nombre,
         al.apepat,
         al.apemat,
@@ -195,10 +197,11 @@ class Asistencia
     FROM matriculas2 m
 
     JOIN alumnos2 al
-    ON al.id = m.alumno_id
+        ON al.id = m.alumno_id
 
     LEFT JOIN alum_asistencia2 a
-    ON a.matricula_id = m.id
+        ON a.matricula_id = m.id
+        AND (m.fecha_matricula IS NULL OR a.fecha >= m.fecha_matricula)
 
     WHERE m.curso_id = :curso_id
     AND m.anio_id = :anio_id
@@ -206,11 +209,14 @@ class Asistencia
 
     GROUP BY m.id
 
-    ORDER BY al.apepat, al.apemat
+    ORDER BY 
+        CASE WHEN m.numero_lista IS NULL THEN 1 ELSE 0 END,
+        m.numero_lista ASC,
+        al.apepat ASC,
+        al.apemat ASC
     ";
 
         $stmt = $this->conn->prepare($sql);
-
         $stmt->execute([
             ':curso_id' => $cursoId,
             ':anio_id' => $anioId

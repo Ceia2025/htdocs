@@ -52,6 +52,7 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
             <table class="min-w-full text-sm text-left text-gray-300">
                 <thead class="bg-gray-700 text-gray-200 uppercase text-xs">
                     <tr>
+                        <th class="px-4 py-3 text-center w-12">#</th>
                         <th class="px-4 py-3">Alumno</th>
                         <th class="px-4 py-3 text-center">Clases</th>
                         <th class="px-4 py-3 text-center">Presentes</th>
@@ -85,6 +86,9 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
                         ?>
 
                         <tr class="hover:bg-gray-700">
+                            <td class="px-4 py-2 text-center text-xs font-bold text-indigo-400">
+                                <?= $row['numero_lista'] ?? '—' ?>
+                            </td>
                             <td class="px-4 py-2">
                                 <?= htmlspecialchars($row['apepat'] . ' ' . $row['apemat'] . ', ' . $row['nombre']) ?>
                             </td>
