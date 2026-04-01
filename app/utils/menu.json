@@ -91,6 +91,11 @@
       "title": "Ficha de Alumnos",
       "desc": "Nómina de fichas de estudiantes registrados",
       "url": "index.php?action=alumnos"
+    },
+    {
+      "title": "Control de Asistencia",
+      "desc": "Gestión de asistencia por nivel y curso",
+      "url": "index.php?action=asistencia_cursos"
     }
   ],
   "soporte": [
@@ -117,11 +122,6 @@
       "url": "index.php?action=anotaciones"
     },
     {
-      "title": "🧪 Test Asistencias",
-      "desc": "Ver registros de asistencia",
-      "url": "index.php?action=asistencias"
-    },
-    {
       "title": "Reporte de Atrasos por Curso",
       "desc": "Consulta y filtrado por periodo académico",
       "url": "index.php?action=atrasos_lista_curso"
@@ -132,7 +132,7 @@
       "url": "index.php?action=profesores"
     }
   ],
-  "inspector general": [
+  "Inspector general y Convivencia escolar": [
     {
       "title": "Control de Asistencia",
       "desc": "Gestión de asistencia por nivel y curso",

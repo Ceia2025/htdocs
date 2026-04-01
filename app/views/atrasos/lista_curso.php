@@ -444,7 +444,7 @@ $maxS = max($sem1, $sem2, 1);
                                                             </svg>
                                                         </a>
 
-                                                        <?php if ($rol === "administrador"): ?>
+                                                        <?php if ($rol === "administrador" || $rol === "Inspector general y Convivencia escolar"): ?>
 
                                                             <button type="button"
                                                                 onclick="abrirModalHora(<?= $a['id'] ?>, '<?= substr($a['hora_llegada'], 0, 5) ?>', '<?= $a['fecha'] ?>')"

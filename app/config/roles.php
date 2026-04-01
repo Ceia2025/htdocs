@@ -102,17 +102,17 @@ return [
     'anotacion_asignaturas'     => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENTE_SOCIAL, ROL_ANOTACIONES],
 
     // ── ASISTENCIAS ──
-    'asistencias'               => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS],
-    'asistencia_cursos'         => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS],
-    'form_asistencia_masiva'    => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS],
-    'guardar_asistencia_masiva' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS],
-    'asistencia_create_form'    => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS],
-    'asistencia_store'          => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS],
-    'asistencia_edit'           => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS],
-    'asistencia_update'         => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS],
-    'asistencia_delete'         => [ROL_ADMINISTRADOR],
-    'resumen_curso'             => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS],
-    'libro_clases'              => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION],
+    'asistencias'               => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS, ROL_ADMINISTRATIVO],
+    'asistencia_cursos'         => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS, ROL_ADMINISTRATIVO],
+    'form_asistencia_masiva'    => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS, ROL_ADMINISTRATIVO],
+    'guardar_asistencia_masiva' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS, ROL_ADMINISTRATIVO],
+    'asistencia_create_form'    => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS, ROL_ADMINISTRATIVO],
+    'asistencia_store'          => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS, ROL_ADMINISTRATIVO],
+    'asistencia_edit'           => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS, ROL_ADMINISTRATIVO],
+    'asistencia_update'         => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS, ROL_ADMINISTRATIVO],
+    'asistencia_delete'         => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
+    'resumen_curso'             => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_INSPECTOR_GENERAL, ROL_ASISTENCIAS, ROL_ADMINISTRATIVO],
+    'libro_clases'              => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_ADMINISTRATIVO],
 
     // ── ATRASOS ──
     'atrasos_registro'          => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ATRASOS],
@@ -121,7 +121,7 @@ return [
     'atrasos_buscar_alumnos'    => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ATRASOS],
     'atrasos_lista_curso'       => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_INSPECTOR_GENERAL, ROL_ATRASOS],
     'atrasos_lista_alumno'      => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_INSPECTOR_GENERAL, ROL_ATRASOS],
-    'atrasos_eliminar'          => [ROL_ADMINISTRADOR],
+    'atrasos_eliminar'          => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL],
 
     // ── PROFESORES ──
     'profesores'                => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION],
@@ -166,7 +166,7 @@ return [
     'alum_emergencia_store'         => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
     'alum_emergencia_edit'          => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO, ROL_INSPECTOR_GENERAL],
     'alum_emergencia_update'        => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
-    'alum_emergencia_delete'        => [ROL_ADMINISTRADOR],
+    'alum_emergencia_delete'        => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
     'alum_emergencia_createProfile' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO, ROL_INSPECTOR_GENERAL],
     'alum_emergencia_storeProfile'  => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
     'alum_emergencia_deleteProfile' => [ROL_ADMINISTRADOR],

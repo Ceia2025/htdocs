@@ -171,19 +171,22 @@ $esRetirado = !empty($alumno['deleted_at']);
                                 </div>
                             </div>
                             <div class="flex gap-2 flex-shrink-0">
-                                <?php if (AuthController::puede('alum_emergencia_edit')): ?>
+
+
+                                <?php if ($rol === "administrador" || $rol === "administrativo" || $rol === "Inspector general y Convivencia escolar"): ?>
+
                                     <a href="index.php?action=alum_emergencia_edit&id=<?= $c['id'] ?>&back=alumno_profile&alumno_id=<?= $alumno['id'] ?>"
                                         class="px-3 py-1.5 bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-semibold rounded-lg transition">
                                         Editar
                                     </a>
-                                <?php endif ?>
-                                <?php if (AuthController::puede('alum_emergencia_deleteProfile')): ?>
-                                    <a href="index.php?action=alum_emergencia_deleteProfile&id=<?= $c['id'] ?>&alumno_id=<?= $alumno['id'] ?>"
+                                   <a href="index.php?action=alum_emergencia_deleteProfile&id=<?= $c['id'] ?>&alumno_id=<?= $alumno['id'] ?>"
                                         onclick="return confirm('¿Estás seguro de eliminar este contacto?');"
                                         class="px-3 py-1.5 bg-red-800 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition">
                                         Eliminar
                                     </a>
-                                <?php endif ?>
+
+                                <?php endif; ?>
+                                    
                             </div>
                         </div>
                     <?php endforeach ?>
