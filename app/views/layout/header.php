@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
-    <link rel="icon" href="public/img/LOG_SAAT_v1png.png" type="image/png">
+    
     <title>SAAT</title>
 </head>
 

@@ -308,6 +308,26 @@ class Asistencia
     }
 
 
+    public function getUltimaFechaAsistenciaPorCurso(int $anioId): array
+    {
+        $sql = "SELECT 
+                m.curso_id,
+                MAX(a.fecha) as ultima_fecha
+            FROM alum_asistencia2 a
+            JOIN matriculas2 m ON m.id = a.matricula_id
+            WHERE m.anio_id = :anio_id
+            GROUP BY m.curso_id";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':anio_id' => $anioId]);
+
+        // Retorna mapa: curso_id => ultima_fecha
+        $resultado = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $resultado[$row['curso_id']] = $row['ultima_fecha'];
+        }
+        return $resultado;
+    }
 
 
 }

@@ -79,6 +79,7 @@ class AsistenciaController
 
         $anios = $this->model->getAnios();
         $cursos = $this->model->getCursosConMatricula($anioId);
+        $ultimasFechas = $this->model->getUltimaFechaAsistenciaPorCurso($anioId);
 
         require "../views/asistencia/cursos.php";
     }

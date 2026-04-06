@@ -17,6 +17,7 @@ switch ($ruta) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="app/public/img/LOG_SAAT_v1png" type="image/png">
     <title>CEIA Juanita Zúñiga</title>
     <link rel="stylesheet" href="styles.css">
 </head>
