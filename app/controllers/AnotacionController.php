@@ -131,4 +131,147 @@ class AnotacionController
         echo json_encode($this->model->getAsignaturasByCurso($curso_id));
         exit;
     }
+
+    public function exportarPdf()
+    {
+        $anio_id = $_GET['anio_id'] ?? null;
+        $curso_id = $_GET['curso_id'] ?? null;
+        $semestre = $_GET['semestre'] ?? null;
+
+        if (!$anio_id || !$curso_id) {
+            die("Faltan parámetros.");
+        }
+
+        $alumnos = $this->model->getAlumnosConAnotaciones($anio_id, $curso_id, $semestre);
+
+        // Nombre del curso
+        $cursos = $this->model->getCursosByAnio($anio_id);
+        $cursoNombre = '';
+        foreach ($cursos as $c) {
+            if ($c['id'] == $curso_id) {
+                $cursoNombre = $c['nombre'];
+                break;
+            }
+        }
+
+        // Anotaciones detalladas por alumno, ordenadas por tipo
+        $ordenTipos = ['Leve' => 1, 'Grave' => 2, 'Gravísima' => 3, 'Positiva' => 4, 'Registro' => 5];
+        $anotacionesPorAlumno = [];
+        foreach ($alumnos as $al) {
+            $lista = $this->model->getByMatricula($al['matricula_id'], $semestre);
+            usort(
+                $lista,
+                fn($a, $b) =>
+                ($ordenTipos[$a['tipo']] ?? 99) <=> ($ordenTipos[$b['tipo']] ?? 99)
+            );
+            $anotacionesPorAlumno[$al['matricula_id']] = $lista;
+        }
+
+        $semestreTexto = $semestre ? $semestre . '° Semestre' : 'Ambos semestres';
+
+        ob_start();
+        require __DIR__ . '/../views/anotaciones/anotaciones_pdf.php';
+        $html = ob_get_clean();
+
+        if (ob_get_length())
+            ob_end_clean();
+
+        try {
+            $options = new \Dompdf\Options();
+            $options->set('isRemoteEnabled', true);
+            $options->set('defaultFont', 'DejaVu Sans');
+
+            $dompdf = new \Dompdf\Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('letter', 'portrait');
+            $dompdf->render();
+
+            header('Content-Type: application/pdf');
+            $dompdf->stream("Anotaciones_{$cursoNombre}.pdf", ["Attachment" => true]);
+            exit;
+        } catch (Exception $e) {
+            die("Error al generar PDF: " . $e->getMessage());
+        }
+    }
+
+    public function exportarIndividualPdf()
+    {
+        //var_dump($_GET); // ← agrega esto temporalmente
+        //die();
+
+        $anio_id = $_GET['anio_id'] ?? null;
+        $curso_id = $_GET['curso_id'] ?? null;
+        $matricula_id = $_GET['matricula_id'] ?? null;
+        $semestre = $_GET['semestre'] ?? null;
+
+        if (!$anio_id || !$curso_id || !$matricula_id) {
+            die("Faltan parámetros.");
+        }
+
+        // Traer todos los alumnos del curso para encontrar el que nos interesa
+        $todosAlumnos = $this->model->getAlumnosConAnotaciones($anio_id, $curso_id, $semestre);
+
+        // Filtrar solo el alumno con la matrícula indicada
+        $alumnos = array_filter(
+            $todosAlumnos,
+            fn($al) => $al['matricula_id'] == $matricula_id
+        );
+        $alumnos = array_values($alumnos); // reindexar
+
+        if (empty($alumnos)) {
+            die("Alumno no encontrado.");
+        }
+
+        // Nombre del curso
+        $cursos = $this->model->getCursosByAnio($anio_id);
+        $cursoNombre = '';
+        foreach ($cursos as $c) {
+            if ($c['id'] == $curso_id) {
+                $cursoNombre = $c['nombre'];
+                break;
+            }
+        }
+
+        // Anotaciones del alumno ordenadas por tipo
+        $ordenTipos = ['Leve' => 1, 'Grave' => 2, 'Gravísima' => 3, 'Positiva' => 4, 'Registro' => 5];
+        $anotacionesPorAlumno = [];
+
+        $lista = $this->model->getByMatricula($matricula_id, $semestre);
+        usort(
+            $lista,
+            fn($a, $b) =>
+            ($ordenTipos[$a['tipo']] ?? 99) <=> ($ordenTipos[$b['tipo']] ?? 99)
+        );
+        $anotacionesPorAlumno[$matricula_id] = $lista;
+
+        $semestreTexto = $semestre ? $semestre . '° Semestre' : 'Ambos semestres';
+
+        // Nombre del alumno para el archivo
+        $al = $alumnos[0];
+        $nombreArchivo = "Anotaciones_{$al['apepat']}_{$al['nombre']}";
+
+        ob_start();
+        require __DIR__ . '/../views/anotaciones/anotaciones_individual_pdf.php';
+        $html = ob_get_clean();
+
+        if (ob_get_length())
+            ob_end_clean();
+
+        try {
+            $options = new \Dompdf\Options();
+            $options->set('isRemoteEnabled', true);
+            $options->set('defaultFont', 'DejaVu Sans');
+
+            $dompdf = new \Dompdf\Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('letter', 'portrait');
+            $dompdf->render();
+
+            header('Content-Type: application/pdf');
+            $dompdf->stream("{$nombreArchivo}.pdf", ["Attachment" => true]);
+            exit;
+        } catch (Exception $e) {
+            die("Error al generar PDF: " . $e->getMessage());
+        }
+    }
 }

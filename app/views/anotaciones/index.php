@@ -195,4 +195,17 @@ include __DIR__ . "/../layout/navbar.php";
 
     </div>
 </main>
+
+<?php if (!empty($_GET['anio_id']) && !empty($_GET['curso_id'])): ?>
+    <a href="index.php?action=anotaciones_pdf&anio_id=<?= $_GET['anio_id'] ?>&curso_id=<?= $_GET['curso_id'] ?>&semestre=<?= htmlspecialchars($_GET['semestre'] ?? '') ?>"
+        target="_blank"
+        class="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-full shadow-2xl transition-all hover:scale-105">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        <span>Exportar Reporte</span>
+    </a>
+<?php endif; ?>
+
 <?php include __DIR__ . "/../layout/footer.php"; ?>

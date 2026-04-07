@@ -868,6 +868,12 @@ switch ($action) {
     case 'anotacion_asignaturas':
         $anotacionController->getAsignaturasAjax();
         break;
+    case 'anotaciones_pdf':
+        $anotacionController->exportarPdf();
+        break;
+    case 'anotaciones_individual_pdf':
+        $anotacionController->exportarIndividualPdf();
+        break;
 
     //----------------------------------------------------------------------
 
