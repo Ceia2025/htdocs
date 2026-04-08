@@ -74,6 +74,11 @@
       "title": "🧪 Test Asistencia 2",
       "desc": "Guardar asistencia masiva",
       "url": "index.php?action=guardar_asistencia_masiva"
+    },
+    {
+      "title": "Notas",
+      "desc": "Gestionar notas de alumnos",
+      "url": "index.php?action=notas"
     }
   ],
   "administrativo": [
@@ -161,14 +166,14 @@
   ],
   "docente": [
     {
-      "title": "🧪 Test Asistencias",
-      "desc": "Ver registros de asistencia",
-      "url": "index.php?action=asistencias"
+      "title": "Control de Asistencia",
+      "desc": "Gestión de asistencia por nivel y curso",
+      "url": "index.php?action=asistencia_cursos"
     },
     {
-      "title": "Notas",
-      "desc": "Gestionar notas de alumnos",
-      "url": "index.php?action=notas"
+      "title": "Gestión de Anotaciones",
+      "desc": "Administración y consulta de anotaciones por alumno",
+      "url": "index.php?action=anotaciones"
     }
   ],
   "asistente social": [
