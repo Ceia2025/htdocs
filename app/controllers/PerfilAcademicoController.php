@@ -58,7 +58,11 @@ class PerfilAcademicoController
         // Obtener notas del alumno según semestre
         $notas = $notaModel->getByMatriculaAndSemestre($matricula_id, $semestreSeleccionado);
 
+        $asistenciaModel = new Asistencia();
+        $asistenciaMap = $asistenciaModel->getAsistenciaCalendarioAlumno((int) $matricula_id);
+
         // Enviar a la vista
         require __DIR__ . '/../views/perfil_academico/show.php';
+
     }
 }

@@ -330,4 +330,25 @@ class Asistencia
     }
 
 
+    public function getAsistenciaCalendarioAlumno(int $matriculaId): array
+    {
+        $sql = "SELECT 
+                fecha,
+                presente
+            FROM alum_asistencia2
+            WHERE matricula_id = :matricula_id
+            ORDER BY fecha ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':matricula_id' => $matriculaId]);
+
+        // Retorna mapa: fecha => presente (1 o 0)
+        $resultado = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $resultado[$row['fecha']] = (int) $row['presente'];
+        }
+        return $resultado;
+    }
+
+
 }

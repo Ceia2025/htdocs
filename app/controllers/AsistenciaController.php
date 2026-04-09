@@ -171,4 +171,18 @@ class AsistenciaController
 
         require "../views/asistencia/libro_clases.php";
     }
+
+    public function calendarioAlumno()
+    {
+        $matriculaId = (int) ($_GET['matricula_id'] ?? 0);
+
+        if (!$matriculaId) {
+            die("Falta matricula_id.");
+        }
+
+        $asistenciaMap = $this->model->getAsistenciaCalendarioAlumno($matriculaId);
+
+        // Pasar como variable que espera la vista del calendario
+        return $asistenciaMap;
+    }
 }
