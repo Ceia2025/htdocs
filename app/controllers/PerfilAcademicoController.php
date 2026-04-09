@@ -61,8 +61,26 @@ class PerfilAcademicoController
         $asistenciaModel = new Asistencia();
         $asistenciaMap = $asistenciaModel->getAsistenciaCalendarioAlumno((int) $matricula_id);
 
-        // Enviar a la vista
+        // Anotaciones del alumno
+        $anotacionModel = new Anotacion();
+        $anotaciones = $anotacionModel->getByMatricula($matricula_id, null); // null = ambos semestres
+
+        // Resumen de anotaciones
+        $resumenAnotaciones = [
+            'total' => count($anotaciones),
+            'positivas' => count(array_filter($anotaciones, fn($a) => $a['tipo'] === 'Positiva')),
+            'leves' => count(array_filter($anotaciones, fn($a) => $a['tipo'] === 'Leve')),
+            'graves' => count(array_filter($anotaciones, fn($a) => $a['tipo'] === 'Grave')),
+            'gravisimas' => count(array_filter($anotaciones, fn($a) => $a['tipo'] === 'Gravísima')),
+            'registros' => count(array_filter($anotaciones, fn($a) => $a['tipo'] === 'Registro')),
+        ];
+
+        // Asistencia para el calendario
+        $asistenciaModel = new Asistencia();
+        $asistenciaMap = $asistenciaModel->getAsistenciaCalendarioAlumno((int) $matricula_id);
+
         require __DIR__ . '/../views/perfil_academico/show.php';
+
 
     }
 }
