@@ -203,22 +203,9 @@ $t = $resumen['totales'];
         }
 
         /* RANKING + POR CURSO: dos columnas */
-        .dos-col {
-            display: table;
+        .bloque-full {
             width: 100%;
-            border-spacing: 6px;
-        }
-
-        .col-izq {
-            display: table-cell;
-            width: 48%;
-            vertical-align: top;
-        }
-
-        .col-der {
-            display: table-cell;
-            width: 48%;
-            vertical-align: top;
+            margin-bottom: 14px;
         }
 
         .ranking-fila {
@@ -386,56 +373,67 @@ $t = $resumen['totales'];
     </div>
 
     <!-- RANKING + POR CURSO -->
-    <div class="dos-col">
-        <!-- Ranking top alumnos -->
-        <div class="col-izq">
-            <div class="seccion">Top Alumnos con más Atrasos</div>
-            <?php foreach (array_slice($resumen['topAlumnos'], 0, 10) as $i => $al):
-                $colPos = $i === 0 ? '#d97706' : ($i === 1 ? '#64748b' : ($i === 2 ? '#92400e' : '#94a3b8'));
-                ?>
-                <div class="ranking-fila">
-                    <div class="ranking-pos" style="color: <?= $colPos ?>">
-                        <?= $i + 1 ?>
-                    </div>
-                    <div class="ranking-nom">
-                        <?= htmlspecialchars($al['apepat'] . ' ' . $al['apemat'] . ', ' . $al['nombre']) ?>
-                        <div class="curso-txt">
-                            <?= htmlspecialchars($al['curso']) ?>
-                        </div>
-                    </div>
-                    <div class="ranking-total"
-                        style="color: <?= $al['total'] >= 5 ? '#dc2626' : ($al['total'] >= 3 ? '#d97706' : '#334155') ?>">
-                        <?= $al['total'] ?>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
+    <div class="bloque-full">
+        <div class="seccion">Top Alumnos con más Atrasos</div>
+        <table>
+            <thead>
+                <tr>
+                    <th class="tc" style="width:30px">#</th>
+                    <th>Alumno</th>
+                    <th>Curso</th>
+                    <th class="tc" style="width:60px">Total</th>
+                    <th class="tc" style="width:60px">Injust.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($resumen['topAlumnos'] as $i => $al):
+                    $colPos = $i === 0 ? '#d97706' : ($i === 1 ? '#64748b' : ($i === 2 ? '#92400e' : '#94a3b8'));
+                    $colTotal = $al['total'] >= 5 ? '#dc2626' : ($al['total'] >= 3 ? '#d97706' : '#334155');
+                    ?>
+                    <tr>
+                        <td class="tc" style="font-weight:bold; color:<?= $colPos ?>"><?= $i + 1 ?></td>
+                        <td><?= htmlspecialchars($al['apepat'] . ' ' . $al['apemat'] . ', ' . $al['nombre']) ?></td>
+                        <td style="color:#64748b"><?= htmlspecialchars($al['curso']) ?></td>
+                        <td class="tc" style="font-weight:bold; font-size:11px; color:<?= $colTotal ?>"><?= $al['total'] ?>
+                        </td>
+                        <td class="tc" style="color:#dc2626; font-weight:bold"><?= $al['injustificados'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 
-        <!-- Atrasos por curso -->
-        <div class="col-der">
-            <div class="seccion">Atrasos por Curso</div>
-            <?php
-            $maxCurso = !empty($resumen['porCurso']) ? $resumen['porCurso'][0]['total'] : 1;
-            foreach ($resumen['porCurso'] as $pc):
-                $pct = round($pc['total'] / $maxCurso * 100);
-                ?>
-                <div class="barra-wrap">
-                    <div class="barra-label">
-                        <div class="barra-nombre">
-                            <?= htmlspecialchars($pc['curso']) ?> <span style="color:#dc2626">(
-                                <?= $pc['injustificados'] ?> IJ)
-                            </span>
-                        </div>
-                        <div class="barra-valor">
-                            <?= $pc['total'] ?>
-                        </div>
-                    </div>
-                    <div class="barra-bg">
-                        <div class="barra-fill" style="width: <?= $pct ?>%"></div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
+    <!-- ATRASOS POR CURSO -->
+    <div class="bloque-full">
+        <div class="seccion">Atrasos por Curso</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Curso</th>
+                    <th class="tc" style="width:70px">Total</th>
+                    <th class="tc" style="width:70px">Injustificados</th>
+                    <th style="width:200px">Barra</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $maxCurso = !empty($resumen['porCurso']) ? $resumen['porCurso'][0]['total'] : 1;
+                foreach ($resumen['porCurso'] as $pc):
+                    $pct = round($pc['total'] / $maxCurso * 100);
+                    ?>
+                    <tr>
+                        <td><?= htmlspecialchars($pc['curso']) ?></td>
+                        <td class="tc" style="font-weight:bold; color:#d97706"><?= $pc['total'] ?></td>
+                        <td class="tc" style="color:#dc2626; font-weight:bold"><?= $pc['injustificados'] ?></td>
+                        <td>
+                            <div class="barra-bg">
+                                <div class="barra-fill" style="width:<?= $pct ?>%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 
     <!-- TABLA DETALLE -->

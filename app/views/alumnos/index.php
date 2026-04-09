@@ -162,22 +162,19 @@ include __DIR__ . "/../layout/navbar.php";
     </div>
 </main>
 
-
 <script>
     const searchInput = document.getElementById('searchInput');
     const tableBody = document.querySelector('tbody');
 
-    // función para agregar puntos a un RUN
     function formatRunForSearch(value) {
         let numeric = value.replace(/\D/g, "");
         if (!numeric) return value;
         return numeric.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
-    // al salir del input, si escribió solo números, se autoformatea
     searchInput.addEventListener('blur', () => {
         const value = searchInput.value.trim();
-        if (/^\d+$/.test(value)) { // si solo son números
+        if (/^\d+$/.test(value)) {
             searchInput.value = formatRunForSearch(value);
         }
     });
@@ -185,58 +182,115 @@ include __DIR__ . "/../layout/navbar.php";
     searchInput.addEventListener('input', async () => {
         let term = searchInput.value.trim();
 
-        // si escribió solo números (ej: 18362031), formateamos antes de enviar
         if (/^\d+$/.test(term)) {
             term = formatRunForSearch(term);
         }
 
-        console.log("Buscando:", term); // para verificar
-
         const response = await fetch(`index.php?action=alumno_search&term=${encodeURIComponent(term)}`);
-        console.log("Respuesta cruda:", response);
+        if (!response.ok) return;
 
-        if (!response.ok) {
-            console.error("Error en la respuesta:", response.status, response.statusText);
+        const alumnos = await response.json();
+        tableBody.innerHTML = '';
+
+        if (alumnos.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-300">
+                        No se encontraron resultados
+                    </td>
+                </tr>`;
             return;
         }
 
-        const alumnos = await response.json();
-        console.log("Resultados JSON:", alumnos);
+        alumnos.forEach(alumno => {
+            const iniciales = (
+                (alumno.nombre?.charAt(0) || '') +
+                (alumno.apepat?.charAt(0) || '')
+            ).toUpperCase();
 
-        tableBody.innerHTML = '';
+            const edadTexto = alumno.edad ? `${alumno.edad} años` : 'Edad no registrada';
 
-        if (alumnos.length > 0) {
-            alumnos.forEach(alumno => {
-                const row = document.createElement('tr');
-                row.className = "cursor-pointer hover:bg-gray-700";
-                row.onclick = () => window.location = `index.php?action=alumno_profile&id=${alumno.id}`;
+            const fechaNac = alumno.fechanac
+                ? new Date(alumno.fechanac).toLocaleDateString('es-CL', { timeZone: 'UTC' })
+                : 'No registrada';
 
-                row.innerHTML = `
-                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.run}-${alumno.codver}</td>
-                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.edad ?? ''}</td>
-                        <td class="px-4 py-3 text-sm text-gray-100 capitalize">${alumno.nombre} ${alumno.apepat} ${alumno.apemat}</td>
-                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.fechanac ?? ''}</td>
-                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.sexo ?? ''}</td>
-                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.email ?? ''}</td>
-                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.telefono ?? ''}</td>
-                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.created_at ?? ''}</td>
-                        <td class="px-4 py-3 text-sm text-gray-100">${alumno.deleted_at ?? ''}</td>
-                        <td class="px-4 py-3 text-sm text-gray-100 space-x-3">
-                            <a href="index.php?action=alumno_edit&id=${alumno.id}" class="text-indigo-400 hover:text-indigo-300 font-medium">Editar</a>
-                            <a href="index.php?action=alumno_delete&id=${alumno.id}" onclick="return confirm('¿Eliminar este alumno?')" class="text-red-400 hover:text-red-300 font-medium">Eliminar</a>
-                        </td>
-                `;
-                tableBody.appendChild(row);
-            });
-        } else {
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="13" class="px-6 py-4 text-center text-sm text-gray-300">
-                        No se encontraron resultados
-                    </td>
-                </tr>
+            const fechaIngreso = alumno.created_at
+                ? new Date(alumno.created_at).toLocaleDateString('es-CL', { timeZone: 'UTC' })
+                : '—';
+
+            const estadoHtml = alumno.deleted_at
+                ? `<span class="inline-flex items-center px-2.5 py-1 rounded-lg border text-xs font-semibold
+                        bg-red-900/40 border-red-500 text-red-300">
+                        ❌ Retirado<br>${new Date(alumno.deleted_at).toLocaleDateString('es-CL', { timeZone: 'UTC' })}
+                   </span>`
+                : `<span class="inline-flex items-center px-2.5 py-1 rounded-lg border text-xs font-semibold
+                        bg-green-900/40 border-green-500 text-green-300">
+                        ✅ Activo
+                   </span>`;
+
+            const row = document.createElement('tr');
+            row.className = "hover:bg-gray-800/50 transition group cursor-pointer";
+            row.onclick = () => window.location = `index.php?action=alumno_profile&id=${alumno.id}`;
+
+            row.innerHTML = `
+                <!-- Alumno -->
+                <td class="px-5 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-indigo-600/20 border border-indigo-600/30
+                            flex items-center justify-center text-indigo-400 text-xs font-bold">
+                            ${iniciales}
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-white capitalize">
+                                ${alumno.nombre} ${alumno.apepat} ${alumno.apemat}
+                            </p>
+                            <p class="text-xs text-gray-500 font-mono">
+                                ${alumno.run}-${alumno.codver}
+                            </p>
+                            <p class="text-xs text-gray-400">${edadTexto}</p>
+                        </div>
+                    </div>
+                </td>
+
+                <!-- Contacto -->
+                <td class="px-5 py-4">
+                    <p class="text-sm text-gray-300">${alumno.email ?? ''}</p>
+                    <p class="text-xs text-gray-500 mt-0.5">
+                        ${alumno.telefono ? '📞 ' + alumno.telefono : '<span class="italic">Sin teléfono</span>'}
+                    </p>
+                </td>
+
+                <!-- Fechas -->
+                <td class="px-5 py-4 text-sm text-gray-300">
+                    <p>🎂 ${fechaNac}</p>
+                    <p class="text-xs text-gray-500 mt-1">📌 Ingreso: ${fechaIngreso}</p>
+                </td>
+
+                <!-- Estado -->
+                <td class="px-5 py-4">${estadoHtml}</td>
+
+                <!-- Acciones -->
+                <td class="px-5 py-4 text-center">
+                    <div class="flex items-center justify-center gap-2" onclick="event.stopPropagation()">
+                        <a href="index.php?action=alumno_edit&id=${alumno.id}"
+                           class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg
+                                  bg-indigo-700/30 hover:bg-indigo-700/60 border border-indigo-600/40
+                                  text-indigo-300 text-xs font-semibold transition">
+                            ✏️ Editar
+                        </a>
+                        <a href="index.php?action=alumno_delete&id=${alumno.id}"
+                           onclick="return confirm('¿Eliminar este alumno?')"
+                           class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg
+                                  bg-red-900/30 hover:bg-red-900/60 border border-red-700/40
+                                  text-red-400 text-xs font-semibold transition">
+                            🗑️ Eliminar
+                        </a>
+                    </div>
+                </td>
             `;
-        }
+
+            tableBody.appendChild(row);
+        });
     });
 </script>
 

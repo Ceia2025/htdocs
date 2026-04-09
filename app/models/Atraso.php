@@ -504,7 +504,7 @@ class Atraso
             $where
             GROUP BY m.id
             ORDER BY total DESC
-            LIMIT 5";
+            LIMIT 10000";
 
         $stmt = $this->conn->prepare($sqlTopAlumnos);
         $stmt->execute($params);

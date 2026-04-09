@@ -128,12 +128,14 @@ include __DIR__ . "/../layout/navbar.php";
                         ➕ Nueva Matrícula
                     </a>
                 </div>
-                
+
+                <!-- 
                 <a href="index.php?action=matricula_numero_lista&curso_id=...&anio_id=..."
     class="inline-flex items-center px-4 py-2 bg-indigo-700 hover:bg-indigo-600 
            text-white font-semibold rounded-lg shadow transition">
     📋 Números de Lista
 </a>
+--->
 
 
                 <!-- TABLA  2-->
@@ -193,7 +195,7 @@ include __DIR__ . "/../layout/navbar.php";
                                             <a href="index.php?action=perfil_academico&id=<?= $m['id'] ?>" class="px-3 py-1.5 rounded-lg text-xs font-semibold
                                            bg-emerald-500/10 text-emerald-400 border border-emerald-500/20
                                            hover:bg-emerald-500/20">
-                                                Ver
+                                                Perfil Académico
                                             </a>
 
                                             <a href="index.php?action=matricula_edit&id=<?= $m['id'] ?>" class="px-3 py-1.5 rounded-lg text-xs font-semibold

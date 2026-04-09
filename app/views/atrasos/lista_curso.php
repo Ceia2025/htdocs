@@ -497,7 +497,7 @@ $maxS = max($sem1, $sem2, 1);
                             <?php
                             $pos = 1;
                             foreach ($rankingAlumnos as $mid => $total):
-                                if ($pos > 10)
+                                if ($pos > 10000)
                                     break;
                                 $s = $stats[$mid];
                                 $color = match ($pos) { 1 => 'text-amber-400', 2 => 'text-gray-300', 3 => 'text-amber-700', default => 'text-gray-500'};
