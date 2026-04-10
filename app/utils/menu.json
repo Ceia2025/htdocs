@@ -79,6 +79,21 @@
       "title": "Notas",
       "desc": "Gestionar notas de alumnos",
       "url": "index.php?action=notas"
+    },
+    {
+      "title": "🧪Retiros",
+      "desc": "Gestión de retiros de alumnos",
+      "url": "index.php?action=retiros"
+    },
+    {
+      "title": "🧪Registrar Retiro",
+      "desc": "Crear un nuevo retiro",
+      "url": "index.php?action=retiros_create"
+    },
+    {
+      "title": "🧪Reportes de Retiros",
+      "desc": "Generar reportes de retiros",
+      "url": "index.php?action=retiros_reportes"
     }
   ],
   "administrativo": [
@@ -162,6 +177,21 @@
       "title": "Ficha de Alumnos",
       "desc": "Nómina de fichas de estudiantes registrados",
       "url": "index.php?action=alumnos"
+    },
+    {
+      "title": "Retiros",
+      "desc": "Gestión de retiros de alumnos",
+      "url": "index.php?action=retiros"
+    },
+    {
+      "title": "Registrar Retiro",
+      "desc": "Crear un nuevo retiro",
+      "url": "index.php?action=retiros_create"
+    },
+    {
+      "title": "Reportes de Retiros",
+      "desc": "Generar reportes de retiros",
+      "url": "index.php?action=retiros_reportes"
     }
   ],
   "docente": [
@@ -179,6 +209,11 @@
       "title": "Mantenedor de Matrículas",
       "desc": "Gestionar matrículas existentes",
       "url": "index.php?action=matriculas"
+    },
+    {
+      "title": "Reporte de Atrasos por Curso",
+      "desc": "Consulta y filtrado por periodo académico",
+      "url": "index.php?action=atrasos_lista_curso"
     }
   ],
   "asistente social": [

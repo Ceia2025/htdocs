@@ -12,17 +12,17 @@ require_once __DIR__ . '/../controllers/AntecedenteFamiliarController.php';
 require_once __DIR__ . '/../controllers/AntecedenteEscolarController.php';
 require_once __DIR__ . '/../controllers/MatriculaController.php';
 require_once __DIR__ . '/../controllers/PerfilAcademicoController.php';
-require_once __DIR__ . '/../controllers/AntecedenteEscolarController.php';
 require_once __DIR__ . '/../controllers/NotasController.php';
 require_once __DIR__ . '/../controllers/AtrasoController.php';
 require_once __DIR__ . '/../controllers/AnotacionController.php';
+
+require_once __DIR__ . '/../controllers/RetirosController.php';
 
 
 //Profesores
 require_once __DIR__ . '/../controllers/ProfesoresController.php';
 require_once __DIR__ . '/../controllers/ProfesorCursoAsignaturaController.php';
 require_once __DIR__ . '/../controllers/HorariosController.php';
-require_once __DIR__ . '/../controllers/ProfesorCursoAsignaturaController.php';
 
 //Perifil academico de los alumnos
 require_once __DIR__ . '/../controllers/PerfilAcademicoAsistenciaController.php';
@@ -63,6 +63,7 @@ $antecedenteEscolarController = new AntecedenteEscolarController();
 $matriculaController = new MatriculaController();
 $atrasoController = new AtrasoController();
 $anotacionController = new AnotacionController();
+$retirosController = new RetirosController();
 
 
 //Verificacion de login para usuarios
@@ -875,8 +876,41 @@ switch ($action) {
         $anotacionController->exportarIndividualPdf();
         break;
 
-    //----------------------------------------------------------------------
 
+    // ── RETIROS ─────────────────────────────────────
+    case 'retiros':
+        $retirosController->index();
+        break;
+
+    case 'retiros_create':
+        $retirosController->create();
+        break;
+
+    case 'retiros_edit':
+        $retirosController->edit((int) ($_GET['id'] ?? 0));
+        break;
+
+    case 'retiros_delete':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $retirosController->delete((int) ($_GET['id'] ?? 0));
+        }
+        break;
+
+    case 'retiros_buscar_alumnos':
+        $retirosController->buscarAlumnos();
+        break;
+
+    case 'retiros_reportes':
+        $retirosController->reportes();
+        break;
+
+    case 'retiros_reporte':
+        $retirosController->generarReporte();
+        break;
+
+
+
+    // ── RETIROS ─────────────────────────────────────
 
     default:
         echo "<h1>Ruta no encontrada papito</h1>

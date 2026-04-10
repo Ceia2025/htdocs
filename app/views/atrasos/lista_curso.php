@@ -75,7 +75,7 @@ $maxS = max($sem1, $sem2, 1);
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
-                    Registrar atraso
+                    Registrar atrasoooo
                 </a>
             </div>
         </header>
@@ -245,23 +245,28 @@ $maxS = max($sem1, $sem2, 1);
                         </div>
                     </div>
 
-                    <!-- Top 5 alumnos -->
+                    <!-- Top 5 alumnos mas MODAL -->
+                    <!-- Card top alumnos -->
                     <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden">
                         <div class="px-4 py-3 border-b border-gray-700">
                             <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">Top alumnos con más
                                 atrasos</h3>
                         </div>
                         <div class="divide-y divide-gray-700/50">
-                            <?php foreach ($resumen['topAlumnos'] as $i => $al):
+                            <?php foreach (array_slice($resumen['topAlumnos'], 0, 5) as $i => $al):
                                 $colores = ['text-amber-400', 'text-gray-300', 'text-amber-700', 'text-gray-500', 'text-gray-500'];
                                 ?>
                                 <div class="flex items-center gap-3 px-4 py-2.5">
-                                    <span class="text-sm font-bold <?= $colores[$i] ?> w-4 flex-shrink-0"><?= $i + 1 ?></span>
+                                    <span class="text-sm font-bold <?= $colores[$i] ?> w-4 flex-shrink-0">
+                                        <?= $i + 1 ?>
+                                    </span>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-white text-xs font-semibold truncate">
                                             <?= htmlspecialchars($al['apepat'] . ' ' . $al['apemat'] . ', ' . $al['nombre']) ?>
                                         </p>
-                                        <p class="text-xs text-gray-500"><?= htmlspecialchars($al['curso']) ?></p>
+                                        <p class="text-xs text-gray-500">
+                                            <?= htmlspecialchars($al['curso']) ?>
+                                        </p>
                                     </div>
                                     <div class="text-right flex-shrink-0">
                                         <span
@@ -269,13 +274,101 @@ $maxS = max($sem1, $sem2, 1);
                                             <?= $al['total'] ?>
                                         </span>
                                         <?php if ($al['injustificados'] > 0): ?>
-                                            <p class="text-xs text-red-500"><?= $al['injustificados'] ?> IJ</p>
+                                            <p class="text-xs text-red-500">
+                                                <?= $al['injustificados'] ?> IJ
+                                            </p>
                                         <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
                         </div>
+
+                        <?php if (count($resumen['topAlumnos']) > 5): ?>
+                            <div class="px-4 py-3 border-t border-gray-700">
+                                <button onclick="document.getElementById('modalTopAlumnos').classList.remove('hidden')"
+                                    class="w-full text-xs text-indigo-400 hover:text-indigo-300 font-medium transition-colors duration-150 flex items-center justify-center gap-1">
+                                    Ver todos (
+                                    <?= count($resumen['topAlumnos']) ?>)
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        <?php endif; ?>
                     </div>
+
+
+                    <!-- Modal top alumnos -->
+                    <div id="modalTopAlumnos"
+                        class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                        <div
+                            class="bg-gray-800 border border-gray-700 rounded-xl w-full max-w-md max-h-[80vh] flex flex-col shadow-xl">
+
+                            <!-- Header modal -->
+                            <div class="flex items-center justify-between px-5 py-4 border-b border-gray-700 flex-shrink-0">
+                                <h2 class="text-sm font-semibold text-white">Ranking de atrasos</h2>
+                                <button onclick="document.getElementById('modalTopAlumnos').classList.add('hidden')"
+                                    class="text-gray-400 hover:text-white transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Lista scrolleable -->
+                            <div class="overflow-y-auto divide-y divide-gray-700/50">
+                                <?php foreach ($resumen['topAlumnos'] as $i => $al):
+                                    $colores = ['text-amber-400', 'text-gray-300', 'text-amber-700', 'text-gray-500', 'text-gray-500'];
+                                    $colorPos = $colores[min($i, count($colores) - 1)];
+                                    ?>
+                                    <div class="flex items-center gap-3 px-5 py-3">
+                                        <span class="text-sm font-bold <?= $colorPos ?> w-5 flex-shrink-0 text-center">
+                                            <?= $i + 1 ?>
+                                        </span>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-white text-xs font-semibold truncate">
+                                                <?= htmlspecialchars($al['apepat'] . ' ' . $al['apemat'] . ', ' . $al['nombre']) ?>
+                                            </p>
+                                            <p class="text-xs text-gray-500">
+                                                <?= htmlspecialchars($al['curso']) ?>
+                                            </p>
+                                        </div>
+                                        <div class="text-right flex-shrink-0">
+                                            <span
+                                                class="text-base font-bold <?= $al['total'] >= 5 ? 'text-red-400' : ($al['total'] >= 3 ? 'text-amber-400' : 'text-gray-300') ?>">
+                                                <?= $al['total'] ?>
+                                            </span>
+                                            <?php if ($al['injustificados'] > 0): ?>
+                                                <p class="text-xs text-red-500">
+                                                    <?= $al['injustificados'] ?> IJ
+                                                </p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+
+                            <!-- Footer modal -->
+                            <div class="px-5 py-3 border-t border-gray-700 flex-shrink-0">
+                                <p class="text-xs text-gray-500 text-center">
+                                    <?= count($resumen['topAlumnos']) ?> alumnos en total
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Cerrar modal al hacer click fuera -->
+                    <script>
+                        document.getElementById('modalTopAlumnos').addEventListener('click', function (e) {
+                            if (e.target === this) this.classList.add('hidden');
+                        });
+                    </script>
+
+
+
+
+
 
                     <!-- Tendencia semanal -->
                     <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden">
