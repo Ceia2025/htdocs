@@ -51,11 +51,6 @@
       "url": "index.php?action=profesor_curso_asignatura"
     },
     {
-      "title": "🧪 Test Asistencias",
-      "desc": "Ver y gestionar el registro de asistencia",
-      "url": "index.php?action=asistencias"
-    },
-    {
       "title": "Administración de Cursos",
       "desc": "Gestión integral de grupos y niveles educativos",
       "url": "index.php?action=cursos"
@@ -66,32 +61,22 @@
       "url": "index.php?action=asignaturas"
     },
     {
-      "title": "🧪 Test Asistencia",
-      "desc": "Formulario masivo de asistencia",
-      "url": "index.php?action=form_asistencia_masiva"
-    },
-    {
-      "title": "🧪 Test Asistencia 2",
-      "desc": "Guardar asistencia masiva",
-      "url": "index.php?action=guardar_asistencia_masiva"
-    },
-    {
       "title": "Notas",
       "desc": "Gestionar notas de alumnos",
       "url": "index.php?action=notas"
     },
     {
-      "title": "🧪Retiros",
+      "title": "Retiros",
       "desc": "Gestión de retiros de alumnos",
       "url": "index.php?action=retiros"
     },
     {
-      "title": "🧪Registrar Retiro",
+      "title": "Registrar Retiro",
       "desc": "Crear un nuevo retiro",
       "url": "index.php?action=retiros_create"
     },
     {
-      "title": "🧪Reportes de Retiros",
+      "title": "Reportes de Retiros",
       "desc": "Generar reportes de retiros",
       "url": "index.php?action=retiros_reportes"
     }
