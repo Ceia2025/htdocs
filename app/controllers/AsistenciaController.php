@@ -1,5 +1,10 @@
 <?php
 require_once __DIR__ . '/../models/Asistencia.php';
+require_once __DIR__ . '/../libs/dompdf/vendor/autoload.php';
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 
 class AsistenciaController
 {
@@ -184,5 +189,110 @@ class AsistenciaController
 
         // Pasar como variable que espera la vista del calendario
         return $asistenciaMap;
+    }
+
+    public function libroClasesPdf(): void
+    {
+        $curso_id = (int) ($_GET['curso_id'] ?? 0);
+        $anio_id = (int) ($_GET['anio_id'] ?? 0);
+        $mes = $_GET['mes'] ?? date('Y-m');
+
+        if (!$curso_id || !$anio_id)
+            die('Parámetros inválidos.');
+
+        $asistenciaModel = new Asistencia();
+
+        $curso = $asistenciaModel->getCurso($curso_id);
+        $anio = $asistenciaModel->getFechasAnio($anio_id);
+        $alumnos = $asistenciaModel->getAlumnosPorCurso($curso_id, $anio_id);
+        $asistencia = $asistenciaModel->getAsistenciaLibro($curso_id, $anio_id);
+
+        // Calcular fechas hábiles del mes solicitado (solo días pasados)
+        [$anioMes, $numMes] = explode('-', $mes);
+        $inicio = new DateTime("$anioMes-$numMes-01");
+        $finMes = new DateTime($inicio->format('Y-m-t'));
+        $hoy = new DateTime('today');
+        $finReal = $finMes < $hoy ? $finMes : $hoy;
+
+        $periodo = new DatePeriod(
+            $inicio,
+            new DateInterval('P1D'),
+            $finReal->modify('+1 day')
+        );
+
+        $fechas = [];
+        foreach ($periodo as $fecha) {
+            if ($fecha->format('N') <= 5) {
+                $fechas[] = clone $fecha;
+            }
+        }
+
+        if (empty($fechas)) {
+            die('No hay días hábiles registrados para el mes seleccionado.');
+        }
+
+        // Calcular stats por alumno
+        $statsAlumnos = [];
+        foreach ($alumnos as $alumno) {
+            $pres = 0;
+            $aus = 0;
+            $total = 0;
+            $fechaMatricula = !empty($alumno['fecha_matricula'])
+                ? new DateTime($alumno['fecha_matricula'])
+                : null;
+
+            foreach ($fechas as $fecha) {
+                if ($fechaMatricula && $fecha < $fechaMatricula)
+                    continue;
+                $f = $fecha->format('Y-m-d');
+                $v = $asistencia[$alumno['matricula_id']][$f] ?? null;
+                if ($v !== null) {
+                    $total++;
+                    $v == 1 ? $pres++ : $aus++;
+                }
+            }
+
+            $statsAlumnos[$alumno['matricula_id']] = [
+                'presentes' => $pres,
+                'ausentes' => $aus,
+                'total' => $total,
+                'pct' => $total > 0 ? round($pres / $total * 100) : null,
+            ];
+        }
+
+        $nombresMeses = [
+            '01' => 'Enero',
+            '02' => 'Febrero',
+            '03' => 'Marzo',
+            '04' => 'Abril',
+            '05' => 'Mayo',
+            '06' => 'Junio',
+            '07' => 'Julio',
+            '08' => 'Agosto',
+            '09' => 'Septiembre',
+            '10' => 'Octubre',
+            '11' => 'Noviembre',
+            '12' => 'Diciembre',
+        ];
+        $nombreMes = $nombresMeses[$numMes] . ' ' . $anioMes;
+        $diasCortos = ['Lu', 'Ma', 'Mi', 'Ju', 'Vi'];
+
+        ob_start();
+        require __DIR__ . '/../views/asistencia/libro_clases_pdf.php';
+        $html = ob_get_clean();
+
+        $options = new Options();
+        $options->set('isRemoteEnabled', true);
+        $options->set('defaultFont', 'DejaVu Sans');
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+        $dompdf->stream(
+            "libro_clases_{$curso['nombre']}_{$mes}.pdf",
+            ['Attachment' => true]
+        );
+        exit;
     }
 }

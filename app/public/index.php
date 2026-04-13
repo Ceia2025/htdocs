@@ -782,6 +782,10 @@ switch ($action) {
     case 'libro_clases':
         $asistenciaController->libroClases();
         break;
+        
+    case 'libro_clases_pdf':
+        $asistenciaController->libroClasesPdf();
+        break;
 
     case 'asistencia_cursos':
         $asistenciaController->listarCursos();
@@ -907,7 +911,7 @@ switch ($action) {
     case 'retiros_reporte':
         $retirosController->generarReporte();
         break;
-        
+
     case 'retiros_buscar_contactos':
         $retirosController->buscarContactos();
         break;

@@ -389,6 +389,88 @@ $mesActual = date("Y-m");
             </div>
         </main>
     </div>
+
+    <!-- Botón flotante PDF con selector de mes -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+
+        <!-- Selector de mes (aparece al hacer hover/click) -->
+        <div id="selector-pdf" class="hidden bg-gray-800 border border-gray-600 rounded-xl p-4 shadow-2xl w-64">
+            <p class="text-xs text-gray-400 uppercase tracking-wider mb-3">Seleccionar mes a exportar</p>
+            <form method="GET" action="index.php" target="_blank">
+                <input type="hidden" name="action" value="libro_clases_pdf">
+                <input type="hidden" name="curso_id" value="<?= $_GET['curso_id'] ?>">
+                <input type="hidden" name="anio_id" value="<?= $_GET['anio_id'] ?>">
+
+                <select name="mes" required
+                    class="w-full bg-gray-900 text-white text-sm border border-gray-600 rounded-lg px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="">— Elegir mes —</option>
+                    <?php
+                    // Recolectar todos los meses disponibles de ambos semestres
+                    $mesesDisponibles = [];
+                    foreach ($datosSemestres as $sem) {
+                        foreach ($sem['fechasPorMes'] as $mesKey => $_) {
+                            $mesesDisponibles[$mesKey] = $sem['nombre'];
+                        }
+                    }
+                    $nombresMesesCortos = [
+                        '01' => 'Enero',
+                        '02' => 'Febrero',
+                        '03' => 'Marzo',
+                        '04' => 'Abril',
+                        '05' => 'Mayo',
+                        '06' => 'Junio',
+                        '07' => 'Julio',
+                        '08' => 'Agosto',
+                        '09' => 'Septiembre',
+                        '10' => 'Octubre',
+                        '11' => 'Noviembre',
+                        '12' => 'Diciembre'
+                    ];
+                    foreach ($mesesDisponibles as $mesKey => $semNombre):
+                        [$anioM, $mesM] = explode('-', $mesKey);
+                        $esFuturo = $mesKey > date('Y-m');
+                        ?>
+                        <option value="<?= $mesKey ?>" <?= $esFuturo ? 'disabled' : '' ?>     <?= $mesKey === date('Y-m') ? 'selected' : '' ?>>
+                            <?= $nombresMesesCortos[$mesM] . ' ' . $anioM ?>
+                            <?= $esFuturo ? '(sin datos)' : '' ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+
+                <button type="submit"
+                    class="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white font-bold px-4 py-2 rounded-lg transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                        stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    Descargar PDF
+                </button>
+            </form>
+        </div>
+
+        <!-- Botón principal -->
+        <button onclick="document.getElementById('selector-pdf').classList.toggle('hidden')"
+            class="flex items-center gap-2 px-5 py-3 bg-green-600 hover:bg-green-500 text-white font-bold rounded-full shadow-2xl shadow-green-900/50 transition-all duration-300 hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
+            Exportar PDF
+        </button>
+    </div>
+
+    <script>
+        // Cerrar selector al hacer click fuera
+        document.addEventListener('click', function (e) {
+            const selector = document.getElementById('selector-pdf');
+            if (!e.target.closest('#selector-pdf') && !e.target.closest('button[onclick]')) {
+                selector.classList.add('hidden');
+            }
+        });
+    </script>
+
 </body>
 
 <script>
