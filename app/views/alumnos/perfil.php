@@ -59,9 +59,38 @@ $esRetirado = !empty($alumno['deleted_at']);
                             class="text-gray-200 font-medium"><?= htmlspecialchars($alumno['run'] . '-' . $alumno['codver']) ?></span>
                         <span class="mx-2 text-gray-600">·</span>
                         <?= htmlspecialchars($alumno['sexo'] === 'M' ? 'Masculino' : 'Femenino') ?>
-                        <?php if ($edad !== null): ?>
+                        <?php if (!empty($alumno['fechanac'])):
+                            $hoy = new DateTime();
+                            $nac = new DateTime($alumno['fechanac']);
+                            $diff = $hoy->diff($nac);
+                            $edadReal = $diff->y;
+                            $meses = $diff->m;
+                            $dias = $diff->d;
+                            $esMayor = $edadReal >= 18;
+
+                            // Cuánto le falta para los 18 si es menor
+                            if (!$esMayor) {
+                                $cumple18 = clone $nac;
+                                $cumple18->modify('+18 years');
+                                $falta = $hoy->diff($cumple18);
+                            }
+                            ?>
                             <span class="mx-2 text-gray-600">·</span>
-                            <?= $edad ?> años
+                            <?php if ($esMayor): ?>
+                                <span class="text-gray-200"><?= $edadReal ?> años</span>
+                                <span
+                                    class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-900/40 border border-blue-700 text-blue-300">
+                                    Mayor de edad
+                                </span>
+                            <?php else: ?>
+                                <span class="text-gray-200"><?= $edadReal ?> años, <?= $meses ?> meses y <?= $dias ?>
+                                    días</span>
+                                <span
+                                    class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-900/40 border border-amber-700 text-amber-300">
+                                    Menor · faltan <?= $falta->y > 0 ? $falta->y . ' año(s), ' : '' ?><?= $falta->m ?> mes(es) y
+                                    <?= $falta->d ?> día(s) para los 18
+                                </span>
+                            <?php endif ?>
                         <?php endif ?>
                     </p>
                     <p class="text-gray-500 text-xs mt-1">
@@ -179,14 +208,14 @@ $esRetirado = !empty($alumno['deleted_at']);
                                         class="px-3 py-1.5 bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-semibold rounded-lg transition">
                                         Editar
                                     </a>
-                                   <a href="index.php?action=alum_emergencia_deleteProfile&id=<?= $c['id'] ?>&alumno_id=<?= $alumno['id'] ?>"
+                                    <a href="index.php?action=alum_emergencia_deleteProfile&id=<?= $c['id'] ?>&alumno_id=<?= $alumno['id'] ?>"
                                         onclick="return confirm('¿Estás seguro de eliminar este contacto?');"
                                         class="px-3 py-1.5 bg-red-800 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition">
                                         Eliminar
                                     </a>
 
                                 <?php endif; ?>
-                                    
+
                             </div>
                         </div>
                     <?php endforeach ?>

@@ -145,6 +145,7 @@ include __DIR__ . "/../layout/navbar.php";
 
                         <thead class="bg-slate-950 text-slate-400 uppercase text-xs">
                             <tr>
+                                <th class="px-5 py-3 text-center">N° Lista</th>
                                 <th class="px-5 py-3 text-left">Alumno</th>
                                 <th class="px-5 py-3 text-left">Curso</th>
                                 <th class="px-5 py-3 text-left">Año</th>
@@ -161,6 +162,16 @@ include __DIR__ . "/../layout/navbar.php";
                                 ?>
 
                                 <tr class="hover:bg-slate-800/50 transition">
+                                    <td class="px-5 py-4 text-center">
+                                        <?php if ($m['numero_lista']): ?>
+                                            <span
+                                                class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-xs font-bold text-indigo-400">
+                                                <?= $m['numero_lista'] ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="text-gray-600 text-xs">—</span>
+                                        <?php endif; ?>
+                                    </td>
 
                                     <!-- Alumno -->
                                     <td class="px-5 py-4">
@@ -184,7 +195,7 @@ include __DIR__ . "/../layout/navbar.php";
                                     </td>
 
                                     <td class="px-6 py-4 text-sm text-gray-100">
-                                        <?= htmlspecialchars($m['fecha_matricula']) ?>
+                                        <?= $m['fecha_matricula'] ? date('d/m/Y', strtotime($m['fecha_matricula'])) : '—' ?>
                                     </td>
 
 

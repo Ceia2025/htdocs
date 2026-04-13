@@ -16,18 +16,19 @@ class Matricula
     public function buscarMatriculas($nombre = null, $rut = null, $anio = null, $curso = null)
     {
         $sql = "
-            SELECT m.id, 
-                   a.run, 
-                   CONCAT(a.nombre, ' ', a.apepat, ' ', a.apemat) AS nombre_completo, 
-                   c.nombre AS curso, 
-                   an.anio AS anio, 
-                   m.fecha_matricula
-            FROM matriculas2 m
-            INNER JOIN alumnos2 a ON m.alumno_id = a.id
-            INNER JOIN cursos2 c ON m.curso_id = c.id
-            INNER JOIN anios2 an ON m.anio_id = an.id
-            WHERE 1=1
-        ";
+        SELECT m.id,
+               m.numero_lista,
+               a.run, 
+               CONCAT(a.apepat, ' ', a.apemat, ', ', a.nombre) AS nombre_completo, 
+               c.nombre AS curso, 
+               an.anio AS anio, 
+               m.fecha_matricula
+        FROM matriculas2 m
+        INNER JOIN alumnos2 a ON m.alumno_id = a.id
+        INNER JOIN cursos2 c ON m.curso_id = c.id
+        INNER JOIN anios2 an ON m.anio_id = an.id
+        WHERE 1=1
+    ";
 
         $params = [];
 
@@ -50,6 +51,12 @@ class Matricula
             $sql .= " AND c.nombre LIKE :curso";
             $params[':curso'] = "%$curso%";
         }
+
+        // ORDER BY siempre al final, después de todos los filtros
+        $sql .= " ORDER BY 
+        CASE WHEN m.numero_lista IS NULL THEN 1 ELSE 0 END,
+        m.numero_lista ASC,
+        a.apepat ASC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
