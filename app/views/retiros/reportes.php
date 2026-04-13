@@ -14,16 +14,24 @@ include __DIR__ . "/../layout/navbar.php";
     <div class="min-h-full">
 
         <header class="bg-gray-800 border-b border-white/10">
-            <div class="mx-auto max-w-4xl px-4 py-5 sm:px-6 flex items-center gap-3">
-                <a href="index.php?action=retiros" class="text-gray-400 hover:text-white transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </a>
+            <div class="mx-auto max-w-6xl px-4 py-5 sm:px-6 flex items-center justify-between flex-wrap gap-3">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-0.5">Convivencia
                         Escolar</p>
                     <h1 class="text-2xl font-bold text-white">Generar reporte de retiros</h1>
+                </div>
+                <div class="flex gap-2 flex-wrap">
+                    <a href="index.php?action=retiros_create"
+                        class="flex items-center gap-2 text-sm text-gray-300 hover:text-white border border-gray-600 hover:border-gray-400 px-4 py-2 rounded-lg transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="8" r="4"></circle>
+                            <path d="M2 20c0-4 4-6 7-6s7 2 7 6"></path>
+                            <line x1="19" y1="8" x2="19" y2="14"></line>
+                            <line x1="16" y1="11" x2="22" y2="11"></line>
+                        </svg>
+                        Registrar
+                    </a>
                 </div>
             </div>
         </header>

@@ -262,6 +262,16 @@
       "title": "Reporte de Atrasos por Curso",
       "desc": "Consulta y filtrado por periodo académico",
       "url": "index.php?action=atrasos_lista_curso"
+    },
+    {
+      "title": "Retiros",
+      "desc": "Gestión de retiros de alumnos",
+      "url": "index.php?action=retiros"
+    },
+    {
+      "title": "Registrar Retiro",
+      "desc": "Crear un nuevo retiro",
+      "url": "index.php?action=retiros_create"
     }
   ]
 }

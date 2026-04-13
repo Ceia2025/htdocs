@@ -15,11 +15,6 @@ include __DIR__ . "/../layout/navbar.php";
 
         <header class="bg-gray-800 border-b border-white/10">
             <div class="mx-auto max-w-3xl px-4 py-5 sm:px-6 flex items-center gap-3">
-                <a href="index.php?action=retiros" class="text-gray-400 hover:text-white transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </a>
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-0.5">Convivencia
                         Escolar</p>
