@@ -6,7 +6,6 @@ class Retiro
     private $conn;
     private $table = 'retiros2';
 
-
     public function __construct()
     {
         $db = new Connection();
@@ -235,15 +234,15 @@ class Retiro
 
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
-            ':matricula_id'   => $data['matricula_id'],
-            ':fecha_retiro'   => $data['fecha_retiro'],
-            ':hora_retiro'    => $data['hora_retiro'],
-            ':motivo'         => $data['motivo'],
-            ':observacion'    => $data['observacion'] ?? null,
-            ':justificado'    => $data['justificado'],
+            ':matricula_id' => $data['matricula_id'],
+            ':fecha_retiro' => $data['fecha_retiro'],
+            ':hora_retiro' => $data['hora_retiro'],
+            ':motivo' => $data['motivo'],
+            ':observacion' => $data['observacion'] ?? null,
+            ':justificado' => $data['justificado'],
             ':extraordinario' => $data['extraordinario'],
-            ':quien_retira'   => $data['quien_retira'] ?? null,
-            ':semestre'       => $data['semestre'],
+            ':quien_retira' => $data['quien_retira'] ?? null,
+            ':semestre' => $data['semestre'],
             ':registrado_por' => $data['registrado_por'] ?? null,
         ]);
     }
@@ -263,15 +262,15 @@ class Retiro
 
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
-            ':fecha_retiro'   => $data['fecha_retiro'],
-            ':hora_retiro'    => $data['hora_retiro'],
-            ':motivo'         => $data['motivo'],
-            ':observacion'    => $data['observacion'] ?? null,
-            ':justificado'    => $data['justificado'],
+            ':fecha_retiro' => $data['fecha_retiro'],
+            ':hora_retiro' => $data['hora_retiro'],
+            ':motivo' => $data['motivo'],
+            ':observacion' => $data['observacion'] ?? null,
+            ':justificado' => $data['justificado'],
             ':extraordinario' => $data['extraordinario'],
-            ':quien_retira'   => $data['quien_retira'] ?? null,
-            ':semestre'       => $data['semestre'],
-            ':id'             => $id,
+            ':quien_retira' => $data['quien_retira'] ?? null,
+            ':semestre' => $data['semestre'],
+            ':id' => $id,
         ]);
     }
 
@@ -287,7 +286,7 @@ class Retiro
 
     public function getMatriculaId(int $alumno_id, int $anio_id): int|false
     {
-        $sql  = "SELECT id FROM matriculas2
+        $sql = "SELECT id FROM matriculas2
                  WHERE  alumno_id = :alumno_id AND anio_id = :anio_id LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':alumno_id' => $alumno_id, ':anio_id' => $anio_id]);
@@ -297,11 +296,24 @@ class Retiro
     public function calcularSemestre(string $fecha, array $anio): int
     {
         $d = strtotime($fecha);
-        if ($anio['sem1_inicio'] && $anio['sem1_fin']
+        if (
+            $anio['sem1_inicio'] && $anio['sem1_fin']
             && $d >= strtotime($anio['sem1_inicio'])
-            && $d <= strtotime($anio['sem1_fin'])) {
+            && $d <= strtotime($anio['sem1_fin'])
+        ) {
             return 1;
         }
         return 2;
+    }
+
+    public function getContactosEmergencia(int $alumno_id): array
+    {
+        $sql = "SELECT id, nombre_contacto, relacion, telefono
+            FROM   alum_emergencia2
+            WHERE  alumno_id = :alumno_id
+            ORDER  BY relacion";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':alumno_id' => $alumno_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

@@ -120,6 +120,17 @@ class RetirosController
         }
         echo json_encode($this->getAlumnosBusqueda($q));
     }
+    
+    public function buscarContactos(): void
+    {
+        header('Content-Type: application/json');
+        $alumno_id = (int) ($_GET['alumno_id'] ?? 0);
+        if (!$alumno_id) {
+            echo json_encode([]);
+            return;
+        }
+        echo json_encode($this->retiroModel->getContactosEmergencia($alumno_id));
+    }
 
     // ─── CREATE ──────────────────────────────────────────────────────────────────
 

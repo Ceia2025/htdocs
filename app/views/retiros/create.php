@@ -149,15 +149,33 @@ include __DIR__ . "/../layout/navbar.php";
 
                             <!-- Quien retira -->
                             <div>
-                                <label class="block text-xs font-semibold text-gray-500 mb-1.5">
-                                    Quien retira
-                                </label>
-                                <input type="text" name="quien_retira" maxlength="150"
-                                    placeholder="Nombre del apoderado, familiar u otro responsable…"
-                                    value="<?= htmlspecialchars($_POST['quien_retira'] ?? '') ?>"
-                                    class="w-full bg-gray-800 text-white text-sm border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-600">
-                                <p class="mt-1 text-xs text-gray-600">Dejar vacío si el alumno se retira solo o si es
-                                    motivo extraordinario del colegio.</p>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1.5">Quien retira</label>
+
+                                <select id="select-quien" onchange="manejarQuienRetira(this.value)"
+                                    class="w-full bg-gray-800 text-white text-sm border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2">
+                                    <option value="">— Se retira solo / sin especificar —</option>
+                                    <option value="__otro__">✏️ Escribir nombre manualmente</option>
+                                    <optgroup id="grupo-contactos" label="Contactos de emergencia">
+                                        <option disabled class="text-gray-500" id="opt-cargando">Selecciona primero un
+                                            alumno</option>
+                                    </optgroup>
+                                </select>
+
+                                <!-- Input libre (aparece solo si elige "otro") -->
+                                <div id="bloque-otro" class="hidden">
+                                    <input type="text" id="input-otro" maxlength="150"
+                                        placeholder="Nombre de quien retira…"
+                                        oninput="document.getElementById('quien_retira').value = this.value"
+                                        class="w-full bg-gray-800 text-white text-sm border border-amber-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-600">
+                                </div>
+
+                                <!-- Campo oculto que se envía al servidor -->
+                                <input type="hidden" name="quien_retira" id="quien_retira"
+                                    value="<?= htmlspecialchars($_POST['quien_retira'] ?? '') ?>">
+
+                                <p class="mt-1 text-xs text-gray-600">
+                                    Los contactos se cargan automáticamente al seleccionar un alumno.
+                                </p>
                             </div>
                         </div>
 
@@ -233,20 +251,20 @@ include __DIR__ . "/../layout/navbar.php";
                     const edadTexto = edad !== null ? `${edad} años` : '';
 
                     return `
-            <div class="flex items-center justify-between px-4 py-3 hover:bg-gray-700 cursor-pointer
-                        border-b border-gray-700/50 last:border-0 transition border-l-2 ${color.borde}"
-                 onclick="seleccionarAlumno(${JSON.stringify(a).replace(/"/g, '&quot;')})">
-                <div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <p class="text-white text-sm font-semibold">${a.apepat} ${a.apemat}, ${a.nombre}</p>
-                        ${color.badge ? `<span class="text-xs px-2 py-0.5 rounded-full ${color.badge}">${color.texto} · ${edadTexto}</span>` : ''}
+                <div class="flex items-center justify-between px-4 py-3 hover:bg-gray-700 cursor-pointer
+                            border-b border-gray-700/50 last:border-0 transition border-l-2 ${color.borde}"
+                     onclick="seleccionarAlumno(${JSON.stringify(a).replace(/"/g, '&quot;')})">
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <p class="text-white text-sm font-semibold">${a.apepat} ${a.apemat}, ${a.nombre}</p>
+                            ${color.badge ? `<span class="text-xs px-2 py-0.5 rounded-full ${color.badge}">${color.texto} · ${edadTexto}</span>` : ''}
+                        </div>
+                        <p class="text-xs text-gray-500 mt-0.5">RUN: ${a.run} · ${a.curso} · ${a.anio}</p>
                     </div>
-                    <p class="text-xs text-gray-500 mt-0.5">RUN: ${a.run} · ${a.curso} · ${a.anio}</p>
-                </div>
-                <svg class="w-4 h-4 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-            </div>`;
+                    <svg class="w-4 h-4 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </div>`;
                 }).join('');
 
                 box.classList.remove('hidden');
@@ -257,6 +275,18 @@ include __DIR__ . "/../layout/navbar.php";
             const { edad, esMayor } = calcularEdad(a.fechanac);
             const color = colorEdad(esMayor);
 
+            // Resetear quien retira antes de cargar nuevos contactos
+            const sel = document.getElementById('select-quien');
+            sel.value = '';
+            sel.disabled = true; // deshabilitar mientras cargan contactos
+            document.getElementById('quien_retira').value = '';
+            document.getElementById('input-otro').value = '';   // Bug 2 fix
+            document.getElementById('bloque-otro').classList.add('hidden');
+
+            // Cargar contactos del nuevo alumno
+            cargarContactos(a.alumno_id, sel);
+
+            // Datos del alumno
             document.getElementById('alumno_id').value = a.alumno_id;
             document.getElementById('anio_id').value = a.anio_id;
             document.getElementById('buscar-alumno').value = `${a.apepat} ${a.apemat}, ${a.nombre}`;
@@ -274,6 +304,57 @@ include __DIR__ . "/../layout/navbar.php";
 
             document.getElementById('sugerencias').classList.add('hidden');
             document.getElementById('btn-guardar').disabled = false;
+        }
+
+        async function cargarContactos(alumno_id, sel) {
+            const grupo = document.getElementById('grupo-contactos');
+            const optLoad = document.getElementById('opt-cargando');
+
+            // Limpiar contactos anteriores y mostrar estado de carga
+            Array.from(grupo.querySelectorAll('option:not(#opt-cargando)')).forEach(o => o.remove());
+            optLoad.style.display = '';      // Bug 1 fix: siempre visible al iniciar
+            optLoad.disabled = true;
+            optLoad.textContent = 'Cargando contactos…';
+
+            try {
+                const res = await fetch(`index.php?action=retiros_buscar_contactos&alumno_id=${alumno_id}`);
+                const data = await res.json();
+
+                if (!data.length) {
+                    optLoad.textContent = 'Sin contactos registrados';
+                } else {
+                    optLoad.style.display = 'none';
+                    data.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.nombre_contacto;
+                        opt.textContent = `${c.nombre_contacto} (${c.relacion})${c.telefono ? ' · ' + c.telefono : ''}`;
+                        grupo.appendChild(opt);
+                    });
+                }
+
+            } catch (e) {
+                optLoad.style.display = '';
+                optLoad.textContent = 'Error al cargar contactos';
+                console.error(e);
+            } finally {
+                // Bug 5 fix: rehabilitar select siempre al terminar, con o sin error
+                if (sel) sel.disabled = false;
+            }
+        }
+
+        function manejarQuienRetira(valor) {
+            const bloqueOtro = document.getElementById('bloque-otro');
+            const hiddenQuien = document.getElementById('quien_retira');
+            const inputOtro = document.getElementById('input-otro');
+
+            if (valor === '__otro__') {
+                bloqueOtro.classList.remove('hidden');
+                inputOtro.focus();
+                hiddenQuien.value = inputOtro.value; // Bug 3 fix: toma lo que ya haya escrito
+            } else {
+                bloqueOtro.classList.add('hidden');
+                hiddenQuien.value = valor;
+            }
         }
 
         document.addEventListener('click', function (e) {

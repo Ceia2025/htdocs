@@ -907,6 +907,10 @@ switch ($action) {
     case 'retiros_reporte':
         $retirosController->generarReporte();
         break;
+        
+    case 'retiros_buscar_contactos':
+        $retirosController->buscarContactos();
+        break;
 
 
 
