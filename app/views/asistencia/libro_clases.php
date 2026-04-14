@@ -226,12 +226,16 @@ $mesActual = date("Y-m");
                                                             #</th>
                                                         <th class="p-2 text-left sticky left-0 bg-gray-800 min-w-[26px] z-10">
                                                             Alumno</th>
-                                                        <?php foreach ($fechas as $fecha): ?>
-                                                            <th class="p-1 text-center min-w-[26px]">
-                                                                <span class="block text-xs">
+                                                        <?php foreach ($fechas as $fecha):
+                                                            $esViernes = $fecha->format("N") == 5;
+                                                            ?>
+                                                            <th
+                                                                class="p-1 text-center min-w-[26px] <?= $esViernes ? 'border-r-2 border-red-500/60' : '' ?>">
+                                                                <span class="block text-xs <?= $esViernes ? 'text-red-400' : '' ?>">
                                                                     <?= $fecha->format("d") ?>
                                                                 </span>
-                                                                <span class="block text-xs font-normal text-gray-400">
+                                                                <span
+                                                                    class="block text-xs font-normal <?= $esViernes ? 'text-red-400/70' : 'text-gray-400' ?>">
                                                                     <?= $diasCortos[$fecha->format("N") - 1] ?>
                                                                 </span>
                                                             </th>
@@ -246,6 +250,25 @@ $mesActual = date("Y-m");
                                                 </thead>
                                                 <tbody>
                                                     <?php
+                                                    $presentesPorFecha = [];
+                                                    foreach ($fechas as $fecha) {
+                                                        $f = $fecha->format("Y-m-d");
+                                                        $cuenta = 0;
+                                                        foreach ($alumnos as $al) {
+                                                            // Respetar fecha de matrícula igual que en las filas
+                                                            $fmAl = !empty($al['fecha_matricula'])
+                                                                ? new DateTime($al['fecha_matricula'])
+                                                                : null;
+                                                            if ($fmAl && $fecha < $fmAl)
+                                                                continue;
+
+                                                            $v = $asistencia[$al['matricula_id']][$f] ?? null;
+                                                            if ($v == 1)
+                                                                $cuenta++;
+                                                        }
+                                                        $presentesPorFecha[$f] = $cuenta;
+                                                    }
+
                                                     $loop = 0;
                                                     foreach ($alumnos as $alumno):
                                                         $presAlumno = 0;
@@ -300,9 +323,13 @@ $mesActual = date("Y-m");
                                                                 $f = $fecha->format("Y-m-d");
                                                                 $v = $asistencia[$alumno['matricula_id']][$f] ?? null;
                                                                 $antesDeMatricula = $fechaMatricula && $fecha < $fechaMatricula;
+                                                                $esFuturo = $fecha > new DateTime('today');
+                                                                $esViernes = $fecha->format("N") == 5;
                                                                 ?>
                                                                 <td
-                                                                    class="text-center p-1 <?= $antesDeMatricula ? 'bg-gray-900/40' : '' ?>">
+                                                                    class="text-center p-1 
+                                                                    <?= $antesDeMatricula ? 'bg-gray-900/40' : '' ?>
+                                                                    <?= $esViernes ? 'border-r-2 border-red-500/60' : '' ?>">
                                                                     <?php
                                                                     $esFuturo = $fecha > new DateTime('today');
                                                                     ?>
@@ -355,6 +382,29 @@ $mesActual = date("Y-m");
                                                         <?php
                                                         $loop++;
                                                     endforeach; ?>
+                                                    <!-- FILA TOTAL POR DÍA -->
+                                                    <tr class="border-t-2 border-cyan-500/60 bg-gray-900/80">
+                                                        <td class="p-1 sticky left-0 bg-gray-900 z-10"></td>
+                                                        <td
+                                                            class="p-1 text-xs font-bold text-cyan-400 sticky left-10 bg-gray-900 z-10">
+                                                            Total presentes
+                                                        </td>
+
+                                                        <?php foreach ($fechas as $fecha):
+                                                            $f = $fecha->format("Y-m-d");
+                                                            $esFuturo = $fecha > new DateTime('today');
+                                                            $esViernes = $fecha->format("N") == 5;
+                                                            $total = $presentesPorFecha[$f] ?? 0;
+                                                            ?>
+                                                            <td class="text-center p-1 text-xs font-bold text-cyan-400
+            <?= $esViernes ? 'border-r-2 border-red-500/60' : '' ?>">
+                                                                <?= $esFuturo ? '·' : $total ?>
+                                                            </td>
+                                                        <?php endforeach; ?>
+
+                                                        <!-- Celdas vacías para %, P, A, Días -->
+                                                        <td colspan="4" class="border-l border-gray-700 bg-gray-900"></td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
