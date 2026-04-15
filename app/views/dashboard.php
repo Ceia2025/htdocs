@@ -36,22 +36,17 @@ include __DIR__ . "/layout/header.php";
 include __DIR__ . "/layout/navbar.php";
 ?>
 
-
-
-
 <style>
     @keyframes fadeIn {
         from {
             opacity: 0;
             transform: translateY(20px);
         }
-
         to {
             opacity: 1;
             transform: translateY(0);
         }
     }
-
     .animate-fadeIn {
         animation: fadeIn 1.5s ease-out forwards;
         opacity: 0;
