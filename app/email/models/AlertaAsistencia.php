@@ -8,7 +8,7 @@ class AlertaAsistencia
     private $conn;
 
     // Roles que reciben la alerta (Inspector General y Docente)
-    private array $rolesDestinatarios = [1, 5, 6]; // ROL_INSPECTOR_GENERAL, ROL_DOCENTE
+    private array $rolesDestinatarios = [1, 5, 6]; // ROL_INSPECTOR_GENERAL, ROL_DOCENTE, ROL_ADMIN
     //private array $rolesDestinatarios = [1]; // ROL_INSPECTOR_GENERAL, ROL_DOCENTE
 
     // Cuántas ausencias consecutivas disparan la alerta
@@ -109,13 +109,6 @@ class AlertaAsistencia
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Verifica que un array de fechas (ordenado DESC) sean días laborales
-     * consecutivos en el calendario, sin contar fines de semana.
-     * Ejemplo válido: ['2026-04-16', '2026-04-15', '2026-04-14'] (Mi, Ma, Lu)
-     * Ejemplo válido: ['2026-04-14', '2026-04-11', '2026-04-10'] (Lu, Vi, Ju) — el fin de semana no cuenta
-     * Ejemplo inválido: ['2026-04-16', '2026-04-14', '2026-04-13'] — hay un día hábil de por medio (Ma 15)
-     */
     private function sonDiasConsecutivos(array $fechasDesc): bool
     {
         // Necesitamos que cada fecha sea exactamente el día hábil anterior a la siguiente
