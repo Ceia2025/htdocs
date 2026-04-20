@@ -32,6 +32,20 @@ include __DIR__ . "/../layout/navbar.php";
     </script>
 <?php endif ?>
 
+<?php if (!empty($_GET['alerta'])): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            <?php if ($_GET['alerta'] === 'enviada'): ?>
+                showToast('⚠️ Alerta enviada: hay alumnos con 3 días consecutivos de ausencia', 'warning');
+            <?php elseif ($_GET['alerta'] === 'sin_ausencias'): ?>
+                showToast('✅ Sin alertas de ausencia detectadas', 'success');
+            <?php elseif ($_GET['alerta'] === 'error_envio'): ?>
+                showToast('❌ Error al enviar la alerta de ausencias', 'error');
+            <?php endif; ?>
+        });
+    </script>
+<?php endif; ?>
+
 <body class="h-full bg-gray-900">
     <div class="min-h-full">
 
@@ -521,6 +535,45 @@ include __DIR__ . "/../layout/navbar.php";
         actualizarContador();
         validarFecha();
     });
+
+
+    function showToast(mensaje, tipo = 'info') {
+        const colores = {
+            success: 'bg-green-900/90 border-green-600 text-green-300',
+            error: 'bg-red-900/90 border-red-600 text-red-300',
+            warning: 'bg-yellow-900/90 border-yellow-600 text-yellow-300',
+            info: 'bg-gray-800/90 border-gray-600 text-gray-300',
+        };
+
+        const toast = document.createElement('div');
+        toast.className = [
+            'fixed top-5 right-5 z-50 flex items-center gap-3 px-4 py-3',
+            'border rounded-xl shadow-2xl text-sm font-medium max-w-sm w-full',
+            'translate-x-full opacity-0 transition-all duration-300',
+            colores[tipo] ?? colores.info
+        ].join(' ');
+
+        toast.innerHTML = `
+        <span class="flex-1">${mensaje}</span>
+        <button onclick="this.parentElement.remove()"
+                class="flex-shrink-0 opacity-50 hover:opacity-100 transition text-lg leading-none">✕</button>
+    `;
+
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-x-full', 'opacity-0');
+            });
+        });
+
+        setTimeout(() => {
+            toast.classList.add('translate-x-full', 'opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }, 6000);
+    }
+
+
 </script>
 
 <?php include __DIR__ . "/../layout/footer.php"; ?>

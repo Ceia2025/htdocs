@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../models/Asistencia.php';
 require_once __DIR__ . '/../libs/dompdf/vendor/autoload.php';
+require_once __DIR__ . '/../email/controller/AlertaController.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -97,7 +98,6 @@ class AsistenciaController
         $cursoId = $_POST['curso_id'];
         $anioId = $_POST['anio_id'];
         $fecha = $_POST['fecha'];
-
         $presentes = $_POST['presentes'] ?? [];
 
         $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
@@ -107,7 +107,11 @@ class AsistenciaController
             $this->model->guardarAsistencia($alumno['matricula_id'], $fecha, $presente);
         }
 
-        header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId&guardado=1");
+        // Verificar y enviar alerta
+        $alertaCtrl = new AlertaController();
+        $resultadoAlerta = $alertaCtrl->verificarYEnviarAlertaAusencias((int) $cursoId, (int) $anioId, $fecha);
+
+        header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId&guardado=1&alerta=$resultadoAlerta");
         exit;
     }
 
