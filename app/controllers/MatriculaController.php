@@ -140,4 +140,20 @@ class MatriculaController
         header("Location: index.php?action=matricula_numero_lista&curso_id=$cursoId&anio_id=$anioId&guardado=1");
         exit;
     }
+
+    public function retirar($id)
+    {
+        // Leer id desde POST si no viene por parámetro
+        $id = $id ?? $_POST['id'] ?? null;
+        $fechaRetiro = $_POST['fecha_retiro'] ?? date('Y-m-d');
+
+        if (!$id) {
+            header("Location: index.php?action=matriculas");
+            exit;
+        }
+
+        $this->model->retirar($id, $fechaRetiro);
+        header("Location: index.php?action=matriculas&retirado=1");
+        exit;
+    }
 }

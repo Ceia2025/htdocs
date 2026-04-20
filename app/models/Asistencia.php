@@ -45,6 +45,7 @@ class Asistencia
         $sql = "SELECT 
                 m.id as matricula_id,
                 m.fecha_matricula,
+                m.fecha_retiro,
                 m.numero_lista,
                 a.nombre,
                 a.apepat,
@@ -183,6 +184,7 @@ class Asistencia
         m.id as matricula_id,
         m.numero_lista,
         m.fecha_matricula,
+        m.fecha_retiro,
         al.nombre,
         al.apepat,
         al.apemat,

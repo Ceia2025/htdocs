@@ -18,6 +18,7 @@ class Matricula
         $sql = "
         SELECT m.id,
                m.numero_lista,
+               m.fecha_retiro,
                a.run, 
                CONCAT(a.apepat, ' ', a.apemat, ', ', a.nombre) AS nombre_completo, 
                c.nombre AS curso, 
@@ -150,6 +151,7 @@ class Matricula
         $sql = "SELECT 
                 m.id as matricula_id,
                 m.numero_lista,
+                m.fecha_retiro,
                 a.nombre,
                 a.apepat,
                 a.apemat,
@@ -208,10 +210,46 @@ class Matricula
     }
 
     // Eliminar matrícula
+    // Reemplaza el método delete() existente
     public function delete($id)
     {
+        // Primero verificar si tiene asistencia registrada
+        $sql = "SELECT COUNT(*) FROM alum_asistencia2 WHERE matricula_id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $tieneAsistencia = (int) $stmt->fetchColumn();
+
+        if ($tieneAsistencia > 0) {
+            // Tiene asistencia: soft delete (marcar como retirado hoy)
+            return $this->retirar($id, date('Y-m-d'));
+        }
+
+        // Sin asistencia: eliminar físicamente
         $sql = "DELETE FROM {$this->table} WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([':id' => $id]);
+    }
+
+    // Nuevo método: marcar como retirado
+    public function retirar($id, $fechaRetiro)
+    {
+        $sql = "UPDATE {$this->table} 
+            SET fecha_retiro = :fecha_retiro 
+            WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':id' => $id,
+            ':fecha_retiro' => $fechaRetiro
+        ]);
+    }
+
+    // Nuevo método: verificar si está retirado
+    public function estaRetirado($id): bool
+    {
+        $sql = "SELECT fecha_retiro FROM {$this->table} WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return !empty($row['fecha_retiro']);
     }
 }

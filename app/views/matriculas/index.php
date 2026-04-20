@@ -215,12 +215,32 @@ include __DIR__ . "/../layout/navbar.php";
                                                 Editar
                                             </a>
 
-                                            <a href="index.php?action=matricula_delete&id=<?= $m['id'] ?>"
-                                                onclick="return confirm('¿Eliminar matrícula?')" class="px-3 py-1.5 rounded-lg text-xs font-semibold
-                                           bg-rose-500/10 text-rose-400 border border-rose-500/20
-                                           hover:bg-rose-500/20">
-                                                Eliminar
-                                            </a>
+                                            <?php if (!empty($m['fecha_retiro'])): ?>
+                                                <span class="px-3 py-1.5 rounded-lg text-xs font-semibold
+                                                        bg-red-500/10 text-red-400 border border-red-500/20 italic">
+                                                    Retirado <?= date('d/m/Y', strtotime($m['fecha_retiro'])) ?>
+                                                </span>
+
+                                            <?php else: ?>
+                                                <div class="flex items-center gap-2">
+                                                    <!-- Botón que abre el modal -->
+                                                    <button type="button"
+                                                        onclick="abrirModalRetiro(<?= $m['id'] ?>, '<?= htmlspecialchars($m['alumno_nombre'] ?? '') ?>')"
+                                                        class="px-3 py-1.5 rounded-lg text-xs font-semibold
+                                                        bg-orange-500/10 text-orange-400 border border-orange-500/20
+                                                        hover:bg-orange-500/20 transition">
+                                                        Retirar
+                                                    </button>
+
+                                                    <!-- Botón eliminar -->
+                                                    <a href="index.php?action=matricula_delete&id=<?= $m['id'] ?>"
+                                                        onclick="return confirm('¿Eliminar matrícula definitivamente?')" class="px-3 py-1.5 rounded-lg text-xs font-semibold
+                                                        bg-rose-500/10 text-rose-400 border border-rose-500/20
+                                                        hover:bg-rose-500/20 transition">
+                                                        Eliminar
+                                                    </a>
+                                                </div>
+                                            <?php endif; ?>
 
                                         </div>
                                     </td>
@@ -244,6 +264,84 @@ include __DIR__ . "/../layout/navbar.php";
             </div>
         </main>
     </div>
+
+
+
+    <!-- MODAL RETIRO -->
+    <div id="modal-retiro" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="cerrarModalRetiro()"></div>
+
+        <!-- Caja del modal -->
+        <div class="relative bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl p-6 w-80 z-10">
+
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-5">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-orange-400 mb-0.5">
+                        Matrícula
+                    </p>
+                    <h3 class="text-lg font-bold text-white">Registrar retiro</h3>
+                </div>
+                <button onclick="cerrarModalRetiro()"
+                    class="text-gray-500 hover:text-white transition p-1 rounded-lg hover:bg-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+
+            <!-- Form -->
+            <form method="POST" action="index.php?action=matricula_retirar" id="form-retiro"
+                onsubmit="return confirm('¿Confirmas el retiro de este alumno?')">
+                <input type="hidden" name="id" id="modal-retiro-id">
+
+                <div class="mb-5">
+                    <label class="block text-xs font-semibold text-gray-400 
+                              uppercase tracking-wider mb-2">
+                        Fecha de retiro
+                    </label>
+                    <input type="date" name="fecha_retiro" id="modal-retiro-fecha" max="<?= date('Y-m-d') ?>"
+                        value="<?= date('Y-m-d') ?>" class="w-full bg-gray-900 text-white text-lg font-mono 
+                              border border-gray-600 rounded-xl px-4 py-3 
+                              focus:outline-none focus:ring-2 focus:ring-orange-500 
+                              focus:border-transparent">
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" onclick="cerrarModalRetiro()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white 
+                               font-semibold py-2.5 rounded-xl transition text-sm">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-1 bg-orange-500 hover:bg-orange-400 
+                               active:bg-orange-600 text-white font-bold 
+                               py-2.5 rounded-xl transition text-sm">
+                        Confirmar retiro
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function abrirModalRetiro(matriculaId, nombreAlumno) {
+            document.getElementById('modal-retiro-id').value = matriculaId;
+            document.getElementById('modal-retiro-fecha').value = '<?= date('Y-m-d') ?>';
+            document.getElementById('modal-retiro').classList.remove('hidden');
+        }
+
+        function cerrarModalRetiro() {
+            document.getElementById('modal-retiro').classList.add('hidden');
+        }
+
+        // Cerrar con Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') cerrarModalRetiro();
+        });
+    </script>
 </body>
 
 <?php include __DIR__ . "/../layout/footer.php"; ?>

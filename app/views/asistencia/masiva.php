@@ -256,39 +256,72 @@ include __DIR__ . "/../layout/navbar.php";
 
 
                             <!-- Filas -->
-                            <?php foreach ($alumnos as $i => $alumno): ?>
+                            <?php foreach ($alumnos as $i => $alumno): 
+                                $estaRetirado = !empty($alumno['fecha_retiro']) && $fecha > $alumno['fecha_retiro'];
+                                $antesDeMatricula = !empty($alumno['fecha_matricula']) && $fecha < $alumno['fecha_matricula'];
+                                $inactivo = $estaRetirado || $antesDeMatricula;
+                            ?>
                                 <label class="grid grid-cols-[40px_1fr_auto] items-center px-5 py-3.5 border-t border-gray-700/60 
-                  hover:bg-gray-700/30 cursor-pointer transition group">
+                                    <?= $inactivo 
+                                        ? 'bg-red-900/10 cursor-default opacity-75' 
+                                        : 'hover:bg-gray-700/30 cursor-pointer' ?> 
+                                    transition group">
 
                                     <!-- Número de lista -->
                                     <div class="text-center">
-                                        <span
-                                            class="text-xs font-bold <?= $alumno['numero_lista'] ? 'text-indigo-400' : 'text-gray-600' ?>">
+                                        <span class="text-xs font-bold <?= $alumno['numero_lista'] ? 'text-indigo-400' : 'text-gray-600' ?>">
                                             <?= $alumno['numero_lista'] ?? '—' ?>
                                         </span>
                                     </div>
 
                                     <!-- Nombre -->
                                     <div>
-                                        <span class="text-sm font-semibold text-white">
+                                        <span class="text-sm font-semibold <?= $inactivo ? 'text-red-400' : 'text-white' ?>">
                                             <?= htmlspecialchars($alumno['apepat'] . " " . $alumno['apemat']) ?>
                                         </span>
-                                        <span class="text-sm text-gray-400">, <?= htmlspecialchars($alumno['nombre']) ?></span>
+                                        <span class="text-sm <?= $inactivo ? 'text-red-500/70' : 'text-gray-400' ?>">
+                                            , <?= htmlspecialchars($alumno['nombre']) ?>
+                                        </span>
+                                        <?php if ($estaRetirado): ?>
+                                            <span class="ml-2 text-xs bg-red-900/50 text-red-400 border border-red-700/50 
+                                                        px-2 py-0.5 rounded-full">
+                                                Retirado <?= date('d/m/Y', strtotime($alumno['fecha_retiro'])) ?>
+                                            </span>
+                                        <?php elseif ($antesDeMatricula): ?>
+                                            <span class="ml-2 text-xs bg-yellow-900/50 text-yellow-400 border border-yellow-700/50 
+                                                        px-2 py-0.5 rounded-full">
+                                                Se matricula el <?= date('d/m/Y', strtotime($alumno['fecha_matricula'])) ?>
+                                            </span>
+                                        <?php endif; ?>
                                     </div>
 
                                     <!-- Checkbox -->
                                     <div class="w-20 flex justify-center">
-                                        <?php
-                                        // Si hay edición: usar el valor guardado; si es nuevo: marcar todos presentes
-                                        $estaPresente = $esEdicion
-                                            ? ($asistenciaExistente[$alumno['matricula_id']] ?? 0) === 1
-                                            : true;
-                                        ?>
-                                        <input type="checkbox" class="presente w-5 h-5 rounded accent-green-500 cursor-pointer"
-                                            name="presentes[]" value="<?= $alumno['matricula_id'] ?>" <?= $estaPresente ? 'checked' : '' ?> onchange="actualizarContador()">
+                                        <?php if ($inactivo): ?>
+                                            <span class="text-red-700/60" title="<?= $estaRetirado ? 'Alumno retirado' : 'Aún no matriculado' ?>">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" 
+                                                    stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" 
+                                                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                                                </svg>
+                                            </span>
+                                        <?php else: ?>
+                                            <?php
+                                            $estaPresente = $esEdicion
+                                                ? ($asistenciaExistente[$alumno['matricula_id']] ?? 0) === 1
+                                                : true;
+                                            ?>
+                                            <input type="checkbox" 
+                                                class="presente w-5 h-5 rounded accent-green-500 cursor-pointer"
+                                                name="presentes[]" 
+                                                value="<?= $alumno['matricula_id'] ?>" 
+                                                <?= $estaPresente ? 'checked' : '' ?> 
+                                                onchange="actualizarContador()">
+                                        <?php endif; ?>
                                     </div>
                                 </label>
                             <?php endforeach; ?>
+
                         <?php endif; ?>
                     </div>
 
@@ -326,7 +359,7 @@ include __DIR__ . "/../layout/navbar.php";
 </body>
 
 <script>
-    const totalAlumnos = <?= count($alumnos ?? []) ?>;
+    const totalAlumnos = <?= $totalActivos ?? 0 ?>;
     const SEM1_INICIO = '<?= $fechasAnio['sem1_inicio'] ?? '' ?>';
     const SEM1_FIN = '<?= $fechasAnio['sem1_fin'] ?? '' ?>';
     const SEM2_INICIO = '<?= $fechasAnio['sem2_inicio'] ?? '' ?>';

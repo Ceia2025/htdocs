@@ -130,6 +130,11 @@ $mesActual = date("Y-m");
                                     $presTotal = 0;
                                     $ausTotal = 0;
                                     $diasTotal = 0;
+                                    $fechaRetiro = !empty($alumno['fecha_retiro'])
+                                        ? new DateTime($alumno['fecha_retiro'])
+                                        : null;
+
+                                    $estaRetirado = $fechaRetiro !== null;
                                     $fechaMatricula = !empty($alumno['fecha_matricula'])
                                         ? new DateTime($alumno['fecha_matricula'])
                                         : null;
@@ -255,11 +260,16 @@ $mesActual = date("Y-m");
                                                         $f = $fecha->format("Y-m-d");
                                                         $cuenta = 0;
                                                         foreach ($alumnos as $al) {
-                                                            // Respetar fecha de matrícula igual que en las filas
                                                             $fmAl = !empty($al['fecha_matricula'])
                                                                 ? new DateTime($al['fecha_matricula'])
                                                                 : null;
+                                                            $frAl = !empty($al['fecha_retiro'])
+                                                                ? new DateTime($al['fecha_retiro'])
+                                                                : null;
+
                                                             if ($fmAl && $fecha < $fmAl)
+                                                                continue;
+                                                            if ($frAl && $fecha > $frAl)
                                                                 continue;
 
                                                             $v = $asistencia[$al['matricula_id']][$f] ?? null;
@@ -273,13 +283,21 @@ $mesActual = date("Y-m");
                                                     foreach ($alumnos as $alumno):
                                                         $presAlumno = 0;
                                                         $totalAlumno = 0;
+
                                                         $fechaMatricula = !empty($alumno['fecha_matricula'])
                                                             ? new DateTime($alumno['fecha_matricula'])
                                                             : null;
+                                                        $fechaRetiro = !empty($alumno['fecha_retiro'])
+                                                            ? new DateTime($alumno['fecha_retiro'])
+                                                            : null;
+                                                        $estaRetirado = $fechaRetiro !== null;
 
                                                         foreach ($fechas as $fecha) {
                                                             if ($fechaMatricula && $fecha < $fechaMatricula)
                                                                 continue;
+                                                            if ($fechaRetiro && $fecha > $fechaRetiro)
+                                                                continue;
+
                                                             $f = $fecha->format("Y-m-d");
                                                             $v = $asistencia[$alumno['matricula_id']][$f] ?? null;
                                                             if ($v !== null) {
@@ -293,27 +311,33 @@ $mesActual = date("Y-m");
                                                             ? round(($presAlumno / $totalAlumno) * 100)
                                                             : null;
 
-                                                        // Color basado en número de lista (1-5 par, 6-10 impar, etc.)
-                                                        // Si no tiene número de lista usa la posición del loop como fallback
                                                         $numLista = $alumno['numero_lista'] ?? ($loop + 1);
                                                         $esGrupoPar = (int) (($numLista - 1) / 5) % 2 === 0;
                                                         $bgFila = $esGrupoPar ? '' : 'bg-slate-700/30';
                                                         $bgSticky = $esGrupoPar ? 'bg-gray-800' : 'bg-slate-700/60';
                                                         ?>
-                                                        <tr class="border-t border-gray-700 <?= $bgFila ?>">
 
+                                                        <tr
+                                                            class="border-t border-gray-700 <?= $estaRetirado ? 'bg-red-900/20' : $bgFila ?>">
                                                             <!-- # -->
-                                                            <td class="p-2 text-center sticky left-0 <?= $bgSticky ?> z-10 text-xs font-bold
-                    <?= $alumno['numero_lista'] ? 'text-indigo-400' : 'text-gray-600' ?>">
+                                                            <td class="p-2 text-center sticky left-0 z-10 text-xs font-bold
+                                                                <?= $estaRetirado ? 'bg-red-900/40' : $bgSticky ?>
+                                                                <?= $alumno['numero_lista'] ? 'text-indigo-400' : 'text-gray-600' ?>">
                                                                 <?= $alumno['numero_lista'] ?? '—' ?>
                                                             </td>
 
                                                             <!-- Nombre -->
-                                                            <td
-                                                                class="p-2 font-semibold sticky left-10 <?= $bgSticky ?> z-10 leading-tight">
-                                                                <?= htmlspecialchars($alumno['apepat'] . ' ' . $alumno['apemat']) ?><br>
-                                                                <span style="color:#969292; font-weight:normal;">
+                                                            <td class="p-2 font-semibold sticky left-10 z-10 leading-tight
+                                                                <?= $estaRetirado ? 'bg-red-900/40' : $bgSticky ?>">
+
+                                                                <?= htmlspecialchars($alumno['apepat'] . ' ' . $alumno['apemat']) ?>
+                                                                <br>
+                                                                <span
+                                                                    class="font-normal text-xs <?= $estaRetirado ? 'text-red-400' : 'text-gray-500' ?>">
                                                                     <?= htmlspecialchars($alumno['nombre']) ?>
+                                                                    <?php if ($estaRetirado): ?>
+                                                                        · Ret. <?= $fechaRetiro->format('d/m/Y') ?>
+                                                                    <?php endif; ?>
                                                                 </span>
                                                             </td>
 
@@ -323,20 +347,21 @@ $mesActual = date("Y-m");
                                                                 $f = $fecha->format("Y-m-d");
                                                                 $v = $asistencia[$alumno['matricula_id']][$f] ?? null;
                                                                 $antesDeMatricula = $fechaMatricula && $fecha < $fechaMatricula;
+                                                                $despuesDeRetiro = $fechaRetiro && $fecha > $fechaRetiro;
                                                                 $esFuturo = $fecha > new DateTime('today');
                                                                 $esViernes = $fecha->format("N") == 5;
                                                                 ?>
-                                                                <td
-                                                                    class="text-center p-1 
-                                                                    <?= $antesDeMatricula ? 'bg-gray-900/40' : '' ?>
-                                                                    <?= $esViernes ? 'border-r-2 border-red-500/60' : '' ?>">
-                                                                    <?php
-                                                                    $esFuturo = $fecha > new DateTime('today');
-                                                                    ?>
-                                                                    <?php if ($antesDeMatricula): ?>
-                                                                        <span class="text-gray-700" title="Antes de la matrícula">·</span>
+                                                                <td class="text-center p-1
+                <?= ($antesDeMatricula || $despuesDeRetiro) ? 'bg-gray-900/40' : '' ?>
+                <?= $esViernes ? 'border-r-2 border-red-500/60' : '' ?>">
+
+                                                                    <?php if ($antesDeMatricula || $despuesDeRetiro): ?>
+                                                                        <span class="text-gray-700"
+                                                                            title="<?= $despuesDeRetiro ? 'Alumno retirado' : 'Antes de la matrícula' ?>">·</span>
+
                                                                     <?php elseif ($esFuturo): ?>
                                                                         <span class="text-gray-600 text-xs" title="Fecha futura">·</span>
+
                                                                     <?php elseif ($v === 1 || $v === "1"): ?>
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                                             viewBox="0 0 48 48" stroke-width="6" stroke="currentColor"
@@ -344,6 +369,7 @@ $mesActual = date("Y-m");
                                                                             class="text-green-500 mx-auto">
                                                                             <path d="M10 24L20 34L38 14" />
                                                                         </svg>
+
                                                                     <?php elseif ($v === 0 || $v === "0"): ?>
                                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                                             viewBox="0 0 48 48" stroke-width="6" stroke="currentColor"
@@ -351,6 +377,7 @@ $mesActual = date("Y-m");
                                                                             class="text-red-400 mx-auto">
                                                                             <path d="M12 12L36 36M36 12L12 36" />
                                                                         </svg>
+
                                                                     <?php else: ?>
                                                                         <span class="text-gray-600">—</span>
                                                                     <?php endif; ?>
@@ -359,9 +386,9 @@ $mesActual = date("Y-m");
 
                                                             <!-- % mes -->
                                                             <td class="text-center p-1 text-xs font-bold
-                    <?= $pctAlumno === null ? 'text-gray-500' :
-                        ($pctAlumno >= 85 ? 'text-green-400' :
-                            ($pctAlumno >= 75 ? 'text-yellow-400' : 'text-red-400')) ?>">
+            <?= $pctAlumno === null ? 'text-gray-500' :
+                ($pctAlumno >= 85 ? 'text-green-400' :
+                    ($pctAlumno >= 75 ? 'text-yellow-400' : 'text-red-400')) ?>">
                                                                 <?= $pctAlumno !== null ? $pctAlumno . '%' : '—' ?>
                                                             </td>
 
@@ -382,8 +409,9 @@ $mesActual = date("Y-m");
                                                         <?php
                                                         $loop++;
                                                     endforeach; ?>
+
                                                     <!-- FILA TOTAL POR DÍA -->
-                                                    <tr class="border-t-2 border-cyan-500/60 bg-gray-900/80">
+                                                    <tr class="border-t-2 border-cyan-500/60 bg-gray-900/80 ">
                                                         <td class="p-1 sticky left-0 bg-gray-900 z-10"></td>
                                                         <td
                                                             class="p-1 text-xs font-bold text-cyan-400 sticky left-10 bg-gray-900 z-10">
@@ -397,7 +425,7 @@ $mesActual = date("Y-m");
                                                             $total = $presentesPorFecha[$f] ?? 0;
                                                             ?>
                                                             <td class="text-center p-1 text-xs font-bold text-cyan-400
-            <?= $esViernes ? 'border-r-2 border-red-500/60' : '' ?>">
+                <?= $esViernes ? 'border-r-2 border-red-500/60' : '' ?>">
                                                                 <?= $esFuturo ? '·' : $total ?>
                                                             </td>
                                                         <?php endforeach; ?>
@@ -405,6 +433,7 @@ $mesActual = date("Y-m");
                                                         <!-- Celdas vacías para %, P, A, Días -->
                                                         <td colspan="4" class="border-l border-gray-700 bg-gray-900"></td>
                                                     </tr>
+
                                                 </tbody>
                                             </table>
                                         </div>

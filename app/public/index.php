@@ -312,6 +312,11 @@ switch ($action) {
         $matriculaController->guardarNumeroLista();
         break;
 
+    case 'matricula_retirar':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $matriculaController->retirar(null);
+        }
+        break;
 
     // Asignaturas
     case 'asignaturas':
@@ -782,7 +787,7 @@ switch ($action) {
     case 'libro_clases':
         $asistenciaController->libroClases();
         break;
-        
+
     case 'libro_clases_pdf':
         $asistenciaController->libroClasesPdf();
         break;
