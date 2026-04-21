@@ -137,6 +137,7 @@ class Atraso
                     al.apepat,
                     al.apemat,
                     al.run,
+                    al.fechanac,
                     c.nombre    AS curso,
                     an.anio
                 FROM alum_atrasos aa
@@ -271,6 +272,7 @@ class Atraso
                 al.nombre,
                 al.apepat,
                 al.apemat,
+                al.fechanac,
                 m.id        AS matricula_id,
                 c.nombre    AS curso,
                 an.anio
@@ -308,6 +310,7 @@ class Atraso
                 al.nombre,
                 al.apepat,
                 al.apemat,
+                al.fechanac,
                 m.id        AS matricula_id,
                 c.nombre    AS curso,
                 an.anio

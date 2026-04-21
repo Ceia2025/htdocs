@@ -13,6 +13,24 @@ include __DIR__ . "/../layout/navbar.php";
 
 $fechaHoy = $_GET['fecha'] ?? date('Y-m-d');
 $guardado = $_GET['guardado'] ?? 0;
+
+function calcularEdad(?string $fechanac): ?array {
+    if (!$fechanac) return null;
+    $hoy = new DateTime();
+    $nac = new DateTime($fechanac);
+    $diff = $hoy->diff($nac);
+    $esMayor = $diff->y >= 18;
+    $data = ['edad' => $diff->y, 'esMayor' => $esMayor];
+    if (!$esMayor) {
+        $cumple18 = clone $nac;
+        $cumple18->modify('+18 years');
+        $falta = $hoy->diff($cumple18);
+        $data['faltaY'] = $falta->y;
+        $data['faltaM'] = $falta->m;
+        $data['faltaD'] = $falta->d;
+    }
+    return $data;
+}
 ?>
 
 <body class="h-full bg-gray-900">
@@ -83,6 +101,7 @@ $guardado = $_GET['guardado'] ?? 0;
                         <p id="alumno-nombre" class="text-white font-bold text-sm"></p>
                         <p id="alumno-curso"  class="text-gray-400 text-xs mt-0.5"></p>
                         <p id="alumno-run"    class="text-gray-500 text-xs font-mono"></p>
+                        <div id="alumno-edad" class="mt-1.5"></div>
                     </div>
 
                     <!-- FORMULARIO -->
@@ -209,6 +228,21 @@ $guardado = $_GET['guardado'] ?? 0;
                                 <span class="text-xs text-gray-500 font-mono"><?= htmlspecialchars($a['run']) ?></span>
                                 <span class="text-gray-700">·</span>
                                 <span class="text-xs text-gray-400"><?= htmlspecialchars($a['curso']) ?></span>
+                                <?php $edad = calcularEdad($a['fechanac'] ?? null); if ($edad): ?>
+                                <span class="text-gray-700">·</span>
+                                <span class="text-xs text-gray-400"><?= $edad['edad'] ?> años</span>
+                                <?php if ($edad['esMayor']): ?>
+                                    <span class="text-xs font-semibold px-2 py-0.5 rounded-full
+                                                bg-blue-900/40 text-blue-300 border border-blue-700/50">
+                                        Mayor
+                                    </span>
+                                <?php else: ?>
+                                    <span class="text-xs font-semibold px-2 py-0.5 rounded-full
+                                                bg-amber-900/40 text-amber-300 border border-amber-700/50">
+                                        Menor
+                                    </span>
+                                <?php endif ?>
+                            <?php endif ?>
                                 <?php if ($a['observacion']): ?>
                                     <span class="text-gray-700">·</span>
                                     <span class="text-xs text-gray-500 italic truncate max-w-[180px]">
@@ -325,6 +359,16 @@ async function buscarSugerencias(q) {
     }
 }
 
+function calcularEdadJS(fechanac) {
+    if (!fechanac) return null;
+    const hoy = new Date();
+    const nac = new Date(fechanac);
+    let edad = hoy.getFullYear() - nac.getFullYear();
+    const m = hoy.getMonth() - nac.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--;
+    return { edad, esMayor: edad >= 18 };
+}
+
 function seleccionarAlumno(alumno) {
     document.getElementById('matricula_id').value = alumno.matricula_id;
     document.getElementById('buscar-run').value   = `${alumno.apepat} ${alumno.apemat}, ${alumno.nombre}`;
@@ -332,6 +376,20 @@ function seleccionarAlumno(alumno) {
     document.getElementById('alumno-nombre').textContent = `${alumno.apepat} ${alumno.apemat}, ${alumno.nombre}`;
     document.getElementById('alumno-curso').textContent  = `Curso: ${alumno.curso} (${alumno.anio})`;
     document.getElementById('alumno-run').textContent    = `RUN: ${alumno.run}${alumno.codver ? '-' + alumno.codver : ''}`;
+
+    const edadEl = document.getElementById('alumno-edad');
+    const e = calcularEdadJS(alumno.fechanac);
+    if (e) {
+        edadEl.innerHTML = e.esMayor
+            ? `<span class="text-xs text-gray-400">${e.edad} años</span>
+               <span class="ml-1.5 inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full
+                            bg-blue-900/40 text-blue-300 border border-blue-700/50">Mayor de edad</span>`
+            : `<span class="text-xs text-gray-400">${e.edad} años</span>
+               <span class="ml-1.5 inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full
+                            bg-amber-900/40 text-amber-300 border border-amber-700/50">Menor de edad</span>`;
+    } else {
+        edadEl.innerHTML = '<span class="text-xs text-gray-500 italic">Sin fecha de nacimiento</span>';
+    }
 
     document.getElementById('info-alumno').classList.remove('hidden');
     document.getElementById('sugerencias').classList.add('hidden');
