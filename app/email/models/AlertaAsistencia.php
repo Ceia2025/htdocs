@@ -1,17 +1,14 @@
 <?php
-// app/models/AlertaAsistencia.php
-
 require_once __DIR__ . '/../../config/Connection.php';
+require_once __DIR__ . '/../../models/CursoDocente.php'; // ← AGREGAR
 
 class AlertaAsistencia
 {
     private $conn;
 
-    // Roles que reciben la alerta (Inspector General y Docente)
-    private array $rolesDestinatarios = [1, 5, 6]; // ROL_INSPECTOR_GENERAL, ROL_DOCENTE, ROL_ADMIN
-    //private array $rolesDestinatarios = [1]; // ROL_INSPECTOR_GENERAL, ROL_DOCENTE
+    // Roles que SIEMPRE reciben la alerta (independiente del curso)
+    private array $rolesDestinatarios = [1, 5]; // ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL
 
-    // Cuántas ausencias consecutivas disparan la alerta
     private int $umbralAusencias = 3;
 
     public function __construct()
@@ -21,22 +18,43 @@ class AlertaAsistencia
     }
 
     /**
-     * Obtiene los emails de todos los usuarios con los roles destinatarios
-     * que tienen email registrado.
+     * Emails de roles fijos (sin filtro de curso)
      */
     public function getEmailsDestinatarios(): array
     {
         $placeholders = implode(',', array_fill(0, count($this->rolesDestinatarios), '?'));
-
         $sql = "SELECT DISTINCT u.email, u.nombre, u.ape_paterno
-                FROM   usuarios2 u
-                WHERE  u.rol_id IN ($placeholders)
-                  AND  u.email IS NOT NULL
-                  AND  u.email != ''";
-
+                FROM usuarios2 u
+                WHERE u.rol_id IN ($placeholders)
+                  AND u.email IS NOT NULL
+                  AND u.email != ''";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($this->rolesDestinatarios);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Emails de roles fijos + docente del curso específico.
+     * USAR ESTE en el envío de alertas.
+     */
+    public function getEmailsDestinatariosDeCurso(int $cursoId, int $anioId): array
+    {
+        $destinatarios = $this->getEmailsDestinatarios();
+
+        $docente = (new CursoDocente())->getDocenteDeCurso($cursoId, $anioId);
+
+        if ($docente && !empty($docente['email'])) {
+            $emailsYaIncluidos = array_column($destinatarios, 'email');
+            if (!in_array($docente['email'], $emailsYaIncluidos)) {
+                $destinatarios[] = [
+                    'email' => $docente['email'],
+                    'nombre' => $docente['nombre'],
+                    'ape_paterno' => $docente['ape_paterno'],
+                ];
+            }
+        }
+
+        return $destinatarios;
     }
 
     /**

@@ -79,6 +79,11 @@
       "title": "Reportes de Retiros",
       "desc": "Generar reportes de retiros",
       "url": "index.php?action=retiros_reportes"
+    },
+    {
+      "title": "Profesor Jefe por Curso",
+      "desc": "Asignación de profesor jefe a cada curso por año lectivo",
+      "url": "index.php?action=curso_docente"
     }
   ],
   "administrativo": [

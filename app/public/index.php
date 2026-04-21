@@ -920,7 +920,28 @@ switch ($action) {
     case 'retiros_buscar_contactos':
         $retirosController->buscarContactos();
         break;
+    // ── RETIROS ─────────────────────────────────────
 
+
+    case 'curso_docente':
+        require_once '../controllers/CursoDocenteController.php';
+        (new CursoDocenteController())->index();
+        break;
+
+    case 'curso_docente_create':
+        require_once '../controllers/CursoDocenteController.php';
+        (new CursoDocenteController())->create();
+        break;
+
+    case 'curso_docente_store':
+        require_once '../controllers/CursoDocenteController.php';
+        (new CursoDocenteController())->store();
+        break;
+
+    case 'curso_docente_delete':
+        require_once '../controllers/CursoDocenteController.php';
+        (new CursoDocenteController())->destroy();
+        break;
 
 
     // ── RETIROS ─────────────────────────────────────

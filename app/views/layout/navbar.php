@@ -114,6 +114,13 @@
                             class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Antecedentes Familiares</a>
                     </div>
                 </div>
+
+
+                <div class="relative">
+                    <a href="https://administrativo2026ceia.vercel.app/#home" style="Color: white;">Gestión Administrativa</a>
+
+                </div>
+
             </div>
 
             <!-- USUARIO -->
@@ -132,6 +139,7 @@
                     <a href="index.php?action=logout" class="text-red-400 hover:text-red-500 text-sm">Cerrar sesión</a>
                 </div>
             </div>
+            
         </div>
     </div>
 
