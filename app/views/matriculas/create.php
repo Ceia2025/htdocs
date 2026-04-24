@@ -102,25 +102,35 @@ include __DIR__ . "/../layout/navbar.php";
             .then(res => res.json())
             .then(data => {
                 list.innerHTML = '';
-                if (data.length === 0) {
+
+                if (!Array.isArray(data) || data.length === 0) {
                     list.classList.add('hidden');
                     return;
                 }
 
                 data.forEach(item => {
                     const li = document.createElement('li');
-                    li.textContent = `${item.nombre} ${item.apepat} ${item.apemat} (${item.run}-${item.codver})`;
-                    li.className = "px-3 py-2 hover:bg-gray-600 cursor-pointer";
+                    const nombreCompleto = `${item.apepat} ${item.apemat}, ${item.nombre}`;
+                    const retirado = item.deleted_at ? ' ⚠️ Retirado' : '';
+
+                    li.textContent = `${nombreCompleto} (${item.run})${retirado}`;
+                    li.className = `px-3 py-2 hover:bg-gray-600 cursor-pointer text-sm ${item.deleted_at ? 'text-orange-400' : 'text-white'}`;
+
                     li.addEventListener('click', () => {
-                        searchInput.value = li.textContent;
+                        searchInput.value = nombreCompleto;
                         hiddenInput.value = item.id;
                         list.classList.add('hidden');
                     });
+
                     list.appendChild(li);
                 });
+
                 list.classList.remove('hidden');
             })
-            .catch(err => console.error("Error buscando alumnos:", err));
+            .catch(err => {
+                console.error("Error buscando alumnos:", err);
+                list.classList.add('hidden');
+            });
     });
 
     // Ocultar lista si se hace clic fuera

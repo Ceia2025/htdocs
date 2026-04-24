@@ -54,7 +54,6 @@ class Asistencia
             JOIN alumnos2 a ON a.id = m.alumno_id
             WHERE m.curso_id = :curso_id
             AND m.anio_id = :anio_id
-            AND a.deleted_at IS NULL
             ORDER BY 
                 CASE WHEN m.numero_lista IS NULL THEN 1 ELSE 0 END,
                 m.numero_lista ASC,
@@ -207,7 +206,7 @@ class Asistencia
 
     WHERE m.curso_id = :curso_id
     AND m.anio_id = :anio_id
-    AND al.deleted_at IS NULL
+    
 
     GROUP BY m.id
 

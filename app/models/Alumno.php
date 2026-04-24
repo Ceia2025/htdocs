@@ -226,34 +226,104 @@ class Alumno
 
 
     //Busqyeda de aliumno para el aprtado de ajax en la creación de matricula
-    public function searchForAutocomplete($term)
+    // Método NUEVO — solo para crear matrículas, incluye retirados pero no eliminados del sistema
+    public function searchForMatricula($term)
     {
-        // Normalizar el término ingresado: quitar puntos, guiones y espacios
-        $clean = preg_replace('/[^0-9kK]/', '', $term);
+        $cleanRut = preg_replace('/[^0-9kK]/', '', $term);
+        $words = array_filter(array_map('trim', explode(' ', $term)));
 
+        $params = [];
+        $nameConditions = [];
+
+        foreach ($words as $i => $word) {
+            $key = ":word{$i}";
+            $params[$key] = "%$word%";
+            $nameConditions[] = "(
+            LOWER(nombre) LIKE LOWER($key) OR 
+            LOWER(apepat) LIKE LOWER($key) OR 
+            LOWER(apemat) LIKE LOWER($key)
+        )";
+        }
+
+        $nameWhere = !empty($nameConditions)
+            ? implode(' AND ', $nameConditions)
+            : '1=0';
+
+        $rutWhere = '';
+        $rutParams = [];
+        if (!empty($cleanRut) && strlen($cleanRut) >= 2) {
+            $rutWhere = "OR run LIKE :rut_raw OR REPLACE(REPLACE(run, '.', ''), '-', '') LIKE :rut_clean";
+            $rutParams[':rut_raw'] = "%$term%";
+            $rutParams[':rut_clean'] = "%$cleanRut%";
+        }
+
+        // Incluye alumnos con deleted_at (retirados de sistema) pero los marca
         $sql = "
-        SELECT id, nombre, apepat, apemat,
-               run, codver,
-               REPLACE(REPLACE(REPLACE(run, '.', ''), '-', ''), ' ', '') AS run_clean
-        FROM alumnos2
-        WHERE deleted_at IS NULL
-        AND (
-            LOWER(CONCAT(nombre, ' ', apepat, ' ', apemat)) LIKE :term
-            OR run LIKE :term
-            OR REPLACE(REPLACE(REPLACE(run, '.', ''), '-', ''), ' ', '') LIKE :clean
-        )
-        ORDER BY nombre
-        LIMIT 10
+    SELECT id, nombre, apepat, apemat, run, codver, deleted_at
+    FROM alumnos2
+    WHERE (
+        ($nameWhere)
+        $rutWhere
+    )
+    ORDER BY apepat, apemat, nombre
+    LIMIT 10
     ";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            ':term' => "%$term%",
-            ':clean' => "%$clean%"
-        ]);
-
+        $stmt->execute(array_merge($params, $rutParams));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Restaurar el método original — solo alumnos activos en el sistema
+    public function searchForAutocomplete($term)
+    {
+        $cleanRut = preg_replace('/[^0-9kK]/', '', $term);
+        $words = array_filter(array_map('trim', explode(' ', $term)));
+
+        $params = [];
+        $nameConditions = [];
+
+        foreach ($words as $i => $word) {
+            $key = ":word{$i}";
+            $params[$key] = "%$word%";
+            $nameConditions[] = "(
+            LOWER(nombre) LIKE LOWER($key) OR 
+            LOWER(apepat) LIKE LOWER($key) OR 
+            LOWER(apemat) LIKE LOWER($key)
+        )";
+        }
+
+        $nameWhere = !empty($nameConditions)
+            ? implode(' AND ', $nameConditions)
+            : '1=0';
+
+        $rutWhere = '';
+        $rutParams = [];
+        if (!empty($cleanRut) && strlen($cleanRut) >= 2) {
+            $rutWhere = "OR run LIKE :rut_raw OR REPLACE(REPLACE(run, '.', ''), '-', '') LIKE :rut_clean";
+            $rutParams[':rut_raw'] = "%$term%";
+            $rutParams[':rut_clean'] = "%$cleanRut%";
+        }
+
+        // Solo alumnos activos en el sistema
+        $sql = "
+    SELECT id, nombre, apepat, apemat, run, codver
+    FROM alumnos2
+    WHERE deleted_at IS NULL
+    AND (
+        ($nameWhere)
+        $rutWhere
+    )
+    ORDER BY apepat, apemat, nombre
+    LIMIT 10
+    ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(array_merge($params, $rutParams));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     // Obtener años que tienen matrículas registradas
     public function getAniosConMatriculas()
     {

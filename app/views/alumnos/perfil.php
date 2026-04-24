@@ -113,6 +113,77 @@ $esRetirado = !empty($alumno['deleted_at']);
         </div>
     </div>
 
+
+    <!-- MATRÍCULA ACTIVA -->
+    <div class="mx-auto max-w-5xl px-4 pt-8 sm:px-6 lg:px-8">
+        <div class="bg-gray-800 border border-purple-800/50 rounded-2xl overflow-hidden shadow-lg shadow-purple-900/20">
+
+            <div class="px-6 py-4 border-b border-gray-700 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-purple-400 text-lg">📋</span>
+                    <h2 class="text-base font-semibold text-white">Matrícula Activa</h2>
+                </div>
+                <?php if (!empty($matriculaActiva)): ?>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold
+                             bg-purple-900/50 border border-purple-600 text-purple-300">
+                        <?= htmlspecialchars($matriculaActiva['anio_escolar']) ?>
+                    </span>
+                <?php endif ?>
+            </div>
+
+            <?php if (!empty($matriculaActiva)): ?>
+                <div class="grid grid-cols-2 sm:grid-cols-4 divide-x divide-gray-700">
+
+                    <!-- Curso -->
+                    <div class="px-6 py-5 flex flex-col items-center text-center gap-1">
+                        <span class="text-2xl">🏫</span>
+                        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Curso</p>
+                        <p class="text-lg font-bold text-white">
+                            <?= htmlspecialchars($matriculaActiva['curso_nombre']) ?>
+                        </p>
+                    </div>
+
+                    <!-- Año escolar -->
+                    <div class="px-6 py-5 flex flex-col items-center text-center gap-1">
+                        <span class="text-2xl">📅</span>
+                        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Año Escolar</p>
+                        <p class="text-lg font-bold text-white">
+                            <?= htmlspecialchars($matriculaActiva['anio_escolar']) ?>
+                        </p>
+                    </div>
+
+                    <!-- N° de lista -->
+                    <div class="px-6 py-5 flex flex-col items-center text-center gap-1">
+                        <span class="text-2xl">🔢</span>
+                        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">N° Lista</p>
+                        <p class="text-lg font-bold text-white">
+                            <?= $matriculaActiva['numero_lista'] ?? '—' ?>
+                        </p>
+                    </div>
+
+                    <!-- Fecha matrícula -->
+                    <div class="px-6 py-5 flex flex-col items-center text-center gap-1">
+                        <span class="text-2xl">📝</span>
+                        <p class="text-xs text-gray-400 uppercase tracking-wider mt-1">Fecha Matrícula</p>
+                        <p class="text-lg font-bold text-white">
+                            <?= $matriculaActiva['fecha_matricula']
+                                ? (new DateTime($matriculaActiva['fecha_matricula']))->format('d/m/Y')
+                                : '—' ?>
+                        </p>
+                    </div>
+
+                </div>
+            <?php else: ?>
+                <div class="px-6 py-10 flex flex-col items-center gap-2 text-center">
+                    <span class="text-4xl">📭</span>
+                    <p class="text-gray-400 text-sm font-medium">Sin matrícula activa</p>
+                    <p class="text-gray-600 text-xs">Este alumno no está matriculado en ningún curso actualmente.</p>
+                </div>
+            <?php endif ?>
+
+        </div>
+    </div>
+
     <div class="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 space-y-6">
 
         <!-- DATOS PERSONALES -->

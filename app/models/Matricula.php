@@ -97,6 +97,7 @@ class Matricula
     {
         $sql = "SELECT 
                     m.*, 
+                    m.fecha_retiro, 
                     c.nombre AS curso_nombre,
                     an.anio AS anio_escolar
                 FROM {$this->table} m
@@ -251,5 +252,36 @@ class Matricula
         $stmt->execute([':id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return !empty($row['fecha_retiro']);
+    }
+
+    // Obtener matrícula activa del alumno (la más reciente sin retiro)
+    public function getActivaByAlumno($alumno_id)
+    {
+        $sql = "SELECT 
+                m.id,
+                m.numero_lista,
+                m.fecha_matricula,
+                m.fecha_retiro,
+                c.nombre AS curso_nombre,
+                an.anio  AS anio_escolar
+            FROM matriculas2 m
+            INNER JOIN cursos2 c  ON m.curso_id = c.id
+            INNER JOIN anios2 an  ON m.anio_id  = an.id
+            WHERE m.alumno_id = :alumno_id
+              AND m.fecha_retiro IS NULL
+            ORDER BY an.anio DESC
+            LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':alumno_id' => $alumno_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function reintegrar($id)
+    {
+        $sql = "UPDATE {$this->table} 
+            SET fecha_retiro = NULL 
+            WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([':id' => $id]);
     }
 }

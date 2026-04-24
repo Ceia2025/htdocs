@@ -129,13 +129,7 @@ include __DIR__ . "/../layout/navbar.php";
                     </a>
                 </div>
 
-                <!-- 
-                <a href="index.php?action=matricula_numero_lista&curso_id=...&anio_id=..."
-    class="inline-flex items-center px-4 py-2 bg-indigo-700 hover:bg-indigo-600 
-           text-white font-semibold rounded-lg shadow transition">
-    📋 Números de Lista
-</a>
---->
+
 
 
                 <!-- TABLA  2-->
@@ -154,6 +148,7 @@ include __DIR__ . "/../layout/navbar.php";
                             </tr>
                         </thead>
 
+
                         <tbody class="divide-y divide-slate-800">
 
                             <?php foreach ($matriculas as $m):
@@ -162,10 +157,12 @@ include __DIR__ . "/../layout/navbar.php";
                                 ?>
 
                                 <tr class="hover:bg-slate-800/50 transition">
+
+                                    <!-- N° Lista -->
                                     <td class="px-5 py-4 text-center">
                                         <?php if ($m['numero_lista']): ?>
-                                            <span
-                                                class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-xs font-bold text-indigo-400">
+                                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-full 
+                                 bg-indigo-500/20 border border-indigo-500/30 text-xs font-bold text-indigo-400">
                                                 <?= $m['numero_lista'] ?>
                                             </span>
                                         <?php else: ?>
@@ -176,70 +173,82 @@ include __DIR__ . "/../layout/navbar.php";
                                     <!-- Alumno -->
                                     <td class="px-5 py-4">
                                         <div class="flex items-center gap-3">
-
                                             <div class="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/30
-                                            flex items-center justify-center text-xs font-bold text-indigo-400">
+                                flex items-center justify-center text-xs font-bold text-indigo-400">
                                                 <?= $iniciales ?>
                                             </div>
-
                                             <span class="font-semibold text-white">
                                                 <?= htmlspecialchars($nombre) ?>
                                             </span>
                                         </div>
                                     </td>
+
+                                    <!-- Curso -->
                                     <td class="px-6 py-4 text-sm text-gray-100">
                                         <?= htmlspecialchars($m['curso_nombre'] ?? $m['curso'] ?? '') ?>
                                     </td>
+
+                                    <!-- Año -->
                                     <td class="px-6 py-4 text-sm text-gray-100">
                                         <?= htmlspecialchars($m['anio_escolar'] ?? $m['anio'] ?? '') ?>
                                     </td>
 
+                                    <!-- Fecha -->
                                     <td class="px-6 py-4 text-sm text-gray-100">
                                         <?= $m['fecha_matricula'] ? date('d/m/Y', strtotime($m['fecha_matricula'])) : '—' ?>
                                     </td>
 
-
-                                    <!-- ACCIONES -->
+                                    <!-- Acciones -->
                                     <td class="px-5 py-4 text-center">
-                                        <div class="flex justify-center gap-2">
+                                        <div class="flex justify-center gap-2 flex-wrap">
 
                                             <a href="index.php?action=perfil_academico&id=<?= $m['id'] ?>" class="px-3 py-1.5 rounded-lg text-xs font-semibold
-                                           bg-emerald-500/10 text-emerald-400 border border-emerald-500/20
-                                           hover:bg-emerald-500/20">
+                              bg-emerald-500/10 text-emerald-400 border border-emerald-500/20
+                              hover:bg-emerald-500/20">
                                                 Perfil Académico
                                             </a>
 
                                             <a href="index.php?action=matricula_edit&id=<?= $m['id'] ?>" class="px-3 py-1.5 rounded-lg text-xs font-semibold
-                                           bg-indigo-500/10 text-indigo-400 border border-indigo-500/20
-                                           hover:bg-indigo-500/20">
+                              bg-indigo-500/10 text-indigo-400 border border-indigo-500/20
+                              hover:bg-indigo-500/20">
                                                 Editar
                                             </a>
 
                                             <?php if (!empty($m['fecha_retiro'])): ?>
+                                                <!-- Alumno retirado: mostrar estado + botón reintegrar -->
                                                 <span class="px-3 py-1.5 rounded-lg text-xs font-semibold
-                                                        bg-red-500/10 text-red-400 border border-red-500/20 italic">
-                                                    Retirado <?= date('d/m/Y', strtotime($m['fecha_retiro'])) ?>
+                                     bg-red-500/10 text-red-400 border border-red-500/20 italic">
+                                                    Retirado
+                                                    <?= date('d/m/Y', strtotime($m['fecha_retiro'])) ?>
                                                 </span>
 
-                                            <?php else: ?>
-                                                <div class="flex items-center gap-2">
-                                                    <!-- Botón que abre el modal -->
-                                                    <button type="button"
-                                                        onclick="abrirModalRetiro(<?= $m['id'] ?>, '<?= htmlspecialchars($m['alumno_nombre'] ?? '') ?>')"
-                                                        class="px-3 py-1.5 rounded-lg text-xs font-semibold
-                                                        bg-orange-500/10 text-orange-400 border border-orange-500/20
-                                                        hover:bg-orange-500/20 transition">
-                                                        Retirar
+                                                <form method="POST" action="index.php?action=matricula_reintegrar"
+                                                    onsubmit="return confirm('¿Reintegrar a este alumno? Se restaurará su matrícula activa.')">
+                                                    <input type="hidden" name="id" value="<?= $m['id'] ?>">
+                                                    <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-semibold
+                                           bg-green-500/10 text-green-400 border border-green-500/20
+                                           hover:bg-green-500/20 transition">
+                                                        Reintegrar
                                                     </button>
+                                                </form>
 
-                                                    <!-- Botón eliminar -->
-                                                    <a href="index.php?action=matricula_delete&id=<?= $m['id'] ?>"
-                                                        onclick="return confirm('¿Eliminar matrícula definitivamente?')" class="px-3 py-1.5 rounded-lg text-xs font-semibold
-                                                        bg-rose-500/10 text-rose-400 border border-rose-500/20
-                                                        hover:bg-rose-500/20 transition">
-                                                        Eliminar
-                                                    </a>
-                                                </div>
+                                            <?php else: ?>
+                                                <!-- Alumno activo: botón retirar (modal) + eliminar -->
+                                                <button type="button"
+                                                    onclick="abrirModalRetiro(<?= $m['id'] ?>, '<?= htmlspecialchars($nombre) ?>')"
+                                                    class="px-3 py-1.5 rounded-lg text-xs font-semibold
+                                       bg-orange-500/10 text-orange-400 border border-orange-500/20
+                                       hover:bg-orange-500/20 transition">
+                                                    Retirar
+                                                </button>
+
+                                                <a href="index.php?action=matricula_delete&id=<?= $m['id'] ?>"
+                                                    onclick="return confirm('¿Eliminar matrícula definitivamente?')" class="px-3 py-1.5 rounded-lg text-xs font-semibold
+                                  bg-rose-500/10 text-rose-400 border border-rose-500/20
+                                  hover:bg-rose-500/20 transition">
+                                                    Eliminar
+                                                </a>
+
                                             <?php endif; ?>
 
                                         </div>

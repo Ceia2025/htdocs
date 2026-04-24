@@ -156,4 +156,18 @@ class MatriculaController
         header("Location: index.php?action=matriculas&retirado=1");
         exit;
     }
+
+    public function reintegrar($id = null)
+    {
+        $id = $id ?? $_POST['id'] ?? null;
+
+        if (!$id) {
+            header("Location: index.php?action=matriculas");
+            exit;
+        }
+
+        $this->model->reintegrar($id);
+        header("Location: index.php?action=matriculas&reintegrado=1");
+        exit;
+    }
 }

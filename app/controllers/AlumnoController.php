@@ -153,18 +153,20 @@ class AlumnosController
             exit;
         }
 
-        // Cargar modelos adicionales
         require_once __DIR__ . '/../models/AlumEmergencia.php';
         require_once __DIR__ . '/../models/AntecedenteFamiliar.php';
         require_once __DIR__ . '/../models/AntecedenteEscolar.php';
+        require_once __DIR__ . '/../models/Matricula.php'; // 👈 agregar esto
 
         $emergenciaModel = new AlumEmergencia();
         $familiarModel = new AntecedenteFamiliar();
         $escolarModel = new AntecedenteEscolar();
+        $matriculaModel = new Matricula(); // 👈 agregar esto
 
-        // Obtener datos relacionados
         $contactos = $emergenciaModel->findByAlumno($id);
         $antecedentes = $familiarModel->findByAlumno($id);
+        $matriculaActiva = $matriculaModel->getActivaByAlumno($id); // 👈 agregar esto
+
         require __DIR__ . '/../views/alumnos/perfil.php';
     }
 
@@ -245,7 +247,7 @@ class AlumnosController
             // Eliminar automáticamente todas sus matrículas
             require_once __DIR__ . '/../models/Matricula.php';
             $matriculaModel = new Matricula();
-            $matriculaModel->deleteByAlumno($id);
+            //$matriculaModel->deleteByAlumno($id);
 
             error_log("🗑️ Matrículas eliminadas para alumno ID: $id");
         } else {
@@ -386,6 +388,28 @@ class AlumnosController
         }
 
         include __DIR__ . "/../views/alumnos/listado_por_anio.php";
+    }
+
+    public function searchAjaxMatricula()
+    {
+        header('Content-Type: application/json; charset=utf-8');
+
+        try {
+            $term = $_GET['term'] ?? '';
+
+            if (strlen($term) < 2) {
+                echo json_encode([]);
+                exit;
+            }
+
+            $alumno = new Alumno();
+            $results = $alumno->searchForMatricula($term);
+
+            echo json_encode($results);
+        } catch (Exception $e) {
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+        exit;
     }
 
 

@@ -292,7 +292,7 @@ switch ($action) {
 
     case 'alumno_search_ajax_matricula':
         $controller = new AlumnosController();
-        $controller->searchAjax();
+        $controller->searchAjaxMatricula();
         break;
 
     case 'alumno_pdf':
@@ -315,6 +315,12 @@ switch ($action) {
     case 'matricula_retirar':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $matriculaController->retirar(null);
+        }
+        break;
+
+    case 'matricula_reintegrar':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $matriculaController->reintegrar();
         }
         break;
 
@@ -639,6 +645,7 @@ switch ($action) {
         }
         break;
 
+       
 
 
     case 'notas':
