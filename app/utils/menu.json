@@ -63,7 +63,7 @@
     {
       "title": "Notas",
       "desc": "Gestionar notas de alumnos",
-      "url": "index.php?action=notas"
+      "url": "index.php?action=notas_panel"
     },
     {
       "title": "Retiros",
@@ -204,6 +204,11 @@
       "title": "Reporte de Atrasos por Curso",
       "desc": "Consulta y filtrado por periodo académico",
       "url": "index.php?action=atrasos_lista_curso"
+    },
+    {
+      "title": "Notas",
+      "desc": "Gestionar notas de alumnos",
+      "url": "index.php?action=notas_panel"
     }
   ],
   "asistente social": [

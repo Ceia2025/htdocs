@@ -22,19 +22,36 @@ class NotasController
     // ✅ Formulario ingreso masivo (solo asignaturas del curso actual)
     public function createGroup($curso_id, $anio_id)
     {
-        // 🔹 Obtener alumnos matriculados en el curso y año
         $alumnos = $this->model->getByCursoYAnio($curso_id, $anio_id);
 
-        // 🔹 Obtener las asignaturas correspondientes al curso actual
         require_once __DIR__ . '/../models/CursoAsignatura.php';
         $cursoAsignaturaModel = new CursoAsignatura();
         $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($curso_id);
 
-        // 🔹 Detectar semestre actual automáticamente
         $mesActual = intval(date('n'));
         $semestreActual = ($mesActual >= 3 && $mesActual <= 7) ? 1 : 2;
 
-        // 🔹 Enviar datos a la vista
+        // Cargar notas existentes por asignatura y semestre
+        $notasExistentes = [];
+        foreach ($asignaturas as $asig) {
+            $notas = $this->model->getNotasPorCursoAsignaturaSemestre(
+                $curso_id,
+                $anio_id,
+                $asig['id'],
+                $semestreActual
+            );
+            foreach ($notas as $n) {
+                $notasExistentes[$asig['id']][$n['matricula_id']][] = $n;
+            }
+        }
+
+        // Verificar permisos
+        require_once __DIR__ . '/../models/CursoDocente.php';
+        $user = $_SESSION['user'];
+        $rolId = $user['rol_id'];
+        $rolesAdmin = [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_INSPECTOR_GENERAL, ROL_UTP];
+        $puedeEditar = in_array($rolId, $rolesAdmin);
+
         require __DIR__ . '/../views/notas/createGroup.php';
     }
 
@@ -149,31 +166,35 @@ class NotasController
         require __DIR__ . '/../views/notas/index.php';
     }
 
+
+
     // Actualizar
     public function update($id, $data)
-{
-    $val = floatval($data['nota']);
-    if ($val < 1.0 || $val > 7.0) {
-        echo "<script>alert('La nota debe estar entre 1.0 y 7.0'); window.history.back();</script>";
+    {
+        $val = floatval($data['nota']);
+        if ($val < 1.0 || $val > 7.0) {
+            echo "<script>alert('La nota debe estar entre 1.0 y 7.0'); window.history.back();</script>";
+            exit;
+        }
+
+        $data['semestre'] = intval($data['semestre'] ?? 1);
+        $this->model->update($id, $data);
+
+        // Redirigir al panel de notas si vienen los parámetros
+        $cursoId = $data['curso_id'] ?? null;
+        $anioId = $data['anio_id'] ?? null;
+        $asignaturaId = $data['asignatura_id'] ?? null;
+        $semestre = $data['semestre'] ?? 1;
+
+        if ($cursoId && $anioId && $asignaturaId) {
+            header("Location: index.php?action=notas_panel_asignatura&curso_id={$cursoId}&anio_id={$anioId}&asignatura_id={$asignaturaId}&semestre={$semestre}");
+            exit;
+        }
+
+        // Fallback si faltan parámetros
+        header("Location: index.php?action=notas_panel");
         exit;
     }
-
-    $data['semestre'] = intval($data['semestre'] ?? 1);
-    $this->model->update($id, $data);
-
-    // 🔹 Redirección mejorada: volver al perfil académico del alumno
-    $matricula_id = $data['matricula_id'] ?? null;
-    $semestre = $data['semestre'] ?? 1;
-
-    if ($matricula_id) {
-        header("Location: index.php?action=perfil_academico&id={$matricula_id}&semestre={$semestre}");
-        exit;
-    }
-
-    // Si no hay matrícula, fallback al listado de notas
-    header("Location: index.php?action=notas");
-    exit;
-}
 
     // Eliminar
     public function delete($id)
@@ -181,5 +202,133 @@ class NotasController
         $this->model->delete($id);
         header("Location: index.php?action=notas");
         exit;
+    }
+
+
+
+    public function panelCursos()
+    {
+        require_once __DIR__ . '/../models/CursoDocente.php';
+        require_once __DIR__ . '/../models/Anio.php';
+        require_once __DIR__ . '/../models/Cursos.php';
+
+        $user = $_SESSION['user'];
+        $rolId = $user['rol_id'];
+        $userId = $user['id'];
+
+        $cursoDocenteModel = new CursoDocente();
+        $anioModel = new Anio();
+
+        $anioId = (int) ($_GET['anio_id'] ?? $cursoDocenteModel->getAnioActualId());
+        $anios = $anioModel->getAll();
+
+        // Roles que ven todos los cursos
+        $rolesAdmin = [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_INSPECTOR_GENERAL, ROL_UTP];
+
+        if (in_array($rolId, $rolesAdmin)) {
+            // Ver todos los cursos con sus docentes
+            $cursos = $cursoDocenteModel->getAllConDocente($anioId);
+            $esTodos = true;
+        } else {
+            // Profesor jefe: solo sus cursos
+            $cursos = $cursoDocenteModel->getCursosByDocente($userId, $anioId);
+            $esTodos = false;
+        }
+
+        require __DIR__ . '/../views/notas/panel_cursos.php';
+    }
+
+    public function panelAsignaturas()
+    {
+        require_once __DIR__ . '/../models/CursoDocente.php';
+        require_once __DIR__ . '/../models/CursoAsignatura.php';
+        require_once __DIR__ . '/../models/Cursos.php';
+        require_once __DIR__ . '/../models/Anio.php';
+
+        $user = $_SESSION['user'];
+        $rolId = $user['rol_id'];
+        $userId = $user['id'];
+
+        $cursoId = (int) ($_GET['curso_id'] ?? 0);
+        $anioId = (int) ($_GET['anio_id'] ?? 0);
+        $semestre = (int) ($_GET['semestre'] ?? 1);
+
+        if (!$cursoId || !$anioId)
+            die("Faltan parámetros.");
+
+        // Verificar acceso si es docente
+        $rolesAdmin = [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_INSPECTOR_GENERAL, ROL_UTP];
+        if (!in_array($rolId, $rolesAdmin)) {
+            $cursoDocenteModel = new CursoDocente();
+            $docente = $cursoDocenteModel->getDocenteDeCurso($cursoId, $anioId);
+            if (!$docente || $docente['id'] != $userId) {
+                header("Location: index.php?action=notas_panel");
+                exit;
+            }
+        }
+
+        $cursoAsignaturaModel = new CursoAsignatura();
+        $cursoModel = new Cursos();
+        $anioModel = new Anio();
+
+        $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($cursoId);
+        $curso = $cursoModel->getById($cursoId);
+        $anio = $anioModel->getById($anioId);
+
+        $puedeEditar = in_array($rolId, $rolesAdmin);
+
+        require __DIR__ . '/../views/notas/panel_asignaturas.php';
+    }
+
+    public function panelNotasAsignatura()
+    {
+        require_once __DIR__ . '/../models/CursoDocente.php';
+        require_once __DIR__ . '/../models/CursoAsignatura.php';
+        require_once __DIR__ . '/../models/Cursos.php';
+        require_once __DIR__ . '/../models/Anio.php';
+        require_once __DIR__ . '/../models/Asignaturas.php';
+
+        $user = $_SESSION['user'];
+        $rolId = $user['rol_id'];
+        $userId = $user['id'];
+
+        $cursoId = (int) ($_GET['curso_id'] ?? 0);
+        $anioId = (int) ($_GET['anio_id'] ?? 0);
+        $asignaturaId = (int) ($_GET['asignatura_id'] ?? 0);
+        $semestre = (int) ($_GET['semestre'] ?? 1);
+
+        if (!$cursoId || !$anioId || !$asignaturaId)
+            die("Faltan parámetros.");
+
+        // Verificar acceso si es docente
+        $rolesAdmin = [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_INSPECTOR_GENERAL, ROL_UTP];
+        if (!in_array($rolId, $rolesAdmin)) {
+            $cursoDocenteModel = new CursoDocente();
+            $docente = $cursoDocenteModel->getDocenteDeCurso($cursoId, $anioId);
+            if (!$docente || $docente['id'] != $userId) {
+                header("Location: index.php?action=notas_panel");
+                exit;
+            }
+        }
+
+        $puedeEditar = in_array($rolId, $rolesAdmin);
+
+        $alumnos = $this->model->getByCursoYAnio($cursoId, $anioId);
+        $notas = $this->model->getNotasPorCursoAsignaturaSemestre(
+            $cursoId,
+            $anioId,
+            $asignaturaId,
+            $semestre
+        );
+
+        $cursoModel = new Cursos();
+        $anioModel = new Anio();
+        $asignaturaModel = new Asignaturas();
+
+        $curso = $cursoModel->getById($cursoId);
+        $anio = $anioModel->getById($anioId);
+        $asignatura = $asignaturaModel->getById($asignaturaId);
+
+        require __DIR__ . '/../views/notas/panel_notas_asignatura.php';
     }
 }

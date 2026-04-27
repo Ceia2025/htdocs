@@ -10,6 +10,7 @@ defined('ROL_ASISTENTE_SOCIAL') || define('ROL_ASISTENTE_SOCIAL', 7);
 defined('ROL_ANOTACIONES') || define('ROL_ANOTACIONES', 9);
 defined('ROL_ASISTENCIAS') || define('ROL_ASISTENCIAS', 10);
 defined('ROL_ATRASOS') || define('ROL_ATRASOS', 11);
+defined('ROL_UTP') || define('ROL_UTP', 12);
 
 return [
     // null = cualquier usuario autenticado puede acceder
@@ -188,14 +189,7 @@ return [
     'antecedente_escolar_editProfile' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO, ROL_INSPECTOR_GENERAL],
     'antecedente_escolar_updateProfile' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
 
-    // ── NOTAS ──
-    'notas' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_DOCENTE],
-    'notas_index' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_DOCENTE],
-    'notas_createGroup' => [ROL_ADMINISTRADOR, ROL_DOCENTE],
-    'notas_storeGroup' => [ROL_ADMINISTRADOR, ROL_DOCENTE],
-    'notas_edit' => [ROL_ADMINISTRADOR, ROL_DOCENTE],
-    'notas_update' => [ROL_ADMINISTRADOR, ROL_DOCENTE],
-    'notas_delete' => [ROL_ADMINISTRADOR],
+    
 
     // ── PERFIL ACADÉMICO ──
     'perfil_academico' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_ADMINISTRATIVO, ROL_INSPECTOR_GENERAL, ROL_ASISTENTE_SOCIAL, ROL_DOCENTE],
@@ -222,4 +216,24 @@ return [
 
     'anamnesis_form' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL],
     'anamnesis_guardar' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL],
+
+    'notas_panel' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_INSPECTOR_GENERAL, ROL_UTP, ROL_DOCENTE],
+    'notas_panel_asignaturas' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_INSPECTOR_GENERAL, ROL_UTP, ROL_DOCENTE],
+    'notas_panel_asignatura' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_INSPECTOR_GENERAL, ROL_UTP, ROL_DOCENTE],
+    'notas_createGroup' => [ROL_ADMINISTRADOR, ROL_UTP],
+    'notas_storeGroup' => [ROL_ADMINISTRADOR, ROL_UTP],
+    'notas_edit' => [ROL_ADMINISTRADOR, ROL_UTP],
+    'notas_update' => [ROL_ADMINISTRADOR, ROL_UTP],
+    'notas_delete' => [ROL_ADMINISTRADOR, ROL_UTP],
+
+
+    // ── NOTAS ──
+    /*
+    'notas' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_DOCENTE],
+    'notas_index' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_DOCENTE],
+    'notas_createGroup' => [ROL_ADMINISTRADOR, ROL_DOCENTE],
+    'notas_storeGroup' => [ROL_ADMINISTRADOR, ROL_DOCENTE],
+    'notas_edit' => [ROL_ADMINISTRADOR, ROL_DOCENTE],
+    'notas_update' => [ROL_ADMINISTRADOR, ROL_DOCENTE],
+    'notas_delete' => [ROL_ADMINISTRADOR],*/
 ];

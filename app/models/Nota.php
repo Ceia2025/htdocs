@@ -14,19 +14,21 @@ class Nota
 
     // Obtener nota por ID
     public function getById($id)
-    {
-        $sql = "SELECT n.*, a.nombre AS asignatura_nombre,
-                       m.alumno_id, m.curso_id, m.anio_id,
-                       al.nombre AS alumno_nombre, al.apepat, al.apemat
-                FROM {$this->table} n
-                JOIN asignaturas2 a ON n.asignatura_id = a.id
-                JOIN matriculas2 m ON n.matricula_id = m.id
-                JOIN alumnos2 al ON m.alumno_id = al.id
-                WHERE n.id = :id LIMIT 1";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([':id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+{
+    $sql = "SELECT n.*, 
+                   n.asignatura_id,
+                   a.nombre AS asignatura_nombre,
+                   m.alumno_id, m.curso_id, m.anio_id,
+                   al.nombre AS alumno_nombre, al.apepat, al.apemat
+            FROM {$this->table} n
+            JOIN asignaturas2 a  ON n.asignatura_id = a.id
+            JOIN matriculas2 m   ON n.matricula_id = m.id
+            JOIN alumnos2 al     ON m.alumno_id = al.id
+            WHERE n.id = :id LIMIT 1";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([':id' => $id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 
     // Listado general
     public function getAll(): array
@@ -76,12 +78,26 @@ class Nota
     // 🟣 Obtener alumnos del curso/año
     public function getByCursoYAnio($curso_id, $anio_id)
     {
-        $sql = "SELECT m.id AS matricula_id, al.id AS alumno_id,
-                       al.nombre, al.apepat, al.apemat, al.deleted_at
-                FROM matriculas2 m
-                JOIN alumnos2 al ON m.alumno_id = al.id
-                WHERE m.curso_id = :curso_id AND m.anio_id = :anio_id
-                ORDER BY al.apepat, al.apemat, al.nombre";
+        $sql = "SELECT 
+                m.id AS matricula_id,
+                m.numero_lista,
+                m.fecha_retiro,
+                al.id AS alumno_id,
+                al.nombre,
+                al.apepat,
+                al.apemat,
+                al.deleted_at
+            FROM matriculas2 m
+            JOIN alumnos2 al ON m.alumno_id = al.id
+            WHERE m.curso_id = :curso_id 
+            AND m.anio_id = :anio_id
+            ORDER BY 
+                CASE WHEN m.numero_lista IS NULL THEN 1 ELSE 0 END,
+                m.numero_lista ASC,
+                al.apepat ASC,
+                al.apemat ASC,
+                al.nombre ASC";
+
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':curso_id' => $curso_id, ':anio_id' => $anio_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -159,5 +175,39 @@ class Nota
     {
         $stmt = $this->conn->prepare("DELETE FROM {$this->table} WHERE id = :id");
         return $stmt->execute([':id' => $id]);
+    }
+
+    public function getNotasPorCursoAsignaturaSemestre(
+        int $cursoId,
+        int $anioId,
+        int $asignaturaId,
+        int $semestre
+    ): array {
+        $sql = "SELECT n.id, n.nota, n.fecha, n.semestre,
+                   n.matricula_id,
+                   al.nombre, al.apepat, al.apemat,
+                   m.numero_lista,
+                   m.fecha_retiro
+            FROM {$this->table} n
+            JOIN matriculas2 m  ON m.id = n.matricula_id
+            JOIN alumnos2 al    ON al.id = m.alumno_id
+            WHERE m.curso_id      = :curso_id
+            AND   m.anio_id       = :anio_id
+            AND   n.asignatura_id = :asignatura_id
+            AND   n.semestre      = :semestre
+            ORDER BY 
+                CASE WHEN m.numero_lista IS NULL THEN 1 ELSE 0 END,
+                m.numero_lista ASC,
+                al.apepat ASC,
+                al.apemat ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':curso_id' => $cursoId,
+            ':anio_id' => $anioId,
+            ':asignatura_id' => $asignaturaId,
+            ':semestre' => $semestre,
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

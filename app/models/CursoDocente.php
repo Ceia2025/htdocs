@@ -20,9 +20,9 @@ class CursoDocente
 
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
-            ':curso_id'    => $cursoId,
-            ':docente_id'  => $docenteId,
-            ':anio_id'     => $anioId,
+            ':curso_id' => $cursoId,
+            ':docente_id' => $docenteId,
+            ':anio_id' => $anioId,
             ':docente_id2' => $docenteId,
         ]);
     }
@@ -101,4 +101,22 @@ class CursoDocente
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row['id'] ?? null;
     }
+
+    public function getCursosByDocente(int $docenteId, int $anioId): array
+    {
+        $sql = "SELECT c.id AS curso_id, c.nombre AS curso
+            FROM curso_docente cd
+            JOIN cursos2 c ON c.id = cd.curso_id
+            WHERE cd.docente_id = :docente_id
+            AND cd.anio_id = :anio_id
+            ORDER BY c.nombre";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':docente_id' => $docenteId,
+            ':anio_id' => $anioId
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }

@@ -558,3 +558,108 @@ Array
 )
 
 --------------------
+Array
+(
+    [fecha] => 2026-04-27 16:40:52
+    [curso_id] => 20
+    [anio_id] => 3
+    [semestre] => 1
+    [asignatura_id] => 53
+    [notas_recibidas] => Array
+        (
+            [225] => Array
+                (
+                    [nota] => 4.4
+                    [matricula_id] => 233
+                    [deleted_at] => 
+                )
+
+            [189] => Array
+                (
+                    [nota] => 5.5
+                    [matricula_id] => 234
+                    [deleted_at] => 
+                )
+
+            [211] => Array
+                (
+                    [nota] => 1.1
+                    [matricula_id] => 236
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
+Array
+(
+    [fecha] => 2026-04-27 16:41:56
+    [curso_id] => 20
+    [anio_id] => 3
+    [semestre] => 1
+    [asignatura_id] => 55
+    [notas_recibidas] => Array
+        (
+            [225] => Array
+                (
+                    [nota] => 4.4
+                    [matricula_id] => 233
+                    [deleted_at] => 
+                )
+
+            [189] => Array
+                (
+                    [nota] => 4.4
+                    [matricula_id] => 234
+                    [deleted_at] => 
+                )
+
+            [211] => Array
+                (
+                    [nota] => 6.3
+                    [matricula_id] => 236
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------
+Array
+(
+    [fecha] => 2026-04-27 16:42:42
+    [curso_id] => 20
+    [anio_id] => 3
+    [semestre] => 1
+    [asignatura_id] => 53
+    [notas_recibidas] => Array
+        (
+            [225] => Array
+                (
+                    [nota] => 3.3
+                    [matricula_id] => 233
+                    [deleted_at] => 
+                )
+
+            [189] => Array
+                (
+                    [nota] => 3.3
+                    [matricula_id] => 234
+                    [deleted_at] => 
+                )
+
+            [211] => Array
+                (
+                    [nota] => 3.3
+                    [matricula_id] => 236
+                    [deleted_at] => 
+                )
+
+        )
+
+)
+
+--------------------

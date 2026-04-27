@@ -17,6 +17,7 @@ require_once __DIR__ . '/../controllers/AtrasoController.php';
 require_once __DIR__ . '/../controllers/AnotacionController.php';
 require_once __DIR__ . '/../controllers/AnamnesisResumenController.php';
 
+
 require_once __DIR__ . '/../controllers/RetirosController.php';
 
 
@@ -65,6 +66,7 @@ $matriculaController = new MatriculaController();
 $atrasoController = new AtrasoController();
 $anotacionController = new AnotacionController();
 $retirosController = new RetirosController();
+$notasController = new NotasController();
 
 
 //Verificacion de login para usuarios
@@ -183,7 +185,7 @@ switch ($action) {
         break;
 
 
-//Anamnesis Resumen
+    //Anamnesis Resumen
     case 'anamnesis_form':
         if (!AuthController::puede('anamnesis_form')) {
             header("Location: index.php?action=dashboard");
@@ -204,7 +206,7 @@ switch ($action) {
         }
         break;
 
-        
+
     // CRUD Roles
     case 'roles':
         $rolesController->index();
@@ -706,6 +708,30 @@ switch ($action) {
     case 'notas_delete':
         $notasController = new NotasController();
         $notasController->delete($_GET['id']);
+        break;
+
+    case 'notas_panel':
+        if (!AuthController::puede('notas_panel')) {
+            header("Location: index.php?action=dashboard");
+            exit;
+        }
+        $notasController->panelCursos();
+        break;
+
+    case 'notas_panel_asignaturas':
+        if (!AuthController::puede('notas_panel_asignaturas')) {
+            header("Location: index.php?action=dashboard");
+            exit;
+        }
+        $notasController->panelAsignaturas();
+        break;
+
+    case 'notas_panel_asignatura':
+        if (!AuthController::puede('notas_panel_asignatura')) {
+            header("Location: index.php?action=dashboard");
+            exit;
+        }
+        $notasController->panelNotasAsignatura();
         break;
 
     //---------------------------------------------------------------------
