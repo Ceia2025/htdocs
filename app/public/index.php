@@ -15,6 +15,7 @@ require_once __DIR__ . '/../controllers/PerfilAcademicoController.php';
 require_once __DIR__ . '/../controllers/NotasController.php';
 require_once __DIR__ . '/../controllers/AtrasoController.php';
 require_once __DIR__ . '/../controllers/AnotacionController.php';
+require_once __DIR__ . '/../controllers/AnamnesisResumenController.php';
 
 require_once __DIR__ . '/../controllers/RetirosController.php';
 
@@ -181,6 +182,29 @@ switch ($action) {
         // ... cargar otras secciones del perfil ...
         break;
 
+
+//Anamnesis Resumen
+    case 'anamnesis_form':
+        if (!AuthController::puede('anamnesis_form')) {
+            header("Location: index.php?action=dashboard");
+            exit;
+        }
+        $anamnesisController = new AnamnesisResumenController();
+        $anamnesisController->formAnamnesis();
+        break;
+
+    case 'anamnesis_guardar':
+        if (!AuthController::puede('anamnesis_guardar')) {
+            header("Location: index.php?action=dashboard");
+            exit;
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $anamnesisController = new AnamnesisResumenController();
+            $anamnesisController->guardar();
+        }
+        break;
+
+        
     // CRUD Roles
     case 'roles':
         $rolesController->index();
@@ -645,7 +669,7 @@ switch ($action) {
         }
         break;
 
-       
+
 
 
     case 'notas':

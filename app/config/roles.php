@@ -219,4 +219,7 @@ return [
     'curso_docente_create' => [ROL_ADMINISTRADOR, ROL_DIRECCION],
     'curso_docente_store' => [ROL_ADMINISTRADOR, ROL_DIRECCION],
     'curso_docente_delete' => [ROL_ADMINISTRADOR, ROL_DIRECCION],
+
+    'anamnesis_form' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL],
+    'anamnesis_guardar' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL],
 ];

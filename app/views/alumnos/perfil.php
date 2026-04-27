@@ -114,6 +114,67 @@ $esRetirado = !empty($alumno['deleted_at']);
     </div>
 
 
+    <div class="mx-auto max-w-5xl px-4 pt-8 sm:px-6 lg:px-8">
+        <div class="bg-gray-800 border border-lime-800/50 rounded-2xl overflow-hidden shadow-lg shadow-lime-900/20">
+
+            <!-- RESUMEN ANAMNESIS -->
+            <?php if (AuthController::puede('anamnesis_form')): ?>
+                <div class="bg-gray-800 border border-lime-700/40 rounded-2xl overflow-hidden shadow">
+                    <div class="px-6 py-4 border-b border-gray-700 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lime-400 text-lg">🧠</span>
+                            <h2 class="text-base font-semibold text-white">Resumen de Anamnesis</h2>
+                        </div>
+                        <a href="index.php?action=anamnesis_form&alumno_id=<?= $alumno['id'] ?>" class="inline-flex items-center gap-1 px-3 py-1.5 bg-purple-700 hover:bg-purple-600 
+                        text-white text-xs font-semibold rounded-lg transition">
+                            ✏️ Ver / Editar
+                        </a>
+                    </div>
+                    <?php
+                    require_once __DIR__ . '/../../models/ResumenAnamnesis.php';
+                    require_once __DIR__ . '/../../models/Anio.php';
+                    $anamnesisModel = new ResumenAnamnesis();
+                    $anioModel = new Anio();
+                    $anios = $anioModel->getAll();
+                    $anioActualId = !empty($anios) ? $anios[0]['id'] : null;
+                    $anamnesisActual = $anioActualId
+                        ? $anamnesisModel->getByAlumnoYAnio($alumno['id'], $anioActualId)
+                        : null;
+                    ?>
+                    <?php if ($anamnesisActual): ?>
+                        <div class="px-6 py-5 space-y-3">
+                            <div class="flex justify-between items-start gap-4">
+                                <span class="text-xs text-gray-400 uppercase tracking-wider min-w-[130px]">Realizado por</span>
+                                <span class="text-sm text-gray-100 text-right">
+                                    <?= htmlspecialchars($anamnesisActual['realizado_por']) ?>
+                                    <?= $anamnesisActual['relacion']
+                                        ? '<span class="text-gray-500"> (' . htmlspecialchars($anamnesisActual['relacion']) . ')</span>'
+                                        : '' ?>
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-start gap-4">
+                                <span class="text-xs text-gray-400 uppercase tracking-wider min-w-[130px]">Año</span>
+                                <span class="text-sm text-gray-100">
+                                    <?= $anamnesisActual['anio_escolar'] ?>
+                                </span>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400 uppercase tracking-wider mb-2">Observaciones</p>
+                                <p class="text-sm text-gray-300 leading-relaxed">
+                                    <?= nl2br(htmlspecialchars($anamnesisActual['observaciones'] ?? '—')) ?>
+                                </p>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <div class="px-6 py-8 text-center text-gray-500 text-sm italic">
+                            No hay anamnesis registrada para el año actual.
+                        </div>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
     <!-- MATRÍCULA ACTIVA -->
     <div class="mx-auto max-w-5xl px-4 pt-8 sm:px-6 lg:px-8">
         <div class="bg-gray-800 border border-purple-800/50 rounded-2xl overflow-hidden shadow-lg shadow-purple-900/20">

@@ -26,7 +26,7 @@
 
                 <a href="index.php?action=dashboard"
                     class="text-gray-300 hover:text-white hover:bg-purple-600/20 px-3 py-2 rounded-lg transition">
-                    Dashboard
+                    Inicio
                 </a>
 
                 <!-- USUARIOS -->
