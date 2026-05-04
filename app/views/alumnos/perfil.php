@@ -299,64 +299,121 @@ $esRetirado = !empty($alumno['deleted_at']);
             <div class="px-6 py-4 border-b border-gray-700 flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <span class="text-red-400 text-lg">🚨</span>
-                    <h2 class="text-base font-semibold text-white">Contactos de Emergencia</h2>
+                    <h2 class="text-base font-semibold text-white">Contactos y Antecedentes Familiares</h2>
                 </div>
                 <?php if (AuthController::puede('alum_emergencia_createProfile')): ?>
-                    <a href="index.php?action=alum_emergencia_createProfile&alumno_id=<?= $alumno['id'] ?>" class="inline-flex items-center gap-1 px-3 py-1.5 bg-green-700 hover:bg-green-600 
-                               text-white text-xs font-semibold rounded-lg transition">
+                    <a href="index.php?action=alum_emergencia_createProfile&alumno_id=<?= $alumno['id'] ?>" class="inline-flex items-center gap-1 px-3 py-1.5 bg-green-700 hover:bg-green-600
+                      text-white text-xs font-semibold rounded-lg transition">
                         ➕ Agregar
                     </a>
                 <?php endif ?>
             </div>
 
-            <?php if (!empty($contactos)): ?>
-                <div class="divide-y divide-gray-700">
-                    <?php foreach ($contactos as $c): ?>
-                        <div class="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-1 flex-1">
-                                <div>
-                                    <p class="text-xs text-gray-400 uppercase tracking-wider">Nombre</p>
-                                    <p class="text-sm text-gray-100"><?= htmlspecialchars($c['nombre_contacto']) ?></p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-400 uppercase tracking-wider">Teléfono</p>
-                                    <p class="text-sm text-gray-100"><?= htmlspecialchars($c['telefono']) ?></p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-400 uppercase tracking-wider">Relación</p>
-                                    <p class="text-sm text-gray-100"><?= htmlspecialchars($c['relacion']) ?></p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-400 uppercase tracking-wider">Dirección</p>
-                                    <p class="text-sm text-gray-100"><?= htmlspecialchars($c['direccion']) ?></p>
-                                </div>
-                            </div>
-                            <div class="flex gap-2 flex-shrink-0">
+            <?php
+            // Helper para mostrar una fila de dato
+            $fila = fn($label, $valor) =>
+                '<div class="flex justify-between items-start gap-4">
+            <span class="text-xs text-gray-400 uppercase tracking-wider min-w-[140px]">' . $label . '</span>
+            <span class="text-sm text-gray-100 text-right">' . htmlspecialchars($valor ?: '—') . '</span>
+        </div>';
 
+            // Helper para renderizar una tarjeta de contacto
+            $tarjetaContacto = function ($c, $mostrarObservacion = false) use ($fila, $alumno, $rol) {
+                echo '<div class="px-6 py-4 flex flex-col gap-3">';
+                echo '<div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">';
+                echo $fila('Nombre', $c['nombre_contacto']);
+                echo $fila('R.U.N.', $c['run_contacto']);
+                echo $fila('Dirección', $c['direccion']);
+                echo $fila('Correo electrónico', $c['email']);
+                echo $fila('Comuna o Sector', $c['comuna']);
+                echo $fila('Vínculo', $c['relacion']);
+                echo $fila('Teléfono', $c['telefono']);
+                echo $fila('Celular', $c['celular'] ? '+569 ' . $c['celular'] : null);
+                echo '</div>';
 
-                                <?php if ($rol === "administrador" || $rol === "administrativo" || $rol === "Inspector general y Convivencia escolar"): ?>
+                if ($mostrarObservacion) {
+                    echo '<div class="mt-3 pt-3 border-t border-gray-700">';
+                    echo '<p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Observación</p>';
+                    echo '<p class="text-sm text-gray-300 leading-relaxed">'
+                        . nl2br(htmlspecialchars($c['observacion'] ?? '—')) . '</p>';
+                    echo '</div>';
+                }
 
-                                    <a href="index.php?action=alum_emergencia_edit&id=<?= $c['id'] ?>&back=alumno_profile&alumno_id=<?= $alumno['id'] ?>"
-                                        class="px-3 py-1.5 bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-semibold rounded-lg transition">
-                                        Editar
-                                    </a>
-                                    <a href="index.php?action=alum_emergencia_deleteProfile&id=<?= $c['id'] ?>&alumno_id=<?= $alumno['id'] ?>"
-                                        onclick="return confirm('¿Estás seguro de eliminar este contacto?');"
-                                        class="px-3 py-1.5 bg-red-800 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition">
-                                        Eliminar
-                                    </a>
+                // Botones editar/eliminar
+                if (in_array($rol, ['administrador', 'administrativo', 'Inspector general y Convivencia escolar'])): ?>
+                    <div class="flex gap-2 mt-2">
+                        <a href="index.php?action=alum_emergencia_edit&id=<?= $c['id'] ?>&back=alumno_profile&alumno_id=<?= $alumno['id'] ?>"
+                            class="px-3 py-1.5 bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-semibold rounded-lg transition">
+                            Editar
+                        </a>
+                        <a href="index.php?action=alum_emergencia_deleteProfile&id=<?= $c['id'] ?>&alumno_id=<?= $alumno['id'] ?>"
+                            onclick="return confirm('¿Estás seguro de eliminar este contacto?');"
+                            class="px-3 py-1.5 bg-red-800 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition">
+                            Eliminar
+                        </a>
+                    </div>
+                <?php endif;
+                echo '</div>';
+            };
 
-                                <?php endif; ?>
-
-                            </div>
-                        </div>
-                    <?php endforeach ?>
+            // ── SECCIÓN 1: Padre / Madre / Tutor Legal ──
+            ?>
+            <div class="border-b border-gray-700">
+                <div class="px-6 py-3 bg-gray-750 flex items-center gap-2">
+                    <span class="text-yellow-400">👨‍👩‍👦</span>
+                    <h3 class="text-sm font-semibold text-yellow-300 uppercase tracking-wider">
+                        Antecedentes del Padre, Madre o Tutor Legal
+                    </h3>
                 </div>
-            <?php else: ?>
-                <div class="px-6 py-8 text-center text-gray-500 text-sm italic">
-                    No hay contactos de emergencia registrados.
+                <?php if (!empty($contactosGrupos['padre_madre_tutor'])): ?>
+                    <div class="divide-y divide-gray-700">
+                        <?php foreach ($contactosGrupos['padre_madre_tutor'] as $c): ?>
+                            <?php $tarjetaContacto($c, false); ?>
+                        <?php endforeach ?>
+                    </div>
+                <?php else: ?>
+                    <p class="px-6 py-5 text-gray-500 text-sm italic">No hay antecedentes del padre/madre/tutor registrados.
+                    </p>
+                <?php endif ?>
+            </div>
+
+            <!-- ── SECCIÓN 2: Apoderado ── -->
+            <div class="border-b border-gray-700">
+                <div class="px-6 py-3 bg-gray-750 flex items-center gap-2">
+                    <span class="text-blue-400">🧑‍💼</span>
+                    <h3 class="text-sm font-semibold text-blue-300 uppercase tracking-wider">
+                        Representante o Apoderado del Estudiante
+                    </h3>
                 </div>
-            <?php endif ?>
+                <?php if (!empty($contactosGrupos['apoderado'])): ?>
+                    <div class="divide-y divide-gray-700">
+                        <?php foreach ($contactosGrupos['apoderado'] as $c): ?>
+                            <?php $tarjetaContacto($c, false); ?>
+                        <?php endforeach ?>
+                    </div>
+                <?php else: ?>
+                    <p class="px-6 py-5 text-gray-500 text-sm italic">No hay apoderado registrado.</p>
+                <?php endif ?>
+            </div>
+
+            <!-- ── SECCIÓN 3: Emergencia / Apoderado Suplente ── -->
+            <div>
+                <div class="px-6 py-3 bg-gray-750 flex items-center gap-2">
+                    <span class="text-red-400">🆘</span>
+                    <h3 class="text-sm font-semibold text-red-300 uppercase tracking-wider">
+                        Avisar en Caso de Emergencia / Apoderado Suplente
+                    </h3>
+                </div>
+                <?php if (!empty($contactosGrupos['emergencia'])): ?>
+                    <div class="divide-y divide-gray-700">
+                        <?php foreach ($contactosGrupos['emergencia'] as $c): ?>
+                            <?php $tarjetaContacto($c, true); // true = mostrar observación ?>
+                        <?php endforeach ?>
+                    </div>
+                <?php else: ?>
+                    <p class="px-6 py-5 text-gray-500 text-sm italic">No hay contacto de emergencia registrado.</p>
+                <?php endif ?>
+            </div>
         </div>
 
         <!-- ANTECEDENTES FAMILIARES -->

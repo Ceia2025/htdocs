@@ -413,28 +413,104 @@ $anioFicha = !empty($alumno['created_at'])
     </div>
 
     <!-- ══ 3. ANTECEDENTES FAMILIARES ══ -->
+    <!-- ══ 2. ANTECEDENTES DEL PADRE, MADRE O TUTOR LEGAL ══ -->
     <div class="section">
-        <div class="section-title">3. Antecedentes Familiares</div>
+        <div class="section-title">2. Antecedentes del Padre, Madre o Tutor Legal</div>
         <div class="section-body">
-            <?php if (!empty($familiarData)): ?>
-                <table class="grid-2">
-                    <tr>
-                        <td>
-                            <div class="sub-titulo">Padre</div>
-                            <div class="dato"><span class="lbl">Escolaridad:</span> <?= v($familiarData, 'padre') ?></div>
-                            <div class="dato"><span class="lbl">Nivel / Ciclo:</span>
-                                <?= v($familiarData, 'nivel_ciclo_p') ?></div>
-                        </td>
-                        <td>
-                            <div class="sub-titulo">Madre</div>
-                            <div class="dato"><span class="lbl">Escolaridad:</span> <?= v($familiarData, 'madre') ?></div>
-                            <div class="dato"><span class="lbl">Nivel / Ciclo:</span>
-                                <?= v($familiarData, 'nivel_ciclo_m') ?></div>
-                        </td>
-                    </tr>
-                </table>
+            <?php
+            // Agrupar contactos por tipo
+            $contactosPMT = array_filter($contactos ?? [], fn($c) => ($c['tipo'] ?? '') === 'padre_madre_tutor');
+            $contactosAPO = array_filter($contactos ?? [], fn($c) => ($c['tipo'] ?? '') === 'apoderado');
+            $contactosEMG = array_filter($contactos ?? [], fn($c) => ($c['tipo'] ?? '') === 'emergencia');
+            ?>
+            <?php if (!empty($contactosPMT)): ?>
+                <?php foreach ($contactosPMT as $c): ?>
+                    <table class="grid-2" style="margin-bottom:6px;">
+                        <tr>
+                            <td>
+                                <div class="dato"><span class="lbl">Nombre:</span> <?= v($c, 'nombre_contacto') ?></div>
+                                <div class="dato"><span class="lbl">Dirección:</span> <?= v($c, 'direccion') ?></div>
+                                <div class="dato"><span class="lbl">Correo Electrónico:</span> <?= v($c, 'email') ?></div>
+                                <div class="dato"><span class="lbl">Vínculo:</span> <?= v($c, 'relacion') ?></div>
+                            </td>
+                            <td>
+                                <div class="dato"><span class="lbl">R.U.N.:</span> <?= v($c, 'run_contacto') ?></div>
+                                <div class="dato"><span class="lbl">Comuna o Sector:</span> <?= v($c, 'comuna') ?></div>
+                                <div class="dato"><span class="lbl">Teléfono:</span> <?= v($c, 'telefono') ?></div>
+                                <div class="dato"><span class="lbl">Celular:</span>
+                                    <?= !empty($c['celular']) ? '+569 ' . htmlspecialchars($c['celular']) : '—' ?>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                <?php endforeach ?>
             <?php else: ?>
-                <p style="color:#94a3b8; font-style:italic;">No hay antecedentes familiares registrados.</p>
+                <p style="color:#94a3b8; font-style:italic;">No hay antecedentes del padre/madre/tutor registrados.</p>
+            <?php endif ?>
+        </div>
+    </div>
+
+    <!-- ══ 3. REPRESENTANTE O APODERADO DEL ESTUDIANTE ══ -->
+    <div class="section">
+        <div class="section-title">3. Representante o Apoderado del Estudiante</div>
+        <div class="section-body">
+            <?php if (!empty($contactosAPO)): ?>
+                <?php foreach ($contactosAPO as $c): ?>
+                    <table class="grid-2" style="margin-bottom:6px;">
+                        <tr>
+                            <td>
+                                <div class="dato"><span class="lbl">Nombre:</span> <?= v($c, 'nombre_contacto') ?></div>
+                                <div class="dato"><span class="lbl">Dirección:</span> <?= v($c, 'direccion') ?></div>
+                                <div class="dato"><span class="lbl">Correo Electrónico:</span> <?= v($c, 'email') ?></div>
+                                <div class="dato"><span class="lbl">Celular:</span>
+                                    <?= !empty($c['celular']) ? '+569 ' . htmlspecialchars($c['celular']) : '—' ?>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="dato"><span class="lbl">R.U.N.:</span> <?= v($c, 'run_contacto') ?></div>
+                                <div class="dato"><span class="lbl">Comuna o Sector:</span> <?= v($c, 'comuna') ?></div>
+                                <div class="dato"><span class="lbl">Teléfono:</span> <?= v($c, 'telefono') ?></div>
+                                <div class="dato"><span class="lbl">Vínculo:</span> <?= v($c, 'relacion') ?></div>
+                            </td>
+                        </tr>
+                    </table>
+                <?php endforeach ?>
+            <?php else: ?>
+                <p style="color:#94a3b8; font-style:italic;">No hay apoderado registrado.</p>
+            <?php endif ?>
+        </div>
+    </div>
+
+    <!-- ══ 4. AVISAR EN CASO DE EMERGENCIA / APODERADO SUPLENTE ══ -->
+    <div class="section">
+        <div class="section-title">4. Avisar en Caso de Emergencia / Apoderado Suplente</div>
+        <div class="section-body">
+            <?php if (!empty($contactosEMG)): ?>
+                <?php foreach ($contactosEMG as $c): ?>
+                    <table class="grid-2" style="margin-bottom:4px;">
+                        <tr>
+                            <td>
+                                <div class="dato"><span class="lbl">Nombre:</span> <?= v($c, 'nombre_contacto') ?></div>
+                                <div class="dato"><span class="lbl">Dirección:</span> <?= v($c, 'direccion') ?></div>
+                            </td>
+                            <td>
+                                <div class="dato"><span class="lbl">Celular:</span>
+                                    <?= !empty($c['celular']) ? '+569 ' . htmlspecialchars($c['celular']) : '—' ?>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <?php if (!empty($c['observacion'])): ?>
+                        <div style="margin-top:6px;">
+                            <div class="sub-titulo">Observación</div>
+                            <p style="font-size:9.5px; color:#334155; line-height:1.6;">
+                                <?= nl2br(htmlspecialchars($c['observacion'])) ?>
+                            </p>
+                        </div>
+                    <?php endif ?>
+                <?php endforeach ?>
+            <?php else: ?>
+                <p style="color:#94a3b8; font-style:italic;">No hay contacto de emergencia registrado.</p>
             <?php endif ?>
         </div>
     </div>

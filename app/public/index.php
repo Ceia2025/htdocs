@@ -293,10 +293,6 @@ switch ($action) {
         $controller->search();
         break;
 
-    case 'alumnos_stepper':
-        $alumnosController->createStepper(); // formulario stepper
-        break;
-
     case 'alumnos_store_stepper':
         $alumnosController->storeStepper($_POST); // guardar todo
         break;
@@ -324,6 +320,10 @@ switch ($action) {
     case 'alumno_pdf':
         // Ya está incluido AlumnoController.php y creada la instancia $alumnosController arriba
         $alumnosController->pdf($_GET['id'] ?? null);
+        break;
+
+    case 'alumnos_stepper':
+        require '../views/alumnos/stepper/form_stepper.php';  // nuevo
         break;
 
     case 'listado_por_anio':

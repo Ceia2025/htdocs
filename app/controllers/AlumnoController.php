@@ -86,13 +86,11 @@ class AlumnosController
         if (!empty($data['emergencias'])) {
             $emergenciaModel = new AlumEmergencia();
             foreach ($data['emergencias'] as $e) {
-                $emergenciaModel->create(
-                    $alumnoId,
-                    $e['nombre_contacto'] ?? null,
-                    $e['telefono'] ?? null,
-                    $e['direccion'] ?? null,
-                    $e['relacion'] ?? null
-                );
+                // Ignorar tarjetas completamente vacías
+                if (empty($e['nombre_contacto']) && empty($e['telefono']) && empty($e['celular'])) {
+                    continue;
+                }
+                $emergenciaModel->createFromArray($alumnoId, $e);
             }
         }
 
@@ -116,14 +114,13 @@ class AlumnosController
             $escolarModel->create($escolar);
         }
 
-        // ✅ NUEVO: Guardar matrícula desde el Paso 5 del stepper
+        // 👉 Guardar matrícula
         if (!empty($data['curso_id']) && !empty($data['anio_id'])) {
             $matriculaModel = new Matricula();
             $matriculaModel->create([
                 'alumno_id' => $alumnoId,
                 'curso_id' => $data['curso_id'],
                 'anio_id' => $data['anio_id'],
-                // opcional: puedes no pasarla y usará date('Y-m-d') del modelo
                 'fecha_matricula' => date('Y-m-d'),
             ]);
         }
@@ -163,6 +160,7 @@ class AlumnosController
         $escolarModel = new AntecedenteEscolar();
         $matriculaModel = new Matricula(); // 👈 agregar esto
 
+        $contactosGrupos = $emergenciaModel->findByAlumnoAgrupado($id);
         $contactos = $emergenciaModel->findByAlumno($id);
         $antecedentes = $familiarModel->findByAlumno($id);
         $matriculaActiva = $matriculaModel->getActivaByAlumno($id); // 👈 agregar esto
@@ -411,10 +409,6 @@ class AlumnosController
         }
         exit;
     }
-
-
-
-
     // Eliminar alumno
     public function delete($id)
     {

@@ -65,35 +65,6 @@ class AlumEmergenciaController
         header("Location: index.php?action=alum_emergencia");
     }
 
-    // Guardar nuevo contacto desde el perfil del alumno
-    public function storeProfile($data)
-    {
-        // Validación mínima
-        if (empty($data['alumno_id'])) {
-            $_SESSION['flash_error'] = "Falta el ID del alumno.";
-            header("Location: index.php?action=alum_emergencia");
-            exit;
-        }
-
-        // Crear registro
-        $ok = $this->model->create(
-            $data['alumno_id'],
-            $data['nombre_contacto'] ?? null,
-            $data['telefono'] ?? null,
-            $data['direccion'] ?? null,
-            $data['relacion'] ?? null
-        );
-
-        if ($ok) {
-            $_SESSION['flash_success'] = "Contacto agregado correctamente.";
-        } else {
-            $_SESSION['flash_error'] = "Error al guardar el contacto.";
-        }
-
-        // Redirigir al perfil del alumno
-        header("Location: index.php?action=alumno_profile&id=" . urlencode($data['alumno_id']));
-        exit;
-    }
 
     // Eliminar contacto desde perfil del alumno
     public function deleteProfile($id, $alumno_id)
@@ -139,24 +110,52 @@ class AlumEmergenciaController
     }
 
     // Actualizar
+    // Guardar nuevo contacto desde el perfil del alumno
+    public function storeProfile($data)
+    {
+        if (empty($data['alumno_id'])) {
+            $_SESSION['flash_error'] = "Falta el ID del alumno.";
+            header("Location: index.php?action=alum_emergencia");
+            exit;
+        }
+
+        // Convertir campos vacíos a null para evitar error en columnas ENUM
+        foreach (['relacion', 'tipo', 'run_contacto', 'email', 'celular', 'comuna', 'observacion', 'telefono', 'direccion'] as $campo) {
+            if (isset($data[$campo]) && trim($data[$campo]) === '') {
+                $data[$campo] = null;
+            }
+        }
+
+        // Tipo por defecto si viene null
+        $data['tipo'] = $data['tipo'] ?? 'emergencia';
+
+        try {
+            $ok = $this->model->createFromArray($data['alumno_id'], $data);
+
+            if ($ok) {
+                $_SESSION['flash_success'] = "✅ Contacto agregado correctamente.";
+            } else {
+                $_SESSION['flash_error'] = "⚠️ No se pudo guardar el contacto. Intenta nuevamente.";
+            }
+        } catch (\PDOException $e) {
+            error_log("PDOException storeProfile: " . $e->getMessage());
+            $_SESSION['flash_error'] = "⚠️ Error al guardar: verifica que todos los campos sean válidos.";
+        }
+
+        header("Location: index.php?action=alumno_profile&id=" . urlencode($data['alumno_id']));
+        exit;
+    }
+
+    // Actualizar contacto
     public function update($id, $data)
     {
-        // Validación mínima
         if (empty($id)) {
             header("Location: index.php?action=alum_emergencia");
             exit;
         }
 
-        $ok = $this->model->update(
-            $id,
-            $data['alumno_id'] ?? null,
-            $data['nombre_contacto'] ?? '',
-            $data['telefono'] ?? '',
-            $data['direccion'] ?? '',
-            $data['relacion'] ?? ''
-        );
+        $ok = $this->model->update($id, $data);
 
-        // --- NUEVO: decidir a dónde volver ---
         $back = $data['back'] ?? 'alum_emergencia';
         $alumno_id = $data['alumno_id'] ?? null;
 
@@ -165,7 +164,6 @@ class AlumEmergenciaController
             exit;
         }
 
-        // Fallback o al venir del listado
         header("Location: index.php?action=alum_emergencia");
         exit;
     }

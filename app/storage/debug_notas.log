@@ -663,3 +663,37 @@ Array
 )
 
 --------------------
+Array
+(
+    [fecha] => 2026-04-29 19:10:08
+    [curso_id] => 20
+    [anio_id] => 3
+    [semestre] => 1
+    [asignatura_id] => 55
+    [notas_recibidas] => Array
+        (
+            [225] => Array
+                (
+                    [nota] => 5.5
+                    [matricula_id] => 233
+                    [deleted_at] => 
+                )
+
+            [211] => Array
+                (
+                    [matricula_id] => 236
+                    [deleted_at] => 
+                    [nota] => 5.5
+                )
+
+            [189] => Array
+                (
+                    [matricula_id] => 234
+                    [deleted_at] => 2026-04-17
+                )
+
+        )
+
+)
+
+--------------------
