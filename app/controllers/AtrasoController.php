@@ -125,29 +125,6 @@ class AtrasoController
         require "../views/atrasos/lista_alumno.php";
     }
 
-    /* ==========================================
-       ELIMINAR ATRASO
-    ========================================== */
-    public function eliminar()
-    {
-        $id = (int) ($_GET['id'] ?? 0);
-        $redirect = ($_GET['redirect'] ?? 'atrasos_registro');
-
-        // Construir query string de vuelta con todos los parámetros de filtro
-        $params = http_build_query(array_filter([
-            'action' => $redirect,
-            'curso_id' => $_GET['curso_id'] ?? '',
-            'anio_id' => $_GET['anio_id'] ?? '',
-            'semestre' => $_GET['semestre'] ?? '',
-            'fecha' => $_GET['fecha'] ?? '',
-        ]));
-
-        if ($id)
-            $this->model->eliminar($id);
-
-        header("Location: index.php?$params");
-        exit;
-    }
 
     /* ==========================================
    BUSCAR ALUMNOS POR TÉRMINO (AJAX autocompletado)
@@ -308,6 +285,111 @@ class AtrasoController
             $nombreArchivo = 'Atrasos_' . $alumno['apepat'] . '_' . $alumno['apemat'] . '.pdf';
             header('Content-Type: application/pdf');
             $dompdf->stream($nombreArchivo, ["Attachment" => true]);
+            exit;
+        } catch (Exception $e) {
+            die("Error al generar PDF: " . $e->getMessage());
+        }
+    }
+
+    /* ==========================================
+   ELIMINAR ATRASO → mover al historial
+========================================== */
+    public function eliminar()
+    {
+        $id = (int) ($_GET['id'] ?? 0);
+        $redirect = $_GET['redirect'] ?? 'atrasos_registro';
+
+        $params = http_build_query(array_filter([
+            'action' => $redirect,
+            'curso_id' => $_GET['curso_id'] ?? '',
+            'anio_id' => $_GET['anio_id'] ?? '',
+            'semestre' => $_GET['semestre'] ?? '',
+            'fecha' => $_GET['fecha'] ?? '',
+        ]));
+
+        if ($id) {
+            // Obtener ID del usuario que está eliminando
+            $eliminadoPor = $_SESSION['user']['id'] ?? null;
+
+            // Primero mover al historial, luego eliminar
+            $this->model->moverAlHistorial($id, $eliminadoPor);
+            $this->model->eliminar($id);
+        }
+
+        header("Location: index.php?$params");
+        exit;
+    }
+
+    /* ==========================================
+       HISTORIAL DE ATRASOS ELIMINADOS
+    ========================================== */
+    public function historial()
+    {
+        $anio = isset($_GET['anio']) && $_GET['anio'] !== '' ? (int) $_GET['anio'] : null;
+        $curso = $_GET['curso'] ?? null;
+        $alumno = $_GET['alumno'] ?? null;
+        $semestre = isset($_GET['semestre']) && $_GET['semestre'] !== '' ? (int) $_GET['semestre'] : null;
+
+        $aniosDisponibles = $this->model->getAniosHistorial();
+
+        // Año por defecto: el más reciente
+        if (!$anio && !empty($aniosDisponibles)) {
+            $anio = $aniosDisponibles[0]['anio'];
+        }
+
+        // Cursos disponibles según el año seleccionado
+        $cursosDisponibles = $this->model->getCursosHistorial($anio);
+
+        $historial = $this->model->getHistorial($anio, $curso, $alumno, $semestre);
+
+        $agrupado = [];
+        foreach ($historial as $h) {
+            $agrupado[$h['curso_nombre']][$h['alumno_nombre']][] = $h;
+        }
+        ksort($agrupado);
+
+        require "../views/atrasos/historial.php";
+    }
+
+    /* ==========================================
+       PDF DEL HISTORIAL
+    ========================================== */
+    public function historial_pdf()
+    {
+        $anio = isset($_GET['anio']) && $_GET['anio'] !== '' ? (int) $_GET['anio'] : null;
+        $curso = $_GET['curso'] ?? null;
+        $alumno = $_GET['alumno'] ?? null;
+        $semestre = isset($_GET['semestre']) && $_GET['semestre'] !== '' ? (int) $_GET['semestre'] : null;
+
+        $aniosDisponibles = $this->model->getAniosHistorial();
+        if (!$anio && !empty($aniosDisponibles)) {
+            $anio = $aniosDisponibles[0]['anio'];
+        }
+
+        $historial = $this->model->getHistorial($anio, $curso, $alumno, $semestre);
+
+        $agrupado = [];
+        foreach ($historial as $h) {
+            $agrupado[$h['curso_nombre']][$h['alumno_nombre']][] = $h;
+        }
+        ksort($agrupado);
+
+        ob_start();
+        require __DIR__ . '/../views/atrasos/historial_pdf.php';
+        $html = ob_get_clean();
+
+        try {
+            $options = new \Dompdf\Options();
+            $options->set('isRemoteEnabled', true);
+            $options->set('defaultFont', 'DejaVu Sans');
+
+            $dompdf = new \Dompdf\Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('letter', 'portrait');
+            $dompdf->render();
+
+            header('Content-Type: application/pdf');
+            $dompdf->stream("Historial_Atrasos_{$anio}.pdf", ["Attachment" => true]);
             exit;
         } catch (Exception $e) {
             die("Error al generar PDF: " . $e->getMessage());

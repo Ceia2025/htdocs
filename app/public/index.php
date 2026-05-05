@@ -912,6 +912,14 @@ switch ($action) {
     case 'atraso_alumno_pdf':
         $atrasoController->atraso_alumno_pdf();
         break;
+
+    case 'atrasos_historial':
+        $atrasoController->historial();
+        break;
+
+    case 'atrasos_historial_pdf':
+        $atrasoController->historial_pdf();
+        break;
     //----------------------------------------------------------------------
     //Anotaciones
     case 'anotaciones':

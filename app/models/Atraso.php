@@ -597,5 +597,129 @@ class Atraso
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /* ==========================================
+   MOVER ATRASO AL HISTORIAL (antes de eliminar)
+========================================== */
+    public function moverAlHistorial(int $id, int $eliminadoPor): bool
+    {
+        // 1. Obtener datos completos del atraso con joins
+        $sql = "SELECT
+                aa.id,
+                aa.matricula_id,
+                aa.semestre,
+                aa.fecha,
+                aa.hora_llegada,
+                aa.justificado,
+                aa.observacion,
+                CONCAT(al.apepat, ' ', al.apemat, ', ', al.nombre) AS alumno_nombre,
+                al.run AS alumno_run,
+                c.nombre  AS curso_nombre,
+                an.anio   AS anio
+            FROM alum_atrasos aa
+            JOIN matriculas2 m  ON m.id  = aa.matricula_id
+            JOIN alumnos2    al ON al.id = m.alumno_id
+            JOIN cursos2     c  ON c.id  = m.curso_id
+            JOIN anios2      an ON an.id = m.anio_id
+            WHERE aa.id = :id
+            LIMIT 1";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $atraso = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$atraso)
+            return false;
+
+        // 2. Insertar en historial
+        $sqlIns = "INSERT INTO alum_atrasos_historial
+                (matricula_id, alumno_nombre, alumno_run, curso_nombre, anio,
+                 semestre, fecha_atraso, hora_llegada, justificado, observacion,
+                 eliminado_por)
+               VALUES
+                (:matricula_id, :alumno_nombre, :alumno_run, :curso_nombre, :anio,
+                 :semestre, :fecha_atraso, :hora_llegada, :justificado, :observacion,
+                 :eliminado_por)";
+
+        $stmtIns = $this->conn->prepare($sqlIns);
+        return $stmtIns->execute([
+            ':matricula_id' => $atraso['matricula_id'],
+            ':alumno_nombre' => $atraso['alumno_nombre'],
+            ':alumno_run' => $atraso['alumno_run'],
+            ':curso_nombre' => $atraso['curso_nombre'],
+            ':anio' => $atraso['anio'],
+            ':semestre' => $atraso['semestre'],
+            ':fecha_atraso' => $atraso['fecha'],
+            ':hora_llegada' => $atraso['hora_llegada'],
+            ':justificado' => $atraso['justificado'],
+            ':observacion' => $atraso['observacion'],
+            ':eliminado_por' => $eliminadoPor,
+        ]);
+    }
+
+    /* ==========================================
+       OBTENER HISTORIAL (con filtros)
+    ========================================== */
+    public function getHistorial(
+        ?int $anio = null,
+        ?string $curso = null,
+        ?string $alumno = null,
+        ?int $semestre = null
+    ): array {
+        $sql = "SELECT
+                h.*,
+                CONCAT(u.nombre, ' ', COALESCE(u.ape_paterno, '')) AS eliminado_por_nombre
+            FROM alum_atrasos_historial h
+            LEFT JOIN usuarios2 u ON u.id = h.eliminado_por
+            WHERE 1=1";
+
+        $params = [];
+
+        if ($anio) {
+            $sql .= " AND h.anio = :anio";
+            $params[':anio'] = $anio;
+        }
+        if ($curso) {
+            $sql .= " AND h.curso_nombre LIKE :curso";
+            $params[':curso'] = "%$curso%";
+        }
+        if ($alumno) {
+            $sql .= " AND h.alumno_nombre LIKE :alumno";
+            $params[':alumno'] = "%$alumno%";
+        }
+        if ($semestre) {
+            $sql .= " AND h.semestre = :semestre";
+            $params[':semestre'] = $semestre;
+        }
+
+        $sql .= " ORDER BY h.curso_nombre ASC, h.alumno_nombre ASC, h.fecha_atraso DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /* ==========================================
+       AÑOS DISPONIBLES EN HISTORIAL
+    ========================================== */
+    public function getAniosHistorial(): array
+    {
+        $sql = "SELECT DISTINCT anio FROM alum_atrasos_historial ORDER BY anio DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /* ==========================================
+   CURSOS DISPONIBLES EN EL HISTORIAL
+========================================== */
+    public function getCursosHistorial(?int $anio = null): array
+    {
+        $sql = "SELECT id, nombre AS curso_nombre 
+            FROM cursos2 
+            ORDER BY nombre ASC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 }

@@ -77,6 +77,10 @@ $maxS = max($sem1, $sem2, 1);
                     </svg>
                     Registrar atrasoooo
                 </a>
+                <a href="index.php?action=atrasos_historial&anio=<?= $anioId ?>" class="flex items-center gap-2 text-sm font-semibold bg-orange-700 hover:bg-orange-600
+           text-white px-4 py-2 rounded-lg transition">
+                    Ver historial disciplinario
+                </a>
             </div>
         </header>
 
