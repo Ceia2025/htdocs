@@ -84,6 +84,11 @@
       "title": "Profesor Jefe por Curso",
       "desc": "Asignación de profesor jefe a cada curso por año lectivo",
       "url": "index.php?action=curso_docente"
+    },
+    {
+      "title": "Centro de Reportes",
+      "desc": "Exportar asistencia en PDF y CSV por curso o general",
+      "url": "index.php?action=reportes"
     }
   ],
   "administrativo": [
@@ -106,6 +111,11 @@
       "title": "Control de Asistencia",
       "desc": "Gestión de asistencia por nivel y curso",
       "url": "index.php?action=asistencia_cursos"
+    },
+    {
+      "title": "Centro de Reportes",
+      "desc": "Exportar asistencia en PDF y CSV por curso o general",
+      "url": "index.php?action=reportes"
     }
   ],
   "soporte": [
@@ -140,6 +150,11 @@
       "title": "Cuerpo Docente",
       "desc": "Nómina y gestión administrativa de profesores",
       "url": "index.php?action=profesores"
+    },
+    {
+      "title": "Centro de Reportes",
+      "desc": "Exportar asistencia en PDF y CSV por curso o general",
+      "url": "index.php?action=reportes"
     }
   ],
   "Inspector general y Convivencia escolar": [
@@ -209,6 +224,11 @@
       "title": "Notas",
       "desc": "Gestionar notas de alumnos",
       "url": "index.php?action=notas_panel"
+    },
+    {
+      "title": "Centro de Reportes",
+      "desc": "Exportar asistencia en PDF y CSV por curso o general",
+      "url": "index.php?action=reportes"
     }
   ],
   "asistente social": [
@@ -221,6 +241,11 @@
       "title": "Gestión de Anotaciones",
       "desc": "Administración y consulta de anotaciones por alumno",
       "url": "index.php?action=anotaciones"
+    },
+    {
+      "title": "Centro de Reportes",
+      "desc": "Exportar asistencia en PDF y CSV por curso o general",
+      "url": "index.php?action=reportes"
     }
   ],
   "registro de anotaciones": [

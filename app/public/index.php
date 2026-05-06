@@ -16,7 +16,8 @@ require_once __DIR__ . '/../controllers/NotasController.php';
 require_once __DIR__ . '/../controllers/AtrasoController.php';
 require_once __DIR__ . '/../controllers/AnotacionController.php';
 require_once __DIR__ . '/../controllers/AnamnesisResumenController.php';
-
+require_once __DIR__ . '/../controllers/reportes/ReporteController.php';
+require_once __DIR__ . '/../controllers/reportes/ReporteDashboardController.php';
 
 require_once __DIR__ . '/../controllers/RetirosController.php';
 
@@ -67,6 +68,8 @@ $atrasoController = new AtrasoController();
 $anotacionController = new AnotacionController();
 $retirosController = new RetirosController();
 $notasController = new NotasController();
+$reporteController = new ReporteController();
+$reporteDashboard = new ReporteDashboardController();
 
 
 //Verificacion de login para usuarios
@@ -985,6 +988,9 @@ switch ($action) {
     case 'retiros_buscar_contactos':
         $retirosController->buscarContactos();
         break;
+
+
+
     // ── RETIROS ─────────────────────────────────────
 
 
@@ -1006,6 +1012,33 @@ switch ($action) {
     case 'curso_docente_delete':
         require_once '../controllers/CursoDocenteController.php';
         (new CursoDocenteController())->destroy();
+        break;
+
+    // En el switch
+
+
+    case 'reportes':
+        $reporteDashboard->index();
+        break;
+
+    case 'reportes_asistencia':
+        $reporteController->index();
+        break;
+
+    case 'reporte_csv_curso':
+        $reporteController->csvCurso();
+        break;
+
+    case 'reporte_csv_general':
+        $reporteController->csvGeneral();
+        break;
+
+    case 'reporte_pdf_curso':
+        $reporteController->pdfCurso();
+        break;
+
+    case 'reporte_pdf_general':
+        $reporteController->pdfGeneral();
         break;
 
 

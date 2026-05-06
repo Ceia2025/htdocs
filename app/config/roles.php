@@ -126,7 +126,7 @@ return [
     'atrasos_historial' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL],
     'atrasos_historial_pdf' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL],
 
-    
+
     // ── PROFESORES ──
     'profesores' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION],
     'profesor_create' => [ROL_ADMINISTRADOR],
@@ -231,6 +231,12 @@ return [
     'notas_update' => [ROL_ADMINISTRADOR, ROL_UTP],
     'notas_delete' => [ROL_ADMINISTRADOR, ROL_UTP],
 
+    // ── REPORTES ──
+    'reportes' => null,  // todos los autenticados por ahora
+    'reporte_csv_curso' => null,
+    'reporte_csv_general' => null,
+    'reporte_pdf_curso' => null,
+    'reporte_pdf_general' => null,
 
     // ── NOTAS ──
     /*
