@@ -125,6 +125,22 @@ include __DIR__ . "/../layout/navbar.php";
                             </select>
                         </div>
 
+                        <!-- Fecha desde -->
+                        <div>
+                            <label class="block text-xs font-medium text-gray-400 mb-1">Fecha desde</label>
+                            <input type="date" name="fecha_desde"
+                                value="<?= htmlspecialchars($_GET['fecha_desde'] ?? '') ?>" class="w-full bg-gray-900 text-white text-sm border border-gray-600 rounded-lg px-3 py-2
+               focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        </div>
+
+                        <!-- Fecha hasta -->
+                        <div>
+                            <label class="block text-xs font-medium text-gray-400 mb-1">Fecha hasta</label>
+                            <input type="date" name="fecha_hasta"
+                                value="<?= htmlspecialchars($_GET['fecha_hasta'] ?? '') ?>" class="w-full bg-gray-900 text-white text-sm border border-gray-600 rounded-lg px-3 py-2
+               focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        </div>
+
                         <!-- Curso (oculto para tipo alumno) -->
                         <div id="bloqueCurso">
                             <label class="block text-xs font-medium text-gray-400 mb-1">Curso</label>

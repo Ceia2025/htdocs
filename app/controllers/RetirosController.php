@@ -90,6 +90,8 @@ class RetirosController
             'semestre' => $_GET['semestre'] ?? '',
             'justificado' => $_GET['justificado'] ?? '',
             'extraordinario' => $_GET['extraordinario'] ?? '',
+            'fecha_desde' => $_GET['fecha_desde'] ?? '',
+            'fecha_hasta' => $_GET['fecha_hasta'] ?? '',
         ];
 
         $retiros = $this->retiroModel->getAll($filtros);
@@ -120,7 +122,7 @@ class RetirosController
         }
         echo json_encode($this->getAlumnosBusqueda($q));
     }
-    
+
     public function buscarContactos(): void
     {
         header('Content-Type: application/json');
@@ -278,6 +280,8 @@ class RetirosController
         $alumno_id = (int) ($_GET['alumno_id'] ?? 0);
         $semestre = $_GET['semestre'] ?? '';
         $formato = $_GET['formato'] ?? 'html';
+        $fecha_desde = $_GET['fecha_desde'] ?? '';
+        $fecha_hasta = $_GET['fecha_hasta'] ?? '';
 
         $filtros = array_filter([
             'anio_id' => $anio_id ?: null,
@@ -285,6 +289,11 @@ class RetirosController
             'alumno_id' => $alumno_id ?: null,
             'semestre' => $semestre ?: null,
         ]);
+
+        if (!empty($fecha_desde))
+            $filtros['fecha_desde'] = $fecha_desde;
+        if (!empty($fecha_hasta))
+            $filtros['fecha_hasta'] = $fecha_hasta;
 
         $retiros = $this->retiroModel->getAll($filtros);
         $porSemestre = $this->retiroModel->getResumenPorSemestre($filtros);

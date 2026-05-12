@@ -43,7 +43,7 @@ class AsistenciaController
             $retiradoEl    = !empty($al['fecha_retiro'])    ? $al['fecha_retiro']    : null;
             $matriculadoEl = !empty($al['fecha_matricula']) ? $al['fecha_matricula'] : null;
 
-            if ($retiradoEl    && $fecha > $retiradoEl)    continue;
+            if ($retiradoEl    && $fecha >= $retiradoEl)    continue;
             if ($matriculadoEl && $fecha < $matriculadoEl) continue;
 
             $totalActivos++;
@@ -106,7 +106,7 @@ class AsistenciaController
             $retiradoEl    = !empty($alumno['fecha_retiro'])    ? $alumno['fecha_retiro']    : null;
             $matriculadoEl = !empty($alumno['fecha_matricula']) ? $alumno['fecha_matricula'] : null;
 
-            if ($retiradoEl    && $fecha > $retiradoEl)    continue;
+            if ($retiradoEl    && $fecha >= $retiradoEl)    continue;
             if ($matriculadoEl && $fecha < $matriculadoEl) continue;
 
             $presente = in_array($alumno['matricula_id'], $presentes) ? 1 : 0;

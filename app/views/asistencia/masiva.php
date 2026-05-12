@@ -257,7 +257,7 @@ include __DIR__ . "/../layout/navbar.php";
 
                             <!-- Filas -->
                             <?php foreach ($alumnos as $i => $alumno): 
-                                $estaRetirado = !empty($alumno['fecha_retiro']) && $fecha > $alumno['fecha_retiro'];
+                                $estaRetirado = !empty($alumno['fecha_retiro']) && $fecha >= $alumno['fecha_retiro'];
                                 $antesDeMatricula = !empty($alumno['fecha_matricula']) && $fecha < $alumno['fecha_matricula'];
                                 $inactivo = $estaRetirado || $antesDeMatricula;
                             ?>

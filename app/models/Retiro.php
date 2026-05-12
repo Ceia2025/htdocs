@@ -53,6 +53,14 @@ class Retiro
             $sql .= " AND r.extraordinario = :extraordinario";
             $params[':extraordinario'] = $filtros['extraordinario'];
         }
+        if (!empty($filtros['fecha_desde'])) {
+    $sql .= " AND r.fecha_retiro >= :fecha_desde";
+    $params[':fecha_desde'] = $filtros['fecha_desde'];
+}
+if (!empty($filtros['fecha_hasta'])) {
+    $sql .= " AND r.fecha_retiro <= :fecha_hasta";
+    $params[':fecha_hasta'] = $filtros['fecha_hasta'];
+}
 
         $sql .= " ORDER BY r.fecha_retiro DESC, r.hora_retiro DESC";
 
@@ -104,6 +112,14 @@ class Retiro
             $sql .= " AND m.curso_id = :curso_id";
             $params[':curso_id'] = $filtros['curso_id'];
         }
+        if (!empty($filtros['fecha_desde'])) {
+    $sql .= " AND r.fecha_retiro >= :fecha_desde";
+    $params[':fecha_desde'] = $filtros['fecha_desde'];
+}
+if (!empty($filtros['fecha_hasta'])) {
+    $sql .= " AND r.fecha_retiro <= :fecha_hasta";
+    $params[':fecha_hasta'] = $filtros['fecha_hasta'];
+}
 
         $sql .= " GROUP BY r.semestre ORDER BY r.semestre";
 
@@ -132,6 +148,14 @@ class Retiro
             $sql .= " AND r.semestre = :semestre";
             $params[':semestre'] = $filtros['semestre'];
         }
+        if (!empty($filtros['fecha_desde'])) {
+    $sql .= " AND r.fecha_retiro >= :fecha_desde";
+    $params[':fecha_desde'] = $filtros['fecha_desde'];
+}
+if (!empty($filtros['fecha_hasta'])) {
+    $sql .= " AND r.fecha_retiro <= :fecha_hasta";
+    $params[':fecha_hasta'] = $filtros['fecha_hasta'];
+}
 
         $sql .= " GROUP BY r.motivo ORDER BY total DESC";
 

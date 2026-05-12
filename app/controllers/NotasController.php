@@ -331,4 +331,82 @@ class NotasController
 
         require __DIR__ . '/../views/notas/panel_notas_asignatura.php';
     }
+
+    public function ajaxStore(): void
+    {
+        header('Content-Type: application/json');
+
+        $matriculaId = (int) ($_POST['matricula_id'] ?? 0);
+        $asignaturaId = (int) ($_POST['asignatura_id'] ?? 0);
+        $semestre = (int) ($_POST['semestre'] ?? 1);
+        $nota = (float) ($_POST['nota'] ?? 0);
+        $fecha = trim($_POST['fecha'] ?? '');
+
+        if (!$matriculaId || !$asignaturaId || !$fecha) {
+            echo json_encode(['ok' => false, 'msg' => 'Faltan parámetros.']);
+            exit;
+        }
+        if ($nota < 1.0 || $nota > 7.0) {
+            echo json_encode(['ok' => false, 'msg' => 'Nota fuera de rango.']);
+            exit;
+        }
+
+        $id = $this->model->insertarNota($matriculaId, $asignaturaId, $semestre, $nota, $fecha);
+
+        echo json_encode(['ok' => true, 'id' => $id]);
+        exit;
+    }
+
+    // ── AJAX: actualizar nota existente ─────────────────────────
+    public function ajaxUpdate(): void
+    {
+        header('Content-Type: application/json');
+
+        $id = (int) ($_POST['id'] ?? 0);
+        $nota = (float) ($_POST['nota'] ?? 0);
+        $fecha = trim($_POST['fecha'] ?? '');
+        $semestre = (int) ($_POST['semestre'] ?? 1);
+
+        if (!$id || !$fecha) {
+            echo json_encode(['ok' => false, 'msg' => 'Faltan parámetros.']);
+            exit;
+        }
+        if ($nota < 1.0 || $nota > 7.0) {
+            echo json_encode(['ok' => false, 'msg' => 'Nota fuera de rango.']);
+            exit;
+        }
+
+        $ok = $this->model->update($id, [
+            'nota' => $nota,
+            'fecha' => $fecha,
+            'semestre' => $semestre,
+        ]);
+
+        echo json_encode(['ok' => (bool) $ok]);
+        exit;
+    }
+
+    // ── AJAX: actualizar fecha de múltiples notas (columna) ─────
+    public function ajaxUpdateFecha(): void
+    {
+        header('Content-Type: application/json');
+
+        $idsStr = trim($_POST['ids'] ?? '');
+        $fecha = trim($_POST['fecha'] ?? '');
+
+        if (!$idsStr || !$fecha) {
+            echo json_encode(['ok' => false, 'msg' => 'Faltan parámetros.']);
+            exit;
+        }
+
+        $ids = array_filter(array_map('intval', explode(',', $idsStr)));
+        if (empty($ids)) {
+            echo json_encode(['ok' => false, 'msg' => 'IDs inválidos.']);
+            exit;
+        }
+
+        $ok = $this->model->actualizarFechaNotas($ids, $fecha);
+        echo json_encode(['ok' => (bool) $ok]);
+        exit;
+    }
 }

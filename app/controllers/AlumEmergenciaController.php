@@ -12,6 +12,7 @@ class AlumEmergenciaController
     }
 
     // Listar
+    /*
     public function index()
     {
         $search = $_GET['q'] ?? null;
@@ -23,7 +24,7 @@ class AlumEmergenciaController
         }
 
         require __DIR__ . '/../views/alum_emergencia/index.php';
-    }
+    }*/
 
 
     // Formulario crear

@@ -1,4 +1,5 @@
 <?php
+// ── REQUIRES ────────────────────────────────────────────────
 require_once __DIR__ . '/../controllers/AuthController.php';
 require_once __DIR__ . '/../controllers/UserController.php';
 require_once __DIR__ . '/../controllers/RolesController.php';
@@ -16,41 +17,20 @@ require_once __DIR__ . '/../controllers/NotasController.php';
 require_once __DIR__ . '/../controllers/AtrasoController.php';
 require_once __DIR__ . '/../controllers/AnotacionController.php';
 require_once __DIR__ . '/../controllers/AnamnesisResumenController.php';
-require_once __DIR__ . '/../controllers/reportes/ReporteController.php';
-require_once __DIR__ . '/../controllers/reportes/ReporteDashboardController.php';
-
 require_once __DIR__ . '/../controllers/RetirosController.php';
-
-
-//Profesores
 require_once __DIR__ . '/../controllers/ProfesoresController.php';
 require_once __DIR__ . '/../controllers/ProfesorCursoAsignaturaController.php';
 require_once __DIR__ . '/../controllers/HorariosController.php';
-
-//Perifil academico de los alumnos
 require_once __DIR__ . '/../controllers/PerfilAcademicoAsistenciaController.php';
-
 require_once __DIR__ . '/../controllers/AsistenciaController.php';
-$asistenciaController = new AsistenciaController();
-
-$perfilAcademicoAsistencia = new PerfilAcademicoAsistenciaController();
-
-
-
-
-
-
-//Inventario
 require_once __DIR__ . '/../controllers/inventario/InventarioController.php';
 require_once __DIR__ . '/../controllers/procedencia/ProcedenciaController.php';
 require_once __DIR__ . '/../controllers/inventario/CategorizacionController.php';
+require_once __DIR__ . '/../controllers/reportes/ReporteController.php';
+require_once __DIR__ . '/../controllers/reportes/ReporteDashboardController.php';
+require_once __DIR__ . '/../controllers/reportes/ReporteNotasController.php';
 
-// Instancias de controladores
-$inventarioController = new InventarioController();
-$procedenciaController = new ProcedenciaController();
-$categorizacionController = new CategorizacionController();
-
-// Instancias de aplicación SAAT
+// ── INSTANCIAS ───────────────────────────────────────────────
 $action = $_GET['action'] ?? 'login';
 $auth = new AuthController();
 $userController = new UserController();
@@ -70,37 +50,35 @@ $retirosController = new RetirosController();
 $notasController = new NotasController();
 $reporteController = new ReporteController();
 $reporteDashboard = new ReporteDashboardController();
+$asistenciaController = new AsistenciaController();
+$perfilAcademicoAsistencia = new PerfilAcademicoAsistenciaController();
+$inventarioController = new InventarioController();
+$procedenciaController = new ProcedenciaController();
+$categorizacionController = new CategorizacionController();
 
-
-//Verificacion de login para usuarios
-$action = $_GET['action'] ?? 'login';
-$auth = new AuthController();
-
-// ── CONTROL DE PERMISOS GLOBAL ──────────────────────────
+// ── PERMISOS GLOBAL ──────────────────────────────────────────
 $auth->checkPermiso($action);
-// ────────────────────────────────────────────────────────
 
-
+// ── ROUTER ───────────────────────────────────────────────────
 switch ($action) {
+
+    // ── AUTH ─────────────────────────────────────────────────
     case 'login':
-        $auth->login(); // muestra formulario
+        $auth->login();
         break;
-    //case 'doLogin':
-    //  $auth->doLogin($_POST); // procesa POST
-    //break;
     case 'doLogin':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userController->doLogin($_POST);
         }
         break;
     case 'logout':
-        $auth->logout(); //Cierra la seción
+        $auth->logout();
         break;
     case 'dashboard':
-        $auth->dashboard(); //Redirije al Dashboard
+        $auth->dashboard();
         break;
 
-    // CRUD usuarios
+    // ── USUARIOS ─────────────────────────────────────────────
     case 'users':
         $userController->index();
         break;
@@ -120,97 +98,7 @@ switch ($action) {
         $userController->destroy($_GET['id']);
         break;
 
-    //Perfil academico
-    case 'perfil_academico':
-        $perfilController = new PerfilAcademicoController();
-        $perfilController->show($_GET['id']);
-        break;
-
-    // CRUD Asistencias 
-    case 'asistencias':
-        // Muestra la vista general (index) de asistencias.
-        // URL: index.php?action=asistencias
-        $perfilAcademicoAsistencia->index();
-        break;
-
-    case 'asistencia_select_context': // NUEVA RUTA
-        // Muestra el formulario SOLO para seleccionar curso/año.
-        //$perfilAcademicoAsistencia->showSelectionForm();
-        break;
-
-    case 'asistencia_create_form':
-        // Muestra el formulario de registro de asistencia (la tabla de alumnos).
-        // Recibe los parámetros GET de la selección previa.
-        $perfilAcademicoAsistencia->showCreateForm();
-        break;
-
-    case 'asistencia_store':
-        // Procesa el formulario para guardar los registros de asistencia.
-        // URL: index.php?action=asistencia_store (Se accede por POST desde un formulario)
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $perfilAcademicoAsistencia->create();
-        } else {
-            header("Location: index.php?action=asistencias");
-        }
-        break;
-
-    case 'asistencia_edit':
-        // Muestra el formulario para editar una asistencia específica.
-        // URL: index.php?action=asistencia_edit&id=X
-        $id = $_GET['id'] ?? null;
-        $perfilAcademicoAsistencia->edit($id);
-        break;
-
-    case 'asistencia_update':
-        // Procesa la actualización de un registro de asistencia.
-        // URL: index.php?action=asistencia_update&id=X (Se accede por POST desde un formulario)
-        $id = $_GET['id'] ?? null;
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $perfilAcademicoAsistencia->update($id);
-        } else {
-            header("Location: index.php?action=asistencias");
-        }
-        break;
-
-    case 'asistencia_delete':
-        // Elimina un registro de asistencia.
-        // URL: index.php?action=asistencia_delete&id=X
-        $id = $_GET['id'] ?? null;
-        $perfilAcademicoAsistencia->delete($id);
-        break;
-
-    case 'alumno_perfil':
-        $alumnoId = $_GET['id'] ?? null;
-        // ... cargar datos del alumno ...
-        // ... y cargar el componente de asistencia
-        $perfilAcademicoAsistencia->getAsistenciaByAlumnoId($alumnoId);
-        // ... cargar otras secciones del perfil ...
-        break;
-
-
-    //Anamnesis Resumen
-    case 'anamnesis_form':
-        if (!AuthController::puede('anamnesis_form')) {
-            header("Location: index.php?action=dashboard");
-            exit;
-        }
-        $anamnesisController = new AnamnesisResumenController();
-        $anamnesisController->formAnamnesis();
-        break;
-
-    case 'anamnesis_guardar':
-        if (!AuthController::puede('anamnesis_guardar')) {
-            header("Location: index.php?action=dashboard");
-            exit;
-        }
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $anamnesisController = new AnamnesisResumenController();
-            $anamnesisController->guardar();
-        }
-        break;
-
-
-    // CRUD Roles
+    // ── ROLES ────────────────────────────────────────────────
     case 'roles':
         $rolesController->index();
         break;
@@ -227,7 +115,7 @@ switch ($action) {
         $rolesController->delete($_GET['id']);
         break;
 
-    // CRUD Años
+    // ── AÑOS ─────────────────────────────────────────────────
     case 'anios':
         $anioController->index();
         break;
@@ -247,7 +135,7 @@ switch ($action) {
         $anioController->delete($_GET['id']);
         break;
 
-    // CRUD Cursos
+    // ── CURSOS ───────────────────────────────────────────────
     case 'cursos':
         $cursosController->index();
         break;
@@ -267,9 +155,7 @@ switch ($action) {
         $cursosController->delete($_GET['id']);
         break;
 
-
-
-    // CRUD Alumnos
+    // ── ALUMNOS ──────────────────────────────────────────────
     case 'alumnos':
         $alumnosController->index();
         break;
@@ -292,326 +178,192 @@ switch ($action) {
         $alumnosController->profile($_GET['id']);
         break;
     case 'alumno_search':
-        $controller = new AlumnosController();
-        $controller->search();
+        $alumnosController->search();
         break;
-
     case 'alumnos_store_stepper':
-        $alumnosController->storeStepper($_POST); // guardar todo
+        $alumnosController->storeStepper($_POST);
         break;
-
     case 'check_run_exists':
-        $controller = new AlumnosController();
-        $controller->checkRunExists();
+        $alumnosController->checkRunExists();
         break;
-
     case 'alumno_retire':
-        $controller = new AlumnosController();
-        $controller->retire($_GET['id']);
+        $alumnosController->retire($_GET['id']);
         break;
-
     case 'alumno_restore':
-        $controller = new AlumnosController();
-        $controller->restore($_GET['id']);
+        $alumnosController->restore($_GET['id']);
         break;
-
     case 'alumno_search_ajax_matricula':
-        $controller = new AlumnosController();
-        $controller->searchAjaxMatricula();
+        $alumnosController->searchAjaxMatricula();
         break;
-
     case 'alumno_pdf':
-        // Ya está incluido AlumnoController.php y creada la instancia $alumnosController arriba
         $alumnosController->pdf($_GET['id'] ?? null);
         break;
-
     case 'alumnos_stepper':
-        require '../views/alumnos/stepper/form_stepper.php';  // nuevo
+        require '../views/alumnos/stepper/form_stepper.php';
         break;
-
     case 'listado_por_anio':
         $alumnosController->listadoPorAnio();
         break;
 
+    // ── PERFIL ACADÉMICO ─────────────────────────────────────
+    case 'perfil_academico':
+        $perfilController = new PerfilAcademicoController();
+        $perfilController->show($_GET['id']);
+        break;
+
+    // ── MATRÍCULAS ───────────────────────────────────────────
+    case 'matriculas':
+        $matriculaController->index();
+        break;
+    case 'matricula_create':
+        $matriculaController->create();
+        break;
+    case 'matricula_store':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $matriculaController->store($_POST);
+        }
+        break;
+    case 'matricula_edit':
+        if (isset($_GET['id'])) {
+            $matriculaController->edit($_GET['id']);
+        }
+        break;
+    case 'matricula_update':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
+            $matriculaController->update($_GET['id'], $_POST);
+        }
+        break;
+    case 'matricula_delete':
+        if (isset($_GET['id'])) {
+            $matriculaController->delete($_GET['id']);
+        }
+        break;
     case 'matricula_numero_lista':
         $matriculaController->numeroLista();
         break;
-
     case 'matricula_guardar_lista':
         $matriculaController->guardarNumeroLista();
         break;
-
     case 'matricula_retirar':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $matriculaController->retirar(null);
         }
         break;
-
     case 'matricula_reintegrar':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $matriculaController->reintegrar();
         }
         break;
 
-    // Asignaturas
+    // ── ASIGNATURAS ──────────────────────────────────────────
     case 'asignaturas':
-        $asignaturas = new AsignaturasController();
         $asignaturas->index();
         break;
-
     case 'asignatura_create':
-        $asignaturas = new AsignaturasController();
         $asignaturas->create();
         break;
-
     case 'asignatura_store':
-        $asignaturas = new AsignaturasController();
         $asignaturas->store($_POST);
         break;
-
     case 'asignatura_edit':
-        $asignaturas = new AsignaturasController();
         $asignaturas->edit($_GET['id']);
         break;
-
     case 'asignatura_update':
-        $asignaturas = new AsignaturasController();
         $asignaturas->update($_GET['id'], $_POST);
         break;
-
     case 'asignatura_delete':
-        $asignaturas = new AsignaturasController();
         $asignaturas->delete($_GET['id']);
         break;
 
-
-    // Relacion de cursos y asignatura
+    // ── CURSO - ASIGNATURA ───────────────────────────────────
     case 'curso_asignaturas':
-        $cursoAsignaruta = new CursoAsignaturaController();
         $cursoAsignaruta->index();
         break;
-
     case 'curso_asignaturas_create':
-        $cursoAsignaruta = new CursoAsignaturaController();
         $cursoAsignaruta->create();
         break;
-
     case 'curso_asignaturas_store':
-        $cursoAsignaruta = new CursoAsignaturaController();
         $cursoAsignaruta->store($_POST);
         break;
-
     case 'curso_asignaturas_edit':
-        if (!isset($_GET['id'])) {
+        if (!isset($_GET['id']))
             die("Falta el ID de la relación");
-        }
-        $cursoAsignaruta = new CursoAsignaturaController();
         $cursoAsignaruta->edit($_GET['id']);
         break;
-
     case 'curso_asignaturas_update':
-        if (!isset($_GET['id'])) {
+        if (!isset($_GET['id']))
             die("Falta el ID para actualizar");
-        }
-        $cursoAsignaruta = new CursoAsignaturaController();
         $cursoAsignaruta->update($_GET['id'], $_POST);
         break;
-
     case 'curso_asignaturas_delete':
-        if (!isset($_GET['id'])) {
+        if (!isset($_GET['id']))
             die("Falta el ID para eliminar");
-        }
-        $cursoAsignaruta = new CursoAsignaturaController();
         $cursoAsignaruta->destroy($_GET['id']);
         break;
 
-
-    // Alumno emergencia
+    // ── CONTACTOS DE EMERGENCIA ──────────────────────────────
     case 'alum_emergencia':
-        $alumnoemergencia = new AlumEmergenciaController();
         $alumnoemergencia->index();
         break;
-
     case 'alum_emergencia_create':
-        $alumnoemergencia = new AlumEmergenciaController();
         $alumnoemergencia->create();
         break;
-
     case 'alum_emergencia_store':
-        $alumnoemergencia = new AlumEmergenciaController();
         $alumnoemergencia->store($_POST);
         break;
-
     case 'alum_emergencia_edit':
-        $alumnoemergencia = new AlumEmergenciaController();
         $alumnoemergencia->edit($_GET['id']);
         break;
-
     case 'alum_emergencia_update':
-        $alumnoemergencia = new AlumEmergenciaController();
         $alumnoemergencia->update($_GET['id'], $_POST);
         break;
-
     case 'alum_emergencia_delete':
-        $alumnoemergencia = new AlumEmergenciaController();
         $alumnoemergencia->delete($_GET['id']);
+        break;
+    case 'alum_emergencia_createProfile':
+        $alumnoemergencia->createProfile($_GET['alumno_id']);
+        break;
+    case 'alum_emergencia_storeProfile':
+        $alumnoemergencia->storeProfile($_POST);
+        break;
+    case 'alum_emergencia_deleteProfile':
+        $alumnoemergencia->deleteProfile($_GET['id'], $_GET['alumno_id']);
         break;
     case 'alumno_search_ajax':
         require_once __DIR__ . '/../models/Alumno.php';
         $alumnoModel = new Alumno();
-        $term = $_GET['term'] ?? '';
-        $results = $alumnoModel->searchAlumnoEmergencia($term);
+        $results = $alumnoModel->searchAlumnoEmergencia($_GET['term'] ?? '');
         header('Content-Type: application/json');
         echo json_encode($results);
-        exit; // Muy importante para que no cargue otra vista
+        exit;
 
-    case 'alum_emergencia_createProfile':
-        $alumnoemergencia = new AlumEmergenciaController();
-        $alumnoemergencia->createProfile($_GET['alumno_id']);
-        break;
-    case 'alum_emergencia_storeProfile':
-        $alumnoemergencia = new AlumEmergenciaController();
-        $alumnoemergencia->storeProfile($_POST);
-        break;
-    case 'alum_emergencia_deleteProfile':
-        $alumnoemergencia = new AlumEmergenciaController();
-        $alumnoemergencia->deleteProfile($_GET['id'], $_GET['alumno_id']);
-        break;
-
-
-    //Inventario
-    case 'inventario_index':
-        $inventarioController->index();
-        break;
-    case 'inventario_create':
-        $inventarioController->create();
-        break;
-    case 'inventario_store':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $inventarioController->store($_POST);
-        }
-        break;
-    case 'inventario_edit':
-        $id = $_GET['id'];
-        $inventarioController->edit($id);
-        break;
-    case 'inventario_update':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = $_GET['id'];
-            $inventarioController->update($id, $_POST);
-        }
-        break;
-
-    case 'inventario_delete':
-        $inventarioController->delete($_GET['id']);
-        break;
-
-
-    //Antecedentes Familiares
+    // ── ANTECEDENTES FAMILIARES ──────────────────────────────
     case 'antecedentefamiliar':
         $antecedenteFamiliarController->index();
         break;
-
     case 'antecedentefamiliar_create':
         $antecedenteFamiliarController->createForm();
         break;
-
     case 'antecedentefamiliar_store':
         $antecedenteFamiliarController->create($_POST);
         break;
-
     case 'antecedentefamiliar_edit':
         $antecedenteFamiliarController->edit($_GET['id']);
         break;
-
     case 'antecedentefamiliar_update':
         $antecedenteFamiliarController->update($_GET['id'], $_POST);
         break;
-
     case 'antecedentefamiliar_delete':
         $antecedenteFamiliarController->delete($_GET['id']);
         break;
     case 'antecedentefamiliar_editProfile':
-        $controller = new AntecedenteFamiliarController();
-        $controller->editProfile($_GET['alumno_id']);
+        $antecedenteFamiliarController->editProfile($_GET['alumno_id']);
         break;
     case 'antecedentefamiliar_updateProfile':
-        $controller = new AntecedenteFamiliarController();
-        $controller->updateProfile($_POST);
+        $antecedenteFamiliarController->updateProfile($_POST);
         break;
 
-
-    //Procedencia SOLO PARA EL INVENTARIO
-    case 'procedencias':
-        $procedenciaController->index();
-        break;
-    case 'procedencia_store':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $procedenciaController->store($_POST); // procesa POST y redirige
-        }
-        break;
-    case 'procedencia_edit':
-        if (isset($_GET['id'])) {
-            $procedenciaController->edit($_GET['id']);
-        } else {
-            echo "ID de procedencia no especificado";
-        }
-        break;
-    case 'procedencia_update':
-        if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-            $procedenciaController->update($_GET['id'], $_POST); // CORRECTO
-        }
-        break;
-    case 'procedencia_delete':
-        if (isset($_GET['id'])) {
-            $procedenciaController->delete($_GET['id']);
-        } else {
-            echo "ID de procedencia no especificado";
-        }
-        break;
-
-    case 'inventario_showLugarGrupo':
-        $controller = new InventarioController();
-        $controller->showLugarGrupo($_GET['lugar'], $_GET['codigo_general']);
-        break;
-
-
-    case 'procedencia_create':
-        $procedenciaController->create(); // solo muestra formulario
-        break;
-
-    //Expotal Inventario a excel
-    case 'inventario_exportExcel':
-        $controller = new InventarioController();
-        $controller->exportExcel();
-        break;
-
-    // Categporizacion
-    case 'categorizaciones':
-        $categorizacionController->index();
-        break;
-
-    case 'categorizacion_create':
-        require __DIR__ . '/../views/categorizacion/create.php';
-        break;
-
-    case 'categorizacion_store':
-        $categorizacionController->create($_POST);
-        break;
-
-    case 'categorizacion_edit':
-        $categorizacionController->edit($_GET['id']);
-        break;
-
-    case 'categorizacion_update':
-        $categorizacionController->update($_GET['id'], $_POST);
-        break;
-
-    case 'categorizacion_delete':
-        $categorizacionController->delete($_GET['id']);
-        break;
-
-    //Antecenters escolares
+    // ── ANTECEDENTES ESCOLARES ───────────────────────────────
     case 'antecedente_escolar':
         $antecedenteEscolarController->index();
         break;
@@ -631,88 +383,111 @@ switch ($action) {
         $antecedenteEscolarController->delete($_GET['id']);
         break;
     case 'antecedente_escolar_editProfile':
-        $controller = new AntecedenteEscolarController();
-        $controller->editProfile($_GET['alumno_id']);
+        $antecedenteEscolarController->editProfile($_GET['alumno_id']);
         break;
-
     case 'antecedente_escolar_updateProfile':
-        $controller = new AntecedenteEscolarController();
-        $controller->updateProfile($_POST);
+        $antecedenteEscolarController->updateProfile($_POST);
         break;
 
-
-    // CRUD MATRÍCULAS
-    case 'matriculas':
-        $matriculaController->index();
+    // ── ANAMNESIS ────────────────────────────────────────────
+    case 'anamnesis_form':
+        if (!AuthController::puede('anamnesis_form')) {
+            header("Location: index.php?action=dashboard");
+            exit;
+        }
+        (new AnamnesisResumenController())->formAnamnesis();
         break;
-
-    case 'matricula_create':
-        $matriculaController->create();
-        break;
-
-    case 'matricula_store':
+    case 'anamnesis_guardar':
+        if (!AuthController::puede('anamnesis_guardar')) {
+            header("Location: index.php?action=dashboard");
+            exit;
+        }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $matriculaController->store($_POST);
+            (new AnamnesisResumenController())->guardar();
         }
         break;
 
-    case 'matricula_edit':
-        if (isset($_GET['id'])) {
-            $matriculaController->edit($_GET['id']);
+    // ── ASISTENCIA (nueva) ───────────────────────────────────
+    case 'asistencias':
+        $perfilAcademicoAsistencia->index();
+        break;
+    case 'asistencia_select_context':
+        break;
+    case 'asistencia_create_form':
+        $perfilAcademicoAsistencia->showCreateForm();
+        break;
+    case 'asistencia_store':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $perfilAcademicoAsistencia->create();
+        } else {
+            header("Location: index.php?action=asistencias");
         }
         break;
-
-    case 'matricula_update':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
-            $matriculaController->update($_GET['id'], $_POST);
+    case 'asistencia_edit':
+        $perfilAcademicoAsistencia->edit($_GET['id'] ?? null);
+        break;
+    case 'asistencia_update':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $perfilAcademicoAsistencia->update($_GET['id'] ?? null);
+        } else {
+            header("Location: index.php?action=asistencias");
         }
         break;
-
-    case 'matricula_delete':
-        if (isset($_GET['id'])) {
-            $matriculaController->delete($_GET['id']);
-        }
+    case 'asistencia_delete':
+        $perfilAcademicoAsistencia->delete($_GET['id'] ?? null);
+        break;
+    case 'alumno_perfil':
+        $perfilAcademicoAsistencia->getAsistenciaByAlumnoId($_GET['id'] ?? null);
         break;
 
+    // ── ASISTENCIA (libro de clases) ─────────────────────────
+    case 'libro_clases':
+        $asistenciaController->libroClases();
+        break;
+    case 'libro_clases_pdf':
+        $asistenciaController->libroClasesPdf();
+        break;
+    case 'asistencia_cursos':
+        $asistenciaController->listarCursos();
+        break;
+    case 'form_asistencia_masiva':
+        $asistenciaController->formMasiva();
+        break;
+    case 'resumen_curso':
+        $asistenciaController->resumenCurso();
+        break;
+    case 'guardar_asistencia_masiva':
+        $asistenciaController->guardarAsistenciaMasiva();
+        break;
+    case 'asistencia_pdf':
+        $asistenciaController->asistencia_pdf(
+            $_GET['anio_id'] ?? null,
+            $_GET['curso_id'] ?? null
+        );
+        break;
 
-
-
+    // ── NOTAS ────────────────────────────────────────────────
     case 'notas':
-        $notasController = new NotasController();
         $notasController->index();
         break;
-
     case 'notas_index':
-        require_once __DIR__ . '/../controllers/NotasController.php';
-        $controller = new NotasController();
-        $controller->indexByAlumno($_GET['matricula_id']);
+        $notasController->indexByAlumno($_GET['matricula_id']);
         break;
-
     case 'notas_createGroup':
-        $notasController = new NotasController();
         $notasController->createGroup($_GET['curso_id'], $_GET['anio_id']);
         break;
-
     case 'notas_storeGroup':
-        $notasController = new NotasController();
         $notasController->storeGroup($_GET['curso_id'], $_GET['anio_id'], $_POST);
         break;
-
     case 'notas_edit':
-        $notasController = new NotasController();
         $notasController->edit($_GET['id']);
         break;
-
     case 'notas_update':
-        $notasController = new NotasController();
         $notasController->update($_GET['id'], $_POST);
         break;
-
     case 'notas_delete':
-        $notasController = new NotasController();
         $notasController->delete($_GET['id']);
         break;
-
     case 'notas_panel':
         if (!AuthController::puede('notas_panel')) {
             header("Location: index.php?action=dashboard");
@@ -720,7 +495,6 @@ switch ($action) {
         }
         $notasController->panelCursos();
         break;
-
     case 'notas_panel_asignaturas':
         if (!AuthController::puede('notas_panel_asignaturas')) {
             header("Location: index.php?action=dashboard");
@@ -728,7 +502,6 @@ switch ($action) {
         }
         $notasController->panelAsignaturas();
         break;
-
     case 'notas_panel_asignatura':
         if (!AuthController::puede('notas_panel_asignatura')) {
             header("Location: index.php?action=dashboard");
@@ -737,194 +510,45 @@ switch ($action) {
         $notasController->panelNotasAsignatura();
         break;
 
-    //---------------------------------------------------------------------
-
-    // CRUD Profesores
-    case 'profesores':
-        $profesoresController = new ProfesoresController();
-        $profesoresController->index();
-        break;
-
-    case 'profesor_create':
-        $profesoresController = new ProfesoresController();
-        $profesoresController->create();
-        break;
-
-    case 'profesor_store':
-        $profesoresController = new ProfesoresController();
-        $profesoresController->store($_POST);
-        break;
-
-    case 'profesor_edit':
-        $profesoresController = new ProfesoresController();
-        $profesoresController->edit($_GET['id']);
-        break;
-
-    case 'profesor_update':
-        $profesoresController = new ProfesoresController();
-        $profesoresController->update($_GET['id'], $_POST);
-        break;
-
-    case 'profesor_delete':
-        $profesoresController = new ProfesoresController();
-        $profesoresController->delete($_GET['id']);
-        break;
-
-
-    // CRUD Profesor-Curso-Asignatura
-    case 'profesor_curso_asignatura':
-        $pcaController = new ProfesorCursoAsignaturaController();
-        $pcaController->index();
-        break;
-
-    case 'pca_create':
-        $pcaController = new ProfesorCursoAsignaturaController();
-        $pcaController->create();
-        break;
-
-    case 'pca_store':
-        $pcaController = new ProfesorCursoAsignaturaController();
-        $pcaController->store($_POST);
-        break;
-
-    case 'pca_edit':
-        $pcaController = new ProfesorCursoAsignaturaController();
-        $pcaController->edit($_GET['id']);
-        break;
-
-    case 'pca_update':
-        $pcaController = new ProfesorCursoAsignaturaController();
-        $pcaController->update($_GET['id'], $_POST);
-        break;
-
-    case 'pca_delete':
-        $pcaController = new ProfesorCursoAsignaturaController();
-        $pcaController->delete($_GET['id']);
-        break;
-    case 'pca_asignaturas_por_curso':
-        $pcaController = new ProfesorCursoAsignaturaController();
-        $pcaController->getAsignaturasPorCurso();
-        break;
-
-
-
-    // Horarios por asignación
-    case 'horarios_pca':
-        $horariosController = new HorariosController();
-        $horariosController->indexPorAsignacion($_GET['pca_id']);
-        break;
-
-    case 'horario_store':
-        $horariosController = new HorariosController();
-        $horariosController->store($_POST);
-        break;
-
-    case 'horario_delete':
-        $horariosController = new HorariosController();
-        $horariosController->delete($_GET['id'], $_GET['pca_id']);
-        break;
-
-    // Suplencias
-    case 'suplencias':
-        $suplenciasController = new SuplenciasController();
-        $suplenciasController->index();
-        break;
-
-    case 'suplencia_store':
-        $suplenciasController = new SuplenciasController();
-        $suplenciasController->store($_POST);
-        break;
-
-    case 'suplencia_delete':
-        $suplenciasController = new SuplenciasController();
-        $suplenciasController->delete($_GET['id']);
-        break;
-
-
-    //---------------------------------------------------------------------
-
-
-    case 'libro_clases':
-        $asistenciaController->libroClases();
-        break;
-
-    case 'libro_clases_pdf':
-        $asistenciaController->libroClasesPdf();
-        break;
-
-    case 'asistencia_cursos':
-        $asistenciaController->listarCursos();
-        break;
-
-    case 'form_asistencia_masiva':
-        $asistenciaController->formMasiva();
-        break;
-
-    case 'resumen_curso':
-        $asistenciaController->resumenCurso();
-        break;
-
-    case 'guardar_asistencia_masiva':
-        $asistenciaController->guardarAsistenciaMasiva();
-        break;
-
-    case 'asistencia_pdf':
-        $anio_id = $_GET['anio_id'] ?? null;
-        $curso_id = $_GET['curso_id'] ?? null; // <--- Agregamos esto
-        $asistenciaController->asistencia_pdf($anio_id, $curso_id);
-        break;
-    //---------------------------------------------------------------------
-
-    // Atrasos
+    // ── ATRASOS ──────────────────────────────────────────────
     case 'atrasos_registro':
         $atrasoController->formRegistro();
         break;
-
     case 'atrasos_guardar':
         $atrasoController->guardar();
         break;
-
-    case 'atrasos_buscar_alumno':   // endpoint AJAX
+    case 'atrasos_buscar_alumno':
         $atrasoController->buscarAlumno();
         break;
-
     case 'atrasos_lista_curso':
         $atrasoController->listarPorCurso();
         break;
-
     case 'atrasos_lista_alumno':
         $atrasoController->listarPorAlumno();
         break;
-
     case 'atrasos_eliminar':
         $atrasoController->eliminar();
         break;
-
-    case 'atrasos_buscar_alumnos':   // con 's' al final — autocompletado
+    case 'atrasos_buscar_alumnos':
         $atrasoController->buscarAlumnos();
         break;
-
     case 'atrasos_actualizar_hora':
         $atrasoController->actualizarHora();
         break;
-
     case 'atrasos_pdf':
         $atrasoController->atrasos_pdf();
         break;
-
     case 'atraso_alumno_pdf':
         $atrasoController->atraso_alumno_pdf();
         break;
-
     case 'atrasos_historial':
         $atrasoController->historial();
         break;
-
     case 'atrasos_historial_pdf':
         $atrasoController->historial_pdf();
         break;
-    //----------------------------------------------------------------------
-    //Anotaciones
+
+    // ── ANOTACIONES ──────────────────────────────────────────
     case 'anotaciones':
         $anotacionController->index();
         break;
@@ -953,100 +577,262 @@ switch ($action) {
         $anotacionController->exportarIndividualPdf();
         break;
 
-
-    // ── RETIROS ─────────────────────────────────────
+    // ── RETIROS ──────────────────────────────────────────────
     case 'retiros':
         $retirosController->index();
         break;
-
     case 'retiros_create':
         $retirosController->create();
         break;
-
     case 'retiros_edit':
         $retirosController->edit((int) ($_GET['id'] ?? 0));
         break;
-
     case 'retiros_delete':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $retirosController->delete((int) ($_GET['id'] ?? 0));
         }
         break;
-
     case 'retiros_buscar_alumnos':
         $retirosController->buscarAlumnos();
         break;
-
     case 'retiros_reportes':
         $retirosController->reportes();
         break;
-
     case 'retiros_reporte':
         $retirosController->generarReporte();
         break;
-
     case 'retiros_buscar_contactos':
         $retirosController->buscarContactos();
         break;
 
+    // ── PROFESORES ───────────────────────────────────────────
+    case 'profesores':
+        (new ProfesoresController())->index();
+        break;
+    case 'profesor_create':
+        (new ProfesoresController())->create();
+        break;
+    case 'profesor_store':
+        (new ProfesoresController())->store($_POST);
+        break;
+    case 'profesor_edit':
+        (new ProfesoresController())->edit($_GET['id']);
+        break;
+    case 'profesor_update':
+        (new ProfesoresController())->update($_GET['id'], $_POST);
+        break;
+    case 'profesor_delete':
+        (new ProfesoresController())->delete($_GET['id']);
+        break;
 
+    // ── PROFESOR - CURSO - ASIGNATURA ────────────────────────
+    case 'profesor_curso_asignatura':
+        (new ProfesorCursoAsignaturaController())->index();
+        break;
+    case 'pca_create':
+        (new ProfesorCursoAsignaturaController())->create();
+        break;
+    case 'pca_store':
+        (new ProfesorCursoAsignaturaController())->store($_POST);
+        break;
+    case 'pca_edit':
+        (new ProfesorCursoAsignaturaController())->edit($_GET['id']);
+        break;
+    case 'pca_update':
+        (new ProfesorCursoAsignaturaController())->update($_GET['id'], $_POST);
+        break;
+    case 'pca_delete':
+        (new ProfesorCursoAsignaturaController())->delete($_GET['id']);
+        break;
+    case 'pca_asignaturas_por_curso':
+        (new ProfesorCursoAsignaturaController())->getAsignaturasPorCurso();
+        break;
 
-    // ── RETIROS ─────────────────────────────────────
+    // ── HORARIOS ─────────────────────────────────────────────
+    case 'horarios_pca':
+        (new HorariosController())->indexPorAsignacion($_GET['pca_id']);
+        break;
+    case 'horario_store':
+        (new HorariosController())->store($_POST);
+        break;
+    case 'horario_delete':
+        (new HorariosController())->delete($_GET['id'], $_GET['pca_id']);
+        break;
 
+    // ── SUPLENCIAS ───────────────────────────────────────────
+    case 'suplencias':
+        (new SuplenciasController())->index();
+        break;
+    case 'suplencia_store':
+        (new SuplenciasController())->store($_POST);
+        break;
+    case 'suplencia_delete':
+        (new SuplenciasController())->delete($_GET['id']);
+        break;
 
+    // ── CURSO DOCENTE ────────────────────────────────────────
     case 'curso_docente':
         require_once '../controllers/CursoDocenteController.php';
         (new CursoDocenteController())->index();
         break;
-
     case 'curso_docente_create':
         require_once '../controllers/CursoDocenteController.php';
         (new CursoDocenteController())->create();
         break;
-
     case 'curso_docente_store':
         require_once '../controllers/CursoDocenteController.php';
         (new CursoDocenteController())->store();
         break;
-
     case 'curso_docente_delete':
         require_once '../controllers/CursoDocenteController.php';
         (new CursoDocenteController())->destroy();
         break;
 
-    // En el switch
+    // ── INVENTARIO ───────────────────────────────────────────
+    case 'inventario_index':
+        $inventarioController->index();
+        break;
+    case 'inventario_create':
+        $inventarioController->create();
+        break;
+    case 'inventario_store':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $inventarioController->store($_POST);
+        }
+        break;
+    case 'inventario_edit':
+        $inventarioController->edit($_GET['id']);
+        break;
+    case 'inventario_update':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $inventarioController->update($_GET['id'], $_POST);
+        }
+        break;
+    case 'inventario_delete':
+        $inventarioController->delete($_GET['id']);
+        break;
+    case 'inventario_showLugarGrupo':
+        $inventarioController->showLugarGrupo($_GET['lugar'], $_GET['codigo_general']);
+        break;
+    case 'inventario_exportExcel':
+        $inventarioController->exportExcel();
+        break;
 
+    // ── PROCEDENCIA ──────────────────────────────────────────
+    case 'procedencias':
+        $procedenciaController->index();
+        break;
+    case 'procedencia_create':
+        $procedenciaController->create();
+        break;
+    case 'procedencia_store':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $procedenciaController->store($_POST);
+        }
+        break;
+    case 'procedencia_edit':
+        if (isset($_GET['id'])) {
+            $procedenciaController->edit($_GET['id']);
+        }
+        break;
+    case 'procedencia_update':
+        if (isset($_GET['id']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $procedenciaController->update($_GET['id'], $_POST);
+        }
+        break;
+    case 'procedencia_delete':
+        if (isset($_GET['id'])) {
+            $procedenciaController->delete($_GET['id']);
+        }
+        break;
 
+    // ── CATEGORIZACIÓN ───────────────────────────────────────
+    case 'categorizaciones':
+        $categorizacionController->index();
+        break;
+    case 'categorizacion_create':
+        require __DIR__ . '/../views/categorizacion/create.php';
+        break;
+    case 'categorizacion_store':
+        $categorizacionController->create($_POST);
+        break;
+    case 'categorizacion_edit':
+        $categorizacionController->edit($_GET['id']);
+        break;
+    case 'categorizacion_update':
+        $categorizacionController->update($_GET['id'], $_POST);
+        break;
+    case 'categorizacion_delete':
+        $categorizacionController->delete($_GET['id']);
+        break;
+
+    // ── REPORTES ─────────────────────────────────────────────
     case 'reportes':
         $reporteDashboard->index();
         break;
-
     case 'reportes_asistencia':
         $reporteController->index();
         break;
-
     case 'reporte_csv_curso':
         $reporteController->csvCurso();
         break;
-
     case 'reporte_csv_general':
         $reporteController->csvGeneral();
         break;
-
     case 'reporte_pdf_curso':
         $reporteController->pdfCurso();
         break;
-
     case 'reporte_pdf_general':
         $reporteController->pdfGeneral();
         break;
 
+    // ── REPORTES DE NOTAS ────────────────────────────────────
+    case 'reportes_notas':
+        (new ReporteNotasController())->index();
+        break;
+    case 'reportes_notas_pdf_alumno':
+        (new ReporteNotasController())->pdfAlumno();
+        break;
+    case 'reportes_notas_pdf_asignatura':
+        (new ReporteNotasController())->pdfAsignatura();
+        break;
 
-    // ── RETIROS ─────────────────────────────────────
+    // ── APIs JSON ────────────────────────────────────────────
+    case 'api_alumnos_curso':
+        require_once __DIR__ . '/../models/Nota.php';
+        header('Content-Type: application/json');
+        echo json_encode(
+            (new Nota())->getByCursoYAnio(
+                (int) ($_GET['curso_id'] ?? 0),
+                (int) ($_GET['anio_id'] ?? 0)
+            )
+        );
+        exit;
 
+    case 'api_asignaturas_curso':
+        require_once __DIR__ . '/../models/CursoAsignatura.php';
+        header('Content-Type: application/json');
+        echo json_encode(
+            (new CursoAsignatura())->getAsignaturasPorCurso(
+                (int) ($_GET['curso_id'] ?? 0)
+            )
+        );
+        exit;
+
+    case 'notas_ajax_store':
+        $notasController->ajaxStore();
+        break;
+
+    case 'notas_ajax_update':
+        $notasController->ajaxUpdate();
+        break;
+
+    case 'notas_ajax_update_fecha':
+        $notasController->ajaxUpdateFecha();
+        break;
+
+    // ── DEFAULT ──────────────────────────────────────────────
     default:
-        echo "<h1>Ruta no encontrada papito</h1>
-        </br>
-        <h3>lal pipo</h3>";
+        echo "<h1>Ruta no encontrada</h1>";
         break;
 }

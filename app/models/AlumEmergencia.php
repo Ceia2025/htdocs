@@ -148,7 +148,8 @@ class AlumEmergencia
             'Abuelo', 'Abuela', 'Tío', 'Tía',
             'Amigo', 'Amiga', 'Esposo', 'Esposa',
             'Apoderado', 'Apoderado Suplente',
-            'Tutor', 'Tutor Legal', 'Representante',
+            'Tutor', 'Tutor Legal', 'Representante','Por poder Simple', 'Psicóloga',
+            'Hijo','Hija'
         ];
     }
 }
