@@ -156,34 +156,34 @@ $asignaturaSeleccionada = (int) ($_GET['asignatura_id'] ?? 0);
     function cargarGrilla(asigId) {
         const notasAsig = NOTAS_EXIST[asigId] ?? {};
 
-        // Encontrar el máximo de notas que tiene cualquier alumno
-        let maxNotas = 0;
+        // 1. Recopilar todas las fechas únicas y ordenarlas
+        const fechasSet = new Set();
         Object.values(notasAsig).forEach(arr => {
-            if (arr.length > maxNotas) maxNotas = arr.length;
+            arr.forEach(n => fechasSet.add(n.fecha));
         });
+        const fechasOrdenadas = [...fechasSet].sort(); // orden cronológico
 
-        // Construir evaluaciones por índice (no por fecha)
-        evaluaciones[asigId] = [];
-        for (let i = 0; i < maxNotas; i++) {
-            // La fecha de la columna = la fecha más común en ese índice
-            let fechaCol = HOY;
-            Object.values(notasAsig).forEach(arr => {
-                if (arr[i]) fechaCol = arr[i].fecha;
-            });
-
+        // 2. Construir evaluaciones por fecha
+        evaluaciones[asigId] = fechasOrdenadas.map(fecha => {
             const notas = {};
             Object.entries(notasAsig).forEach(([matId, arr]) => {
-                if (arr[i]) {
-                    notas[matId] = { id: parseInt(arr[i].id), valor: parseFloat(arr[i].nota) };
+                // buscar la nota de este alumno en esta fecha específica
+                const nota = arr.find(n => n.fecha === fecha);
+                if (nota) {
+                    notas[matId] = { id: parseInt(nota.id), valor: parseFloat(nota.nota) };
                 }
             });
+            return { fecha, notas };
+        });
 
-            evaluaciones[asigId].push({ fecha: fechaCol, notas });
+        // Si no hay evaluaciones aún, iniciar con una columna vacía
+        if (evaluaciones[asigId].length === 0) {
+            evaluaciones[asigId] = [{ fecha: HOY, notas: {} }];
         }
 
         renderGrilla(asigId);
     }
-
+    
     // ── RENDERIZAR TABLA ─────────────────────────────────────────────────────────
     function renderGrilla(asigId) {
         const evals = evaluaciones[asigId] ?? [];
