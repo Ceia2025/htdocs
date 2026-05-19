@@ -200,7 +200,18 @@ class NotasController
     public function delete($id)
     {
         $this->model->delete($id);
-        header("Location: index.php?action=notas");
+
+        $cursoId = $_GET['curso_id'] ?? null;
+        $anioId = $_GET['anio_id'] ?? null;
+        $asignaturaId = $_GET['asignatura_id'] ?? null;
+        $semestre = $_GET['semestre'] ?? 1;
+
+        if ($cursoId && $anioId && $asignaturaId) {
+            header("Location: index.php?action=notas_panel_asignatura&curso_id={$cursoId}&anio_id={$anioId}&asignatura_id={$asignaturaId}&semestre={$semestre}");
+            exit;
+        }
+
+        header("Location: index.php?action=notas_panel");
         exit;
     }
 

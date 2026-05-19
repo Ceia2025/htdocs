@@ -80,6 +80,12 @@ class ReporteNotasController
         $anio = $anioModel->getById($matricula['anio_id']);
         $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($curso['id']);
 
+        $asignaturasExcluidas = ['Inspectoría', 'Convivencia Escolar'];
+        $asignaturas = array_filter($asignaturas, function ($a) use ($asignaturasExcluidas) {
+            return !in_array($a['nombre'], $asignaturasExcluidas);
+        });
+        $asignaturas = array_values($asignaturas);
+
         // Profesor jefe
         $docente = $cursoDocenteModel->getDocenteDeCurso($curso['id'], $anio['id']);
         $docenteNombre = $docente
@@ -156,6 +162,12 @@ class ReporteNotasController
         $curso = $cursoModel->getById($cursoId);
         $anio = $anioModel->getById($anioId);
         $asignatura = $asignaturaModel->getById($asignaturaId);
+        $asignaturasExcluidas = ['Inspectoría', 'Convivencia Escolar'];
+
+        //Excluir las asignaturas
+        if (in_array($asignatura['nombre'], $asignaturasExcluidas)) {
+            die('Esta asignatura no está disponible en reportes.');
+        }
         $alumnos = $this->notaModel->getByCursoYAnio($cursoId, $anioId);
 
         // Notas agrupadas por matricula_id

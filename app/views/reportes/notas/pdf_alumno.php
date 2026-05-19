@@ -156,6 +156,7 @@ function fmtN($v, $dec = 1)
             width: 100%;
             border-collapse: collapse;
             font-size: 6.5px;
+            table-layout: fixed;
         }
 
         table.nt thead tr.sem-row th {
@@ -176,10 +177,22 @@ function fmtN($v, $dec = 1)
             text-align: center;
         }
 
+        /* DESPUÉS */
         table.nt thead th.th-asig {
             text-align: left;
             padding-left: 4px;
-            min-width: 100px;
+            width: 110px;
+            max-width: 110px;
+        }
+
+        table.nt tbody td.td-a {
+            text-align: left;
+            padding-left: 4px;
+            font-weight: bold;
+            font-size: 6.5px;
+            width: 110px;
+            max-width: 110px;
+            overflow: hidden;
         }
 
         table.nt tbody tr:nth-child(even) td {
@@ -310,7 +323,7 @@ function fmtN($v, $dec = 1)
     <div class="header">
         <div class="h-left">
             <?php if ($logoExists): ?>
-                <img src="<?= $logoPath ?>" style="width:60px;height:auto;">
+                <img src="http://localhost:8080/app/public/img/LOGO%20CEIA.jpg" style="width:60px;height:auto;">
             <?php else: ?>
                 <strong style="color:#004b8d;font-size:8px;">CEIA</strong>
             <?php endif; ?>
@@ -321,18 +334,26 @@ function fmtN($v, $dec = 1)
             <div class="doc-t">Informe de Notas</div>
             <div class="doc-sb">Año Escolar <?= htmlspecialchars($anio['anio']) ?></div>
         </div>
-        <div class="h-right">
-            <?php if ($logoExists): ?>
-                <img src="<?= $logoPath ?>" style="width:52px;height:auto;">
-            <?php endif; ?>
-        </div>
     </div>
 
-    <!-- DECRETOS -->
+    <?php
+    // IDs de cursos que son "1° y 2°" (primer nivel medio)
+    $cursosPrimerNivel = [2, 5, 8];
+    $esPrimerNivel = in_array((int) $curso['id'], $cursosPrimerNivel);
+    ?>
+
+    <!-- DECRETO -->
     <div class="dec">
-        Decreto Exento de educación que aprueba el Reglamento de Evaluación y Promoción Escolar N° 2169 de 2007<br>
-        Decreto Exento o Resolución Exenta de Educación que aprueba Plan y Programas de Estudio N° 257 de 2009<br>
-        Decreto Supremo, Resolución Exenta de Educación N° 3290 de 1981
+
+        <?php if ($esPrimerNivel): ?>
+            Decreto Supremo de Educación que aprueba Bases Curriculares N°10/2022<br>
+        <?php else: ?>
+            Decreto Exento o Resolución Exenta de Educación que aprueba Planes y Programas de Estudio N° 257/2009<br>
+        <?php endif; ?>
+
+        Decreto Exento de educación que aprueba el Reglamento de Evaluación y Promoción Escolar N° 2169/2007<br>
+        Reconocimiento oficial del ministerio de Educación de Chile, N°3290/1981
+
     </div>
 
     <!-- FICHA ALUMNO -->
@@ -480,17 +501,29 @@ function fmtN($v, $dec = 1)
         Asistencia registrada hasta el día <?= date('j') ?> de <?= strftime('%B', mktime(0, 0, 0, date('n'), 1)) ?>
     </div>
 
-    <!-- FECHA + FIRMA -->
-    <table style="width:100%;margin-top:10px;">
+    <!-- FECHA -->
+    <div style="font-size:7px; margin-top:10px; margin-bottom:8px;">
+        <strong>Fecha del Informe:</strong> <?= date('d/m/Y') ?>
+    </div>
+
+    <!-- FIRMAS -->
+    <table style="width:100%;margin-top:4px;">
         <tr>
-            <td style="font-size:7px;">
-                <strong>Fecha del Informe:</strong> <?= date('d/m/Y') ?>
-            </td>
-            <td style="text-align:right;">
+            <!-- Firma Profesor Jefe -->
+            <td style="width:50%; vertical-align:bottom; text-align:center;">
                 <div class="firma">
                     <div class="fl"></div>
                     <div style="font-weight:bold;font-size:7.5px;"><?= htmlspecialchars($docenteNombre ?? '') ?></div>
                     <div style="font-size:6.5px;color:#64748b;">Profesor Jefe</div>
+                </div>
+            </td>
+
+            <!-- Firma Director -->
+            <td style="width:50%; vertical-align:bottom; text-align:center;">
+                <div class="firma">
+                    <div class="fl"></div>
+                    <div style="font-weight:bold;font-size:7.5px;">Juan José Araya Chandía</div>
+                    <div style="font-size:6.5px;color:#64748b;">Director</div>
                 </div>
             </td>
         </tr>

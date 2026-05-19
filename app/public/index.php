@@ -486,7 +486,7 @@ switch ($action) {
         $notasController->update($_GET['id'], $_POST);
         break;
     case 'notas_delete':
-        $notasController->delete($_GET['id']);
+        $notasController->delete((int)($_GET['id'] ?? 0));
         break;
     case 'notas_panel':
         if (!AuthController::puede('notas_panel')) {
