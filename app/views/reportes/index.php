@@ -46,6 +46,24 @@ $modulos = [
         'disponible' => false,
         'tags' => ['Próximamente'],
     ],
+    [
+        'titulo' => 'Reporte Alumnos Etnia',
+        'descripcion' => 'Exporta filtro de Alumnos con distintas Etnias, Separadas por curso y año.',
+        'icono' => '🧑🏽',
+        'color' => 'yellow',
+        'url' => 'index.php?action=reportes_etnia',
+        'disponible' => true,          // ← activar
+        'tags' => ['PDF', 'CSV', 'Por curso', 'Por etnia'],
+    ],
+    [
+        'titulo' => 'Reporte Alumnos Pie',
+        'descripcion' => 'Exporta filtro de Alumnos ingresados por PIE',
+        'icono' => '👦',
+        'color' => 'cyan',
+        'url' => '',
+        'disponible' => false,
+        'tags' => ['Próximamente'],
+    ]
 ];
 
 // Colores por tipo
@@ -81,6 +99,71 @@ $colores = [
         'badge' => 'bg-purple-900/30 text-purple-400 border-purple-700/40',
         'btn' => 'bg-purple-700 hover:bg-purple-600',
         'glow' => 'hover:shadow-purple-900/30',
+    ],
+
+    'yellow' => [
+        'border' => 'border-yellow-700/40',
+        'icon_bg' => 'bg-yellow-900/30',
+        'icon' => 'text-yellow-400',
+        'badge' => 'bg-yellow-900/30 text-yellow-400 border-yellow-700/40',
+        'btn' => 'bg-yellow-700 hover:bg-yellow-600',
+        'glow' => 'hover:shadow-yellow-900/30',
+    ],
+    'cyan' => [
+        'border' => 'border-cyan-700/40',
+        'icon_bg' => 'bg-cyan-900/30',
+        'icon' => 'text-cyan-400',
+        'badge' => 'bg-cyan-900/30 text-cyan-400 border-cyan-700/40',
+        'btn' => 'bg-cyan-700 hover:bg-cyan-600',
+        'glow' => 'hover:shadow-cyan-900/30',
+    ],
+    'indigo' => [
+        'border' => 'border-indigo-700/40',
+        'icon_bg' => 'bg-indigo-900/30',
+        'icon' => 'text-indigo-400',
+        'badge' => 'bg-indigo-900/30 text-indigo-400 border-indigo-700/40',
+        'btn' => 'bg-indigo-700 hover:bg-indigo-600',
+        'glow' => 'hover:shadow-indigo-900/30',
+    ],
+    'rose' => [
+        'border' => 'border-rose-700/40',
+        'icon_bg' => 'bg-rose-900/30',
+        'icon' => 'text-rose-400',
+        'badge' => 'bg-rose-900/30 text-rose-400 border-rose-700/40',
+        'btn' => 'bg-rose-700 hover:bg-rose-600',
+        'glow' => 'hover:shadow-rose-900/30',
+    ],
+    'pink' => [
+        'border' => 'border-pink-700/40',
+        'icon_bg' => 'bg-pink-900/30',
+        'icon' => 'text-pink-400',
+        'badge' => 'bg-pink-900/30 text-pink-400 border-pink-700/40',
+        'btn' => 'bg-pink-700 hover:bg-pink-600',
+        'glow' => 'hover:shadow-pink-900/30',
+    ],
+    'teal' => [
+        'border' => 'border-teal-700/40',
+        'icon_bg' => 'bg-teal-900/30',
+        'icon' => 'text-teal-400',
+        'badge' => 'bg-teal-900/30 text-teal-400 border-teal-700/40',
+        'btn' => 'bg-teal-700 hover:bg-teal-600',
+        'glow' => 'hover:shadow-teal-900/30',
+    ],
+    'red' => [
+        'border' => 'border-red-700/40',
+        'icon_bg' => 'bg-red-900/30',
+        'icon' => 'text-red-400',
+        'badge' => 'bg-red-900/30 text-red-400 border-red-700/40',
+        'btn' => 'bg-red-700 hover:bg-red-600',
+        'glow' => 'hover:shadow-red-900/30',
+    ],
+    'slate' => [
+        'border' => 'border-slate-700/40',
+        'icon_bg' => 'bg-slate-900/30',
+        'icon' => 'text-slate-400',
+        'badge' => 'bg-slate-900/30 text-slate-400 border-slate-700/40',
+        'btn' => 'bg-slate-700 hover:bg-slate-600',
+        'glow' => 'hover:shadow-slate-900/30',
     ],
 ];
 ?>

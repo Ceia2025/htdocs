@@ -320,7 +320,8 @@ $mesActual = date("Y-m");
                                                         <tr
                                                             class="border-t border-gray-700 <?= $estaRetirado ? 'bg-red-900/20' : $bgFila ?>">
                                                             <!-- # -->
-                                                            <td class="p-2 text-center sticky left-0 z-10 text-xs font-bold
+                                                            <td
+                                                                class="p-2 text-center sticky left-0 z-10 text-xs font-bold
                                                                 <?= $estaRetirado ? 'bg-red-900/40' : $bgSticky ?>
                                                                 <?= $alumno['numero_lista'] ? 'text-indigo-400' : 'text-gray-600' ?>">
                                                                 <?= $alumno['numero_lista'] ?? '—' ?>
@@ -539,6 +540,107 @@ $mesActual = date("Y-m");
             Exportar PDF
         </button>
     </div>
+    <div class="fixed bottom-24 right-6 z-50 flex flex-col items-end gap-2">
+
+        <!-- Panel auditoría -->
+        <div id="panel-auditoria"
+            class="hidden bg-gray-800 border border-gray-600 rounded-2xl shadow-2xl w-80 overflow-hidden mb-1">
+
+            <div class="px-4 py-3 bg-gray-900/60 border-b border-gray-700 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586
+                             a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <p class="text-xs font-semibold text-white">Registro de asistencia</p>
+                </div>
+                <button onclick="document.getElementById('panel-auditoria').classList.add('hidden')"
+                    class="text-gray-500 hover:text-white transition text-sm">✕</button>
+            </div>
+
+            <div class="max-h-80 overflow-y-auto">
+                <?php if (empty($auditoria)): ?>
+                    <div class="px-4 py-8 text-center">
+                        <p class="text-gray-500 text-xs">Sin registros de auditoría disponibles.</p>
+                        <p class="text-gray-600 text-[10px] mt-1">Los registros se guardan a partir de ahora.</p>
+                    </div>
+                <?php else: ?>
+                    <div class="divide-y divide-gray-700/60">
+                        <?php foreach ($auditoria as $fecha => $info):
+                            $dt = new DateTime($info['updated_at']);
+                            [$anioA, $mesA, $diaA] = explode('-', $fecha);
+                            $nombresMesesAud = [
+                                '01' => 'Ene',
+                                '02' => 'Feb',
+                                '03' => 'Mar',
+                                '04' => 'Abr',
+                                '05' => 'May',
+                                '06' => 'Jun',
+                                '07' => 'Jul',
+                                '08' => 'Ago',
+                                '09' => 'Sep',
+                                '10' => 'Oct',
+                                '11' => 'Nov',
+                                '12' => 'Dic'
+                            ];
+                            $fechaLegible = $diaA . ' ' . ($nombresMesesAud[$mesA] ?? $mesA) . ' ' . $anioA;
+                            ?>
+                            <div class="px-4 py-3 hover:bg-gray-700/20 transition">
+                                <div class="flex items-center justify-between mb-0.5">
+                                    <span class="text-xs font-bold text-white">
+                                        <?= $fechaLegible ?>
+                                    </span>
+                                    <span class="text-[10px] text-gray-500">
+                                        <?= $dt->format('H:i') ?>
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <div class="w-5 h-5 rounded-full bg-indigo-900/60 border border-indigo-700/50
+                                            flex items-center justify-center flex-shrink-0">
+                                        <span class="text-[9px] font-bold text-indigo-300">
+                                            <?= mb_strtoupper(mb_substr($info['usuario'], 0, 1)) ?>
+                                        </span>
+                                    </div>
+                                    <span class="text-xs text-gray-300 truncate">
+                                        <?= htmlspecialchars($info['usuario']) ?>
+                                    </span>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <div class="px-4 py-2.5 bg-gray-900/40 border-t border-gray-700">
+                <p class="text-[10px] text-gray-600 text-center">
+                    Mostrando quién registró la asistencia por última vez en cada día
+                </p>
+            </div>
+        </div>
+
+        <!-- Botón principal auditoría -->
+        <button onclick="document.getElementById('panel-auditoria').classList.toggle('hidden')" class="flex items-center gap-2 px-4 py-3 bg-indigo-600/20 hover:bg-indigo-600/30
+                   border border-indigo-600/40 text-indigo-300 hover:text-indigo-200
+                   font-semibold rounded-full shadow-xl transition-all duration-300 hover:scale-105">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            Quién registró
+        </button>
+    </div>
+
+    <script>
+        // Cerrar panel auditoría al hacer click fuera
+        document.addEventListener('click', function (e) {
+            const panel = document.getElementById('panel-auditoria');
+            if (panel &&
+                !e.target.closest('#panel-auditoria') &&
+                !e.target.closest('button[onclick*="panel-auditoria"]')) {
+                panel.classList.add('hidden');
+            }
+        });
+    </script>
 
     <script>
         // Cerrar selector al hacer click fuera

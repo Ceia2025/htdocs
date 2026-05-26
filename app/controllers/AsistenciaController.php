@@ -22,29 +22,31 @@ class AsistenciaController
     public function formMasiva()
     {
         $cursoId = $_GET['curso_id'] ?? null;
-        $anioId  = $_GET['anio_id'] ?? null;
-        $fecha   = $_GET['fecha'] ?? date("Y-m-d");
+        $anioId = $_GET['anio_id'] ?? null;
+        $fecha = $_GET['fecha'] ?? date("Y-m-d");
 
         if (!$cursoId || !$anioId)
             die("Faltan parámetros.");
         if ($fecha > date("Y-m-d"))
             die("No se puede registrar asistencia futura.");
 
-        $alumnos           = $this->model->getAlumnosPorCurso($cursoId, $anioId);
-        $curso             = $this->model->getCurso($cursoId);
-        $fechasAnio        = $this->model->getFechasAnio($anioId);
+        $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
+        $curso = $this->model->getCurso($cursoId);
+        $fechasAnio = $this->model->getFechasAnio($anioId);
         $fechasConAsistencia = $this->model->getFechasConAsistencia($cursoId, $anioId);
         $asistenciaExistente = $this->model->getAsistenciaPorFecha($cursoId, $anioId, $fecha);
-        $esEdicion         = !empty($asistenciaExistente);
+        $esEdicion = !empty($asistenciaExistente);
 
         // Contar solo alumnos activos en la fecha seleccionada
         $totalActivos = 0;
         foreach ($alumnos as $al) {
-            $retiradoEl    = !empty($al['fecha_retiro'])    ? $al['fecha_retiro']    : null;
+            $retiradoEl = !empty($al['fecha_retiro']) ? $al['fecha_retiro'] : null;
             $matriculadoEl = !empty($al['fecha_matricula']) ? $al['fecha_matricula'] : null;
 
-            if ($retiradoEl    && $fecha >= $retiradoEl)    continue;
-            if ($matriculadoEl && $fecha < $matriculadoEl) continue;
+            if ($retiradoEl && $fecha >= $retiradoEl)
+                continue;
+            if ($matriculadoEl && $fecha < $matriculadoEl)
+                continue;
 
             $totalActivos++;
         }
@@ -58,16 +60,16 @@ class AsistenciaController
     public function resumenCurso()
     {
         $cursoId = $_GET['curso_id'] ?? null;
-        $anioId  = $_GET['anio_id'] ?? null;
+        $anioId = $_GET['anio_id'] ?? null;
 
         if (!$cursoId || !$anioId)
             die("Faltan parámetros para el resumen.");
 
         $inicio = date("Y-03-01");
-        $fin    = date("Y-m-d");
+        $fin = date("Y-m-d");
 
         $porcentaje = $this->model->porcentajeCurso($cursoId, $anioId, $inicio, $fin);
-        $detalle    = $this->model->getResumenAsistenciaCurso($cursoId, $anioId);
+        $detalle = $this->model->getResumenAsistenciaCurso($cursoId, $anioId);
 
         require "../views/asistencia/resumen_curso.php";
     }
@@ -82,8 +84,8 @@ class AsistenciaController
         if (!$anioId)
             die("No existe año académico configurado.");
 
-        $anios        = $this->model->getAnios();
-        $cursos       = $this->model->getCursosConMatricula($anioId);
+        $anios = $this->model->getAnios();
+        $cursos = $this->model->getCursosConMatricula($anioId);
         $ultimasFechas = $this->model->getUltimaFechaAsistenciaPorCurso($anioId);
 
         require "../views/asistencia/cursos.php";
@@ -94,30 +96,35 @@ class AsistenciaController
     ========================================== */
     public function guardarAsistenciaMasiva()
     {
-        $cursoId  = $_POST['curso_id'];
-        $anioId   = $_POST['anio_id'];
-        $fecha    = $_POST['fecha'];
+        $cursoId = $_POST['curso_id'];
+        $anioId = $_POST['anio_id'];
+        $fecha = $_POST['fecha'];
         $presentes = $_POST['presentes'] ?? [];
+
+        // ID del usuario logueado
+        $usuarioId = $_SESSION['user']['id'] ?? null;
 
         $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
 
         foreach ($alumnos as $alumno) {
-            // Ignorar alumnos retirados o aún no matriculados en esa fecha
-            $retiradoEl    = !empty($alumno['fecha_retiro'])    ? $alumno['fecha_retiro']    : null;
+            $retiradoEl = !empty($alumno['fecha_retiro']) ? $alumno['fecha_retiro'] : null;
             $matriculadoEl = !empty($alumno['fecha_matricula']) ? $alumno['fecha_matricula'] : null;
 
-            if ($retiradoEl    && $fecha >= $retiradoEl)    continue;
-            if ($matriculadoEl && $fecha < $matriculadoEl) continue;
+            if ($retiradoEl && $fecha >= $retiradoEl)
+                continue;
+            if ($matriculadoEl && $fecha < $matriculadoEl)
+                continue;
 
             $presente = in_array($alumno['matricula_id'], $presentes) ? 1 : 0;
-            $this->model->guardarAsistencia($alumno['matricula_id'], $fecha, $presente);
+
+            // ← pasar $usuarioId
+            $this->model->guardarAsistencia($alumno['matricula_id'], $fecha, $presente, $usuarioId);
         }
 
-        // Verificar y enviar alerta
-        $alertaCtrl     = new AlertaController();
+        $alertaCtrl = new AlertaController();
         $resultadoAlerta = $alertaCtrl->verificarYEnviarAlertaAusencias(
-            (int) $cursoId, 
-            (int) $anioId, 
+            (int) $cursoId,
+            (int) $anioId,
             $fecha
         );
 
@@ -143,7 +150,8 @@ class AsistenciaController
         require __DIR__ . '/../views/asistencia/asistencia_reporte_pdf.php';
         $html = ob_get_clean();
 
-        if (ob_get_length()) ob_end_clean();
+        if (ob_get_length())
+            ob_end_clean();
 
         try {
             $options = new \Dompdf\Options();
@@ -169,19 +177,20 @@ class AsistenciaController
     public function libroClases()
     {
         $cursoId = $_GET['curso_id'] ?? null;
-        $anioId  = $_GET['anio_id'] ?? null;
+        $anioId = $_GET['anio_id'] ?? null;
 
         if (!$cursoId || !$anioId)
             die("Faltan parámetros.");
 
-        $curso      = $this->model->getCurso($cursoId);
-        $alumnos    = $this->model->getAlumnosPorCurso($cursoId, $anioId);
+        $curso = $this->model->getCurso($cursoId);
+        $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
         $asistencia = $this->model->getAsistenciaLibro($cursoId, $anioId);
         $fechasAnio = $this->model->getFechasAnio($anioId);
+        $auditoria = $this->model->getAuditoriaAsistencia((int) $cursoId, (int) $anioId); // ← nuevo
 
         if (empty($fechasAnio['sem1_inicio'])) {
-            die("⚠️ El año seleccionado no tiene fechas de semestres configuradas. 
-                 <a href='index.php?action=anio_edit&id=$anioId'>Configurar ahora</a>");
+            die("El año seleccionado no tiene fechas de semestres configuradas.
+             <a href='index.php?action=anio_edit&id=$anioId'>Configurar ahora</a>");
         }
 
         require "../views/asistencia/libro_clases.php";
@@ -205,23 +214,23 @@ class AsistenciaController
     public function libroClasesPdf(): void
     {
         $curso_id = (int) ($_GET['curso_id'] ?? 0);
-        $anio_id  = (int) ($_GET['anio_id'] ?? 0);
-        $mes      = $_GET['mes'] ?? date('Y-m');
+        $anio_id = (int) ($_GET['anio_id'] ?? 0);
+        $mes = $_GET['mes'] ?? date('Y-m');
 
         if (!$curso_id || !$anio_id)
             die('Parámetros inválidos.');
 
         $asistenciaModel = new Asistencia();
 
-        $curso      = $asistenciaModel->getCurso($curso_id);
-        $anio       = $asistenciaModel->getFechasAnio($anio_id);
-        $alumnos    = $asistenciaModel->getAlumnosPorCurso($curso_id, $anio_id);
+        $curso = $asistenciaModel->getCurso($curso_id);
+        $anio = $asistenciaModel->getFechasAnio($anio_id);
+        $alumnos = $asistenciaModel->getAlumnosPorCurso($curso_id, $anio_id);
         $asistencia = $asistenciaModel->getAsistenciaLibro($curso_id, $anio_id);
 
         [$anioMes, $numMes] = explode('-', $mes);
-        $inicio  = new DateTime("$anioMes-$numMes-01");
-        $finMes  = new DateTime($inicio->format('Y-m-t'));
-        $hoy     = new DateTime('today');
+        $inicio = new DateTime("$anioMes-$numMes-01");
+        $finMes = new DateTime($inicio->format('Y-m-t'));
+        $hoy = new DateTime('today');
         $finReal = $finMes < $hoy ? $finMes : $hoy;
 
         $periodo = new DatePeriod(
@@ -241,8 +250,8 @@ class AsistenciaController
 
         $statsAlumnos = [];
         foreach ($alumnos as $alumno) {
-            $pres  = 0;
-            $aus   = 0;
+            $pres = 0;
+            $aus = 0;
             $total = 0;
             $fechaMatricula = !empty($alumno['fecha_matricula'])
                 ? new DateTime($alumno['fecha_matricula'])
@@ -252,8 +261,10 @@ class AsistenciaController
                 : null;
 
             foreach ($fechas as $fecha) {
-                if ($fechaMatricula && $fecha < $fechaMatricula) continue;
-                if ($fechaRetiro    && $fecha > $fechaRetiro)    continue;
+                if ($fechaMatricula && $fecha < $fechaMatricula)
+                    continue;
+                if ($fechaRetiro && $fecha > $fechaRetiro)
+                    continue;
 
                 $f = $fecha->format('Y-m-d');
                 $v = $asistencia[$alumno['matricula_id']][$f] ?? null;
@@ -265,19 +276,27 @@ class AsistenciaController
 
             $statsAlumnos[$alumno['matricula_id']] = [
                 'presentes' => $pres,
-                'ausentes'  => $aus,
-                'total'     => $total,
-                'pct'       => $total > 0 ? round($pres / $total * 100) : null,
+                'ausentes' => $aus,
+                'total' => $total,
+                'pct' => $total > 0 ? round($pres / $total * 100) : null,
             ];
         }
 
         $nombresMeses = [
-            '01' => 'Enero',   '02' => 'Febrero',   '03' => 'Marzo',
-            '04' => 'Abril',   '05' => 'Mayo',       '06' => 'Junio',
-            '07' => 'Julio',   '08' => 'Agosto',     '09' => 'Septiembre',
-            '10' => 'Octubre', '11' => 'Noviembre',  '12' => 'Diciembre',
+            '01' => 'Enero',
+            '02' => 'Febrero',
+            '03' => 'Marzo',
+            '04' => 'Abril',
+            '05' => 'Mayo',
+            '06' => 'Junio',
+            '07' => 'Julio',
+            '08' => 'Agosto',
+            '09' => 'Septiembre',
+            '10' => 'Octubre',
+            '11' => 'Noviembre',
+            '12' => 'Diciembre',
         ];
-        $nombreMes  = $nombresMeses[$numMes] . ' ' . $anioMes;
+        $nombreMes = $nombresMeses[$numMes] . ' ' . $anioMes;
         $diasCortos = ['Lu', 'Ma', 'Mi', 'Ju', 'Vi'];
 
         ob_start();
@@ -298,4 +317,27 @@ class AsistenciaController
         );
         exit;
     }
+
+    public function eliminarAsistenciaDia(): void
+    {
+        $cursoId = (int) ($_POST['curso_id'] ?? 0);
+        $anioId = (int) ($_POST['anio_id'] ?? 0);
+        $fecha = $_POST['fecha'] ?? '';
+
+        if (!$cursoId || !$anioId || !$fecha) {
+            $_SESSION['flash_error'] = 'Faltan parámetros para eliminar la asistencia.';
+            header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId");
+            exit;
+        }
+
+        $eliminadas = $this->model->eliminarAsistenciaDia($cursoId, $anioId, $fecha);
+
+        $_SESSION['flash_success'] = "Se eliminaron $eliminadas registros de asistencia del $fecha.";
+        header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId");
+        exit;
+    }
+
+
+
+    
 }

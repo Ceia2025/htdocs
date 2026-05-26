@@ -1,6 +1,11 @@
 {
   "administrador": [
     {
+      "title": "Reglamentos C.E.I.A.",
+      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
+      "url": "https://reglamentos-ceia-2026.vercel.app/"
+    },
+    {
       "title": "Años Académicos ",
       "desc": "En este Apartado se agregan años escolares, junto a el inicio y fin del semestre",
       "url": "index.php?action=anios"
@@ -93,6 +98,11 @@
   ],
   "administrativo": [
     {
+      "title": "Reglamentos C.E.I.A.",
+      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
+      "url": "https://reglamentos-ceia-2026.vercel.app/"
+    },
+    {
       "title": "Nueva Ficha",
       "desc": "Creación de fichas escolares y de antecedentes",
       "url": "index.php?action=alumnos_stepper"
@@ -120,6 +130,11 @@
   ],
   "soporte": [
     {
+      "title": "Reglamentos C.E.I.A.",
+      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
+      "url": "https://reglamentos-ceia-2026.vercel.app/"
+    },
+    {
       "title": "Ficha de Alumnos",
       "desc": "Nómina de fichas de estudiantes registrados",
       "url": "index.php?action=alumnos"
@@ -131,6 +146,11 @@
     }
   ],
   "direccion": [
+    {
+      "title": "Reglamentos C.E.I.A.",
+      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
+      "url": "https://reglamentos-ceia-2026.vercel.app/"
+    },
     {
       "title": "Ficha de Alumnos",
       "desc": "Nómina de fichas de estudiantes registrados",
@@ -158,6 +178,11 @@
     }
   ],
   "Inspector general y Convivencia escolar": [
+    {
+      "title": "Reglamentos C.E.I.A.",
+      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
+      "url": "https://reglamentos-ceia-2026.vercel.app/"
+    },
     {
       "title": "Control de Asistencia",
       "desc": "Gestión de asistencia por nivel y curso",
@@ -197,9 +222,19 @@
       "title": "Reportes de Retiros",
       "desc": "Generar reportes de retiros",
       "url": "index.php?action=retiros_reportes"
+    },
+    {
+      "title": "Centro de Reportes",
+      "desc": "Exportar asistencia en PDF y CSV por curso o general",
+      "url": "index.php?action=reportes"
     }
   ],
   "docente": [
+    {
+      "title": "Reglamentos C.E.I.A.",
+      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
+      "url": "https://reglamentos-ceia-2026.vercel.app/"
+    },
     {
       "title": "Control de Asistencia",
       "desc": "Gestión de asistencia por nivel y curso",
@@ -233,6 +268,11 @@
   ],
   "asistente social": [
     {
+      "title": "Reglamentos C.E.I.A.",
+      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
+      "url": "https://reglamentos-ceia-2026.vercel.app/"
+    },
+    {
       "title": "Ficha de Alumnos",
       "desc": "Nómina de fichas de estudiantes registrados",
       "url": "index.php?action=alumnos"
@@ -250,6 +290,11 @@
   ],
   "registro de anotaciones": [
     {
+      "title": "Reglamentos C.E.I.A.",
+      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
+      "url": "https://reglamentos-ceia-2026.vercel.app/"
+    },
+    {
       "title": "Gestión de Anotaciones",
       "desc": "Administración y consulta de anotaciones por alumno",
       "url": "index.php?action=anotaciones"
@@ -262,6 +307,11 @@
   ],
   "registro asistencias": [
     {
+      "title": "Reglamentos C.E.I.A.",
+      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
+      "url": "https://reglamentos-ceia-2026.vercel.app/"
+    },
+    {
       "title": "Control de Asistencia",
       "desc": "Gestión de asistencia por nivel y curso",
       "url": "index.php?action=asistencia_cursos"
@@ -273,6 +323,11 @@
     }
   ],
   "registro atrasos y salidas": [
+    {
+      "title": "Reglamentos C.E.I.A.",
+      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
+      "url": "https://reglamentos-ceia-2026.vercel.app/"
+    },
     {
       "title": "Registro de Atrasos Estudiantiles",
       "desc": "Control de acceso y puntualidad por portería",

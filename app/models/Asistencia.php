@@ -158,19 +158,21 @@ class Asistencia
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function guardarAsistencia($matriculaId, $fecha, $presente)
+    public function guardarAsistencia($matriculaId, $fecha, $presente, $usuarioId = null)
     {
-        $sql = "INSERT INTO alum_asistencia2 (matricula_id, fecha, presente)
-        VALUES (:matricula_id, :fecha, :presente)
-        ON DUPLICATE KEY UPDATE
-        presente = :presente";
+        $sql = "INSERT INTO alum_asistencia2 (matricula_id, fecha, presente, usuario_id, updated_at)
+            VALUES (:matricula_id, :fecha, :presente, :usuario_id, NOW())
+            ON DUPLICATE KEY UPDATE
+                presente    = :presente,
+                usuario_id  = :usuario_id,
+                updated_at  = NOW()";
 
         $stmt = $this->conn->prepare($sql);
-
         $stmt->execute([
             ':matricula_id' => $matriculaId,
             ':fecha' => $fecha,
-            ':presente' => $presente
+            ':presente' => $presente,
+            ':usuario_id' => $usuarioId,
         ]);
     }
 
@@ -351,5 +353,56 @@ class Asistencia
         return $resultado;
     }
 
+    public function eliminarAsistenciaDia(int $cursoId, int $anioId, string $fecha): int
+    {
+        $sql = "DELETE a
+            FROM alum_asistencia2 a
+            JOIN matriculas2 m ON m.id = a.matricula_id
+            WHERE m.curso_id = :curso_id
+              AND m.anio_id  = :anio_id
+              AND a.fecha    = :fecha";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':curso_id' => $cursoId,
+            ':anio_id' => $anioId,
+            ':fecha' => $fecha,
+        ]);
+
+        return $stmt->rowCount(); // filas eliminadas
+    }
+
+    public function getAuditoriaAsistencia(int $cursoId, int $anioId): array
+    {
+        $sql = "SELECT
+                a.fecha,
+                u.nombre        AS usuario_nombre,
+                u.email         AS usuario_email,
+                MAX(a.updated_at) AS updated_at
+            FROM alum_asistencia2 a
+            JOIN matriculas2 m  ON m.id = a.matricula_id
+            LEFT JOIN usuarios2 u ON u.id = a.usuario_id
+            WHERE m.curso_id = :curso_id
+              AND m.anio_id  = :anio_id
+              AND a.usuario_id IS NOT NULL
+            GROUP BY a.fecha, a.usuario_id
+            ORDER BY a.fecha DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':curso_id' => $cursoId,
+            ':anio_id' => $anioId,
+        ]);
+
+        $resultado = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $resultado[$row['fecha']] = [
+                'usuario' => $row['usuario_nombre'] ?? 'Desconocido',
+                'email' => $row['usuario_email'] ?? '',
+                'updated_at' => $row['updated_at'],
+            ];
+        }
+        return $resultado;
+    }
 
 }

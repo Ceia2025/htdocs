@@ -29,6 +29,7 @@ require_once __DIR__ . '/../controllers/inventario/CategorizacionController.php'
 require_once __DIR__ . '/../controllers/reportes/ReporteController.php';
 require_once __DIR__ . '/../controllers/reportes/ReporteDashboardController.php';
 require_once __DIR__ . '/../controllers/reportes/ReporteNotasController.php';
+require_once __DIR__ . '/../controllers/reportes/etnia/ReporteEtniaController.php';
 
 // ── INSTANCIAS ───────────────────────────────────────────────
 $action = $_GET['action'] ?? 'login';
@@ -55,6 +56,7 @@ $perfilAcademicoAsistencia = new PerfilAcademicoAsistenciaController();
 $inventarioController = new InventarioController();
 $procedenciaController = new ProcedenciaController();
 $categorizacionController = new CategorizacionController();
+$reporteEtnia = new ReporteEtniaController();
 
 // ── PERMISOS GLOBAL ──────────────────────────────────────────
 $auth->checkPermiso($action);
@@ -466,6 +468,12 @@ switch ($action) {
         );
         break;
 
+    case 'eliminar_asistencia_dia':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $asistenciaController->eliminarAsistenciaDia();
+        }
+        break;
+
     // ── NOTAS ────────────────────────────────────────────────
     case 'notas':
         $notasController->index();
@@ -486,7 +494,7 @@ switch ($action) {
         $notasController->update($_GET['id'], $_POST);
         break;
     case 'notas_delete':
-        $notasController->delete((int)($_GET['id'] ?? 0));
+        $notasController->delete((int) ($_GET['id'] ?? 0));
         break;
     case 'notas_panel':
         if (!AuthController::puede('notas_panel')) {
@@ -603,6 +611,18 @@ switch ($action) {
         break;
     case 'retiros_buscar_contactos':
         $retirosController->buscarContactos();
+        break;
+
+    case 'reportes_etnia':
+        $reporteEtnia->index();
+        break;
+
+    // ← AGREGAR ESTOS DOS:
+    case 'reporte_etnia_pdf':
+        $reporteEtnia->pdfEtnia();
+        break;
+    case 'reporte_etnia_csv':
+        $reporteEtnia->csvEtnia();
         break;
 
     // ── PROFESORES ───────────────────────────────────────────
