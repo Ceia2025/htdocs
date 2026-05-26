@@ -497,6 +497,14 @@ $maxS = max($sem1, $sem2, 1);
                                                     <p class="text-xs text-gray-500 font-mono">
                                                         <?= htmlspecialchars($a['run']) ?>
                                                     </p>
+                                                    <?php if (!empty($a['registrado_por_nombre'])): ?>
+                                                        <p class="text-[10px] text-gray-600 mt-1">
+                                                            Registrado por:
+                                                            <span class="text-gray-500 font-medium">
+                                                                <?= htmlspecialchars($a['registrado_por_nombre']) ?>
+                                                            </span>
+                                                        </p>
+                                                    <?php endif; ?>
                                                 </td>
                                                 <td class="px-3 py-3 text-xs text-gray-400">
                                                     <?= htmlspecialchars($a['curso'] ?? '—') ?>

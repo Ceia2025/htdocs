@@ -98,6 +98,7 @@ $totalHistorial = count($historial);
                             placeholder="Filtrar por nombre..." class="w-full bg-gray-900 text-white text-sm border border-gray-600 rounded-lg px-3 py-2
                        focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder-gray-600">
                     </div>
+                    
 
                     <!-- Semestre -->
                     <div>

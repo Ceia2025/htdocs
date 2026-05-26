@@ -249,6 +249,12 @@ function calcularEdad(?string $fechanac): ?array {
                                         "<?= htmlspecialchars($a['observacion']) ?>"
                                     </span>
                                 <?php endif; ?>
+                                <?php if (!empty($a['registrado_por_nombre'])): ?>
+                                    <span class="text-gray-700">·</span>
+                                    <span class="text-xs text-gray-600">
+                                        Por: <span class="text-gray-500"><?= htmlspecialchars($a['registrado_por_nombre']) ?></span>
+                                    </span>
+                                <?php endif; ?>
                             </div>
                         </div>
 

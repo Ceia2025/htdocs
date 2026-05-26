@@ -139,12 +139,14 @@ class Atraso
                     al.run,
                     al.fechanac,
                     c.nombre    AS curso,
-                    an.anio
+                    an.anio,
+                    u.nombre    AS registrado_por_nombre
                 FROM alum_atrasos aa
                 JOIN matriculas2 m  ON m.id   = aa.matricula_id
                 JOIN alumnos2    al ON al.id  = m.alumno_id
                 JOIN cursos2     c  ON c.id   = m.curso_id
                 JOIN anios2      an ON an.id  = m.anio_id
+                LEFT JOIN usuarios2 u ON u.id = aa.registrado_por
                 WHERE aa.fecha = :fecha
                 ORDER BY aa.hora_llegada DESC";
 
@@ -402,11 +404,13 @@ class Atraso
                 al.apepat,
                 al.apemat,
                 al.run,
-                c.nombre    AS curso
+                c.nombre    AS curso,
+                u.nombre    AS registrado_por_nombre
             FROM alum_atrasos aa
             JOIN matriculas2 m  ON m.id   = aa.matricula_id
             JOIN alumnos2    al ON al.id  = m.alumno_id
             JOIN cursos2     c  ON c.id   = m.curso_id
+            LEFT JOIN usuarios2 u ON u.id = aa.registrado_por
             WHERE m.anio_id = :anio_id
               AND al.deleted_at IS NULL";
 
