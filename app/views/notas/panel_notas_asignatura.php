@@ -28,26 +28,68 @@ $fechasUnicas = array_keys($fechasUnicas);
 // Stats generales
 $totalAlumnos = 0;
 $totalAprobados = 0;
+$totalReprobados = 0;
+$totalPendientes = 0;
 $sumaProms = 0;
 $cntProms = 0;
+
+$notasPorColumna = [];
+
+
+$totalNotasDelCurso = count($fechasUnicas);
 
 foreach ($alumnos as $alumno) {
     if (!empty($alumno['fecha_retiro']))
         continue;
+
     $totalAlumnos++;
     $mid = $alumno['matricula_id'];
     $ns = $notasPorMatricula[$mid] ?? [];
-    if (count($ns) > 0) {
+    $cantNotasAlumno = count($ns);
+
+
+    foreach ($ns as $n) {
+        if (isset($n['fecha']) && is_numeric($n['nota'])) {
+            $notasPorColumna[$n['fecha']][] = floatval($n['nota']);
+        }
+    }
+
+
+    if ($cantNotasAlumno < $totalNotasDelCurso || $totalNotasDelCurso === 0) {
+        $totalPendientes++;
+    } else {
         $suma = array_sum(array_column($ns, 'nota'));
-        $prom = $suma / count($ns);
+        $prom = $suma / $cantNotasAlumno;
         $sumaProms += $prom;
         $cntProms++;
-        if ($prom >= 4.0)
+
+        if ($prom >= 4.0) {
             $totalAprobados++;
+        } else {
+            $totalReprobados++;
+        }
     }
+
+    $promediosColumnas = [];
+    foreach ($fechasUnicas as $fecha) {
+        $notasCol = $notasPorColumna[$fecha] ?? [];
+        if (count($notasCol) > 0) {
+            $promediosColumnas[$fecha] = round(array_sum($notasCol) / count($notasCol), 1);
+        } else {
+            $promediosColumnas[$fecha] = null;
+        }
+    }
+
+    $promGeneral = $cntProms > 0 ? round($sumaProms / $cntProms, 1) : null;
+    $pctAprobados = $totalAlumnos > 0 ? round($totalAprobados / $totalAlumnos * 100) : 0;
+
+    $colorProm = $promGeneral === null ? 'text-gray-500'
+        : ($promGeneral >= 4.0 ? 'text-green-400' : 'text-red-400');
 }
+
 $promGeneral = $cntProms > 0 ? round($sumaProms / $cntProms, 1) : null;
 $pctAprobados = $totalAlumnos > 0 ? round($totalAprobados / $totalAlumnos * 100) : 0;
+
 $colorProm = $promGeneral === null ? 'text-gray-500'
     : ($promGeneral >= 4.0 ? 'text-green-400' : 'text-red-400');
 ?>
@@ -243,24 +285,23 @@ $colorProm = $promGeneral === null ? 'text-gray-500'
                                                         ? 'bg-green-900/20 border-green-700/40 text-green-300'
                                                         : 'bg-red-900/20 border-red-700/40 text-red-300';
                                                     ?>
-                                                    <div class="inline-flex items-center gap-1.5 border rounded-lg px-2.5 py-1 <?= $bgNota ?>">
+                                                    <div
+                                                        class="inline-flex items-center gap-1.5 border rounded-lg px-2.5 py-1 <?= $bgNota ?>">
                                                         <span class="text-sm font-bold"><?= number_format($v, 1) ?></span>
                                                         <?php if ($puedeEditar): ?>
                                                             <a href="index.php?action=notas_edit&id=<?= $n['id'] ?>"
                                                                 class="text-yellow-500/70 hover:text-yellow-400 transition" title="Editar nota">
                                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                        d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828
-                                                                        2.828L11.828 15H9v-2.828z"/>
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828
+                                                                        2.828L11.828 15H9v-2.828z" />
                                                                 </svg>
                                                             </a>
                                                             <a href="index.php?action=notas_delete&id=<?= $n['id'] ?>&curso_id=<?= $cursoId ?>&anio_id=<?= $anioId ?>&asignatura_id=<?= $asignaturaId ?>&semestre=<?= $semestre ?>"
-                                                                class="text-red-500/70 hover:text-red-400 transition"
-                                                                title="Eliminar nota"
+                                                                class="text-red-500/70 hover:text-red-400 transition" title="Eliminar nota"
                                                                 onclick="return confirm('¿Eliminar esta nota (<?= number_format($v, 1) ?>)?')">
                                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                                 </svg>
                                                             </a>
                                                         <?php endif ?>
@@ -297,23 +338,55 @@ $colorProm = $promGeneral === null ? 'text-gray-500'
                                 <td colspan="2" class="px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">
                                     Resumen del curso
                                 </td>
-                                <?php foreach ($fechasUnicas as $_): ?>
-                                    <td class="border-l border-gray-700/60"></td>
+                                <?php foreach ($fechasUnicas as $fecha):
+                                    $promCol = $promediosColumnas[$fecha] ?? null;
+                                    $colorCol = $promCol !== null
+                                        ? ($promCol >= 4.0 ? 'text-green-400 bg-green-900/20 border-green-700/30' : 'text-red-400 bg-red-900/20 border-red-700/30')
+                                        : 'text-gray-600 bg-gray-900/20 border-gray-700/30';
+                                    ?>
+                                    <td class="px-3 py-3 text-center border-l border-gray-700/60">
+                                        <div class="flex flex-col items-center justify-center">
+                                            <span
+                                                class="inline-flex items-center justify-center w-12 h-6 rounded-md text-xs font-bold border <?= $colorCol ?>">
+                                                <?= $promCol !== null ? number_format($promCol, 1) : '—' ?>
+                                            </span>
+                                            <span
+                                                class="text-[9px] text-gray-500 mt-0.5 font-medium uppercase tracking-tight">Prom.</span>
+                                        </div>
+                                    </td>
                                 <?php endforeach ?>
+
+                                <?php if (empty($fechasUnicas)): ?>
+                                    <td></td>
+                                <?php endif ?>
+
                                 <?php if (empty($fechasUnicas)): ?>
                                     <td></td>
                                 <?php endif ?>
                                 <td class="px-4 py-3 text-center border-l border-gray-600">
                                     <div class="flex flex-col items-center gap-0.5">
-                                        <span class="text-green-400 text-xs font-semibold">✓ <?= $totalAprobados ?>
-                                            aprobados</span>
-                                        <span class="text-red-400 text-xs font-semibold">✗
-                                            <?= $totalAlumnos - $totalAprobados ?> reprobados</span>
-                                        <span class="inline-flex items-center justify-center w-14 h-7 mt-1
-                                                 rounded-lg text-sm font-bold <?= $colorProm ?>
-                                                 <?= $promGeneral !== null && $promGeneral >= 4.0
-                                                     ? 'bg-green-900/20 border border-green-700/30'
-                                                     : 'bg-red-900/20 border border-red-700/30' ?>">
+                                        <span class="text-green-400 text-xs font-semibold">
+                                            ✓ <?= $totalAprobados ?> Aprobados
+                                        </span>
+
+                                        <span class="text-sky-400 text-xs font-semibold">
+                                            -- <?= $totalPendientes ?> Pendientes
+                                        </span>
+
+                                        <span class="text-red-400 text-xs font-semibold">
+                                            ✗ <?= $totalReprobados ?> Reprobados
+                                        </span>
+
+                                        <span class="inline-flex items-center justify-center w-14 h-7 mt-1 rounded-lg text-sm font-bold <?= $colorProm ?>
+                                                <?php
+                                                if ($promGeneral === null) {
+                                                    echo 'bg-gray-900/20 border border-gray-700/30';
+                                                } elseif ($promGeneral >= 4.0) {
+                                                    echo 'bg-green-900/20 border border-green-700/30';
+                                                } else {
+                                                    echo 'bg-red-900/20 border border-red-700/30';
+                                                }
+                                                ?>">
                                             <?= $promGeneral ?? '—' ?>
                                         </span>
                                     </div>

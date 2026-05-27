@@ -143,7 +143,7 @@ include __DIR__ . "/../layout/navbar.php";
                                 <th class="px-5 py-3 text-left">Alumno</th>
                                 <th class="px-5 py-3 text-left">Curso</th>
                                 <th class="px-5 py-3 text-left">Año</th>
-                                <th class="px-5 py-3 text-left">Fecha</th>
+                                <th class="px-5 py-3 text-left">Fecha de Ingreso</th>
                                 <th class="px-5 py-3 text-center">Acciones</th>
                             </tr>
                         </thead>
