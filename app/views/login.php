@@ -176,8 +176,8 @@
         }
 
         .logo-img {
-            width: 80px;
-            height: 80px;
+            width: 200px;
+            height: 200px;
             object-fit: contain;
             filter: drop-shadow(0 4px 16px rgba(245, 197, 24, 0.35));
             transition: transform 0.4s ease;

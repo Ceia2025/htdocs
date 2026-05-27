@@ -126,7 +126,7 @@ function calcularEdad(?string $fechanac): ?array {
                                     Hora de llegada
                                 </label>
                                 <input type="time" name="hora_llegada" id="campo-hora"
-                                    value="<?= date('H:i') ?>"
+                                    value=""
                                     
                                     class="w-full bg-gray-900 text-white text-sm border border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent cursor-pointer">
                             </div>
@@ -410,6 +410,13 @@ document.addEventListener('click', function(e) {
     }
 });
 
+
+(() => {
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('campo-hora').value = hh + ':' + mm;
+})();
 
 </script>
 
