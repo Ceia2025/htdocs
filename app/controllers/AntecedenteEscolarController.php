@@ -110,21 +110,12 @@ class AntecedenteEscolarController
     public function updateProfile($data)
     {
         $alumno_id = $data['alumno_id'] ?? null;
-
         if (!$alumno_id) {
             header("Location: index.php?action=alumnos");
             exit;
         }
 
-        // ✅ SANITIZAR: convertir strings vacíos a null para columnas ENUM
-        $enumFields = [
-            'ultimo_curso',
-            'prob_apren',
-            'pie',
-            'chile_solidario_cual',
-            'grupo_fonasa',
-            'isapre'
-        ];
+        $enumFields = ['ultimo_curso', 'prob_apren', 'pie', 'chile_solidario_cual', 'grupo_fonasa', 'isapre'];
         foreach ($enumFields as $field) {
             if (isset($data[$field]) && $data[$field] === '') {
                 $data[$field] = null;
@@ -135,14 +126,23 @@ class AntecedenteEscolarController
 
         if ($existente && !empty($existente['id'])) {
             $this->model->update($existente['id'], $data);
+            $accion = 'editar';
+            $detalle = 'Antecedente escolar actualizado';
         } else {
             $data['alumno_id'] = $alumno_id;
             $this->model->create($data);
+            $accion = 'crear';
+            $detalle = 'Antecedente escolar registrado';
         }
+
+        // ✅ Registrar quién modificó
+        $ctrl = new ControlModificacionAlumnoController();
+        $ctrl->registrar((int) $alumno_id, 'antecedente_escolar', $accion, $detalle);
 
         header("Location: index.php?action=alumno_profile&id=" . urlencode($alumno_id));
         exit;
     }
+
 
 
 

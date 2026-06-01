@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../models/ResumenAnamnesis.php';
 require_once __DIR__ . '/../models/Alumno.php';
 require_once __DIR__ . '/../models/Anio.php';
+require_once __DIR__ . '/../controllers/ControlModificacionAlumnoController.php';
 
 class AnamnesisResumenController
 {
@@ -25,7 +26,6 @@ class AnamnesisResumenController
         $alumno   = $alumnoModel->getById($alumnoId);
         $anios    = $anioModel->getAll();
 
-        // Si no viene anio_id, usar el más reciente
         if (!$anioId && !empty($anios)) {
             $anioId = $anios[0]['id'];
         }
@@ -33,8 +33,7 @@ class AnamnesisResumenController
         $anamnesis = $this->model->getByAlumnoYAnio($alumnoId, $anioId);
         $historial = $this->model->getAllByAlumno($alumnoId);
 
-        // Determinar si el alumno es mayor de edad
-        $esMayor = !empty($alumno['fechanac']) 
+        $esMayor = !empty($alumno['fechanac'])
             ? (new DateTime())->diff(new DateTime($alumno['fechanac']))->y >= 18
             : false;
 
@@ -51,14 +50,25 @@ class AnamnesisResumenController
             exit;
         }
 
+        // ¿Era nueva o ya existía? Para el detalle del log
+        $yaExistia = $this->model->getByAlumnoYAnio($alumnoId, $anioId);
+
         $this->model->save([
-            'alumno_id'    => $alumnoId,
-            'anio_id'      => $anioId,
+            'alumno_id'     => $alumnoId,
+            'anio_id'       => $anioId,
             'realizado_por' => $_POST['realizado_por'] ?? '',
-            'relacion'     => $_POST['relacion'] ?? null,
+            'relacion'      => $_POST['relacion'] ?? null,
             'observaciones' => $_POST['observaciones'] ?? null,
-            'created_by'   => $_SESSION['user']['id'] ?? null,
+            'created_by'    => $_SESSION['user']['id'] ?? null,
         ]);
+
+        // ✅ Registrar quién modificó
+        $ctrl = new ControlModificacionAlumnoController();
+        $accion  = $yaExistia ? 'editar' : 'crear';
+        $detalle = $yaExistia
+            ? 'Anamnesis actualizada'
+            : 'Anamnesis registrada por primera vez';
+        $ctrl->registrar((int)$alumnoId, 'resumen_anamnesis', $accion, $detalle);
 
         header("Location: index.php?action=anamnesis_form&alumno_id=$alumnoId&anio_id=$anioId&guardado=1");
         exit;

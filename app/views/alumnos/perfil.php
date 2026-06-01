@@ -527,6 +527,36 @@ $esRetirado = !empty($alumno['deleted_at']);
             <?php endif ?>
         </div>
 
+
+        <!-- ÚLTIMA MODIFICACIÓN -->
+        <?php if (!empty($ultimaModificacion)): ?>
+            <div class="bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden shadow">
+                <div class="px-6 py-4 flex items-center gap-3">
+                    <span class="text-gray-400 text-lg">🕓</span>
+                    <div>
+                        <p class="text-xs text-gray-400 uppercase tracking-wider">Última modificación</p>
+                        <p class="text-sm text-gray-200 mt-0.5">
+                            <span class="font-semibold text-white">
+                                <?= htmlspecialchars($ultimaModificacion['usuario_nombre'] . ' ' . $ultimaModificacion['usuario_apepat']) ?>
+                            </span>
+                            <span class="text-gray-500 mx-1">·</span>
+                            <?= htmlspecialchars(ucfirst($ultimaModificacion['accion'])) ?>
+                            en <span
+                                class="text-gray-300 italic"><?= htmlspecialchars($ultimaModificacion['tabla_afectada']) ?></span>
+                            <span class="text-gray-500 mx-1">·</span>
+                            <?= (new DateTime($ultimaModificacion['created_at']))->format('d/m/Y H:i') ?>
+                        </p>
+                        <?php if (!empty($ultimaModificacion['detalle'])): ?>
+                            <p class="text-xs text-gray-500 mt-0.5">
+                                <?= htmlspecialchars($ultimaModificacion['detalle']) ?>
+                            </p>
+                        <?php endif ?>
+                    </div>
+                </div>
+            </div>
+        <?php endif ?>
+
+
         <!-- VOLVER -->
         <div class="flex justify-center pt-2">
             <a href="index.php?action=alumnos" class="inline-flex items-center gap-2 px-6 py-2.5 bg-gray-700 hover:bg-gray-600 

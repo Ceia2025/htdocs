@@ -12,6 +12,8 @@ require_once __DIR__ . '/../libs/dompdf/vendor/autoload.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
+//Llamar a las modificaciones
+require_once __DIR__ . '/../controllers/ControlModificacionAlumnoController.php';
 
 
 class AlumnosController
@@ -52,15 +54,16 @@ class AlumnosController
     public function store($data)
     {
         if (!empty($data['run']) && !empty($data['nombre']) && !empty($data['apepat'])) {
-
-            // Calcular mayor de edad
             if (!empty($data['fechanac'])) {
                 $data['mayoredad'] = $this->calcularMayorEdad($data['fechanac']);
             } else {
-                $data['mayoredad'] = "No"; // valor por defecto si no hay fecha
+                $data['mayoredad'] = "No";
             }
 
-            $this->alumnoModel->create($data);
+            $alumnoId = $this->alumnoModel->create($data);
+
+            $ctrl = new ControlModificacionAlumnoController();
+            $ctrl->registrar((int) $alumnoId, 'alumnos2', 'crear', 'Alumno creado');
         }
         header("Location: index.php?action=alumnos");
         exit;
@@ -153,17 +156,22 @@ class AlumnosController
         require_once __DIR__ . '/../models/AlumEmergencia.php';
         require_once __DIR__ . '/../models/AntecedenteFamiliar.php';
         require_once __DIR__ . '/../models/AntecedenteEscolar.php';
-        require_once __DIR__ . '/../models/Matricula.php'; // 👈 agregar esto
+        require_once __DIR__ . '/../models/Matricula.php';
+        require_once __DIR__ . '/../controllers/ControlModificacionAlumnoController.php'; // ✅ aquí sí
 
         $emergenciaModel = new AlumEmergencia();
         $familiarModel = new AntecedenteFamiliar();
         $escolarModel = new AntecedenteEscolar();
-        $matriculaModel = new Matricula(); // 👈 agregar esto
+        $matriculaModel = new Matricula();
 
         $contactosGrupos = $emergenciaModel->findByAlumnoAgrupado($id);
         $contactos = $emergenciaModel->findByAlumno($id);
         $antecedentes = $familiarModel->findByAlumno($id);
-        $matriculaActiva = $matriculaModel->getActivaByAlumno($id); // 👈 agregar esto
+        $matriculaActiva = $matriculaModel->getActivaByAlumno($id);
+
+        // ✅ Última modificación — se pasa a la vista como variable
+        $modCtrl = new ControlModificacionAlumnoController();
+        $ultimaModificacion = $modCtrl->ultimaModificacion((int) $id);
 
         require __DIR__ . '/../views/alumnos/perfil.php';
     }
@@ -196,20 +204,16 @@ class AlumnosController
     public function update($id, $data)
     {
         if (!empty($id) && !empty($data['run']) && !empty($data['nombre']) && !empty($data['apepat'])) {
-
-            // Calcular mayor de edad si se envía fecha de nacimiento
             if (!empty($data['fechanac'])) {
                 $data['mayoredad'] = $this->calcularMayorEdad($data['fechanac']);
             }
-
-            // 🔥 Mantener el estado deleted_at actual (retirado/activo)
             $alumnoActual = $this->alumnoModel->getById($id);
             $data['deleted_at'] = $alumnoActual['deleted_at'];
-
-            // Actualizar información normal
             $this->alumnoModel->update($id, $data);
-        }
 
+            $ctrl = new ControlModificacionAlumnoController();
+            $ctrl->registrar((int) $id, 'alumnos2', 'editar', 'Datos del alumno actualizados');
+        }
         header("Location: index.php?action=alumnos");
         exit;
     }
@@ -234,7 +238,7 @@ class AlumnosController
         exit;
     }
 
-    // 🔹 Marcar alumno como retirado
+    // Marcar alumno como retirado
     public function retire($id)
     {
         if (!empty($id)) {
@@ -248,6 +252,11 @@ class AlumnosController
             //$matriculaModel->deleteByAlumno($id);
 
             error_log("🗑️ Matrículas eliminadas para alumno ID: $id");
+
+            // ✅ Registrar quién retiró al alumno
+            $ctrl = new ControlModificacionAlumnoController();
+            $ctrl->registrar((int) $id, 'alumnos2', 'retirar', 'Alumno marcado como retirado');
+
         } else {
             error_log("⚠️ ID vacío en retire()");
         }
@@ -255,11 +264,15 @@ class AlumnosController
         exit;
     }
 
-    // 🔹 Reintegrar alumno
+    // Reintegrar alumno
     public function restore($id)
     {
         if (!empty($id)) {
             $this->alumnoModel->restore($id);
+
+            // ✅ Registrar
+            $ctrl = new ControlModificacionAlumnoController();
+            $ctrl->registrar((int) $id, 'alumnos2', 'restaurar', 'Retiro anulado, alumno reintegrado');
         }
         header("Location: index.php?action=alumno_edit&id=$id");
         exit;

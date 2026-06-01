@@ -50,7 +50,7 @@ class AntecedenteFamiliarController
     }
 
 
-    
+
     // Actualizar antecedentes familiares desde el perfil
     public function updateProfile($data)
     {
@@ -60,11 +60,9 @@ class AntecedenteFamiliarController
             exit;
         }
 
-        // Buscar si ya existe
         $antecedenteExistente = $this->model->findByAlumno($alumno_id);
 
         if ($antecedenteExistente && !empty($antecedenteExistente['id'])) {
-            // Actualizar registro existente
             $this->model->update(
                 $antecedenteExistente['id'],
                 $alumno_id,
@@ -73,8 +71,9 @@ class AntecedenteFamiliarController
                 $data['madre'] ?? 'Desconocido',
                 $data['nivel_ciclo_m'] ?? null
             );
+            $accion = 'editar';
+            $detalle = 'Antecedentes familiares actualizados';
         } else {
-            // Crear nuevo si no existe
             $this->model->create(
                 $alumno_id,
                 $data['padre'] ?? 'Desconocido',
@@ -82,9 +81,14 @@ class AntecedenteFamiliarController
                 $data['madre'] ?? 'Desconocido',
                 $data['nivel_ciclo_m'] ?? null
             );
+            $accion = 'crear';
+            $detalle = 'Antecedentes familiares registrados';
         }
 
-        // Redirigir de nuevo al perfil del alumno
+        // ✅ Registrar quién modificó
+        $ctrl = new ControlModificacionAlumnoController();
+        $ctrl->registrar((int) $alumno_id, 'antecedentes_familiares', $accion, $detalle);
+
         header("Location: index.php?action=alumno_profile&id=" . urlencode($alumno_id));
         exit;
     }

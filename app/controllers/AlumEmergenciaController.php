@@ -11,21 +11,6 @@ class AlumEmergenciaController
         $this->model = new AlumEmergencia();
     }
 
-    // Listar
-    /*
-    public function index()
-    {
-        $search = $_GET['q'] ?? null;
-
-        if ($search) {
-            $emergencias = $this->model->searchByAlumno($search);
-        } else {
-            $emergencias = $this->model->getAll();
-        }
-
-        require __DIR__ . '/../views/alum_emergencia/index.php';
-    }*/
-
 
     // Formulario crear
     public function create()
@@ -135,12 +120,16 @@ class AlumEmergenciaController
 
             if ($ok) {
                 $_SESSION['flash_success'] = "✅ Contacto agregado correctamente.";
+
+                // ✅ Registrar quién modificó
+                $ctrl = new ControlModificacionAlumnoController();
+                $ctrl->registrar((int) $data['alumno_id'], 'alum_emergencia2', 'crear', 'Contacto de emergencia agregado');
             } else {
-                $_SESSION['flash_error'] = "⚠️ No se pudo guardar el contacto. Intenta nuevamente.";
+                $_SESSION['flash_error'] = "⚠️ No se pudo guardar el contacto.";
             }
         } catch (\PDOException $e) {
             error_log("PDOException storeProfile: " . $e->getMessage());
-            $_SESSION['flash_error'] = "⚠️ Error al guardar: verifica que todos los campos sean válidos.";
+            $_SESSION['flash_error'] = "⚠️ Error al guardar.";
         }
 
         header("Location: index.php?action=alumno_profile&id=" . urlencode($data['alumno_id']));
@@ -161,6 +150,9 @@ class AlumEmergenciaController
         $alumno_id = $data['alumno_id'] ?? null;
 
         if ($ok && $back === 'alumno_profile' && $alumno_id) {
+            $ctrl = new ControlModificacionAlumnoController();
+            $ctrl->registrar((int) $alumno_id, 'alum_emergencia2', 'editar', 'Contacto de emergencia editado');
+
             header("Location: index.php?action=alumno_profile&id=" . urlencode($alumno_id));
             exit;
         }
