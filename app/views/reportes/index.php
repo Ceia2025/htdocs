@@ -63,6 +63,15 @@ $modulos = [
         'url' => '',
         'disponible' => false,
         'tags' => ['Próximamente'],
+    ],
+    [
+        'titulo' => 'Alumno Regular',
+        'descripcion' => 'Descarga en formato PDF el Certificado de Alumno Regular, con o sin detalle de asistencia.',
+        'icono' => '👼',
+        'color' => 'indigo',
+        'url' => 'index.php?action=reportes_cert_alumno_regular',
+        'disponible' => true,          // ← activar
+        'tags' => ['PDF', 'Normal', 'Con Asistencia'],
     ]
 ];
 

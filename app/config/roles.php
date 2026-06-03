@@ -92,6 +92,10 @@ return [
     'matricula_edit' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
     'matricula_update' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
     'matricula_delete' => [ROL_ADMINISTRADOR],
+    'matricula_numero_lista' => [ROL_ADMINISTRADOR],
+    'matricula_guardar_lista' => [ROL_ADMINISTRADOR],
+    'matricula_retirar' => [ROL_ADMINISTRADOR],
+    'matricula_reintegrar' => [ROL_ADMINISTRADOR],
 
     // ── ANOTACIONES ──
     'anotaciones' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_INSPECTOR_GENERAL, ROL_ASISTENTE_SOCIAL, ROL_ANOTACIONES, ROL_DOCENTE],
@@ -237,6 +241,17 @@ return [
     'reporte_csv_general' => null,
     'reporte_pdf_curso' => null,
     'reporte_pdf_general' => null,
+
+
+    //---Reportes de certificado alumno regular y demas ----
+    // ── CERTIFICADO ALUMNO REGULAR ──
+    'reportes_cert_alumno_regular' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
+    'cert_alumno_regular_buscar' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
+    'cert_alumno_regular_datos' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
+    'cert_alumno_regular_pdf' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
+    'cert_alumno_regular_pdf_asistencia' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
+
+
 
     // ── NOTAS ──
     /*

@@ -30,6 +30,8 @@ require_once __DIR__ . '/../controllers/reportes/ReporteController.php';
 require_once __DIR__ . '/../controllers/reportes/ReporteDashboardController.php';
 require_once __DIR__ . '/../controllers/reportes/ReporteNotasController.php';
 require_once __DIR__ . '/../controllers/reportes/etnia/ReporteEtniaController.php';
+require_once __DIR__ . '/../controllers/reportes/certificadoAlumnoRegular/CertificadoAlumnoRegularController.php';
+
 
 // ── INSTANCIAS ───────────────────────────────────────────────
 $action = $_GET['action'] ?? 'login';
@@ -624,6 +626,39 @@ switch ($action) {
     case 'reporte_etnia_csv':
         $reporteEtnia->csvEtnia();
         break;
+
+    case 'reportes_cert_alumno_regular':
+        (new CertificadoAlumnoRegularController())->index();
+        break;
+
+    case 'cert_alumno_regular_buscar':
+        (new CertificadoAlumnoRegularController())->buscar();
+        break;
+
+    // AJAX: datos del alumno (para la card previa en el buscador)
+    case 'cert_alumno_regular_datos':
+        header('Content-Type: application/json; charset=utf-8');
+        require_once __DIR__ . '/../models/reportes/certificadoAlumnoRegular/CertificadoAlumnoRegular.php';
+        $model = new CertificadoAlumnoRegular();
+        $id = (int) ($_GET['alumno_id'] ?? 0);
+        $data = $id ? $model->getDatosAlumno($id) : null;
+        if ($data) {
+            $data['nombre_completo'] = trim(
+                $data['nombre'] . ' ' . $data['apepat'] . ' ' . ($data['apemat'] ?? '')
+            );
+        }
+        echo json_encode($data ?? ['error' => 'no encontrado']);
+        exit;
+
+    case 'cert_alumno_regular_pdf':
+        (new CertificadoAlumnoRegularController())->pdfNormal();
+        break;
+
+    case 'cert_alumno_regular_pdf_asistencia':
+        (new CertificadoAlumnoRegularController())->pdfConAsistencia();
+        break;
+
+
 
     // ── PROFESORES ───────────────────────────────────────────
     case 'profesores':
