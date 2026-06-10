@@ -59,6 +59,7 @@ $inventarioController = new InventarioController();
 $procedenciaController = new ProcedenciaController();
 $categorizacionController = new CategorizacionController();
 $reporteEtnia = new ReporteEtniaController();
+$reporteNotasController = new ReporteNotasController();
 
 // ── PERMISOS GLOBAL ──────────────────────────────────────────
 $auth->checkPermiso($action);
@@ -839,6 +840,9 @@ switch ($action) {
         break;
     case 'reporte_pdf_general':
         $reporteController->pdfGeneral();
+        break;
+    case 'reportes_notas_pdf_consolidado':
+        $reporteNotasController->pdfConsolidado();
         break;
 
     // ── REPORTES DE NOTAS ────────────────────────────────────

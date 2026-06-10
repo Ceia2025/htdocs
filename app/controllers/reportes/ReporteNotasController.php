@@ -222,4 +222,72 @@ class ReporteNotasController
     }
 
 
+    /* ══════════════════════════════════════════════════════════
+       PDF CONSOLIDADO DE NOTAS
+       Todos los alumnos del curso × todas las asignaturas
+       Una celda = promedio del semestre seleccionado
+    ══════════════════════════════════════════════════════════ */
+    public function pdfConsolidado(): void
+    {
+        $cursoId = (int) ($_GET['curso_id'] ?? 0);
+        $anioId = (int) ($_GET['anio_id'] ?? 0);
+        $semestre = (int) ($_GET['semestre'] ?? 1);
+
+        if (!$cursoId || !$anioId)
+            die('Faltan parámetros (curso_id, anio_id).');
+
+        $cursoModel = new Cursos();
+        $anioModel = new Anio();
+        $cursoAsignaturaModel = new CursoAsignatura();
+
+        $curso = $cursoModel->getById($cursoId);
+        $anio = $anioModel->getById($anioId);
+
+        if (!$curso || !$anio)
+            die('Curso o año no encontrado.');
+
+        // ── Asignaturas del curso (excluir las no calificables) ──────────────
+        $asignaturasExcluidas = ['Inspectoría', 'Convivencia Escolar'];
+        $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($cursoId);
+        $asignaturas = array_values(array_filter(
+            $asignaturas,
+            fn($a) => !in_array($a['nombre'], $asignaturasExcluidas)
+        ));
+
+        // ── Alumnos matriculados en el curso ─────────────────────────────────
+        // Reutilizamos el mismo método que pdfAsignatura usa para el listado
+        $alumnos = $this->notaModel->getByCursoYAnio($cursoId, $anioId);
+
+        // ── Notas: [asignatura_id][matricula_id] = [ ...filas de nota... ] ───
+        // Hacemos una consulta por asignatura (reutiliza método existente)
+        $notas = [];   // [asigId][matriculaId] = array de notas
+        foreach ($asignaturas as $asig) {
+            $asigId = $asig['id'];
+            $rawNotas = $this->notaModel->getNotasPorCursoAsignaturaSemestre(
+                $cursoId,
+                $anioId,
+                $asigId,
+                $semestre
+            );
+            $notas[$asigId] = [];
+            foreach ($rawNotas as $n) {
+                $notas[$asigId][$n['matricula_id']][] = $n;
+            }
+        }
+
+        $logoPath = __DIR__ . '/../../public/img/LOGO CEIA.jpg';
+
+        ob_start();
+        require __DIR__ . '/../../views/reportes/notas/pdfConsolidado.php';
+        $html = ob_get_clean();
+
+        $nombreArchivo = 'Consolidado_'
+            . preg_replace('/\s+/', '_', $curso['nombre'])
+            . '_Sem' . $semestre
+            . '_' . $anio['anio'] . '.pdf';
+
+        $this->_streamPdf($html, 'letter', 'landscape', $nombreArchivo);
+    }
+
+
 }

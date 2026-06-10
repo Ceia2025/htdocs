@@ -1,55 +1,3 @@
-<?php
-// views/reportes/notas/pdf_alumno.php
-// Variables esperadas del controlador:
-//   $alumno, $curso, $anio, $asignaturas
-//   $notasSem[1][asig_id][] = nota   /   $notasSem[2][asig_id][] = nota
-//   $maxCols[1], $maxCols[2]  — columnas dinámicas por semestre
-//   $asistencia['dias_trabajados','dias_inasistencia','porcentaje']
-//   $docenteNombre, $logoPath, $observaciones
-
-$logoExists = !empty($logoPath) && file_exists($logoPath);
-
-// Calcular promedios por fila y promedios generales
-$sumaGenSem1 = 0;
-$cntGenSem1 = 0;
-$sumaGenSem2 = 0;
-$cntGenSem2 = 0;
-
-$filas = [];
-foreach ($asignaturas as $asig) {
-    $id = $asig['id'];
-    $ns1 = $notasSem[1][$id] ?? [];
-    $ns2 = $notasSem[2][$id] ?? [];
-
-    $p1 = count($ns1) > 0 ? array_sum(array_column($ns1, 'nota')) / count($ns1) : null;
-    $p2 = count($ns2) > 0 ? array_sum(array_column($ns2, 'nota')) / count($ns2) : null;
-
-    if ($p1 !== null) {
-        $sumaGenSem1 += $p1;
-        $cntGenSem1++;
-    }
-    if ($p2 !== null) {
-        $sumaGenSem2 += $p2;
-        $cntGenSem2++;
-    }
-
-    $filas[] = ['nombre' => $asig['nombre'], 'sem1' => $ns1, 'sem2' => $ns2, 'p1' => $p1, 'p2' => $p2];
-}
-
-$promGenSem1 = $cntGenSem1 > 0 ? $sumaGenSem1 / $cntGenSem1 : null;
-$promGenSem2 = $cntGenSem2 > 0 ? $sumaGenSem2 / $cntGenSem2 : null;
-
-function colorN($v)
-{
-    if ($v === null)
-        return '#94a3b8';
-    return $v >= 4.0 ? '#16a34a' : '#dc2626';
-}
-function fmtN($v, $dec = 1)
-{
-    return $v !== null ? number_format($v, $dec) : '—';
-}
-?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -64,167 +12,164 @@ function fmtN($v, $dec = 1)
 
         body {
             font-family: DejaVu Sans, sans-serif;
-            font-size: 7px;
+            font-size: 10px;
             color: #1e293b;
-            margin: 10px 12px;
+            margin: 0;
+            padding: 0;
         }
 
-        /* HEADER */
+        .page {
+            margin: 22px 30px 90px 30px;
+        }
+
+        /* ── ENCABEZADO 3 LOGOS ── */
         .header {
             display: table;
             width: 100%;
             border-bottom: 3px solid #004b8d;
-            padding-bottom: 5px;
-            margin-bottom: 7px;
+            padding-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .h-left {
             display: table-cell;
-            width: 13%;
+            width: 28%;
             vertical-align: middle;
         }
 
-        .h-mid {
+        .h-center {
             display: table-cell;
-            width: 74%;
+            width: 44%;
             vertical-align: middle;
             text-align: center;
-            padding: 0 6px;
         }
 
         .h-right {
             display: table-cell;
-            width: 13%;
+            width: 28%;
             vertical-align: middle;
             text-align: right;
         }
 
-        .inst-nm {
-            font-size: 10px;
-            font-weight: bold;
-            color: #004b8d;
-            text-transform: uppercase;
+        .header img {
+            height: 62px;
+            width: auto;
         }
 
-        .inst-sb {
-            font-size: 7px;
-            color: #475569;
+        /* Título del documento (debajo de los logos) */
+        .doc-header {
+            text-align: center;
+            margin-bottom: 8px;
         }
 
-        .doc-t {
-            font-size: 12px;
+        .doc-titulo {
+            font-size: 14px;
             font-weight: bold;
             color: #1e293b;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .doc-subtitulo {
+            font-size: 7.5px;
+            color: #475569;
             margin-top: 2px;
         }
 
-        .doc-sb {
-            font-size: 8px;
-            color: #475569;
-        }
-
-        /* DECRETOS */
+        /* ── DECRETO ── */
         .dec {
-            font-size: 6px;
+            font-size: 9px;
             color: #64748b;
-            margin-bottom: 5px;
-            line-height: 1.5;
+            margin-bottom: 8px;
+            line-height: 1.6;
+            border-left: 2px solid #004b8d;
+            padding-left: 6px;
         }
 
-        /* FICHA */
+        /* ── FICHA ALUMNO ── */
         .ficha {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 7px;
+            margin-bottom: 10px;
         }
 
         .ficha td {
             border: 1px solid #cbd5e1;
-            padding: 3px 5px;
-            font-size: 7.5px;
+            padding: 4px 6px;
+            font-size: 8px;
         }
 
         .ficha .lb {
-            background: #e2e8f0;
+            background: #dbeafe;
             font-weight: bold;
-            width: 22%;
-            color: #334155;
+            width: 20%;
+            color: #1e3a5f;
         }
 
-        /* TABLA NOTAS */
+        /* ── TABLA NOTAS ── */
         table.nt {
             width: 100%;
             border-collapse: collapse;
-            font-size: 6.5px;
+            font-size: 11px;
             table-layout: fixed;
         }
 
         table.nt thead tr.sem-row th {
             background: #1e3a5f;
             color: #fff;
-            padding: 2.5px 1px;
+            padding: 3px 1px;
             border: 1px solid #1e40af;
-            font-size: 6.5px;
+            font-size: 7px;
             text-align: center;
         }
 
         table.nt thead tr.nota-row th {
             background: #004b8d;
             color: #fff;
-            padding: 2px 1px;
+            padding: 2.5px 1px;
             border: 1px solid #1e40af;
-            font-size: 6px;
+            font-size: 6.5px;
             text-align: center;
         }
 
-        /* DESPUÉS */
         table.nt thead th.th-asig {
             text-align: left;
-            padding-left: 4px;
-            width: 110px;
-            max-width: 110px;
+            padding-left: 5px;
+            width: 120px;
         }
 
-        table.nt tbody td.td-a {
-            text-align: left;
-            padding-left: 4px;
-            font-weight: bold;
-            font-size: 6.5px;
-            width: 110px;
-            max-width: 110px;
-            overflow: hidden;
+        table.nt tbody td {
+            border: 1px solid #e2e8f0;
+            padding: 2.5px 1.5px;
+            text-align: center;
+            vertical-align: middle;
         }
 
         table.nt tbody tr:nth-child(even) td {
             background: #f8fafc;
         }
 
-        table.nt tbody td {
-            border: 1px solid #e2e8f0;
-            padding: 2px 1.5px;
-            text-align: center;
-            vertical-align: middle;
-        }
-
         table.nt tbody td.td-a {
             text-align: left;
-            padding-left: 4px;
+            padding-left: 5px;
             font-weight: bold;
-            font-size: 6.5px;
+            font-size: 7px;
+            width: 120px;
         }
 
         table.nt tfoot td {
             border: 1px solid #cbd5e1;
-            padding: 2.5px 1px;
+            padding: 3px 1.5px;
             text-align: center;
-            background: #f1f5f9;
+            background: #dbeafe;
             font-weight: bold;
-            font-size: 7px;
+            font-size: 9.5px;
+            color: #1e3a5f;
         }
 
         table.nt tfoot td.td-a {
             text-align: left;
-            padding-left: 4px;
+            padding-left: 5px;
         }
 
         .sep {
@@ -248,14 +193,16 @@ function fmtN($v, $dec = 1)
         }
 
         .nd {
-            color: #e2e8f0;
+            color: #cbd5e1;
         }
 
-        /* ASISTENCIA */
+        /* ── ASISTENCIA ── */
         .asis {
             display: table;
             width: 100%;
-            margin-top: 7px;
+            margin-top: 10px;
+            border-collapse: separate;
+            border-spacing: 4px;
         }
 
         .ac {
@@ -263,54 +210,88 @@ function fmtN($v, $dec = 1)
             width: 33.3%;
             text-align: center;
             border: 1px solid #e2e8f0;
-            padding: 4px;
+            padding: 6px 4px;
             background: #f8fafc;
+            border-radius: 4px;
         }
 
         .av {
-            font-size: 13px;
+            font-size: 18px;
             font-weight: bold;
         }
 
         .al {
-            font-size: 6px;
+            font-size: 6.5px;
             color: #64748b;
-            margin-top: 1px;
+            margin-top: 2px;
         }
 
-        /* OBS */
+        /* ── OBSERVACIONES ── */
         .obs {
-            margin-top: 7px;
+            margin-top: 8px;
             border: 1px solid #e2e8f0;
-            padding: 4px 7px;
-            font-size: 6.5px;
+            border-radius: 4px;
+            padding: 5px 8px;
+            font-size: 9px;
+            background: #f8fafc;
         }
 
         .obs-t {
             font-weight: bold;
-            color: #334155;
-            margin-bottom: 2px;
-        }
-
-        /* FIRMA */
-        .firma {
-            margin-top: 18px;
-            text-align: center;
+            color: #1e3a5f;
+            margin-bottom: 3px;
             font-size: 7.5px;
         }
 
-        .fl {
-            border-top: 1px solid #334155;
-            width: 150px;
-            margin: 0 auto 2px;
+        /* ── FIRMA ── */
+        .firmas {
+            display: table;
+            width: 100%;
+            margin-top: 20px;
         }
 
-        /* FOOTER */
+        .firma-col {
+            display: table-cell;
+            width: 50%;
+            text-align: center;
+            padding: 0 16px;
+        }
+
+        .firma-linea {
+            border-top: 1px solid #334155;
+            padding-top: 5px;
+            margin-top: 40px;
+        }
+
+        .firma-nombre {
+            font-weight: bold;
+            font-size: 8px;
+        }
+
+        .firma-cargo {
+            font-size: 7px;
+            color: #64748b;
+        }
+
+        /* ── PIE ── */
+        .pie-pagina {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .pie-pagina img {
+            width: 100%;
+            display: block;
+        }
+
+        /* ── FOOTER TEXTO ── */
         .footer {
-            margin-top: 7px;
+            margin-top: 8px;
             border-top: 1px solid #e2e8f0;
-            padding-top: 3px;
-            font-size: 6px;
+            padding-top: 4px;
+            font-size: 9px;
             color: #94a3b8;
             text-align: right;
         }
@@ -319,220 +300,237 @@ function fmtN($v, $dec = 1)
 
 <body>
 
-    <!-- HEADER -->
-    <div class="header">
-        <div class="h-left">
-            <?php if ($logoExists): ?>
-                <img src="http://localhost:8080/app/public/img/LOGO%20CEIA.jpg" style="width:60px;height:auto;">
-            <?php else: ?>
-                <strong style="color:#004b8d;font-size:8px;">CEIA</strong>
-            <?php endif; ?>
-        </div>
-        <div class="h-mid">
-            <div class="inst-nm">Centro de Educación Integrada de Adultos</div>
-            <div class="inst-sb">"Juanita Zúñiga Fuentes" – Parral</div>
-            <div class="doc-t">Informe de Notas</div>
-            <div class="doc-sb">Año Escolar <?= htmlspecialchars($anio['anio']) ?></div>
-        </div>
-    </div>
-
     <?php
-    // IDs de cursos que son "1° y 2°" (primer nivel medio)
+    $base = 'http://localhost:8080/app/public/img/';
+    $logo1 = $base . 'certificado_1.png';
+    $logo2 = $base . 'certificado_3.png';
+    $logo3 = $base . 'certificado_2.png';
+    $piePag = $base . 'pie_pagina_certificado.png';
+
+    // Calcular promedios
+    $sumaGenSem1 = 0;
+    $cntGenSem1 = 0;
+    $sumaGenSem2 = 0;
+    $cntGenSem2 = 0;
+    $filas = [];
+
+    foreach ($asignaturas as $asig) {
+        $id = $asig['id'];
+        $ns1 = $notasSem[1][$id] ?? [];
+        $ns2 = $notasSem[2][$id] ?? [];
+        $p1 = count($ns1) > 0 ? array_sum(array_column($ns1, 'nota')) / count($ns1) : null;
+        $p2 = count($ns2) > 0 ? array_sum(array_column($ns2, 'nota')) / count($ns2) : null;
+        if ($p1 !== null) {
+            $sumaGenSem1 += $p1;
+            $cntGenSem1++;
+        }
+        if ($p2 !== null) {
+            $sumaGenSem2 += $p2;
+            $cntGenSem2++;
+        }
+        $filas[] = ['nombre' => $asig['nombre'], 'sem1' => $ns1, 'sem2' => $ns2, 'p1' => $p1, 'p2' => $p2];
+    }
+
+    $promGenSem1 = $cntGenSem1 > 0 ? $sumaGenSem1 / $cntGenSem1 : null;
+    $promGenSem2 = $cntGenSem2 > 0 ? $sumaGenSem2 / $cntGenSem2 : null;
+
+    function colorN($v)
+    {
+        if ($v === null)
+            return '#94a3b8';
+        return $v >= 4.0 ? '#16a34a' : '#dc2626';
+    }
+    function fmtN($v, $dec = 1)
+    {
+        return $v !== null ? number_format($v, $dec) : '—';
+    }
+
     $cursosPrimerNivel = [2, 5, 8];
-    $esPrimerNivel = in_array((int) $curso['id'], $cursosPrimerNivel);
+    $esPrimerNivel = in_array((int) ($curso['id'] ?? 0), $cursosPrimerNivel);
     ?>
 
-    <!-- DECRETO -->
-    <div class="dec">
+    <!-- PIE FIJO -->
+    <div class="pie-pagina"><img src="<?= $piePag ?>" alt="Pie"></div>
 
-        <?php if ($esPrimerNivel): ?>
-            Decreto Supremo de Educación que aprueba Bases Curriculares N°10/2022<br>
-        <?php else: ?>
-            Decreto Exento o Resolución Exenta de Educación que aprueba Planes y Programas de Estudio N° 257/2009<br>
-        <?php endif; ?>
+    <div class="page">
 
-        Decreto Exento de educación que aprueba el Reglamento de Evaluación y Promoción Escolar N° 2169/2007<br>
-        Reconocimiento oficial del ministerio de Educación de Chile, N°3290/1981
+        <!-- ENCABEZADO -->
+        <div class="header">
+            <div class="h-left"><img src="<?= $logo1 ?>" alt="Educación Pública"></div>
+            <div class="h-center"><img src="<?= $logo2 ?>" alt="Los Álamos"></div>
+            <div class="h-right"><img src="<?= $logo3 ?>" alt="CEIA"></div>
+        </div>
 
-    </div>
+        <!-- TÍTULO -->
+        <div class="doc-header">
+            <div class="doc-titulo">Informe de Notas</div>
+            <div class="doc-subtitulo">Año Escolar <?= htmlspecialchars($anio['anio']) ?></div>
+        </div>
 
-    <!-- FICHA ALUMNO -->
-    <table class="ficha">
-        <tr>
-            <td class="lb">Estudiante</td>
-            <td style="font-weight:bold;">
-                <?= htmlspecialchars(strtoupper(
-                    $alumno['apepat'] . ' ' . $alumno['apemat'] . ' ' . $alumno['nombre']
-                )) ?>
-            </td>
-        </tr>
-        <tr>
-            <td class="lb">Curso</td>
-            <td><?= htmlspecialchars($curso['nombre']) ?></td>
-        </tr>
-        <tr>
-            <td class="lb">Profesor Jefe</td>
-            <td><?= htmlspecialchars($docenteNombre ?? '—') ?></td>
-        </tr>
-    </table>
+        <!-- DECRETO -->
+        <div class="dec">
+            <?php if ($esPrimerNivel): ?>
+                Decreto Supremo de Educación que aprueba Bases Curriculares N°10/2022 ·
+            <?php else: ?>
+                Decreto Exento de Educación que aprueba Planes y Programas N° 257/2009 ·
+            <?php endif; ?>
+            Decreto Exento N° 2169/2007 Reglamento de Evaluación y Promoción ·
+            Reconocimiento Oficial Ministerio de Educación N°3290/1981
+        </div>
 
-    <!-- TABLA NOTAS -->
-    <table class="nt">
-        <thead>
-            <!-- Fila 1: agrupación semestres -->
-            <tr class="sem-row">
-                <th class="th-asig" rowspan="2">Asignatura</th>
-                <th colspan="<?= $maxCols[1] ?>">Primer Semestre</th>
-                <th colspan="<?= $maxCols[2] ?>" class="sep">Segundo Semestre</th>
-                <th rowspan="2" style="min-width:30px;">Prom.<br>1° Sem</th>
-                <th rowspan="2" style="min-width:30px;" class="sep">Prom.<br>2° Sem</th>
-                <th rowspan="2" style="min-width:30px;">Prom.<br>Final</th>
-            </tr>
-            <!-- Fila 2: numeración de notas -->
-            <tr class="nota-row">
-                <?php for ($i = 1; $i <= $maxCols[1]; $i++): ?>
-                    <th>N<?= $i ?></th>
-                <?php endfor; ?>
-                <?php for ($i = 1; $i <= $maxCols[2]; $i++): ?>
-                    <th class="<?= $i === 1 ? 'sep' : '' ?>">N<?= $i ?></th>
-                <?php endfor; ?>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($filas as $fila):
-                $ns1 = array_values($fila['sem1']);
-                $ns2 = array_values($fila['sem2']);
-                $p1 = $fila['p1'];
-                $p2 = $fila['p2'];
-                $pFinal = ($p1 !== null && $p2 !== null) ? ($p1 + $p2) / 2 : null;
-                ?>
-                <tr>
-                    <td class="td-a"><?= htmlspecialchars($fila['nombre']) ?></td>
-
-                    <!-- Notas semestre 1 -->
-                    <?php for ($i = 0; $i < $maxCols[1]; $i++):
-                        $n = $ns1[$i] ?? null;
-                        $v = $n ? floatval($n['nota']) : null;
-                        ?>
-                        <td>
-                            <?php if ($v !== null): ?>
-                                <span class="<?= $v >= 4.0 ? 'ok' : 'mal' ?>"><?= number_format($v, 1) ?></span>
-                            <?php else: ?>
-                                <span class="nd">—</span>
-                            <?php endif; ?>
-                        </td>
-                    <?php endfor; ?>
-
-                    <!-- Notas semestre 2 -->
-                    <?php for ($i = 0; $i < $maxCols[2]; $i++):
-                        $n = $ns2[$i] ?? null;
-                        $v = $n ? floatval($n['nota']) : null;
-                        ?>
-                        <td class="<?= $i === 0 ? 'sep' : '' ?>">
-                            <?php if ($v !== null): ?>
-                                <span class="<?= $v >= 4.0 ? 'ok' : 'mal' ?>"><?= number_format($v, 1) ?></span>
-                            <?php else: ?>
-                                <span class="nd">—</span>
-                            <?php endif; ?>
-                        </td>
-                    <?php endfor; ?>
-
-                    <!-- Promedios -->
-                    <td style="color:<?= colorN($p1) ?>;font-weight:bold;">
-                        <?= $p1 !== null ? number_format($p1, 1) : '<span class="pen">Pend.</span>' ?>
-                    </td>
-                    <td style="color:<?= colorN($p2) ?>;font-weight:bold;" class="sep">
-                        <?= $p2 !== null ? number_format($p2, 1) : '<span class="pen">Pend.</span>' ?>
-                    </td>
-                    <td style="color:<?= colorN($pFinal) ?>;font-weight:bold;">
-                        <?= $pFinal !== null ? number_format($pFinal, 1) : '<span class="pen">Pend.</span>' ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-        <tfoot>
+        <!-- FICHA ALUMNO -->
+        <table class="ficha">
             <tr>
-                <td class="td-a">Promedio General</td>
-                <?php
-                // Celdas vacías para columnas de notas sem1
-                for ($i = 0; $i < $maxCols[1]; $i++)
-                    echo '<td></td>';
-                // Celdas vacías para columnas de notas sem2
-                for ($i = 0; $i < $maxCols[2]; $i++)
-                    echo '<td class="' . ($i === 0 ? 'sep' : '') . '"></td>';
-                ?>
-                <td style="color:<?= colorN($promGenSem1) ?>;font-size:8px;">
-                    <?= $promGenSem1 !== null ? number_format($promGenSem1, 1) : '<span class="pen">Pend.</span>' ?>
+                <td class="lb">Estudiante</td>
+                <td style="font-weight:bold;">
+                    <?= htmlspecialchars(strtoupper($alumno['apepat'] . ' ' . $alumno['apemat'] . ' ' . $alumno['nombre'])) ?>
                 </td>
-                <td style="color:<?= colorN($promGenSem2) ?>;font-size:8px;" class="sep">
-                    <?= $promGenSem2 !== null ? number_format($promGenSem2, 1) : '<span class="pen">Pend.</span>' ?>
-                </td>
-                <td style="font-size:8px;">—</td>
+                <td class="lb" style="width:14%;">Curso</td>
+                <td><?= htmlspecialchars($curso['nombre']) ?></td>
             </tr>
-        </tfoot>
-    </table>
+            <tr>
+                <td class="lb">RUT</td>
+                <td><?= htmlspecialchars($alumno['run'] . '-' . ($alumno['codver'] ?? '')) ?></td>
+                <td class="lb">Profesor Jefe</td>
+                <td><?= htmlspecialchars(strtoupper($docenteNombre ?? '—')) ?></td>
+            </tr>
 
-    <!-- ASISTENCIA -->
-    <div class="asis">
-        <div class="ac">
-            <div class="av"><?= $asistencia['dias_trabajados'] ?? '—' ?></div>
-            <div class="al">Días trabajados</div>
+        </table>
+
+        <!-- TABLA NOTAS -->
+        <table class="nt">
+            <thead>
+                <tr class="sem-row">
+                    <th class="th-asig" rowspan="2">Asignatura</th>
+                    <th colspan="<?= $maxCols[1] ?>">1° Semestre</th>
+                    <th colspan="<?= $maxCols[2] ?>" class="sep">2° Semestre</th>
+                    <th rowspan="2" style="min-width:28px;">Prom.<br>S1</th>
+                    <th rowspan="2" style="min-width:28px;" class="sep">Prom.<br>S2</th>
+                    <th rowspan="2" style="min-width:28px;">Prom.<br>Final</th>
+                </tr>
+                <tr class="nota-row">
+                    <?php for ($i = 1; $i <= $maxCols[1]; $i++): ?>
+                        <th>N<?= $i ?></th>
+                    <?php endfor; ?>
+                    <?php for ($i = 1; $i <= $maxCols[2]; $i++): ?>
+                        <th class="<?= $i === 1 ? 'sep' : '' ?>">N<?= $i ?></th>
+                    <?php endfor; ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($filas as $fila):
+                    $ns1 = array_values($fila['sem1']);
+                    $ns2 = array_values($fila['sem2']);
+                    $p1 = $fila['p1'];
+                    $p2 = $fila['p2'];
+                    $pFinal = ($p1 !== null && $p2 !== null) ? ($p1 + $p2) / 2 : null;
+                    ?>
+                    <tr>
+                        <td class="td-a"><?= htmlspecialchars($fila['nombre']) ?></td>
+                        <?php for ($i = 0; $i < $maxCols[1]; $i++):
+                            $n = $ns1[$i] ?? null;
+                            $v = $n ? floatval($n['nota']) : null;
+                            ?>
+                            <td><?php if ($v !== null): ?>
+                                    <span class="<?= $v >= 4.0 ? 'ok' : 'mal' ?>"><?= number_format($v, 1) ?></span>
+                                <?php else: ?><span class="nd">—</span><?php endif; ?>
+                            </td>
+                        <?php endfor; ?>
+                        <?php for ($i = 0; $i < $maxCols[2]; $i++):
+                            $n = $ns2[$i] ?? null;
+                            $v = $n ? floatval($n['nota']) : null;
+                            ?>
+                            <td class="<?= $i === 0 ? 'sep' : '' ?>"><?php if ($v !== null): ?>
+                                    <span class="<?= $v >= 4.0 ? 'ok' : 'mal' ?>"><?= number_format($v, 1) ?></span>
+                                <?php else: ?><span class="nd">—</span><?php endif; ?>
+                            </td>
+                        <?php endfor; ?>
+                        <td style="color:<?= colorN($p1) ?>;font-weight:bold;">
+                            <?= $p1 !== null ? number_format($p1, 1) : '<span class="pen">Pend.</span>' ?>
+                        </td>
+                        <td style="color:<?= colorN($p2) ?>;font-weight:bold;" class="sep">
+                            <?= $p2 !== null ? number_format($p2, 1) : '<span class="pen">Pend.</span>' ?>
+                        </td>
+                        <td style="color:<?= colorN($pFinal) ?>;font-weight:bold;">
+                            <?= $pFinal !== null ? number_format($pFinal, 1) : '<span class="pen">Pend.</span>' ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="td-a">Promedio General</td>
+                    <?php for ($i = 0; $i < $maxCols[1]; $i++): ?>
+                        <td></td><?php endfor; ?>
+                    <?php for ($i = 0; $i < $maxCols[2]; $i++): ?>
+                        <td class="<?= $i === 0 ? 'sep' : '' ?>"></td>
+                    <?php endfor; ?>
+                    <td style="color:<?= colorN($promGenSem1) ?>"><?= fmtN($promGenSem1) ?></td>
+                    <td style="color:<?= colorN($promGenSem2) ?>" class="sep"><?= fmtN($promGenSem2) ?></td>
+                    <td>—</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- ASISTENCIA -->
+        <div class="asis">
+            <div class="ac">
+                <div class="av"><?= $asistencia['dias_trabajados'] ?? '—' ?></div>
+                <div class="al">Días trabajados</div>
+            </div>
+            <div class="ac">
+                <div class="av" style="color:#dc2626;"><?= $asistencia['dias_inasistencia'] ?? '—' ?></div>
+                <div class="al">Días inasistencia</div>
+            </div>
+            <div class="ac">
+                <?php
+                $pct = $asistencia['porcentaje'] ?? null;
+                $cA = $pct !== null ? ($pct >= 85 ? '#16a34a' : ($pct >= 75 ? '#d97706' : '#dc2626')) : '#64748b';
+                ?>
+                <div class="av" style="color:<?= $cA ?>"><?= $pct !== null ? $pct . '%' : '—' ?></div>
+                <div class="al">% Asistencia</div>
+            </div>
         </div>
-        <div class="ac">
-            <div class="av" style="color:#dc2626;"><?= $asistencia['dias_inasistencia'] ?? '—' ?></div>
-            <div class="al">Días Inasistencia</div>
+
+        <!-- OBSERVACIONES -->
+        <div class="obs">
+            <div class="obs-t">Observaciones:</div>
+            <?= htmlspecialchars($observaciones ?? 'DOCUMENTO CEIA') ?><br><br>
+            <strong>Pend.:</strong> Falta una o más notas — no se puede calcular promedio de la asignatura ni el
+            promedio final.<br>
+            <strong>Situación:</strong> Parcial a la fecha<br>
+            Asistencia registrada hasta el día <?= date('d/m/Y') ?>
         </div>
-        <div class="ac">
-            <?php
-            $pct = $asistencia['porcentaje'] ?? null;
-            $cA = $pct !== null ? ($pct >= 85 ? '#16a34a' : ($pct >= 75 ? '#d97706' : '#dc2626')) : '#64748b';
-            ?>
-            <div class="av" style="color:<?= $cA ?>"><?= $pct !== null ? $pct . '%' : '—' ?></div>
-            <div class="al">% Asistencia</div>
+
+        <!-- FECHA -->
+        <div style="font-size:7.5px; margin-top:10px;">
+            <strong>Fecha del Informe:</strong> <?= date('d/m/Y') ?>
         </div>
-    </div>
 
-    <!-- OBSERVACIONES -->
-    <div class="obs">
-        <div class="obs-t">Observaciones del Estudiante:</div>
-        <?= htmlspecialchars($observaciones ?? 'DOCUMENTO CEIA') ?><br><br>
-        <strong>Pendiente:</strong> Falta una o más notas, no se puede obtener promedio de la asignatura ni el promedio
-        final.<br>
-        Asistencia registrada hasta el día <?= date('j') ?> de <?= strftime('%B', mktime(0, 0, 0, date('n'), 1)) ?>
-    </div>
+        <!-- FIRMAS -->
+        <div class="firmas">
+            <div class="firma-col">
+                <div class="firma-linea">
+                    <div class="firma-nombre">
+                        <?= htmlspecialchars(strtoupper($docenteNombre ?? '—')) ?>
+                    </div>
+                    <div class="firma-cargo">Profesor(a) Jefe</div>
 
-    <!-- FECHA -->
-    <div style="font-size:7px; margin-top:10px; margin-bottom:8px;">
-        <strong>Fecha del Informe:</strong> <?= date('d/m/Y') ?>
-    </div>
-
-    <!-- FIRMAS -->
-    <table style="width:100%;margin-top:4px;">
-        <tr>
-            <!-- Firma Profesor Jefe -->
-            <td style="width:50%; vertical-align:bottom; text-align:center;">
-                <div class="firma">
-                    <div class="fl"></div>
-                    <div style="font-weight:bold;font-size:7.5px;"><?= htmlspecialchars($docenteNombre ?? '') ?></div>
-                    <div style="font-size:6.5px;color:#64748b;">Profesor Jefe</div>
                 </div>
-            </td>
-
-            <!-- Firma Director -->
-            <td style="width:50%; vertical-align:bottom; text-align:center;">
-                <div class="firma">
-                    <div class="fl"></div>
-                    <div style="font-weight:bold;font-size:7.5px;">Juan José Araya Chandía</div>
-                    <div style="font-size:6.5px;color:#64748b;">Director</div>
+            </div>
+            <div class="firma-col">
+                <div class="firma-linea">
+                    <div class="firma-nombre">Juan José Araya Chandía</div>
+                    <div class="firma-cargo">Director ADP C.E.I.A. Parral</div>
                 </div>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
 
-    <div class="footer">
-        Documento generado el <?= date('d/m/Y H:i') ?> — Sistema SAAT · C.E.I.A. Parral
+        <div class="footer">
+            Documento generado el <?= date('d/m/Y H:i') ?> — Sistema SAAT · C.E.I.A. Parral
+        </div>
+
     </div>
-
 </body>
 
 </html>

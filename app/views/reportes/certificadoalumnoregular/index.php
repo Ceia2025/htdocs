@@ -103,25 +103,39 @@ include __DIR__ . "/../../layout/navbar.php";
 
                 <!-- Botones de descarga -->
                 <div class="px-6 py-5 flex flex-col sm:flex-row gap-3">
-                    <a id="btn-normal" href="#" target="_blank" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3
+
+                    <div class="mx-auto max-w-4xl px-4 py-8 sm:px-6">
+                        <input id="input-motivo" ... placeholder="Escriba el motivo..." />
+                        <input
+                            class="bg-zinc-200 text-zinc-600  ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300
+                        placeholder:text-zinc-600 placeholder:opacity-50 rounded-xl px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
+                            autocomplete="off" placeholder="Escriba el motivo..." name="text" type="text" />
+                    </div>
+
+
+                    <div class='mx-auto max-w-4xl px-4 py-8 sm:px-6'>
+                        <a id="btn-normal" href="#" target="_blank" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3
                           bg-indigo-700 hover:bg-indigo-600 text-white font-semibold
                           rounded-xl shadow transition text-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                        </svg>
-                        Certificado Normal
-                    </a>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                            </svg>
+                            Certificado Normal
+                        </a>
 
-                    <a id="btn-asistencia" href="#" target="_blank" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3
+                        <a id="btn-asistencia" href="#" target="_blank" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3
                           bg-emerald-700 hover:bg-emerald-600 text-white font-semibold
                           rounded-xl shadow transition text-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 17v-2m3 2v-4m3 4v-6M9 7h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                        </svg>
-                        Certificado con Asistencia
-                    </a>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 17v-2m3 2v-4m3 4v-6M9 7h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                            </svg>
+                            Certificado con Asistencia
+                        </a>
+                    </div>
+
+
                 </div>
             </div>
 
@@ -181,6 +195,10 @@ include __DIR__ . "/../../layout/navbar.php";
             }
 
             function seleccionar(a) {
+                const motivo = () => encodeURIComponent(
+                    document.getElementById('input-motivo')?.value.trim()
+                    || 'los fines que estime conveniente'
+                );
                 lista.classList.add('hidden');
                 input.value = a.nombre_completo.trim();
 
@@ -196,12 +214,20 @@ include __DIR__ . "/../../layout/navbar.php";
                         infoAnio.textContent = d.anio;
                         infoDias.textContent = `${d.dias_presentes} / ${d.total_dias}`;
 
-                        btnNormal.href = `index.php?action=cert_alumno_regular_pdf&alumno_id=${d.id}`;
-                        btnAsist.href = `index.php?action=cert_alumno_regular_pdf_asistencia&alumno_id=${d.id}`;
+                        btnNormal.href = `index.php?action=cert_alumno_regular_pdf&alumno_id=${d.id}&motivo=${motivo()}`;
+                        btnAsist.href = `index.php?action=cert_alumno_regular_pdf_asistencia&alumno_id=${d.id}&motivo=${motivo()}`;
 
                         cardAlumno.classList.remove('hidden');
                     });
             }
+
+            document.getElementById('input-motivo')?.addEventListener('input', function () {
+                if (!btnNormal.href.includes('alumno_id')) return; // si no hay alumno seleccionado, no hacer nada
+                const id = new URLSearchParams(btnNormal.href.split('?')[1]).get('alumno_id');
+                const m = encodeURIComponent(this.value.trim() || 'los fines que estime conveniente');
+                btnNormal.href = `index.php?action=cert_alumno_regular_pdf&alumno_id=${id}&motivo=${m}`;
+                btnAsist.href = `index.php?action=cert_alumno_regular_pdf_asistencia&alumno_id=${id}&motivo=${m}`;
+            });
 
             // Cierra lista al hacer clic fuera
             document.addEventListener('click', e => {

@@ -158,6 +158,39 @@ include __DIR__ . "/../../layout/navbar.php";
                             Descargar notas del ramo
                         </button>
                     </div>
+
+                </div>
+
+                <div class="bg-gray-800 border border-teal-700/40 rounded-xl overflow-hidden">
+                    <div class="px-5 py-4 border-b border-gray-700/60 flex items-start gap-4">
+                        <div
+                            class="w-11 h-11 rounded-xl bg-teal-900/30 flex items-center justify-center text-xl flex-shrink-0">
+                            📊
+                        </div>
+                        <div>
+                            <h3 class="text-white font-bold text-sm">Consolidado de Notas</h3>
+                            <p class="text-xs text-gray-400 mt-1 leading-relaxed">
+                                Genera una tabla con todos los alumnos del curso y el promedio
+                                de cada asignatura en el semestre seleccionado.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-5 py-4 space-y-3">
+                        <p class="text-xs text-gray-500">
+                            Usa el curso, año y semestre seleccionados arriba.
+                        </p>
+                        <button id="btn-pdf-consolidado" onclick="descargarPdfConsolidado()" disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5
+                   bg-teal-700 hover:bg-teal-600 text-white font-semibold
+                   rounded-xl transition text-sm
+                   disabled:opacity-40 disabled:cursor-not-allowed">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
+                       M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                            </svg>
+                            Descargar consolidado
+                        </button>
+                    </div>
                 </div>
 
             </div>
@@ -189,12 +222,15 @@ include __DIR__ . "/../../layout/navbar.php";
         selAsig.innerHTML = '<option value="">— Cargando... —</option>';
         btnAlumno.disabled = true;
         btnAsig.disabled = true;
+        document.getElementById('btn-pdf-consolidado').disabled = true;
 
         if (!cursoId) {
             selAlumno.innerHTML = '<option value="">— Primero selecciona un curso —</option>';
             selAsig.innerHTML = '<option value="">— Primero selecciona un curso —</option>';
             return;
         }
+
+        document.getElementById('btn-pdf-consolidado').disabled = false;
 
         // Cargar alumnos
         fetch(`index.php?action=api_alumnos_curso&curso_id=${cursoId}&anio_id=${anioVal}`)
@@ -255,6 +291,17 @@ include __DIR__ . "/../../layout/navbar.php";
         if (!cursoId || !asignaturaId) return;
         window.open(
             `index.php?action=reportes_notas_pdf_asignatura&curso_id=${cursoId}&anio_id=${anioVal}&asignatura_id=${asignaturaId}&semestre=${semestre}`,
+            '_blank'
+        );
+    }
+
+    function descargarPdfConsolidado() {
+        const cursoId = document.getElementById('sel-curso').value;
+        const anioVal = document.getElementById('sel-anio').value;
+        const semestre = document.getElementById('sel-semestre').value;
+        if (!cursoId) return;
+        window.open(
+            `index.php?action=reportes_notas_pdf_consolidado&curso_id=${cursoId}&anio_id=${anioVal}&semestre=${semestre}`,
             '_blank'
         );
     }

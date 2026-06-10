@@ -190,7 +190,7 @@ if (!empty($alumno['fechanac'] ?? $fechanac ?? '')) {
         <p style="margin-left:30px;">
             Se extiende el presente Certificado, para ser presentado por el interesado (a) en:
         </p>
-        <p class="presentado">Para los fines que estime conveniente.</p>
+        <p class="presentado"><?= htmlspecialchars($motivo ?? 'los fines que estime conveniente') ?></p>
     </div>
 
     <!-- ══ FIRMA ══ -->
