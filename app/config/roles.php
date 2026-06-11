@@ -241,6 +241,18 @@ return [
     'reporte_csv_general' => null,
     'reporte_pdf_curso' => null,
     'reporte_pdf_general' => null,
+    'reportes_notas_pdf_consolidado' => null,
+    'api_alumnos_curso' => null,
+    'reportes_notas' => null,
+    'reportes_notas_pdf_alumno' => null,
+    'reportes_notas_pdf_asignatura' => null,
+    'api_ranking' => null,
+    'reportes_notas_pdf_ranking' => null,
+    'reportes_asistencia' => null,
+    'api_asignaturas_curso' => null,
+    'notas_ajax_store' => null,
+    'notas_ajax_update' => null,
+    'notas_ajax_update_fecha' => null,
 
 
     //---Reportes de certificado alumno regular y demas ----

@@ -2,9 +2,9 @@
 require_once __DIR__ . "/../../../controllers/AuthController.php";
 $auth = new AuthController();
 $auth->checkAuth();
-$user = $_SESSION['user'];
-$nombre = $user['nombre'];
-$rol = $user['rol'];
+$user    = $_SESSION['user'];
+$nombre  = $user['nombre'];
+$rol     = $user['rol'];
 include __DIR__ . "/../../layout/header.php";
 include __DIR__ . "/../../layout/navbar.php";
 ?>
@@ -24,10 +24,11 @@ include __DIR__ . "/../../layout/navbar.php";
                         Exporta informes de notas por alumno o por asignatura
                     </p>
                 </div>
-                <a href="index.php?action=reportes" class="flex items-center gap-2 text-sm text-gray-400 hover:text-white
-                      border border-gray-600 hover:border-gray-400 px-4 py-2 rounded-lg transition">
+                <a href="index.php?action=reportes"
+                    class="flex items-center gap-2 text-sm text-gray-400 hover:text-white
+                           border border-gray-600 hover:border-gray-400 px-4 py-2 rounded-lg transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                     </svg>
                     Volver a reportes
                 </a>
@@ -42,11 +43,10 @@ include __DIR__ . "/../../layout/navbar.php";
                     Seleccionar curso y año
                 </h2>
                 <div class="flex flex-wrap items-end gap-4">
-
-                    <!-- Año -->
                     <div>
                         <label class="block text-xs text-gray-500 mb-1.5">Año académico</label>
-                        <select id="sel-anio" class="bg-gray-900 text-white text-sm border border-gray-600 rounded-lg
+                        <select id="sel-anio"
+                            class="bg-gray-900 text-white text-sm border border-gray-600 rounded-lg
                                    px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <?php foreach ($anios as $a): ?>
                                 <option value="<?= $a['id'] ?>" <?= $a['id'] == $anioId ? 'selected' : '' ?>>
@@ -55,11 +55,10 @@ include __DIR__ . "/../../layout/navbar.php";
                             <?php endforeach; ?>
                         </select>
                     </div>
-
-                    <!-- Curso -->
                     <div>
                         <label class="block text-xs text-gray-500 mb-1.5">Curso</label>
-                        <select id="sel-curso" class="bg-gray-900 text-white text-sm border border-gray-600 rounded-lg
+                        <select id="sel-curso"
+                            class="bg-gray-900 text-white text-sm border border-gray-600 rounded-lg
                                    px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[180px]">
                             <option value="">— Seleccionar curso —</option>
                             <?php foreach ($cursos as $c): ?>
@@ -69,28 +68,25 @@ include __DIR__ . "/../../layout/navbar.php";
                             <?php endforeach; ?>
                         </select>
                     </div>
-
-                    <!-- Semestre -->
                     <div>
                         <label class="block text-xs text-gray-500 mb-1.5">Semestre</label>
-                        <select id="sel-semestre" class="bg-gray-900 text-white text-sm border border-gray-600 rounded-lg
+                        <select id="sel-semestre"
+                            class="bg-gray-900 text-white text-sm border border-gray-600 rounded-lg
                                    px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="1">1° Semestre</option>
                             <option value="2">2° Semestre</option>
                         </select>
                     </div>
-
                 </div>
             </div>
 
-            <!-- ── DOS OPCIONES DE REPORTE ── -->
+            <!-- ── CARDS DE REPORTE (2 columnas, todas igual tamaño) ── -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
                 <!-- CARD 1: Informe individual del alumno -->
-                <div class="bg-gray-800 border border-blue-700/40 rounded-xl overflow-hidden">
+                <div class="bg-gray-800 border border-blue-700/40 rounded-xl overflow-hidden flex flex-col">
                     <div class="px-5 py-4 border-b border-gray-700/60 flex items-start gap-4">
-                        <div
-                            class="w-11 h-11 rounded-xl bg-blue-900/30 flex items-center justify-center text-xl flex-shrink-0">
+                        <div class="w-11 h-11 rounded-xl bg-blue-900/30 flex items-center justify-center text-xl flex-shrink-0">
                             👤
                         </div>
                         <div>
@@ -101,22 +97,25 @@ include __DIR__ . "/../../layout/navbar.php";
                             </p>
                         </div>
                     </div>
-                    <div class="px-5 py-4 space-y-3">
+                    <div class="px-5 py-4 space-y-3 flex-1 flex flex-col justify-between">
                         <div>
                             <label class="block text-xs text-gray-500 mb-1.5">Seleccionar alumno</label>
-                            <select id="sel-alumno" class="w-full bg-gray-900 text-white text-xs border border-gray-600 rounded-lg
+                            <select id="sel-alumno"
+                                class="w-full bg-gray-900 text-white text-xs border border-gray-600 rounded-lg
                                        px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">— Primero selecciona un curso —</option>
                             </select>
                         </div>
-                        <button id="btn-pdf-alumno" onclick="descargarPdfAlumno()" disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5
+                        <button id="btn-pdf-alumno" onclick="descargarPdfAlumno()" disabled
+                            class="w-full flex items-center justify-center gap-2 px-4 py-2.5
                                    bg-blue-700 hover:bg-blue-600 text-white font-semibold
                                    rounded-xl transition text-sm
                                    disabled:opacity-40 disabled:cursor-not-allowed">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
-                                     M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
+                                       M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
                             </svg>
                             Descargar informe
                         </button>
@@ -124,10 +123,9 @@ include __DIR__ . "/../../layout/navbar.php";
                 </div>
 
                 <!-- CARD 2: Notas por asignatura -->
-                <div class="bg-gray-800 border border-indigo-700/40 rounded-xl overflow-hidden">
+                <div class="bg-gray-800 border border-indigo-700/40 rounded-xl overflow-hidden flex flex-col">
                     <div class="px-5 py-4 border-b border-gray-700/60 flex items-start gap-4">
-                        <div
-                            class="w-11 h-11 rounded-xl bg-indigo-900/30 flex items-center justify-center text-xl flex-shrink-0">
+                        <div class="w-11 h-11 rounded-xl bg-indigo-900/30 flex items-center justify-center text-xl flex-shrink-0">
                             📚
                         </div>
                         <div>
@@ -138,33 +136,35 @@ include __DIR__ . "/../../layout/navbar.php";
                             </p>
                         </div>
                     </div>
-                    <div class="px-5 py-4 space-y-3">
+                    <div class="px-5 py-4 space-y-3 flex-1 flex flex-col justify-between">
                         <div>
                             <label class="block text-xs text-gray-500 mb-1.5">Seleccionar asignatura</label>
-                            <select id="sel-asignatura" class="w-full bg-gray-900 text-white text-xs border border-gray-600 rounded-lg
+                            <select id="sel-asignatura"
+                                class="w-full bg-gray-900 text-white text-xs border border-gray-600 rounded-lg
                                        px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                 <option value="">— Primero selecciona un curso —</option>
                             </select>
                         </div>
-                        <button id="btn-pdf-asignatura" onclick="descargarPdfAsignatura()" disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5
+                        <button id="btn-pdf-asignatura" onclick="descargarPdfAsignatura()" disabled
+                            class="w-full flex items-center justify-center gap-2 px-4 py-2.5
                                    bg-indigo-700 hover:bg-indigo-600 text-white font-semibold
                                    rounded-xl transition text-sm
                                    disabled:opacity-40 disabled:cursor-not-allowed">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
-                                     M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
+                                       M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
                             </svg>
                             Descargar notas del ramo
                         </button>
                     </div>
-
                 </div>
 
-                <div class="bg-gray-800 border border-teal-700/40 rounded-xl overflow-hidden">
+                <!-- CARD 3: Consolidado de notas -->
+                <div class="bg-gray-800 border border-teal-700/40 rounded-xl overflow-hidden flex flex-col">
                     <div class="px-5 py-4 border-b border-gray-700/60 flex items-start gap-4">
-                        <div
-                            class="w-11 h-11 rounded-xl bg-teal-900/30 flex items-center justify-center text-xl flex-shrink-0">
+                        <div class="w-11 h-11 rounded-xl bg-teal-900/30 flex items-center justify-center text-xl flex-shrink-0">
                             📊
                         </div>
                         <div>
@@ -175,136 +175,462 @@ include __DIR__ . "/../../layout/navbar.php";
                             </p>
                         </div>
                     </div>
-                    <div class="px-5 py-4 space-y-3">
+                    <div class="px-5 py-4 space-y-3 flex-1 flex flex-col justify-between">
                         <p class="text-xs text-gray-500">
                             Usa el curso, año y semestre seleccionados arriba.
                         </p>
-                        <button id="btn-pdf-consolidado" onclick="descargarPdfConsolidado()" disabled class="w-full flex items-center justify-center gap-2 px-4 py-2.5
-                   bg-teal-700 hover:bg-teal-600 text-white font-semibold
-                   rounded-xl transition text-sm
-                   disabled:opacity-40 disabled:cursor-not-allowed">
+                        <button id="btn-pdf-consolidado" onclick="descargarPdfConsolidado()" disabled
+                            class="w-full flex items-center justify-center gap-2 px-4 py-2.5
+                                   bg-teal-700 hover:bg-teal-600 text-white font-semibold
+                                   rounded-xl transition text-sm
+                                   disabled:opacity-40 disabled:cursor-not-allowed">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
-                       M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
+                                       M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
                             </svg>
                             Descargar consolidado
                         </button>
                     </div>
                 </div>
 
+                <!-- CARD 4: Ranking de Notas -->
+                <div class="bg-gray-800 border border-amber-700/40 rounded-xl overflow-hidden flex flex-col">
+                    <div class="px-5 py-4 border-b border-gray-700/60 flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-amber-900/30 flex items-center justify-center text-xl flex-shrink-0">
+                            🏆
+                        </div>
+                        <div>
+                            <h3 class="text-white font-bold text-sm">Ranking de Notas</h3>
+                            <p class="text-xs text-gray-400 mt-1 leading-relaxed">
+                                Todos los alumnos y asignaturas ordenados de menor a mayor promedio,
+                                agrupados por curso · Año <span id="ranking-anio-label">—</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-5 py-4 space-y-3 flex-1 flex flex-col justify-between">
+                        <p class="text-xs text-gray-500">
+                            El ranking incluye todos los cursos del año seleccionado automáticamente.
+                        </p>
+                        <div class="flex gap-3">
+                            <button onclick="abrirModalRanking('alumnos')"
+                                id="btn-ranking-alumnos" disabled
+                                class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                                       bg-amber-700 hover:bg-amber-600 text-white font-semibold
+                                       rounded-xl transition text-sm
+                                       disabled:opacity-40 disabled:cursor-not-allowed">
+                                👤 Alumnos
+                            </button>
+                            <button onclick="abrirModalRanking('asignaturas')"
+                                id="btn-ranking-asignaturas" disabled
+                                class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                                       bg-orange-700 hover:bg-orange-600 text-white font-semibold
+                                       rounded-xl transition text-sm
+                                       disabled:opacity-40 disabled:cursor-not-allowed">
+                                📚 Asignaturas
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- Aviso estado -->
             <div id="aviso-curso" class="hidden text-center py-6 text-gray-600 text-sm">
                 Selecciona un curso para cargar alumnos y asignaturas
             </div>
 
         </main>
     </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         MODAL RANKING
+         ══════════════════════════════════════════════════════════ -->
+    <div id="modal-ranking"
+        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div class="bg-gray-800 border border-gray-600 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl">
+
+            <!-- Header modal -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-700">
+                <div>
+                    <h2 class="text-white font-bold text-lg" id="modal-ranking-titulo">Ranking de Notas</h2>
+                    <p class="text-xs text-gray-400 mt-0.5" id="modal-ranking-subtitulo">—</p>
+                </div>
+                <button onclick="cerrarModalRanking()"
+                    class="text-gray-400 hover:text-white transition p-1 rounded-lg hover:bg-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Pestañas + filtro curso -->
+            <div class="flex items-center border-b border-gray-700 px-6">
+                <button id="tab-alumnos" onclick="cambiarTab('alumnos')"
+                    class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 transition border-amber-500 text-amber-400">
+                    👤 Por Alumno
+                </button>
+                <button id="tab-asignaturas" onclick="cambiarTab('asignaturas')"
+                    class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 transition border-transparent text-gray-400 hover:text-white">
+                    📚 Por Asignatura
+                </button>
+                <div id="filtro-curso-wrap" class="ml-auto flex items-center gap-2 py-2">
+                    <label class="text-xs text-gray-500 whitespace-nowrap">Filtrar curso:</label>
+                    <select id="sel-ranking-curso" onchange="filtrarCurso(this.value)"
+                        class="bg-gray-900 text-white text-xs border border-gray-600 rounded-lg
+                               px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        <option value="">— Todos —</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Contenido scrolleable -->
+            <div class="flex-1 overflow-y-auto px-6 py-4" id="modal-ranking-contenido">
+                <div class="flex items-center justify-center py-12 text-gray-500 text-sm">
+                    <svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 5.373 0 0 12h4z"></path>
+                    </svg>
+                    Cargando ranking...
+                </div>
+            </div>
+
+            <!-- Footer modal -->
+            <div class="px-6 py-4 border-t border-gray-700 flex justify-between items-center">
+                <p class="text-xs text-gray-500">
+                    Ordenado de menor a mayor promedio · Semestre <span id="modal-sem-label">—</span>
+                </p>
+                <button onclick="descargarPdfRanking()"
+                    class="flex items-center gap-2 px-5 py-2.5 bg-amber-700 hover:bg-amber-600
+                           text-white font-semibold rounded-xl transition text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
+                               M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                    </svg>
+                    Descargar PDF
+                </button>
+            </div>
+
+        </div>
+    </div>
+
 </body>
 
 <script>
-    const anioId = document.getElementById('sel-anio').value;
+// ── Estado global ─────────────────────────────────────────────
+let rankingTab  = 'alumnos';
+let rankingData = null;
 
-    // Al cambiar curso → cargar alumnos y asignaturas vía fetch
-    document.getElementById('sel-curso').addEventListener('change', function () {
-        const cursoId = this.value;
-        const anioVal = document.getElementById('sel-anio').value;
+// ── Año → recarga página ──────────────────────────────────────
+document.getElementById('sel-anio').addEventListener('change', function () {
+    window.location.href = 'index.php?action=reportes_notas&anio_id=' + this.value;
+});
 
-        const selAlumno = document.getElementById('sel-alumno');
-        const selAsig = document.getElementById('sel-asignatura');
-        const btnAlumno = document.getElementById('btn-pdf-alumno');
-        const btnAsig = document.getElementById('btn-pdf-asignatura');
+// ── Curso → carga alumnos y asignaturas ───────────────────────
+document.getElementById('sel-curso').addEventListener('change', function () {
+    const cursoId = this.value;
+    const anioVal = document.getElementById('sel-anio').value;
+    const selAlumno = document.getElementById('sel-alumno');
+    const selAsig   = document.getElementById('sel-asignatura');
 
-        // Reset
-        selAlumno.innerHTML = '<option value="">— Cargando... —</option>';
-        selAsig.innerHTML = '<option value="">— Cargando... —</option>';
-        btnAlumno.disabled = true;
-        btnAsig.disabled = true;
-        document.getElementById('btn-pdf-consolidado').disabled = true;
+    selAlumno.innerHTML = '<option value="">— Cargando... —</option>';
+    selAsig.innerHTML   = '<option value="">— Cargando... —</option>';
+    document.getElementById('btn-pdf-alumno').disabled      = true;
+    document.getElementById('btn-pdf-asignatura').disabled  = true;
+    document.getElementById('btn-pdf-consolidado').disabled = true;
 
-        if (!cursoId) {
-            selAlumno.innerHTML = '<option value="">— Primero selecciona un curso —</option>';
-            selAsig.innerHTML = '<option value="">— Primero selecciona un curso —</option>';
+    if (!cursoId) {
+        selAlumno.innerHTML = '<option value="">— Primero selecciona un curso —</option>';
+        selAsig.innerHTML   = '<option value="">— Primero selecciona un curso —</option>';
+        return;
+    }
+
+    document.getElementById('btn-pdf-consolidado').disabled = false;
+
+    fetch(`index.php?action=api_alumnos_curso&curso_id=${cursoId}&anio_id=${anioVal}`)
+        .then(r => r.json())
+        .then(data => {
+            selAlumno.innerHTML = '<option value="">— Seleccionar alumno —</option>';
+            data.forEach(a => {
+                const opt = document.createElement('option');
+                opt.value = a.matricula_id;
+                opt.textContent = a.apepat + ' ' + a.apemat + ', ' + a.nombre;
+                selAlumno.appendChild(opt);
+            });
+        })
+        .catch(() => { selAlumno.innerHTML = '<option value="">Error al cargar alumnos</option>'; });
+
+    fetch(`index.php?action=api_asignaturas_curso&curso_id=${cursoId}`)
+        .then(r => r.json())
+        .then(data => {
+            selAsig.innerHTML = '<option value="">— Seleccionar asignatura —</option>';
+            data.forEach(a => {
+                const opt = document.createElement('option');
+                opt.value = a.id;
+                opt.textContent = a.nombre;
+                selAsig.appendChild(opt);
+            });
+        })
+        .catch(() => { selAsig.innerHTML = '<option value="">Error al cargar asignaturas</option>'; });
+});
+
+// ── Habilitar botones al seleccionar ─────────────────────────
+document.getElementById('sel-alumno').addEventListener('change', function () {
+    document.getElementById('btn-pdf-alumno').disabled = !this.value;
+});
+document.getElementById('sel-asignatura').addEventListener('change', function () {
+    document.getElementById('btn-pdf-asignatura').disabled = !this.value;
+});
+
+// ── Ranking: habilitar al cargar (año siempre presente) ───────
+(function () {
+    const sel = document.getElementById('sel-anio');
+    document.getElementById('ranking-anio-label').textContent =
+        sel.options[sel.selectedIndex].text;
+    document.getElementById('btn-ranking-alumnos').disabled    = false;
+    document.getElementById('btn-ranking-asignaturas').disabled = false;
+})();
+
+// ── Descargas ─────────────────────────────────────────────────
+function descargarPdfAlumno() {
+    const id = document.getElementById('sel-alumno').value;
+    if (!id) return;
+    window.open('index.php?action=reportes_notas_pdf_alumno&matricula_id=' + id, '_blank');
+}
+function descargarPdfAsignatura() {
+    const cursoId     = document.getElementById('sel-curso').value;
+    const anioVal     = document.getElementById('sel-anio').value;
+    const asignaturaId = document.getElementById('sel-asignatura').value;
+    const semestre    = document.getElementById('sel-semestre').value;
+    if (!cursoId || !asignaturaId) return;
+    window.open(
+        `index.php?action=reportes_notas_pdf_asignatura&curso_id=${cursoId}&anio_id=${anioVal}&asignatura_id=${asignaturaId}&semestre=${semestre}`,
+        '_blank'
+    );
+}
+function descargarPdfConsolidado() {
+    const cursoId  = document.getElementById('sel-curso').value;
+    const anioVal  = document.getElementById('sel-anio').value;
+    const semestre = document.getElementById('sel-semestre').value;
+    if (!cursoId) return;
+    window.open(
+        `index.php?action=reportes_notas_pdf_consolidado&curso_id=${cursoId}&anio_id=${anioVal}&semestre=${semestre}`,
+        '_blank'
+    );
+}
+function descargarPdfRanking() {
+    const anioVal  = document.getElementById('sel-anio').value;
+    const semestre = document.getElementById('sel-semestre').value;
+    window.open(
+        `index.php?action=reportes_notas_pdf_ranking&anio_id=${anioVal}&semestre=${semestre}&tipo=${rankingTab}`,
+        '_blank'
+    );
+}
+
+// ════════════════════════════════════════════════════════════
+// MODAL RANKING
+// ════════════════════════════════════════════════════════════
+function abrirModalRanking(tab) {
+    rankingTab  = tab;
+    rankingData = null;
+    document.getElementById('modal-ranking').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    const anioVal  = document.getElementById('sel-anio').value;
+    const semestre = document.getElementById('sel-semestre').value;
+    const anioTxt  = document.getElementById('sel-anio').options[
+        document.getElementById('sel-anio').selectedIndex].text;
+
+    document.getElementById('modal-ranking-subtitulo').textContent =
+        `Año ${anioTxt} · ${semestre}° Semestre · Todos los cursos`;
+    document.getElementById('modal-sem-label').textContent = semestre + '°';
+    document.getElementById('sel-ranking-curso').innerHTML = '<option value="">— Todos —</option>';
+
+    activarTab(tab);
+    cargarRanking(anioVal, semestre);
+}
+
+function cerrarModalRanking() {
+    document.getElementById('modal-ranking').classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModalRanking(); });
+document.getElementById('modal-ranking').addEventListener('click', function (e) {
+    if (e.target === this) cerrarModalRanking();
+});
+
+function cambiarTab(tab) {
+    rankingTab = tab;
+    activarTab(tab);
+    if (rankingData) renderRanking(rankingData);
+}
+
+function activarTab(tab) {
+    ['alumnos', 'asignaturas'].forEach(t => {
+        const btn = document.getElementById('tab-' + t);
+        if (t === tab) {
+            btn.classList.add('border-amber-500', 'text-amber-400');
+            btn.classList.remove('border-transparent', 'text-gray-400');
+        } else {
+            btn.classList.remove('border-amber-500', 'text-amber-400');
+            btn.classList.add('border-transparent', 'text-gray-400');
+        }
+    });
+    document.getElementById('modal-ranking-titulo').textContent =
+        tab === 'alumnos' ? '🏆 Ranking de Alumnos por Promedio' : '📊 Ranking de Asignaturas por Promedio';
+    document.getElementById('filtro-curso-wrap').style.display =
+        tab === 'alumnos' ? 'flex' : 'none';
+}
+
+function cargarRanking(anioId, semestre) {
+    mostrarCargando();
+    fetch(`index.php?action=api_ranking&anio_id=${anioId}&semestre=${semestre}`)
+        .then(r => r.json())
+        .then(data => { rankingData = data; renderRanking(data); })
+        .catch(() => {
+            document.getElementById('modal-ranking-contenido').innerHTML =
+                '<p class="text-red-400 text-sm text-center py-8">Error al cargar el ranking.</p>';
+        });
+}
+
+function mostrarCargando() {
+    document.getElementById('modal-ranking-contenido').innerHTML = `
+        <div class="flex items-center justify-center py-12 text-gray-500 text-sm">
+            <svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 5.373 0 0 12h4z"></path>
+            </svg>
+            Cargando ranking...
+        </div>`;
+}
+
+function renderRanking(data) {
+    const contenido = document.getElementById('modal-ranking-contenido');
+
+    if (rankingTab === 'alumnos') {
+        const cursos    = data.alumnos ?? {};
+        const cursoKeys = Object.keys(cursos);
+
+        if (cursoKeys.length === 0) {
+            contenido.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">Sin datos para este año/semestre.</p>';
             return;
         }
 
-        document.getElementById('btn-pdf-consolidado').disabled = false;
+        // Poblar selector de cursos
+        const selCurso    = document.getElementById('sel-ranking-curso');
+        const cursoActual = selCurso.value;
+        selCurso.innerHTML = '<option value="">— Todos —</option>';
+        cursoKeys.forEach(nombre => {
+            const opt = document.createElement('option');
+            opt.value = nombre;
+            opt.textContent = nombre;
+            if (nombre === cursoActual) opt.selected = true;
+            selCurso.appendChild(opt);
+        });
 
-        // Cargar alumnos
-        fetch(`index.php?action=api_alumnos_curso&curso_id=${cursoId}&anio_id=${anioVal}`)
-            .then(r => r.json())
-            .then(data => {
-                selAlumno.innerHTML = '<option value="">— Seleccionar alumno —</option>';
-                data.forEach(a => {
-                    const opt = document.createElement('option');
-                    opt.value = a.matricula_id;
-                    opt.textContent = a.apepat + ' ' + a.apemat + ', ' + a.nombre;
-                    selAlumno.appendChild(opt);
-                });
-            })
-            .catch(() => {
-                selAlumno.innerHTML = '<option value="">Error al cargar alumnos</option>';
+        let html = '';
+        cursoKeys.forEach(cursoNombre => {
+            const alumnos = cursos[cursoNombre];
+            html += `<div class="mb-6" data-curso="${cursoNombre}">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-amber-900/40 text-amber-400 text-xs font-bold px-3 py-1 rounded-full border border-amber-700/40">
+                        ${cursoNombre}
+                    </span>
+                    <span class="text-gray-600 text-xs">${alumnos.length} alumno${alumnos.length !== 1 ? 's' : ''}</span>
+                </div>
+                <table class="w-full text-xs">
+                    <thead>
+                        <tr class="bg-gray-700/50">
+                            <th class="text-left px-3 py-2 text-gray-400 font-semibold">#</th>
+                            <th class="text-left px-3 py-2 text-gray-400 font-semibold">Alumno</th>
+                            <th class="text-center px-3 py-2 text-gray-400 font-semibold">Promedio</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            alumnos.forEach((a, i) => {
+                const prom    = a.promedio;
+                const color   = prom === null ? 'text-gray-500' : (prom >= 4.0 ? 'text-emerald-400' : 'text-red-400');
+                const promTxt = prom !== null ? parseFloat(prom).toFixed(1) : 'S/N';
+                // Verifica pendiente usando matricula_id
+                const tienePendiente = data.pendientes_alumnos?.[cursoNombre]?.includes(a.matricula_id);
+                const badgePendiente = tienePendiente
+                    ? `<span class="ml-2 text-[10px] font-normal bg-yellow-900/50 text-yellow-400
+                               border border-yellow-700/40 px-1.5 py-0.5 rounded-full">⚠ Faltan notas</span>`
+                    : '';
+
+                html += `
+                    <tr class="border-t border-gray-700/50 hover:bg-gray-700/20">
+                        <td class="px-3 py-2 text-gray-500 font-bold">${i + 1}</td>
+                        <td class="px-3 py-2 text-white font-semibold">
+                            ${a.apepat} ${a.apemat}
+                            <span class="text-gray-400 font-normal">${a.nombre}</span>
+                            ${badgePendiente}
+                        </td>
+                        <td class="px-3 py-2 text-center font-bold text-base ${color}">${promTxt}</td>
+                    </tr>`;
             });
 
-        // Cargar asignaturas
-        fetch(`index.php?action=api_asignaturas_curso&curso_id=${cursoId}`)
-            .then(r => r.json())
-            .then(data => {
-                selAsig.innerHTML = '<option value="">— Seleccionar asignatura —</option>';
-                data.forEach(a => {
-                    const opt = document.createElement('option');
-                    opt.value = a.id;
-                    opt.textContent = a.nombre;
-                    selAsig.appendChild(opt);
-                });
-            })
-            .catch(() => {
-                selAsig.innerHTML = '<option value="">Error al cargar asignaturas</option>';
-            });
-    });
+            html += `</tbody></table></div>`;
+        });
 
-    // Habilitar botones al seleccionar
-    document.getElementById('sel-alumno').addEventListener('change', function () {
-        document.getElementById('btn-pdf-alumno').disabled = !this.value;
-    });
-    document.getElementById('sel-asignatura').addEventListener('change', function () {
-        document.getElementById('btn-pdf-asignatura').disabled = !this.value;
-    });
-    document.getElementById('sel-anio').addEventListener('change', function () {
-        // Recargar la página con el nuevo año
-        window.location.href = 'index.php?action=reportes_notas&anio_id=' + this.value;
-    });
+        contenido.innerHTML = html;
+        if (cursoActual) filtrarCurso(cursoActual);
 
-    function descargarPdfAlumno() {
-        const matriculaId = document.getElementById('sel-alumno').value;
-        if (!matriculaId) return;
-        window.open('index.php?action=reportes_notas_pdf_alumno&matricula_id=' + matriculaId, '_blank');
+    } else {
+        const asigs = data.asignaturas ?? [];
+
+        if (asigs.length === 0) {
+            contenido.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">Sin datos para este año/semestre.</p>';
+            return;
+        }
+
+        let html = `
+        <table class="w-full text-xs">
+            <thead>
+                <tr class="bg-gray-700/50">
+                    <th class="text-left px-3 py-2 text-gray-400 font-semibold">#</th>
+                    <th class="text-left px-3 py-2 text-gray-400 font-semibold">Asignatura</th>
+                    <th class="text-left px-3 py-2 text-gray-400 font-semibold">Curso</th>
+                    <th class="text-center px-3 py-2 text-gray-400 font-semibold">Promedio</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        asigs.forEach((a, i) => {
+            const prom    = a.promedio;
+            const color   = prom === null ? 'text-gray-500' : (prom >= 4.0 ? 'text-emerald-400' : 'text-red-400');
+            const promTxt = prom !== null ? parseFloat(prom).toFixed(1) : 'S/N';
+            const faltanAlumnos = data.pendientes_asignaturas?.some(
+                p => p.asignatura === a.asignatura && p.curso === a.curso
+            );
+            const badgeAsig = faltanAlumnos
+                ? `<span class="ml-2 text-[10px] font-normal bg-yellow-900/50 text-yellow-400
+                           border border-yellow-700/40 px-1.5 py-0.5 rounded-full">⚠ Faltan alumnos con nota</span>`
+                : '';
+
+            html += `
+                <tr class="border-t border-gray-700/50 hover:bg-gray-700/20">
+                    <td class="px-3 py-2 text-gray-500 font-bold">${i + 1}</td>
+                    <td class="px-3 py-2 text-white font-semibold">${a.asignatura}${badgeAsig}</td>
+                    <td class="px-3 py-2 text-gray-400">${a.curso}</td>
+                    <td class="px-3 py-2 text-center font-bold text-base ${color}">${promTxt}</td>
+                </tr>`;
+        });
+
+        html += `</tbody></table>`;
+        contenido.innerHTML = html;
     }
+}
 
-    function descargarPdfAsignatura() {
-        const cursoId = document.getElementById('sel-curso').value;
-        const anioVal = document.getElementById('sel-anio').value;
-        const asignaturaId = document.getElementById('sel-asignatura').value;
-        const semestre = document.getElementById('sel-semestre').value;
-        if (!cursoId || !asignaturaId) return;
-        window.open(
-            `index.php?action=reportes_notas_pdf_asignatura&curso_id=${cursoId}&anio_id=${anioVal}&asignatura_id=${asignaturaId}&semestre=${semestre}`,
-            '_blank'
-        );
-    }
-
-    function descargarPdfConsolidado() {
-        const cursoId = document.getElementById('sel-curso').value;
-        const anioVal = document.getElementById('sel-anio').value;
-        const semestre = document.getElementById('sel-semestre').value;
-        if (!cursoId) return;
-        window.open(
-            `index.php?action=reportes_notas_pdf_consolidado&curso_id=${cursoId}&anio_id=${anioVal}&semestre=${semestre}`,
-            '_blank'
-        );
-    }
+function filtrarCurso(cursoNombre) {
+    document.querySelectorAll('#modal-ranking-contenido [data-curso]').forEach(el => {
+        el.style.display = (!cursoNombre || el.dataset.curso === cursoNombre) ? '' : 'none';
+    });
+}
 </script>
 
 <?php include __DIR__ . "/../../layout/footer.php"; ?>

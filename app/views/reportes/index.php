@@ -57,7 +57,7 @@ $modulos = [
     ],
     [
         'titulo' => 'Reporte Alumnos Pie',
-        'descripcion' => 'Exporta filtro de Alumnos ingresados por PIE',
+        'descripcion' => 'Exporta filtro de Alumnos ingresados a PIE',
         'icono' => '👦',
         'color' => 'cyan',
         'url' => '',

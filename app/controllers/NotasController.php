@@ -241,8 +241,10 @@ class NotasController
             $cursos = $cursoDocenteModel->getAllConDocente($anioId);
             $esTodos = true;
         } else {
-            // Profesor jefe: solo sus cursos
             $cursos = $cursoDocenteModel->getCursosByDocente($userId, $anioId);
+            if (empty($cursos)) {
+                $cursos = $cursoDocenteModel->getAllConDocente($anioId);
+            }
             $esTodos = false;
         }
 

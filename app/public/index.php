@@ -856,6 +856,14 @@ switch ($action) {
         (new ReporteNotasController())->pdfAsignatura();
         break;
 
+    case 'api_ranking':
+        $reporteNotasController->apiRanking();
+        break;
+
+    case 'reportes_notas_pdf_ranking':
+        $reporteNotasController->pdfRanking();
+        break;
+
     // ── APIs JSON ────────────────────────────────────────────
     case 'api_alumnos_curso':
         require_once __DIR__ . '/../models/Nota.php';

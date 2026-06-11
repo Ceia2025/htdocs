@@ -7,14 +7,14 @@
 
 body {
     font-family: DejaVu Sans, sans-serif;
-    font-size: 12px;
+    font-size: 10px;
     color: #1e293b;
     margin: 0;
     padding: 0;
 }
 
 .page {
-    margin: 22px 30px 90px 30px;
+    margin: 15px 18px 75px 18px;
 }
 
 /* ── ENCABEZADO 3 LOGOS ── */
@@ -80,7 +80,7 @@ body {
 table.nt {
     width: 100%;
     border-collapse: collapse;
-    font-size: 9px;
+    font-size: 6px;
     table-layout: fixed;
 }
 
@@ -90,8 +90,11 @@ table.nt thead tr.asig-row th {
     color: #fff;
     padding: 3px 1px;
     border: 1px solid #1e40af;
-    font-size: 9px;
+    font-size: 6px;
     text-align: center;
+
+    word-wrap: break-word;  
+    overflow-wrap: break-word; 
 }
 table.nt thead tr.asig-row th.th-al {
     text-align: left;
@@ -101,7 +104,7 @@ table.nt thead tr.asig-row th.th-al {
 table.nt tbody tr:nth-child(even) td { background: #f8fafc; }
 table.nt tbody td {
     border: 1px solid #e2e8f0;
-    padding: 3px 2px;
+    padding: 2px 1px;
     text-align: center;
     vertical-align: middle;
 }
@@ -222,8 +225,8 @@ $promCursoGeneral = count($vals) > 0 ? round(array_sum($vals) / count($vals), 1)
 
 // Ancho de columna por asignatura (distribución equitativa)
 $numAsig    = count($asignaturas);
-$anchoAlumno = 130; // px fijo para columna nombre
-$anchoProm   = 28;  // px fijo columna prom. alumno
+$anchoAlumno = 85; // px fijo para columna nombre
+$anchoProm   = 30;  // px fijo columna prom. alumno
 // Las asignaturas reparten el resto — dompdf ignora % con table-layout:fixed,
 // así que lo ponemos inline en cada <th>
 ?>
