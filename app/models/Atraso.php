@@ -726,4 +726,18 @@ class Atraso
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /* ==========================================
+   OBTENER ANIO_ID SEGÚN UNA FECHA
+========================================== */
+    public function getAnioIdPorFecha(string $fecha): ?int
+    {
+        $anio = (int) date('Y', strtotime($fecha));
+        $sql = "SELECT id FROM anios2 WHERE anio = :anio LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':anio' => $anio]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row['id'] ?? null;
+    }
+
+
 }
