@@ -40,23 +40,38 @@ class CertificadoAlumnoRegularController
     public function pdfNormal(): void
     {
         $alumno_id = (int) ($_GET['alumno_id'] ?? 0);
-        if (!$alumno_id) { http_response_code(400); die('ID no válido'); }
+        if (!$alumno_id) {
+            http_response_code(400);
+            die('ID no válido');
+        }
 
         $data = $this->model->getDatosAlumno($alumno_id);
-        if (!$data) { http_response_code(404); die('Alumno no encontrado'); }
+        if (!$data) {
+            http_response_code(404);
+            die('Alumno no encontrado');
+        }
+
+        $data['motivo'] = trim($_GET['motivo'] ?? '') ?: 'los fines que estime conveniente';
 
         $html = $this->renderTemplate('cert_normal', $data);
         $this->streamPdf($html, "CertAlumnoRegular_{$data['run']}.pdf");
     }
 
-    // ─── Genera PDF: Certificado Con Asistencia ────────────────────────────
     public function pdfConAsistencia(): void
     {
         $alumno_id = (int) ($_GET['alumno_id'] ?? 0);
-        if (!$alumno_id) { http_response_code(400); die('ID no válido'); }
+        if (!$alumno_id) {
+            http_response_code(400);
+            die('ID no válido');
+        }
 
         $data = $this->model->getDatosAlumno($alumno_id);
-        if (!$data) { http_response_code(404); die('Alumno no encontrado'); }
+        if (!$data) {
+            http_response_code(404);
+            die('Alumno no encontrado');
+        }
+
+        $data['motivo'] = trim($_GET['motivo'] ?? '') ?: 'los fines que estime conveniente';
 
         $data['asistencia_mensual'] = $this->model->getAsistenciaMensual(
             (int) $data['matricula_id']

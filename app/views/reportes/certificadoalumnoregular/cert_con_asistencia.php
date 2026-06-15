@@ -395,7 +395,7 @@
         <div class="fecha-vb">
             <p><?= ucfirst($fechaTexto) ?></p>
             <p class="vb">
-                Vº Bº: <img src="<?= $timbre ?>" alt="VB"> JJACH/MACA/PRPC/rlrd
+                V° B°:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JJACH/MACA/PRPC/rlrd
             </p>
         </div>
 

@@ -91,11 +91,11 @@ return [
     'matricula_store' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
     'matricula_edit' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
     'matricula_update' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
-    'matricula_delete' => [ROL_ADMINISTRADOR],
-    'matricula_numero_lista' => [ROL_ADMINISTRADOR],
-    'matricula_guardar_lista' => [ROL_ADMINISTRADOR],
-    'matricula_retirar' => [ROL_ADMINISTRADOR],
-    'matricula_reintegrar' => [ROL_ADMINISTRADOR],
+    'matricula_delete' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
+    'matricula_numero_lista' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
+    'matricula_guardar_lista' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
+    'matricula_retirar' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
+    'matricula_reintegrar' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
 
     // ── ANOTACIONES ──
     'anotaciones' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION, ROL_INSPECTOR_GENERAL, ROL_ASISTENTE_SOCIAL, ROL_ANOTACIONES, ROL_DOCENTE],
@@ -236,6 +236,7 @@ return [
     'notas_delete' => [ROL_ADMINISTRADOR, ROL_UTP],
 
     // ── REPORTES ──
+    /*
     'reportes' => null,  // todos los autenticados por ahora
     'reporte_csv_curso' => null,
     'reporte_csv_general' => null,
@@ -252,7 +253,7 @@ return [
     'api_asignaturas_curso' => null,
     'notas_ajax_store' => null,
     'notas_ajax_update' => null,
-    'notas_ajax_update_fecha' => null,
+    'notas_ajax_update_fecha' => null,*/
 
 
     //---Reportes de certificado alumno regular y demas ----

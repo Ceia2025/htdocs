@@ -53,10 +53,10 @@ class Nota
     public function getByMatriculaAndSemestre($matricula_id, $semestre): array
     {
         $sql = "SELECT n.*, a.nombre AS asignatura_nombre
-                FROM {$this->table} n
-                JOIN asignaturas2 a ON n.asignatura_id = a.id
-                WHERE n.matricula_id = :matricula_id AND n.semestre = :semestre
-                ORDER BY a.nombre, n.fecha DESC";
+            FROM {$this->table} n
+            JOIN asignaturas2 a ON n.asignatura_id = a.id
+            WHERE n.matricula_id = :matricula_id AND n.semestre = :semestre
+            ORDER BY a.nombre, n.fecha ASC, n.id ASC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':matricula_id' => $matricula_id, ':semestre' => $semestre]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -166,22 +166,24 @@ class Nota
         int $semestre
     ): array {
         $sql = "SELECT n.id, n.nota, n.fecha, n.semestre,
-                   n.matricula_id,
-                   al.nombre, al.apepat, al.apemat,
-                   m.numero_lista,
-                   m.fecha_retiro
-            FROM {$this->table} n
-            JOIN matriculas2 m  ON m.id = n.matricula_id
-            JOIN alumnos2 al    ON al.id = m.alumno_id
-            WHERE m.curso_id      = :curso_id
-            AND   m.anio_id       = :anio_id
-            AND   n.asignatura_id = :asignatura_id
-            AND   n.semestre      = :semestre
-            ORDER BY 
-                CASE WHEN m.numero_lista IS NULL THEN 1 ELSE 0 END,
-                m.numero_lista ASC,
-                al.apepat ASC,
-                al.apemat ASC";
+               n.matricula_id,
+               al.nombre, al.apepat, al.apemat,
+               m.numero_lista,
+               m.fecha_retiro
+        FROM {$this->table} n
+        JOIN matriculas2 m  ON m.id = n.matricula_id
+        JOIN alumnos2 al    ON al.id = m.alumno_id
+        WHERE m.curso_id      = :curso_id
+        AND   m.anio_id       = :anio_id
+        AND   n.asignatura_id = :asignatura_id
+        AND   n.semestre      = :semestre
+        ORDER BY 
+            CASE WHEN m.numero_lista IS NULL THEN 1 ELSE 0 END,
+            m.numero_lista ASC,
+            al.apepat ASC,
+            al.apemat ASC,
+            n.fecha ASC,
+            n.id ASC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([

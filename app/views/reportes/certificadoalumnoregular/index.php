@@ -102,21 +102,26 @@ include __DIR__ . "/../../layout/navbar.php";
                 </div>
 
                 <!-- Botones de descarga -->
-                <div class="px-6 py-5 flex flex-col sm:flex-row gap-3">
+                <!-- Motivo + Botones de descarga -->
+                <div class="px-6 py-5 border-t border-gray-700/60 flex flex-col gap-4">
 
-                    <div class="mx-auto max-w-4xl px-4 py-8 sm:px-6">
-                        <input id="input-motivo" ... placeholder="Escriba el motivo..." />
-                        <input
-                            class="bg-zinc-200 text-zinc-600  ring-1 ring-zinc-400 focus:ring-2 focus:ring-cyan-400 outline-none duration-300
-                        placeholder:text-zinc-600 placeholder:opacity-50 rounded-xl px-4 py-1 shadow-md focus:shadow-lg focus:shadow-cyan-400"
-                            autocomplete="off" placeholder="Escriba el motivo..." name="text" type="text" />
+                    <div>
+                        <label for="input-motivo" class="block text-xs text-gray-500 uppercase tracking-wide mb-1.5">
+                            Motivo del certificado <span class="text-gray-600">(opcional)</span>
+                        </label>
+                        <input id="input-motivo" type="text" autocomplete="off"
+                            placeholder="Ej: ser presentado ante institución bancaria" class="w-full bg-gray-700 border border-gray-600 text-white placeholder-gray-400
+                   rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500
+                   focus:ring-1 focus:ring-indigo-500 transition" />
+                        <p class="text-xs text-gray-500 mt-1.5">
+                            Si se deja vacío, se usará "los fines que estime conveniente".
+                        </p>
                     </div>
 
-
-                    <div class='mx-auto max-w-4xl px-4 py-8 sm:px-6'>
+                    <div class="flex flex-col sm:flex-row gap-3">
                         <a id="btn-normal" href="#" target="_blank" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3
-                          bg-indigo-700 hover:bg-indigo-600 text-white font-semibold
-                          rounded-xl shadow transition text-sm">
+          bg-indigo-700 hover:bg-indigo-600 text-white font-semibold
+          rounded-xl shadow transition text-sm">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
@@ -125,8 +130,8 @@ include __DIR__ . "/../../layout/navbar.php";
                         </a>
 
                         <a id="btn-asistencia" href="#" target="_blank" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3
-                          bg-emerald-700 hover:bg-emerald-600 text-white font-semibold
-                          rounded-xl shadow transition text-sm">
+          bg-emerald-700 hover:bg-emerald-600 text-white font-semibold
+          rounded-xl shadow transition text-sm">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 17v-2m3 2v-4m3 4v-6M9 7h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
@@ -134,7 +139,6 @@ include __DIR__ . "/../../layout/navbar.php";
                             Certificado con Asistencia
                         </a>
                     </div>
-
 
                 </div>
             </div>
