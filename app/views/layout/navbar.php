@@ -1,15 +1,15 @@
 <!-- NAVBAR COMPLETO -->
-<nav class="relative z-40 bg-gray-900/70 backdrop-blur-md shadow-lg border-b border-gray-700/30">
+<nav class="navbar-shell relative z-40 shadow-lg">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between w-full">
 
             <!-- LOGO HAMBURGUESA -->
             <div class="flex items-center gap-3">
-                <img src="img/logo.jpg" alt="Logo CEIA" class="size-12 rounded-full shadow-md" />
+                <img src="img/logo.jpg" alt="Logo CEIA" class="size-12 rounded-full shadow-md ring-2 ring-amarillo/40" />
 
                 <!-- Botón móvil -->
                 <button id="menu-toggle"
-                    class="md:hidden inline-flex items-center justify-center p-3 rounded-lg text-gray-200 hover:text-white hover:bg-gray-700/60 transition ml-auto">
+                    class="icon-btn md:hidden inline-flex items-center justify-center p-3 rounded-lg transition ml-auto">
 
                     <svg id="menu-icon" class="size-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         stroke-width="2.2">
@@ -25,109 +25,124 @@
             <div class="hidden md:flex items-center space-x-6">
 
                 <a href="index.php?action=dashboard"
-                    class="text-gray-300 hover:text-white hover:bg-purple-600/20 px-3 py-2 rounded-lg transition">
+                    class="nav-link px-3 py-2 rounded-lg transition">
                     Inicio
                 </a>
 
                 <!-- USUARIOS -->
                 <div class="relative">
-                    <button class="nav-btn flex items-center gap-2 text-gray-300 hover:text-white hover:bg-purple-600/20 px-3 py-2 rounded-lg transition"
+                    <button class="nav-btn nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition"
                         data-menu="usuarios">
                         Usuarios
-                        <svg class="w-5 h-5 text-gray-400 transition" fill="none" stroke="currentColor"
+                        <svg class="w-5 h-5 opacity-70 transition" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round"
                                 stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
                     </button>
 
                     <div id="menu-usuarios"
-                        class="dropdown hidden absolute left-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-lg origin-top">
+                        class="dropdown dropdown-panel hidden absolute left-0 mt-2 w-48 rounded-lg origin-top">
                         <a href="index.php?action=users"
-                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Lista de usuarios</a>
+                            class="dropdown-link block px-4 py-2">Lista de usuarios</a>
                         <a href="index.php?action=roles"
-                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Roles</a>
+                            class="dropdown-link block px-4 py-2">Roles</a>
                     </div>
                 </div>
 
                 <!-- CURSOS -->
                 <div class="relative">
-                    <button class="nav-btn flex items-center gap-2 text-gray-300 hover:text-white hover:bg-purple-600/20 px-3 py-2 rounded-lg transition"
+                    <button class="nav-btn nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition"
                         data-menu="cursos">
                         Cursos
-                        <svg class="w-5 h-5 text-gray-400 transition" fill="none" stroke="currentColor"
+                        <svg class="w-5 h-5 opacity-70 transition" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round"
                                 stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
                     </button>
 
                     <div id="menu-cursos"
-                        class="dropdown hidden absolute left-0 mt-2 w-56 bg-gray-800 border border-gray-700 rounded-lg shadow-lg origin-top">
+                        class="dropdown dropdown-panel hidden absolute left-0 mt-2 w-56 rounded-lg origin-top">
                         <a href="index.php?action=cursos"
-                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Listado Cursos</a>
+                            class="dropdown-link block px-4 py-2">Listado Cursos</a>
                         <a href="index.php?action=asignaturas"
-                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Asignaturas</a>
+                            class="dropdown-link block px-4 py-2">Asignaturas</a>
                         <a href="index.php?action=curso_asignaturas"
-                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Cursos y Asignaturas</a>
+                            class="dropdown-link block px-4 py-2">Cursos y Asignaturas</a>
                     </div>
                 </div>
 
                 <!-- INVENTARIO -->
                 <div class="relative">
-                    <button class="nav-btn flex items-center gap-2 text-gray-300 hover:text-white hover:bg-purple-600/20 px-3 py-2 rounded-lg transition"
+                    <button class="nav-btn nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition"
                         data-menu="inventario">
                         Inventario
-                        <svg class="w-5 h-5 text-gray-400 transition" fill="none" stroke="currentColor"
+                        <svg class="w-5 h-5 opacity-70 transition" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round"
                                 stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
                     </button>
 
                     <div id="menu-inventario"
-                        class="dropdown hidden absolute left-0 mt-2 w-56 bg-gray-800 border border-gray-700 rounded-lg shadow-lg origin-top">
+                        class="dropdown dropdown-panel hidden absolute left-0 mt-2 w-56 rounded-lg origin-top">
                         <a href="index.php?action=inventario_index"
-                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Inventario</a>
+                            class="dropdown-link block px-4 py-2">Inventario</a>
                         <a href="index.php?action=procedencias"
-                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Procedencia</a>
+                            class="dropdown-link block px-4 py-2">Procedencia</a>
                         <a href="index.php?action=categorizaciones"
-                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Individualización</a>
+                            class="dropdown-link block px-4 py-2">Individualización</a>
                     </div>
                 </div>
 
                 <!-- ALUMNOS -->
                 <div class="relative">
-                    <button class="nav-btn flex items-center gap-2 text-gray-300 hover:text-white hover:bg-purple-600/20 px-3 py-2 rounded-lg transition"
+                    <button class="nav-btn nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition"
                         data-menu="alumnos">
                         Alumnos
-                        <svg class="w-5 h-5 text-gray-400 transition" fill="none" stroke="currentColor"
+                        <svg class="w-5 h-5 opacity-70 transition" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round"
                                 stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
                     </button>
 
                     <div id="menu-alumnos"
-                        class="dropdown hidden absolute left-0 mt-2 w-56 bg-gray-800 border border-gray-700 rounded-lg shadow-lg origin-top">
+                        class="dropdown dropdown-panel hidden absolute left-0 mt-2 w-56 rounded-lg origin-top">
                         <a href="index.php?action=listado_por_anio"
-                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Listado alumnos</a>
+                            class="dropdown-link block px-4 py-2">Listado alumnos</a>
                         <a href="index.php?action=alumnos"
-                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Ficha Escolar</a>
+                            class="dropdown-link block px-4 py-2">Ficha Escolar</a>
                         <a href="index.php?action=alum_emergencia"
-                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Datos Emergencia</a>
+                            class="dropdown-link block px-4 py-2">Datos Emergencia</a>
                         <a href="index.php?action=antecedente_escolar"
-                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Antecedentes Escolares</a>
+                            class="dropdown-link block px-4 py-2">Antecedentes Escolares</a>
                         <a href="index.php?action=antecedentefamiliar"
-                            class="block px-4 py-2 text-gray-300 hover:bg-purple-600/20 hover:text-white">Antecedentes Familiares</a>
+                            class="dropdown-link block px-4 py-2">Antecedentes Familiares</a>
                     </div>
                 </div>
 
 
                 <div class="relative">
-                    <a href="https://administrativo2026ceia.vercel.app/#home" style="Color: white;">Gestión Administrativa</a>
-
+                    <a href="https://administrativo2026ceia.vercel.app/#home" target="_blank" rel="noopener noreferrer"
+                        class="nav-link px-3 py-2 rounded-lg transition inline-block">Gestión Administrativa</a>
                 </div>
 
             </div>
 
             <!-- USUARIO -->
             <div class="hidden md:flex items-center space-x-3">
-                <button class="p-1 text-gray-300 hover:text-white hover:bg-purple-600/20 rounded-full transition">
+
+                <!-- Toggle tema claro/oscuro -->
+                <button data-theme-toggle class="theme-toggle-btn" title="Cambiar tema" aria-label="Cambiar tema">
+                    <svg class="sun-icon dark:hidden" width="18" height="18" fill="none" stroke="currentColor"
+                        stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 3v1.5M12 19.5V21M4.22 4.22l1.06 1.06M18.72 18.72l1.06 1.06M3 12h1.5M19.5 12H21M4.22 19.78l1.06-1.06M18.72 5.28l1.06-1.06M12 7.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9z" />
+                    </svg>
+                    <svg class="moon-icon hidden dark:block" width="18" height="18" fill="none" stroke="currentColor"
+                        stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                    </svg>
+                </button>
+
+                <button class="icon-btn p-1 rounded-full transition">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                        class="size-6 text-gray-300">
+                        class="size-6">
                         <path
                             d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
                             stroke-linecap="round" stroke-linejoin="round" />
@@ -135,81 +150,101 @@
                 </button>
 
                 <div class="text-right">
-                    <span class="text-white font-semibold block capitalize"><?= htmlspecialchars($nombre) ?></span>
+                    <span class="text-strong font-semibold block capitalize"><?= htmlspecialchars($nombre) ?></span>
                     <a href="index.php?action=logout" class="text-red-400 hover:text-red-500 text-sm">Cerrar sesión</a>
                 </div>
             </div>
-            
+
         </div>
     </div>
 
     <!-- ============ MENÚ MÓVIL ============ -->
     <div id="mobile-menu"
-        class="md:hidden hidden opacity-0 transform -translate-y-5 transition-all duration-300 bg-gray-900/95 border-t border-gray-700/40 backdrop-blur-md">
+        class="md:hidden hidden opacity-0 transform -translate-y-5 transition-all duration-300 mobile-menu-shell">
 
         <div class="px-4 py-4 space-y-3">
 
             <a href="index.php?action=dashboard"
-                class="block px-3 py-2 rounded-md text-gray-200 hover:bg-purple-600/20 transition">Dashboard</a>
+                class="nav-link block px-3 py-2 rounded-md transition">Dashboard</a>
 
             <!-- USUARIOS -->
-            <button class="mobile-toggle flex justify-between items-center w-full px-3 py-2 rounded-md text-gray-200 hover:bg-purple-600/20 transition"
+            <button class="mobile-toggle nav-link flex justify-between items-center w-full px-3 py-2 rounded-md transition"
                 data-target="mobile-users">
                 Usuarios
                 <svg class="w-5 h-5" fill="none" stroke="currentColor"><path stroke-linecap="round"
                         stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
             </button>
             <div id="mobile-users" class="hidden pl-6 space-y-2">
-                <a href="index.php?action=users" class="block text-gray-300 py-1">Lista</a>
-                <a href="index.php?action=roles" class="block text-gray-300 py-1">Roles</a>
+                <a href="index.php?action=users" class="dropdown-link block py-1 px-2 rounded-md">Lista</a>
+                <a href="index.php?action=roles" class="dropdown-link block py-1 px-2 rounded-md">Roles</a>
             </div>
 
             <!-- CURSOS -->
-            <button class="mobile-toggle flex justify-between items-center w-full px-3 py-2 rounded-md text-gray-200 hover:bg-purple-600/20 transition"
+            <button class="mobile-toggle nav-link flex justify-between items-center w-full px-3 py-2 rounded-md transition"
                 data-target="mobile-cursos">
                 Cursos
                 <svg class="w-5 h-5" fill="none" stroke="currentColor"><path stroke-linecap="round"
                         stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
             </button>
             <div id="mobile-cursos" class="hidden pl-6 space-y-2">
-                <a href="index.php?action=cursos" class="block text-gray-300 py-1">Listado</a>
-                <a href="index.php?action=asignaturas" class="block text-gray-300 py-1">Asignaturas</a>
-                <a href="index.php?action=curso_asignaturas" class="block text-gray-300 py-1">Curso y Asignatura</a>
+                <a href="index.php?action=cursos" class="dropdown-link block py-1 px-2 rounded-md">Listado</a>
+                <a href="index.php?action=asignaturas" class="dropdown-link block py-1 px-2 rounded-md">Asignaturas</a>
+                <a href="index.php?action=curso_asignaturas" class="dropdown-link block py-1 px-2 rounded-md">Curso y Asignatura</a>
             </div>
 
             <!-- INVENTARIO -->
-            <button class="mobile-toggle flex justify-between items-center w-full px-3 py-2 rounded-md text-gray-200 hover:bg-purple-600/20 transition"
+            <button class="mobile-toggle nav-link flex justify-between items-center w-full px-3 py-2 rounded-md transition"
                 data-target="mobile-inventario">
                 Inventario
                 <svg class="w-5 h-5" fill="none" stroke="currentColor"><path stroke-linecap="round"
                         stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
             </button>
             <div id="mobile-inventario" class="hidden pl-6 space-y-2">
-                <a href="index.php?action=inventario_index" class="block text-gray-300 py-1">Inventario</a>
-                <a href="index.php?action=procedencias" class="block text-gray-300 py-1">Procedencia</a>
-                <a href="index.php?action=categorizaciones" class="block text-gray-300 py-1">Individualización</a>
+                <a href="index.php?action=inventario_index" class="dropdown-link block py-1 px-2 rounded-md">Inventario</a>
+                <a href="index.php?action=procedencias" class="dropdown-link block py-1 px-2 rounded-md">Procedencia</a>
+                <a href="index.php?action=categorizaciones" class="dropdown-link block py-1 px-2 rounded-md">Individualización</a>
             </div>
 
             <!-- ALUMNOS -->
-            <button class="mobile-toggle flex justify-between items-center w-full px-3 py-2 rounded-md text-gray-200 hover:bg-purple-600/20 transition"
+            <button class="mobile-toggle nav-link flex justify-between items-center w-full px-3 py-2 rounded-md transition"
                 data-target="mobile-alumnos">
                 Alumnos
                 <svg class="w-5 h-5" fill="none" stroke="currentColor"><path stroke-linecap="round"
                         stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
             </button>
             <div id="mobile-alumnos" class="hidden pl-6 space-y-2">
-                <a href="index.php?action=listado_por_anio" class="block text-gray-300 py-1">Listado</a>
-                <a href="index.php?action=alumnos" class="block text-gray-300 py-1">Ficha Escolar</a>
-                <a href="index.php?action=alum_emergencia" class="block text-gray-300 py-1">Emergencia</a>
-                <a href="index.php?action=antecedente_escolar" class="block text-gray-300 py-1">Escolares</a>
-                <a href="index.php?action=antecedentefamiliar" class="block text-gray-300 py-1">Familiares</a>
+                <a href="index.php?action=listado_por_anio" class="dropdown-link block py-1 px-2 rounded-md">Listado</a>
+                <a href="index.php?action=alumnos" class="dropdown-link block py-1 px-2 rounded-md">Ficha Escolar</a>
+                <a href="index.php?action=alum_emergencia" class="dropdown-link block py-1 px-2 rounded-md">Emergencia</a>
+                <a href="index.php?action=antecedente_escolar" class="dropdown-link block py-1 px-2 rounded-md">Escolares</a>
+                <a href="index.php?action=antecedentefamiliar" class="dropdown-link block py-1 px-2 rounded-md">Familiares</a>
             </div>
 
-            <hr class="border-gray-700 my-2">
+            <a href="https://administrativo2026ceia.vercel.app/#home" target="_blank" rel="noopener noreferrer"
+                class="nav-link block px-3 py-2 rounded-md transition">Gestión Administrativa</a>
+
+            <!-- Toggle tema claro/oscuro -->
+            <div class="flex items-center justify-between px-3 py-2">
+                <span class="text-soft text-sm">Tema</span>
+                <button data-theme-toggle class="theme-toggle-btn" title="Cambiar tema" aria-label="Cambiar tema">
+                    <svg class="sun-icon dark:hidden" width="18" height="18" fill="none" stroke="currentColor"
+                        stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 3v1.5M12 19.5V21M4.22 4.22l1.06 1.06M18.72 18.72l1.06 1.06M3 12h1.5M19.5 12H21M4.22 19.78l1.06-1.06M18.72 5.28l1.06-1.06M12 7.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9z" />
+                    </svg>
+                    <svg class="moon-icon hidden dark:block" width="18" height="18" fill="none" stroke="currentColor"
+                        stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                    </svg>
+                </button>
+            </div>
+
+            <hr class="divider-soft my-2">
 
             <!-- Usuario -->
             <div class="pt-2">
-                <p class="text-gray-300 font-semibold capitalize"><?= htmlspecialchars($nombre) ?></p>
+                <p class="text-soft font-semibold capitalize"><?= htmlspecialchars($nombre) ?></p>
                 <a href="index.php?action=logout" class="text-red-400 hover:text-red-500 text-sm">Cerrar sesión</a>
             </div>
         </div>
@@ -276,6 +311,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const id = btn.dataset.target;
             const box = document.getElementById(id);
             box.classList.toggle("hidden");
+        });
+    });
+
+
+    // TEMA CLARO / OSCURO (persistente vía localStorage)
+    document.querySelectorAll("[data-theme-toggle]").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const isDark = !document.documentElement.classList.contains("dark");
+            document.documentElement.classList.toggle("dark", isDark);
+            localStorage.setItem("saat-theme", isDark ? "dark" : "light");
         });
     });
 

@@ -19,45 +19,15 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
 
 <!-- Flash messages -->
 <?php if ($flashSuccess): ?>
-    <div id="toast-flash-ok"
-         class="fixed top-10 right-10 z-50 flex items-center gap-3 bg-gray-900 border border-green-600
-                text-green-300 rounded-2xl px-6 py-4 shadow-2xl shadow-green-900/40 max-w-sm">
-        <span class="text-xl">✅</span>
-        <p class="text-sm font-medium"><?= htmlspecialchars($flashSuccess) ?></p>
-        <button onclick="this.parentElement.remove()" class="ml-auto text-gray-500 hover:text-white">✕</button>
-    </div>
-    <script>setTimeout(() => document.getElementById('toast-flash-ok')?.remove(), 4000);</script>
+    <script>document.addEventListener('DOMContentLoaded', () => showToast(<?= json_encode($flashSuccess) ?>, 'success'));</script>
 <?php endif; ?>
 
 <?php if ($flashError): ?>
-    <div id="toast-flash-err"
-         class="fixed top-10 right-10 z-50 flex items-center gap-3 bg-gray-900 border border-red-600
-                text-red-300 rounded-2xl px-6 py-4 shadow-2xl shadow-red-900/40 max-w-sm">
-        <span class="text-xl">❌</span>
-        <p class="text-sm font-medium"><?= htmlspecialchars($flashError) ?></p>
-        <button onclick="this.parentElement.remove()" class="ml-auto text-gray-500 hover:text-white">✕</button>
-    </div>
-    <script>setTimeout(() => document.getElementById('toast-flash-err')?.remove(), 5000);</script>
+    <script>document.addEventListener('DOMContentLoaded', () => showToast(<?= json_encode($flashError) ?>, 'error'));</script>
 <?php endif; ?>
 
 <?php if (!empty($_GET['guardado'])): ?>
-    <div id="toast-ok" class="fixed top-10 right-10 z-50 flex items-center gap-3 bg-gray-900 border border-green-600
-           text-green-300 rounded-2xl px-10 py-10 shadow-2xl shadow-green-900/40
-           transition-all duration-500 max-w-sm">
-        <span class="text-2xl">✅</span>
-        <p class="text-xl font-medium">Asistencia guardada correctamente.</p>
-        <button onclick="cerrarToast()" class="ml-auto text-gray-500 hover:text-white text-lg leading-none">✕</button>
-    </div>
-    <script>
-        setTimeout(() => cerrarToast(), 4000);
-        function cerrarToast() {
-            const t = document.getElementById('toast-ok');
-            if (!t) return;
-            t.style.opacity = '0';
-            t.style.transform = 'translateY(-10px)';
-            setTimeout(() => t.remove(), 400);
-        }
-    </script>
+    <script>document.addEventListener('DOMContentLoaded', () => showToast('Asistencia guardada correctamente.', 'success'));</script>
 <?php endif ?>
 
 <?php if (!empty($_GET['alerta'])): ?>
@@ -74,311 +44,289 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
     </script>
 <?php endif; ?>
 
-<body class="h-full bg-gray-900">
-    <div class="min-h-full">
+<header class="page-header">
+    <div class="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8 flex items-center justify-between">
+        <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-accent mb-1">Asistencia</p>
+            <h1 class="text-2xl font-bold text-strong font-display">Tomar Asistencia</h1>
+            <p class="text-sm text-muted mt-0.5">Curso:
+                <?= htmlspecialchars($curso['nombre'] ?? '') ?>
+            </p>
+        </div>
+        <a href="index.php?action=libro_clases&curso_id=<?= $curso['id'] ?>&anio_id=<?= $_GET['anio_id'] ?>"
+            class="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            Ver libro de clases
+        </a>
+    </div>
+</header>
 
-        <header class="bg-gray-800 border-b border-white/10">
-            <div class="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8 flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-widest text-blue-400 mb-1">Asistencia</p>
-                    <h1 class="text-2xl font-bold text-white">Tomar Asistencia</h1>
-                    <p class="text-sm text-gray-400 mt-0.5">Curso:
-                        <?= htmlspecialchars($curso['nombre'] ?? '') ?>
-                    </p>
+<main>
+    <div class="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
+
+        <form method="POST" action="index.php?action=guardar_asistencia_masiva">
+            <input type="hidden" name="curso_id" value="<?= $_GET['curso_id'] ?>">
+            <input type="hidden" name="anio_id" value="<?= $_GET['anio_id'] ?>">
+
+            <!-- Card fecha + acciones -->
+            <div class="panel rounded-xl overflow-hidden mb-5">
+
+                <?php if ($esEdicion): ?>
+                    <div class="flex items-center gap-2 px-5 py-2.5 border-b"
+                         style="background: var(--warn-soft); color: var(--warn); border-color: var(--warn);">
+                        <span class="text-sm">✏️</span>
+                        <p class="text-xs font-medium">
+                            Estás <strong>modificando</strong> una asistencia ya registrada para esta fecha.
+                        </p>
+                    </div>
+                <?php endif ?>
+
+                <!-- Fila: fecha y botones de selección -->
+                <div class="flex flex-wrap items-center gap-3 px-5 py-4 border-b divider-soft">
+
+                    <div class="flex items-start gap-2 w-full flex-col">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <label class="text-sm font-medium text-soft">Fecha</label>
+                            <button type="button" id="btn-fecha"
+                                class="btn-secondary text-sm rounded-lg px-3 py-1.5 transition min-w-[130px] text-left">
+                                📅 <span id="fecha-display"><?= date('d/m/Y', strtotime($fecha)) ?></span>
+                            </button>
+                            <input type="hidden" name="fecha" id="campo-fecha" value="<?= $fecha ?>">
+                        </div>
+
+                        <div id="aviso-semestre" class="banner-danger hidden px-4 py-2 text-xs rounded-lg flex items-center gap-2">
+                            <span>⚠️</span>
+                            <span id="aviso-semestre-texto"></span>
+                        </div>
+
+                        <!-- CALENDARIO CUSTOM -->
+                        <div id="calendario" class="dropdown-panel hidden absolute z-50 mt-1 rounded-2xl p-4 w-80">
+                            <div class="flex items-center justify-between mb-3">
+                                <button type="button" id="mes-prev" class="icon-btn p-1.5 rounded-lg transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+                                <span id="mes-titulo" class="text-sm font-semibold text-strong"></span>
+                                <button type="button" id="mes-next" class="icon-btn p-1.5 rounded-lg transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-7 mb-1">
+                                <?php foreach (['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do'] as $d): ?>
+                                    <div class="text-center text-xs font-semibold
+                                        <?= in_array($d, ['Sá', 'Do']) ? 'text-faint' : 'text-muted' ?> py-1">
+                                        <?= $d ?>
+                                    </div>
+                                <?php endforeach ?>
+                            </div>
+                            <div id="grid-dias" class="grid grid-cols-7 gap-0.5"></div>
+                            <div class="mt-3 pt-3 border-t divider-soft flex items-center gap-4 text-xs text-muted">
+                                <div class="flex items-center gap-1.5">
+                                    <div class="w-3 h-3 rounded-full legend-dot-accent"></div>Con asistencia
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <div class="w-3 h-3 rounded-full bg-azul-vivo"></div>Seleccionado
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hidden sm:block w-px h-5" style="background: var(--border-soft);"></div>
+
+                    <!-- Botones selección masiva -->
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-muted font-medium">Selección:</span>
+                        <button type="button" onclick="marcarTodos(true)"
+                            class="btn-soft-success flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Todos presentes
+                        </button>
+                        <button type="button" onclick="marcarTodos(false)"
+                            class="btn-soft-danger flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Todos ausentes
+                        </button>
+                    </div>
+
+                    <!-- Contador -->
+                    <div class="ml-auto">
+                        <span id="contador" class="chip-counter text-xs font-semibold px-3 py-1.5 rounded-full">
+                            0 / 0 presentes
+                        </span>
+                    </div>
                 </div>
-                <a href="index.php?action=libro_clases&curso_id=<?= $curso['id'] ?>&anio_id=<?= $_GET['anio_id'] ?>"
-                    class="flex items-center gap-2 text-sm text-gray-400 hover:text-white border border-gray-600 hover:border-gray-400 px-4 py-2 rounded-lg transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                    Ver libro de clases
-                </a>
-            </div>
-        </header>
 
-        <main>
-            <div class="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
+                <?php if (empty($alumnos)): ?>
+                    <div class="px-5 py-8 text-center">
+                        <p class="text-muted font-medium">No hay alumnos matriculados en este curso.</p>
+                    </div>
+                <?php else: ?>
+                    <div class="list-head flex items-center px-5 py-2.5 rounded-t-xl gap-6">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-muted w-8 text-center">#</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-muted flex-1">Alumno</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-muted w-24 text-center">Presente</span>
+                    </div>
 
-                <form method="POST" action="index.php?action=guardar_asistencia_masiva">
-                    <input type="hidden" name="curso_id" value="<?= $_GET['curso_id'] ?>">
-                    <input type="hidden" name="anio_id" value="<?= $_GET['anio_id'] ?>">
+                    <?php foreach ($alumnos as $i => $alumno):
+                        $estaRetirado     = !empty($alumno['fecha_retiro'])    && $fecha >= $alumno['fecha_retiro'];
+                        $antesDeMatricula = !empty($alumno['fecha_matricula']) && $fecha <  $alumno['fecha_matricula'];
+                        $inactivo         = $estaRetirado || $antesDeMatricula;
+                    ?>
+                        <label class="list-row flex items-center flex-nowrap px-5 py-3.5 transition group gap-4 <?php echo $inactivo ? 'row-inactive cursor-default' : 'cursor-pointer'; ?>">
 
-                    <!-- Card fecha + acciones -->
-                    <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden mb-5">
-
-                        <?php if ($esEdicion): ?>
-                            <div class="flex items-center gap-2 px-5 py-2.5 bg-yellow-900/30 border-b border-yellow-700/40">
-                                <span class="text-yellow-400 text-sm">✏️</span>
-                                <p class="text-xs text-yellow-300 font-medium">
-                                    Estás <strong>modificando</strong> una asistencia ya registrada para esta fecha.
-                                </p>
-                            </div>
-                        <?php endif ?>
-
-                        <!-- Fila: fecha y botones de selección -->
-                        <div class="flex flex-wrap items-center gap-3 px-5 py-4 border-b border-gray-700">
-
-                            <div class="flex items-start gap-2 w-full flex-col">
-                                <div class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    <label class="text-sm font-medium text-gray-300">Fecha</label>
-                                    <button type="button" id="btn-fecha"
-                                        class="bg-gray-900 text-white text-sm border border-gray-600 rounded-lg px-3 py-1.5
-                                               hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition min-w-[130px] text-left">
-                                        📅 <span id="fecha-display"><?= date('d/m/Y', strtotime($fecha)) ?></span>
-                                    </button>
-                                    <input type="hidden" name="fecha" id="campo-fecha" value="<?= $fecha ?>">
-                                </div>
-
-                                <div id="aviso-semestre" class="hidden px-4 py-2 bg-red-900/40 border border-red-700
-                                     text-red-300 text-xs rounded-lg flex items-center gap-2">
-                                    <span>⚠️</span>
-                                    <span id="aviso-semestre-texto"></span>
-                                </div>
-
-                                <!-- CALENDARIO CUSTOM -->
-                                <div id="calendario" class="hidden absolute z-50 mt-1 bg-gray-900 border border-gray-700
-                                     rounded-2xl shadow-2xl p-4 w-80">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <button type="button" id="mes-prev"
-                                            class="p-1.5 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-white transition">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                                            </svg>
-                                        </button>
-                                        <span id="mes-titulo" class="text-sm font-semibold text-white"></span>
-                                        <button type="button" id="mes-next"
-                                            class="p-1.5 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-white transition">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <div class="grid grid-cols-7 mb-1">
-                                        <?php foreach (['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do'] as $d): ?>
-                                            <div class="text-center text-xs font-semibold
-                                                <?= in_array($d, ['Sá', 'Do']) ? 'text-gray-600' : 'text-gray-400' ?> py-1">
-                                                <?= $d ?>
-                                            </div>
-                                        <?php endforeach ?>
-                                    </div>
-                                    <div id="grid-dias" class="grid grid-cols-7 gap-0.5"></div>
-                                    <div class="mt-3 pt-3 border-t border-gray-800 flex items-center gap-4 text-xs text-gray-500">
-                                        <div class="flex items-center gap-1.5">
-                                            <div class="w-3 h-3 rounded-full bg-indigo-600"></div>Con asistencia
-                                        </div>
-                                        <div class="flex items-center gap-1.5">
-                                            <div class="w-3 h-3 rounded-full bg-blue-500"></div>Seleccionado
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="hidden sm:block w-px h-5 bg-gray-600"></div>
-
-                            <!-- Botones selección masiva -->
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs text-gray-500 font-medium">Selección:</span>
-                                <button type="button" onclick="marcarTodos(true)"
-                                    class="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-green-900/40 text-green-400 border border-green-700/50 hover:bg-green-900/70 transition">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    Todos presentes
-                                </button>
-                                <button type="button" onclick="marcarTodos(false)"
-                                    class="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-900/40 text-red-400 border border-red-700/50 hover:bg-red-900/70 transition">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                    Todos ausentes
-                                </button>
-                            </div>
-
-                            <!-- Contador -->
-                            <div class="ml-auto">
-                                <span id="contador"
-                                    class="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-900 border border-gray-600 text-gray-400">
-                                    0 / 0 presentes
+                            <div class="w-8 flex justify-center flex-shrink-0">
+                                <span class="text-xs font-bold <?= $inactivo ? 'text-danger' : (($alumno['numero_lista'] ?? null) ? 'text-azul-vivo' : 'text-faint') ?>">
+                                    <?= $alumno['numero_lista'] ?? '—' ?>
                                 </span>
                             </div>
-                        </div>
 
-                        <!-- Lista de alumnos -->
-                        <?php if (empty($alumnos)): ?>
-                            <div class="px-5 py-8 text-center">
-                                <p class="text-gray-400 font-medium">No hay alumnos matriculados en este curso.</p>
-                            </div>
-                        <?php else: ?>
-                            <div class="grid grid-cols-[40px_1fr_auto] items-center px-5 py-2.5 bg-gray-900/50">
-                                <span class="text-xs font-semibold uppercase tracking-wider text-gray-500 text-center">#</span>
-                                <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Alumno</span>
-                                <span class="text-xs font-semibold uppercase tracking-wider text-gray-500 w-20 text-center">Presente</span>
-                            </div>
+                            <div class="flex-1 min-w-0 flex flex-wrap items-center gap-1.5">
+                                <span class="text-sm font-semibold <?= $inactivo ? 'text-danger line-through' : 'text-strong' ?>">
+                                    <?= htmlspecialchars(($alumno['apepat'] ?? '') . " " . ($alumno['apemat'] ?? '')) ?>
+                                </span>
+                                <span class="text-sm <?= $inactivo ? 'text-danger' : 'text-soft' ?>">
+                                    , <?= htmlspecialchars($alumno['nombre'] ?? '') ?>
+                                </span>
 
-                            <?php foreach ($alumnos as $i => $alumno):
-                                $estaRetirado     = !empty($alumno['fecha_retiro'])    && $fecha >= $alumno['fecha_retiro'];
-                                $antesDeMatricula = !empty($alumno['fecha_matricula']) && $fecha <  $alumno['fecha_matricula'];
-                                $inactivo         = $estaRetirado || $antesDeMatricula;
-                            ?>
-                                <label class="grid grid-cols-[40px_1fr_auto] items-center px-5 py-3.5 border-t border-gray-700/60
-                                    <?= $inactivo ? 'bg-red-900/10 cursor-default opacity-75' : 'hover:bg-gray-700/30 cursor-pointer' ?>
-                                    transition group">
-
-                                    <div class="text-center">
-                                        <span class="text-xs font-bold <?= $alumno['numero_lista'] ? 'text-indigo-400' : 'text-gray-600' ?>">
-                                            <?= $alumno['numero_lista'] ?? '—' ?>
-                                        </span>
-                                    </div>
-
-                                    <div>
-                                        <span class="text-sm font-semibold <?= $inactivo ? 'text-red-400' : 'text-white' ?>">
-                                            <?= htmlspecialchars($alumno['apepat'] . " " . $alumno['apemat']) ?>
-                                        </span>
-                                        <span class="text-sm <?= $inactivo ? 'text-red-500/70' : 'text-gray-400' ?>">
-                                            , <?= htmlspecialchars($alumno['nombre']) ?>
-                                        </span>
-                                        <?php if ($estaRetirado): ?>
-                                            <span class="ml-2 text-xs bg-red-900/50 text-red-400 border border-red-700/50 px-2 py-0.5 rounded-full">
-                                                Retirado <?= date('d/m/Y', strtotime($alumno['fecha_retiro'])) ?>
-                                            </span>
-                                        <?php elseif ($antesDeMatricula): ?>
-                                            <span class="ml-2 text-xs bg-yellow-900/50 text-yellow-400 border border-yellow-700/50 px-2 py-0.5 rounded-full">
-                                                Se matricula el <?= date('d/m/Y', strtotime($alumno['fecha_matricula'])) ?>
-                                            </span>
-                                        <?php endif; ?>
-                                    </div>
-
-                                    <div class="w-20 flex justify-center">
-                                        <?php if ($inactivo): ?>
-                                            <span class="text-red-700/60" title="<?= $estaRetirado ? 'Alumno retirado' : 'Aún no matriculado' ?>">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                                                    stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
-                                                </svg>
-                                            </span>
-                                        <?php else: ?>
-                                            <?php
-                                            $estaPresente = $esEdicion
-                                                ? ($asistenciaExistente[$alumno['matricula_id']] ?? 0) === 1
-                                                : true;
-                                            ?>
-                                            <input type="checkbox"
-                                                class="presente w-5 h-5 rounded accent-green-500 cursor-pointer"
-                                                name="presentes[]"
-                                                value="<?= $alumno['matricula_id'] ?>"
-                                                <?= $estaPresente ? 'checked' : '' ?>
-                                                onchange="actualizarContador()">
-                                        <?php endif; ?>
-                                    </div>
-                                </label>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- Botones -->
-                    <?php if (!empty($alumnos)): ?>
-                        <div class="flex items-center justify-between gap-4">
-
-                            <!-- Volver -->
-                            <a href="index.php?action=asistencia_cursos&anio_id=<?= $_GET['anio_id'] ?>"
-                               class="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white
-                                      font-semibold px-6 py-3 rounded-xl transition">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                                </svg>
-                                Volver a cursos
-                            </a>
-
-                            <div class="flex items-center gap-3">
-
-                                <!-- ── BOTÓN ELIMINAR ── -->
-                                <?php if ($esEdicion): ?>
-                                    <button type="button" onclick="confirmarEliminar()"
-                                            class="flex items-center gap-2 bg-red-900/40 hover:bg-red-900/70
-                                                   text-red-400 hover:text-red-300 border border-red-700/50
-                                                   font-semibold px-5 py-3 rounded-xl transition">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                        Eliminar asistencia
-                                    </button>
+                                <?php if ($estaRetirado): ?>
+                                    <span class="chip-danger ml-2 text-xs px-2 py-0.5 rounded-full whitespace-nowrap">
+                                        Retirado <?= date('d/m/Y', strtotime($alumno['fecha_retiro'])) ?>
+                                    </span>
+                                <?php elseif ($antesDeMatricula): ?>
+                                    <span class="chip-warn ml-2 text-xs px-2 py-0.5 rounded-full whitespace-nowrap">
+                                        Se matricula el <?= date('d/m/Y', strtotime($alumno['fecha_matricula'])) ?>
+                                    </span>
                                 <?php endif; ?>
-
-                                <!-- Guardar -->
-                                <button type="submit"
-                                        class="flex items-center gap-2 bg-green-600 hover:bg-green-500 active:bg-green-700
-                                               text-white font-bold px-8 py-3 rounded-xl transition shadow-lg shadow-green-900/30">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    Guardar Asistencia
-                                </button>
-
                             </div>
-                        </div>
-                    <?php endif ?>
 
-                </form>
+                            <div class="flex items-center flex-shrink-0 ml-auto">
+                                <?php if ($inactivo): ?>
+                                    <span class="text-danger" title="<?= $estaRetirado ? 'Alumno retirado' : 'Aún no matriculado' ?>">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                                        </svg>
+                                    </span>
+                                <?php else: ?>
+                                    <?php $estaPresente = $esEdicion ? (($asistenciaExistente[$alumno['matricula_id']] ?? 0) === 1) : true; ?>
+                                    <input type="checkbox"
+                                           class="presente w-5 h-5 rounded accent-green-500 cursor-pointer"
+                                           name="presentes[]"
+                                           value="<?= $alumno['matricula_id'] ?>"
+                                           <?= $estaPresente ? 'checked' : '' ?>
+                                           onchange="actualizarContador()">
+                                <?php endif; ?>
+                            </div>
 
-                <!-- Formulario oculto para eliminar -->
-                <form id="form-eliminar" method="POST"
-                      action="index.php?action=eliminar_asistencia_dia"
-                      class="hidden">
-                    <input type="hidden" name="curso_id" value="<?= $_GET['curso_id'] ?>">
-                    <input type="hidden" name="anio_id"  value="<?= $_GET['anio_id'] ?>">
-                    <input type="hidden" name="fecha"    id="fecha-eliminar" value="">
-                </form>
+                        </label>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
-                <!-- Modal de confirmación -->
-                <div id="modal-eliminar"
-                     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-                    <div class="bg-gray-800 border border-red-700/50 rounded-2xl p-6 shadow-2xl max-w-sm w-full mx-4">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-10 h-10 bg-red-900/40 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            </div>
+
+            <!-- Botones -->
+            <?php if (!empty($alumnos)): ?>
+                <div class="flex items-center justify-between gap-4">
+
+                    <!-- Volver -->
+                    <a href="index.php?action=asistencia_cursos&anio_id=<?= $_GET['anio_id'] ?>"
+                       class="btn-secondary flex items-center gap-2 font-semibold px-6 py-3 rounded-xl transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Volver a cursos
+                    </a>
+
+                    <div class="flex items-center gap-3">
+
+                        <!-- ── BOTÓN ELIMINAR ── -->
+                        <?php if ($esEdicion): ?>
+                            <button type="button" onclick="confirmarEliminar()"
+                                    class="btn-soft-danger flex items-center gap-2 font-semibold px-5 py-3 rounded-xl transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
-                            </div>
-                            <div>
-                                <h3 class="text-white font-bold text-base">¿Eliminar asistencia?</h3>
-                                <p class="text-xs text-gray-400 mt-0.5">Esta acción no se puede deshacer</p>
-                            </div>
-                        </div>
-
-                        <p class="text-sm text-gray-300 mb-5">
-                            Se eliminarán <strong class="text-white">todos los registros</strong>
-                            de asistencia del día
-                            <strong class="text-red-300" id="modal-fecha-texto"></strong>
-                            para el curso <strong class="text-white"><?= htmlspecialchars($curso['nombre'] ?? '') ?></strong>.
-                        </p>
-
-                        <div class="flex gap-3">
-                            <button onclick="cerrarModal()"
-                                    class="flex-1 px-4 py-2.5 bg-gray-700 hover:bg-gray-600
-                                           text-white font-semibold rounded-xl transition text-sm">
-                                Cancelar
+                                Eliminar asistencia
                             </button>
-                            <button onclick="ejecutarEliminar()"
-                                    class="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-500
-                                           text-white font-bold rounded-xl transition text-sm">
-                                Sí, eliminar
-                            </button>
-                        </div>
+                        <?php endif; ?>
+
+                        <!-- Guardar -->
+                        <button type="submit"
+                                class="btn-soft-success flex items-center gap-2 font-bold px-8 py-3 rounded-xl transition shadow-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Guardar Asistencia
+                        </button>
+
+                    </div>
+                </div>
+            <?php endif ?>
+
+        </form>
+
+        <!-- Formulario oculto para eliminar -->
+        <form id="form-eliminar" method="POST"
+              action="index.php?action=eliminar_asistencia_dia"
+              class="hidden">
+            <input type="hidden" name="curso_id" value="<?= $_GET['curso_id'] ?>">
+            <input type="hidden" name="anio_id"  value="<?= $_GET['anio_id'] ?>">
+            <input type="hidden" name="fecha"    id="fecha-eliminar" value="">
+        </form>
+
+        <!-- Modal de confirmación -->
+        <div id="modal-eliminar"
+             class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div class="modal-danger rounded-2xl p-6 shadow-2xl max-w-sm w-full mx-4">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="modal-icon-danger w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-strong font-bold text-base">¿Eliminar asistencia?</h3>
+                        <p class="text-xs text-muted mt-0.5">Esta acción no se puede deshacer</p>
                     </div>
                 </div>
 
+                <p class="text-sm text-soft mb-5">
+                    Se eliminarán <strong class="text-strong">todos los registros</strong>
+                    de asistencia del día
+                    <strong class="text-danger" id="modal-fecha-texto"></strong>
+                    para el curso <strong class="text-strong"><?= htmlspecialchars($curso['nombre'] ?? '') ?></strong>.
+                </p>
+
+                <div class="flex gap-3">
+                    <button onclick="cerrarModal()"
+                            class="btn-secondary flex-1 px-4 py-2.5 font-semibold rounded-xl transition text-sm">
+                        Cancelar
+                    </button>
+                    <button onclick="ejecutarEliminar()"
+                            class="btn-danger flex-1 px-4 py-2.5 font-bold rounded-xl transition text-sm">
+                        Sí, eliminar
+                    </button>
+                </div>
             </div>
-        </main>
+        </div>
+
     </div>
-</body>
+</main>
 
 <script>
     const totalAlumnos = <?= $totalActivos ?? 0 ?>;
@@ -448,21 +396,21 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
 
     function crearCelda(dia, fecha = null, opts = {}) {
         const el = document.createElement('div');
-        el.className = 'relative flex items-center justify-center h-8 w-full rounded-lg text-xs font-medium transition select-none';
+        el.className = 'cal-day';
         if (!dia) return el;
         const { esFinSemana, esFuturo, enSemestre, tieneAsist, esSeleccion, esHoy } = opts;
         const bloqueado = esFinSemana || esFuturo || !enSemestre;
-        if (esSeleccion)          el.className += ' bg-blue-600 text-white ring-2 ring-blue-400 ring-offset-1 ring-offset-gray-900';
-        else if (tieneAsist && !bloqueado) el.className += ' bg-indigo-700/70 text-indigo-200 hover:bg-indigo-600 cursor-pointer';
-        else if (bloqueado)       el.className += ' text-gray-700 cursor-not-allowed';
+        if (esSeleccion) el.classList.add('cal-day--selected');
+        else if (tieneAsist && !bloqueado) el.classList.add('cal-day--has-attendance');
+        else if (bloqueado) el.classList.add('cal-day--blocked');
         else {
-            el.className += ' text-gray-300 hover:bg-gray-700 cursor-pointer';
-            if (esHoy) el.className += ' ring-1 ring-blue-500';
+            el.classList.add('cal-day--default');
+            if (esHoy) el.classList.add('cal-day--today');
         }
         el.textContent = dia;
         if (tieneAsist && !esSeleccion) {
             const punto = document.createElement('div');
-            punto.className = 'absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-indigo-400';
+            punto.className = 'cal-day-dot';
             el.appendChild(punto);
         }
         if (!bloqueado) {
@@ -512,12 +460,10 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
             aviso.classList.remove('hidden');
             btnGuardar.disabled = true;
             btnGuardar.classList.add('opacity-40', 'cursor-not-allowed');
-            btnGuardar.classList.remove('hover:bg-green-500');
         } else {
             aviso.classList.add('hidden');
             btnGuardar.disabled = false;
             btnGuardar.classList.remove('opacity-40', 'cursor-not-allowed');
-            btnGuardar.classList.add('hover:bg-green-500');
         }
     }
 
@@ -525,12 +471,10 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
         const presentes = document.querySelectorAll('.presente:checked').length;
         const el = document.getElementById('contador');
         el.textContent = `${presentes} / ${totalAlumnos} presentes`;
-        if (presentes === totalAlumnos)
-            el.className = 'text-xs font-semibold px-3 py-1.5 rounded-full bg-green-900/40 border border-green-700/50 text-green-400';
-        else if (presentes === 0)
-            el.className = 'text-xs font-semibold px-3 py-1.5 rounded-full bg-red-900/40 border border-red-700/50 text-red-400';
-        else
-            el.className = 'text-xs font-semibold px-3 py-1.5 rounded-full bg-yellow-900/40 border border-yellow-700/50 text-yellow-400';
+        el.className = 'chip-counter text-xs font-semibold px-3 py-1.5 rounded-full';
+        if (totalAlumnos > 0 && presentes === totalAlumnos) el.classList.add('chip-counter--all');
+        else if (presentes === 0) el.classList.add('chip-counter--none');
+        else el.classList.add('chip-counter--partial');
     }
 
     function marcarTodos(estado) {
@@ -565,24 +509,35 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
         validarFecha();
     });
 
+    function getToastStack() {
+        let stack = document.getElementById('toast-stack');
+        if (!stack) {
+            stack = document.createElement('div');
+            stack.id = 'toast-stack';
+            stack.className = 'fixed top-5 right-5 z-50 flex flex-col gap-3 items-end pointer-events-none';
+            document.body.appendChild(stack);
+        }
+        return stack;
+    }
+
     function showToast(mensaje, tipo = 'info') {
-        const colores = {
-            success: 'bg-green-900/90 border-green-600 text-green-300',
-            error:   'bg-red-900/90 border-red-600 text-red-300',
-            warning: 'bg-yellow-900/90 border-yellow-600 text-yellow-300',
-            info:    'bg-gray-800/90 border-gray-600 text-gray-300',
+        const clases = {
+            success: 'banner-success',
+            error:   'banner-danger',
+            warning: 'banner-warning',
+            info:    'banner-info',
         };
         const toast = document.createElement('div');
         toast.className = [
-            'fixed top-5 right-5 z-50 flex items-center gap-3 px-4 py-3',
-            'border rounded-xl shadow-2xl text-sm font-medium max-w-sm w-full',
+            'pointer-events-auto flex items-center gap-3 px-4 py-3',
+            'rounded-xl shadow-2xl text-sm font-medium max-w-sm w-full',
             'translate-x-full opacity-0 transition-all duration-300',
-            colores[tipo] ?? colores.info
+            clases[tipo] ?? clases.info
         ].join(' ');
         toast.innerHTML = `<span class="flex-1">${mensaje}</span>
             <button onclick="this.parentElement.remove()"
                     class="flex-shrink-0 opacity-50 hover:opacity-100 transition text-lg leading-none">✕</button>`;
-        document.body.appendChild(toast);
+        getToastStack().appendChild(toast);
         requestAnimationFrame(() => requestAnimationFrame(() => {
             toast.classList.remove('translate-x-full', 'opacity-0');
         }));

@@ -1,0 +1,1248 @@
+/* ===========================================================
+   SAAT — Hoja de estilos global
+   Paleta: azul institucional + amarillo, fondo glassmorphism
+   Este archivo está pensado para reutilizarse en otras vistas
+   además del login, manteniendo el mismo lenguaje visual.
+   =========================================================== */
+
+/* Acotado a .login-page para no pisar las utilidades de Tailwind
+   (margin/padding) en el resto del panel — ver nota en el código. */
+.login-page,
+.login-page *,
+.login-page *::before,
+.login-page *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --azul-oscuro: #0a1628;
+    --azul-medio: #0d2247;
+    --azul-vivo: #1a4fd6;
+    --azul-claro: #3b82f6;
+    --amarillo: #f5c518;
+    --amarillo-claro: #fde68a;
+    --blanco: #ffffff;
+    --gris-suave: rgba(255, 255, 255, 0.07);
+    --borde: rgba(255, 255, 255, 0.12);
+}
+
+html.login-page,
+body.login-page {
+    height: 100%;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--azul-oscuro);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* ── Fondo animado ── */
+.bg-scene {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(26, 79, 214, 0.45) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 90% 80%, rgba(245, 197, 24, 0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 70% at 50% 50%, rgba(13, 34, 71, 0.9) 0%, transparent 80%),
+        var(--azul-oscuro);
+}
+
+/* Orbes flotantes */
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    animation: drift 12s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.orb-1 {
+    width: 500px;
+    height: 500px;
+    background: var(--azul-vivo);
+    top: -120px;
+    left: -80px;
+    animation-duration: 14s;
+}
+
+.orb-2 {
+    width: 350px;
+    height: 350px;
+    background: var(--amarillo);
+    bottom: -80px;
+    right: -60px;
+    animation-duration: 10s;
+    animation-delay: -4s;
+    opacity: 0.2;
+}
+
+.orb-3 {
+    width: 250px;
+    height: 250px;
+    background: var(--azul-claro);
+    top: 40%;
+    right: 15%;
+    animation-duration: 16s;
+    animation-delay: -7s;
+    opacity: 0.2;
+}
+
+@keyframes drift {
+    from {
+        transform: translate(0, 0) scale(1);
+    }
+
+    to {
+        transform: translate(30px, 20px) scale(1.08);
+    }
+}
+
+/* Grid de líneas decorativas */
+.grid-lines {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.04;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
+    background-size: 60px 60px;
+}
+
+/* ── Contenedor principal ── */
+.wrapper {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1.5rem;
+}
+
+/* ── Card ── */
+.card {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(13, 34, 71, 0.55);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border: 1px solid var(--borde);
+    border-radius: 24px;
+    padding: 2.8rem 2.4rem 2.4rem;
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+        0 32px 80px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(26, 79, 214, 0.15);
+    animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ── Logo ── */
+.logo-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    animation: fadeDown 0.6s 0.15s both;
+}
+
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo-img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 16px rgba(245, 197, 24, 0.35));
+    transition: transform 0.4s ease;
+}
+
+.logo-img:hover {
+    transform: scale(1.06) rotate(-2deg);
+}
+
+.logo-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--blanco);
+    letter-spacing: -0.02em;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.logo-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--amarillo), #f97316);
+    color: var(--azul-oscuro);
+    font-family: 'Sora', sans-serif;
+    font-size: 0.80rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.7rem;
+    border-radius: 99px;
+    margin-top: 0.1rem;
+}
+
+.badge-wrap {
+    text-align: center;
+    margin-top: 0.4rem;
+}
+
+/* ── Divisor ── */
+.divider {
+    height: 1px;
+    margin-bottom: 1.8rem;
+    background: linear-gradient(90deg, transparent, var(--borde), transparent);
+}
+
+/* ── Formulario ── */
+.form-group {
+    margin-bottom: 1.1rem;
+    animation: fadeUp 0.5s both;
+}
+
+.form-group:nth-child(1) {
+    animation-delay: 0.25s;
+}
+
+.form-group:nth-child(2) {
+    animation-delay: 0.35s;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.input-wrap {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+    transition: color 0.2s;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.7rem;
+    background: var(--gris-suave);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    color: var(--blanco);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+input:focus {
+    border-color: var(--azul-claro);
+    background: rgba(59, 130, 246, 0.08);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+input:focus+.input-icon,
+.input-wrap:focus-within .input-icon {
+    color: var(--azul-claro);
+}
+
+/* Fila olvidé contraseña */
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.forgot {
+    font-size: 0.9rem;
+    color: var(--amarillo);
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.forgot:hover {
+    opacity: 1;
+}
+
+/* ── Botón ── */
+.btn-submit {
+    width: 100%;
+    margin-top: 1.6rem;
+    padding: 0.85rem;
+    background: linear-gradient(135deg, var(--azul-vivo) 0%, #2563eb 50%, #1d4ed8 100%);
+    border: none;
+    border-radius: 12px;
+    color: var(--blanco);
+    font-family: 'Sora', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 24px rgba(26, 79, 214, 0.45);
+    animation: fadeUp 0.5s 0.45s both;
+}
+
+.btn-submit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(245, 197, 24, 0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(26, 79, 214, 0.55);
+}
+
+.btn-submit:hover::before {
+    opacity: 1;
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+/* Shimmer en botón */
+.btn-submit::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    animation: shimmer 3s 1.5s infinite;
+}
+
+@keyframes shimmer {
+    from {
+        left: -60%;
+    }
+
+    to {
+        left: 130%;
+    }
+}
+
+/* ── Error ── */
+.error-box {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    color: #fca5a5;
+    font-size: 1.1rem;
+    animation: shake 0.35s ease;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-6px);
+    }
+
+    75% {
+        transform: translateX(6px);
+    }
+}
+
+/* ── Footer ── */
+.card-footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.04em;
+    animation: fadeUp 0.5s 0.55s both;
+}
+
+.card-footer span {
+    color: var(--amarillo);
+    opacity: 0.7;
+}
+
+/* ===========================================================
+   RESPONSIVE
+   =========================================================== */
+
+/* Tablets / móviles grandes */
+@media (max-width: 600px) {
+    .card {
+        padding: 2.2rem 1.8rem 2rem;
+        border-radius: 18px;
+    }
+
+    .logo-img {
+        width: 150px;
+        height: 150px;
+    }
+
+    .logo-title {
+        font-size: 1.3rem;
+    }
+}
+
+/* Móviles chicos */
+@media (max-width: 380px) {
+    .wrapper {
+        padding: 1rem;
+        align-items: flex-start;
+        padding-top: 2rem;
+    }
+
+    .card {
+        padding: 1.8rem 1.3rem 1.6rem;
+        border-radius: 16px;
+    }
+
+    .logo-img {
+        width: 110px;
+        height: 110px;
+    }
+
+    .logo-wrap {
+        margin-bottom: 1.3rem;
+        gap: 0.5rem;
+    }
+
+    .logo-title {
+        font-size: 1.15rem;
+    }
+
+    .logo-badge {
+        font-size: 0.7rem;
+        padding: 0.15rem 0.55rem;
+    }
+
+    .divider {
+        margin-bottom: 1.2rem;
+    }
+
+    label {
+        font-size: 0.85rem;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        font-size: 1rem;
+        padding: 0.65rem 0.9rem 0.65rem 2.5rem;
+    }
+
+    .btn-submit {
+        font-size: 1.1rem;
+        padding: 0.75rem;
+        margin-top: 1.2rem;
+    }
+
+    .card-footer {
+        margin-top: 1.4rem;
+        font-size: 0.78rem;
+    }
+}
+
+/* Pantallas bajas (móviles en horizontal, notebooks pequeños) */
+@media (max-height: 700px) {
+    .wrapper {
+        align-items: flex-start;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .logo-wrap {
+        margin-bottom: 1.2rem;
+    }
+
+    .logo-img {
+        width: 110px;
+        height: 110px;
+    }
+
+    .divider {
+        margin-bottom: 1.2rem;
+    }
+
+    .form-group {
+        margin-bottom: 0.8rem;
+    }
+
+    .card-footer {
+        margin-top: 1.2rem;
+    }
+}
+
+/* ===========================================================
+   LOGIN — VARIANTE HORIZONTAL (split: logo izquierda / form derecha)
+   Reutiliza las mismas variables y componentes (form-group, input,
+   btn-submit, error-box, card-footer) que la variante vertical.
+   =========================================================== */
+
+.card.card-split {
+    display: flex;
+    align-items: stretch;
+    max-width: 760px;
+    padding: 0;
+    overflow: hidden;
+}
+
+.card-brand {
+    flex: 0 0 38%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.9rem;
+    padding: 3rem 2rem;
+    background: linear-gradient(160deg, rgba(26, 79, 214, 0.18), rgba(13, 34, 71, 0.45));
+    position: relative;
+    overflow: hidden;
+    animation: fadeDown 0.6s 0.15s both;
+}
+
+.card-brand::before {
+    content: '';
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, rgba(245, 197, 24, 0.18), transparent 70%);
+    top: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.card-brand .logo-img {
+    width: 130px;
+    height: 130px;
+    position: relative;
+    z-index: 1;
+}
+
+.card-brand .logo-title {
+    font-size: 1.35rem;
+    position: relative;
+    z-index: 1;
+}
+
+.card-brand .logo-badge {
+    font-size: 0.72rem;
+    position: relative;
+    z-index: 1;
+}
+
+.card-divider-v {
+    width: 1px;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, transparent, var(--borde) 15%, var(--borde) 85%, transparent);
+}
+
+.card-form {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2.8rem 2.6rem 2.4rem;
+    animation: fadeUp 0.5s 0.2s both;
+}
+
+@media (max-width: 760px) {
+    .card.card-split {
+        flex-direction: column;
+    }
+
+    .card-brand {
+        flex: none;
+        width: 100%;
+        padding: 2.4rem 1.8rem 1.8rem;
+    }
+
+    .card-divider-v {
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--borde) 15%, var(--borde) 85%, transparent);
+    }
+
+    .card-form {
+        padding: 2rem 1.8rem 2.2rem;
+    }
+}
+
+/* Respeta usuarios que prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+/* ===========================================================
+   PANEL / APP SHELL — tema claro y oscuro persistente
+   Se activa agregando o quitando la clase "dark" en <html>
+   (ver el script anti-flash en header.php). Alimenta
+   navbar.php, dashboard.php y cualquier vista nueva del panel.
+   =========================================================== */
+
+:root {
+    /* Tema claro (valores por defecto) — con más presencia institucional,
+       evitando que todo se vea blanco/genérico */
+    --surface-1: #c1d2fb;
+    --surface-2: #ffffff;
+    --text-primary: #0a1628;
+    --text-secondary: #1e293b;
+    --text-muted: #51607a;
+    --border-soft: rgba(26, 79, 214, 0.20);
+    --nav-bg: rgba(255, 255, 255, 0.92);
+    --card-from: #ffffff;
+    --card-to: #e3e9f7;
+    --accent-title: var(--azul-vivo);
+    --accent-title-soft: rgba(26, 79, 214, 0.14);
+    --link-action: var(--azul-vivo);
+    --danger: #dc2626;
+    --danger-hover: #b91c1c;
+    --warn: #b45309;
+    --table-head-bg: #d8e1f4;
+}
+
+.dark {
+    /* Tema oscuro */
+    --surface-1: var(--azul-oscuro);
+    --surface-2: rgba(13, 34, 71, 0.85);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.75);
+    --text-muted: rgba(255, 255, 255, 0.45);
+    --border-soft: var(--borde);
+    --nav-bg: rgba(13, 34, 71, 0.72);
+    --card-from: #16264a;
+    --card-to: #0d1830;
+    --accent-title: var(--amarillo-claro);
+    --accent-title-soft: rgba(245, 197, 24, 0.14);
+    --link-action: var(--azul-claro);
+    --danger: #f87171;
+    --danger-hover: #fca5a5;
+    --warn: var(--amarillo);
+    --table-head-bg: var(--azul-oscuro);
+}
+
+.app-shell {
+    background: var(--surface-1);
+    color: var(--text-secondary);
+    min-height: 100%;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Utilidades de texto reutilizables en todo el panel */
+.text-strong {
+    color: var(--text-primary);
+}
+
+.text-soft {
+    color: var(--text-secondary);
+}
+
+.text-faint {
+    color: var(--text-muted);
+}
+
+.divider-soft {
+    border-color: var(--border-soft);
+}
+
+/* ── Navbar ── */
+.navbar-shell {
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--border-soft);
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.icon-btn {
+    color: var(--text-secondary);
+    transition: color 0.2s, background 0.2s;
+}
+
+.icon-btn:hover {
+    color: var(--text-primary);
+    background: rgba(26, 79, 214, 0.12);
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    transition: color 0.2s, background 0.2s;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: var(--text-primary);
+    background: rgba(26, 79, 214, 0.12);
+}
+
+.dropdown-panel {
+    background: var(--surface-2);
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 18px 40px rgba(10, 22, 40, 0.18);
+    backdrop-filter: blur(16px) saturate(1.3);
+    -webkit-backdrop-filter: blur(16px) saturate(1.3);
+}
+
+.dropdown-link {
+    color: var(--text-secondary);
+    transition: color 0.2s, background 0.2s;
+}
+
+.dropdown-link:hover {
+    background: rgba(26, 79, 214, 0.12);
+    color: var(--text-primary);
+}
+
+.mobile-menu-shell {
+    background: var(--nav-bg);
+    border-top: 1px solid var(--border-soft);
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+}
+
+/* ── Botón de tema (sol / luna) ── */
+.theme-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-soft);
+    background: transparent;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.theme-toggle-btn:hover {
+    color: var(--amarillo);
+    background: rgba(245, 197, 24, 0.14);
+    transform: rotate(12deg);
+}
+
+/* ── Toast de acceso denegado ── */
+.toast-shell {
+    background: var(--surface-2);
+    backdrop-filter: blur(16px) saturate(1.3);
+    -webkit-backdrop-filter: blur(16px) saturate(1.3);
+}
+
+/* ── Dashboard ── */
+.dashboard-header {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(120deg, var(--azul-medio), var(--azul-vivo) 75%);
+}
+
+.dashboard-header::before {
+    content: '';
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    right: -90px;
+    top: -130px;
+    background: radial-gradient(circle, rgba(245, 197, 24, 0.22), transparent 70%);
+    pointer-events: none;
+}
+
+.dashboard-card {
+    background: linear-gradient(150deg, var(--card-from), var(--card-to));
+    border: 1px solid var(--border-soft);
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+
+.dashboard-card:hover {
+    border-color: var(--azul-vivo);
+    box-shadow: 0 14px 36px rgba(26, 79, 214, 0.18);
+    transform: translateY(-3px);
+}
+
+.dashboard-card-title {
+    color: var(--accent-title);
+}
+
+.dashboard-card-desc {
+    color: var(--text-muted);
+}
+
+.card-icon-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.875rem;
+    background: var(--accent-title-soft);
+    color: var(--accent-title);
+    flex-shrink: 0;
+}
+
+.card-cta {
+    color: var(--azul-vivo);
+    border: 1px solid var(--azul-vivo);
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.card-cta:hover {
+    background: var(--azul-vivo);
+    color: #ffffff;
+    transform: translateX(2px);
+}
+
+.btn-brand {
+    background: linear-gradient(135deg, var(--azul-vivo), #2563eb);
+    color: #ffffff;
+    transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+}
+
+.btn-brand:hover {
+    box-shadow: 0 8px 24px rgba(26, 79, 214, 0.4);
+    transform: translateY(-1px);
+}
+
+/* ── Animación de entrada reutilizable (tarjetas, listados, etc.) ── */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 1.5s ease-out forwards;
+    opacity: 0;
+}
+
+/* ===========================================================
+   VISTAS DE MANTENEDOR (listados, tablas, formularios CRUD)
+   Reutilizable en cualquier vista que no sea el dashboard
+   principal: header simple, panel de contenido, tabla, botones
+   secundarios y enlaces de acción.
+   =========================================================== */
+
+.page-header {
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.panel {
+    background: var(--surface-2);
+    border: 1px solid var(--border-soft);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table thead {
+    background: var(--table-head-bg);
+}
+
+.data-table thead th {
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.data-table tbody tr {
+    border-bottom: 1px solid var(--border-soft);
+    transition: background 0.15s;
+}
+
+.data-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.data-table tbody tr:hover {
+    background: rgba(26, 79, 214, 0.06);
+}
+
+.btn-secondary {
+    background: var(--surface-1);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-soft);
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-secondary:hover {
+    background: var(--accent-title-soft);
+    color: var(--text-primary);
+}
+
+.link-action {
+    color: var(--link-action);
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.link-action:hover {
+    color: var(--accent-title);
+}
+
+.link-action-danger {
+    color: var(--danger);
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.link-action-danger:hover {
+    color: var(--danger-hover);
+}
+
+.text-warn {
+    color: var(--warn);
+}
+
+/* ===========================================================
+   ESTADOS REUTILIZABLES (éxito / peligro / advertencia)
+   Banners, botones de acción, chips de estado y contadores.
+   Pensado para cualquier vista, no solo asistencia.
+   =========================================================== */
+
+:root {
+    --success: #16a34a;
+    --success-hover: #15803d;
+    --success-soft: rgba(22, 163, 74, 0.12);
+    --danger-soft: rgba(220, 38, 38, 0.10);
+    --warn-soft: rgba(180, 83, 9, 0.10);
+}
+
+.dark {
+    --success: #4ade80;
+    --success-hover: #86efac;
+    --success-soft: rgba(74, 222, 128, 0.14);
+    --danger-soft: rgba(248, 113, 113, 0.12);
+    --warn-soft: rgba(245, 197, 24, 0.12);
+}
+
+.text-accent {
+    color: var(--accent-title);
+}
+
+.text-danger {
+    color: var(--danger);
+}
+
+/* Banners / avisos inline y toasts */
+.banner-success {
+    background: var(--success-soft);
+    border: 1px solid var(--success);
+    color: var(--success);
+}
+
+.banner-danger {
+    background: var(--danger-soft);
+    border: 1px solid var(--danger);
+    color: var(--danger);
+}
+
+.banner-warning {
+    background: var(--warn-soft);
+    border: 1px solid var(--warn);
+    color: var(--warn);
+}
+
+.banner-info {
+    background: var(--accent-title-soft);
+    border: 1px solid var(--azul-vivo);
+    color: var(--link-action);
+}
+
+/* Chips de estado, no interactivos */
+.chip-danger {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+
+.chip-warn {
+    background: var(--warn-soft);
+    color: var(--warn);
+    border: 1px solid var(--warn);
+}
+
+/* Contador dinámico (ej. "12/30 presentes") */
+.chip-counter {
+    background: var(--surface-1);
+    border: 1px solid var(--border-soft);
+    color: var(--text-secondary);
+}
+
+.chip-counter--all {
+    background: var(--success-soft);
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.chip-counter--none {
+    background: var(--danger-soft);
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.chip-counter--partial {
+    background: var(--warn-soft);
+    border-color: var(--warn);
+    color: var(--warn);
+}
+
+/* Botones sólidos (acción final/confirmación) */
+.btn-success {
+    background: #16a34a;
+    color: #ffffff;
+    transition: background 0.2s;
+}
+
+.btn-success:hover {
+    background: #15803d;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: #ffffff;
+    transition: background 0.2s;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+/* Botones suaves (selección masiva, abrir confirmaciones) */
+.btn-soft-success {
+    background: var(--success-soft);
+    color: var(--success);
+    border: 1px solid var(--success);
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-soft-success:hover {
+    background: var(--success);
+    color: #ffffff;
+}
+
+.btn-soft-danger {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-soft-danger:hover {
+    background: var(--danger);
+    color: #ffffff;
+}
+
+/* Botones genéricos de marca (no atados a éxito/peligro) */
+.btn-primary {
+    background: var(--azul-vivo);
+    color: #ffffff;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.btn-accent {
+    background: var(--amarillo);
+    color: var(--azul-oscuro);
+    transition: background 0.2s, transform 0.15s;
+}
+
+.btn-accent:hover {
+    background: var(--amarillo-claro);
+    transform: translateY(-1px);
+}
+
+/* Modal con contexto de peligro (confirmar eliminación) */
+.modal-danger {
+    background: var(--surface-2);
+    border: 1px solid var(--danger);
+}
+
+.modal-icon-danger {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+/* Listados tipo tabla hechos con flexbox (sin <table>) */
+.list-head {
+    background: var(--table-head-bg);
+}
+
+.list-row {
+    display: flex !important;
+    align-items: center;
+    flex-wrap: nowrap !important;
+    border-top: 1px solid var(--border-soft);
+    transition: background 0.15s;
+}
+
+.list-row > :last-child {
+    margin-left: auto !important;
+    flex-shrink: 0;
+}
+
+.list-row:hover {
+    background: rgba(26, 79, 214, 0.06);
+}
+
+.row-inactive {
+    background: var(--danger-soft);
+}
+
+/* ===========================================================
+   CALENDARIO / DATE PICKER PERSONALIZADO
+   Reutilizable en cualquier vista con selector de fecha propio.
+   =========================================================== */
+
+.cal-day {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2rem;
+    width: 100%;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s;
+    user-select: none;
+}
+
+.cal-day--selected {
+    background: var(--azul-vivo);
+    color: #ffffff;
+    box-shadow: 0 0 0 3px var(--accent-title-soft);
+}
+
+.cal-day--has-attendance {
+    background: var(--accent-title-soft);
+    color: var(--accent-title);
+    cursor: pointer;
+}
+
+.cal-day--has-attendance:hover {
+    background: var(--azul-vivo);
+    color: #ffffff;
+}
+
+.cal-day--blocked {
+    color: var(--text-muted);
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.cal-day--default {
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.cal-day--default:hover {
+    background: var(--accent-title-soft);
+}
+
+.cal-day--today {
+    box-shadow: inset 0 0 0 1px var(--azul-claro);
+}
+
+.cal-day-dot {
+    position: absolute;
+    bottom: 0.125rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: 50%;
+    background: var(--azul-vivo);
+}
+
+.legend-dot-accent {
+    background: var(--accent-title);
+}
