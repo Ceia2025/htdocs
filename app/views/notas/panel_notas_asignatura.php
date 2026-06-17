@@ -74,20 +74,22 @@ foreach ($alumnos as $alumno) {
     foreach ($fechasUnicas as $fecha) {
         $notasCol = $notasPorColumna[$fecha] ?? [];
         if (count($notasCol) > 0) {
-            $promediosColumnas[$fecha] = round(array_sum($notasCol) / count($notasCol), 1);
+            $promediosColumnas[$fecha] = count($notasCol) > 0
+                ? Nota::redondearNota(array_sum($notasCol) / count($notasCol), 1)
+                : null;
         } else {
             $promediosColumnas[$fecha] = null;
         }
     }
 
-    $promGeneral = $cntProms > 0 ? round($sumaProms / $cntProms, 1) : null;
+    $promGeneral = $cntProms > 0 ? Nota::redondearNota($sumaProms / $cntProms, 1) : null;
     $pctAprobados = $totalAlumnos > 0 ? round($totalAprobados / $totalAlumnos * 100) : 0;
 
     $colorProm = $promGeneral === null ? 'text-gray-500'
         : ($promGeneral >= 4.0 ? 'text-green-400' : 'text-red-400');
 }
 
-$promGeneral = $cntProms > 0 ? round($sumaProms / $cntProms, 1) : null;
+$promGeneral = $cntProms > 0 ? Nota::redondearNota($sumaProms / $cntProms, 1) : null;
 $pctAprobados = $totalAlumnos > 0 ? round($totalAprobados / $totalAlumnos * 100) : 0;
 
 $colorProm = $promGeneral === null ? 'text-gray-500'
@@ -235,7 +237,7 @@ $colorProm = $promGeneral === null ? 'text-gray-500'
                                         $cant++;
                                     }
                                 }
-                                $promedio = $cant > 0 ? round($suma / $cant, 1) : null;
+                                $promedio = $cant > 0 ? Nota::redondearNota($suma / $cant, 1) : null;
                                 $colorNum = $alumno['numero_lista'] ? 'text-indigo-400' : 'text-gray-600';
                                 $colorPomedio = $promedio !== null
                                     ? ($promedio >= 4.0 ? 'text-green-400' : 'text-red-400')
@@ -280,7 +282,7 @@ $colorProm = $promGeneral === null ? 'text-gray-500'
                                                     <span class="text-gray-700 text-xs">—</span>
                                                 <?php elseif ($n): ?>
                                                     <?php
-                                                    $v = floatval($n['nota']);
+                                                    $v = Nota::redondearNota(floatval($n['nota']), 1);
                                                     $bgNota = $v >= 4.0
                                                         ? 'bg-green-900/20 border-green-700/40 text-green-300'
                                                         : 'bg-red-900/20 border-red-700/40 text-red-300';

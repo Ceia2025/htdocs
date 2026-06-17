@@ -12,6 +12,14 @@ class Nota
         $this->conn = $db->open();
     }
 
+    public static function redondearNota(float $valor, int $decimales = 1): float
+    {
+        $factor = 10 ** $decimales;
+        // El +1e-9 compensa el ruido de precisión binaria sin afectar
+        // ningún valor real de nota (la diferencia mínima entre notas es 0.01)
+        return round($valor * $factor + 1e-9) / $factor;
+    }
+
     // Obtener nota por ID
     public function getById($id)
     {

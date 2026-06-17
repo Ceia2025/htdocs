@@ -661,7 +661,7 @@ input:focus+.input-icon,
 :root {
     /* Tema claro (valores por defecto) — con más presencia institucional,
        evitando que todo se vea blanco/genérico */
-    --surface-1: #c1d2fb;
+    --surface-1: #d8e3fb;
     --surface-2: #ffffff;
     --text-primary: #0a1628;
     --text-secondary: #1e293b;
@@ -1245,4 +1245,158 @@ input:focus+.input-icon,
 
 .legend-dot-accent {
     background: var(--accent-title);
+}
+
+/* ===========================================================
+   ACORDEONES (semestre → mes)
+   =========================================================== */
+
+.accordion-item {
+    border: 1px solid var(--border-soft);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.accordion-trigger {
+    background: var(--surface-2);
+    color: var(--text-primary);
+    transition: background 0.2s;
+}
+
+.accordion-trigger:hover {
+    background: var(--accent-title-soft);
+}
+
+.accordion-content {
+    background: var(--surface-1);
+}
+
+/* ===========================================================
+   CAMPOS DE FORMULARIO GENÉRICOS (input, select, textarea)
+   =========================================================== */
+
+.input-field {
+    background: var(--surface-1);
+    border: 1px solid var(--border-soft);
+    color: var(--text-primary);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--azul-claro);
+    box-shadow: 0 0 0 2px var(--accent-title-soft);
+}
+
+/* Avatar / insignia de inicial */
+.avatar-badge {
+    background: var(--accent-title-soft);
+    border: 1px solid var(--azul-vivo);
+    color: var(--accent-title);
+}
+
+/* Botón suave informativo (azul) */
+.btn-soft-info {
+    background: var(--accent-title-soft);
+    color: var(--link-action);
+    border: 1px solid var(--azul-vivo);
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-soft-info:hover {
+    background: var(--azul-vivo);
+    color: #ffffff;
+}
+
+.text-success {
+    color: var(--success);
+}
+
+.divider-week {
+    border-color: var(--warn);
+}
+
+.cell-muted {
+    background: var(--surface-1);
+}
+
+/* ===========================================================
+   TABLA GRANDE DE ASISTENCIA (libro de clases)
+   Bandas cebra cada 5 alumnos + columnas pegajosas.
+   Los colores de banda son sólidos (no rgba) a propósito:
+   las columnas "sticky" necesitan fondo opaco para no dejar
+   ver las columnas de fecha deslizándose por debajo al hacer
+   scroll horizontal.
+   =========================================================== */
+
+:root {
+    --table-base: #ffffff;
+    --table-band: #eef2fc;
+    --table-danger: #fde8e8;
+}
+
+.dark {
+    --table-base: #0d2247;
+    --table-band: #16284f;
+    --table-danger: #3a1a1a;
+}
+
+.attendance-table {
+    background: var(--table-base);
+    color: var(--text-secondary);
+    border-collapse: collapse;
+}
+
+.attendance-table thead th {
+    background: var(--table-head-bg);
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.attendance-table .sticky-col {
+    position: sticky;
+    z-index: 10;
+    background: var(--table-base);
+}
+
+.attendance-table tr.row-band,
+.attendance-table tr.row-band .sticky-col {
+    background: var(--table-band);
+}
+
+.attendance-table tr.row-retired,
+.attendance-table tr.row-retired .sticky-col {
+    background: var(--table-danger);
+}
+
+.attendance-table tr.row-total,
+.attendance-table tr.row-total .sticky-col {
+    background: var(--table-head-bg);
+}
+
+.attendance-table tr.row-total {
+    border-top: 2px solid var(--amarillo);
+}
+
+.audit-entry {
+    transition: background 0.15s;
+}
+
+.audit-entry:hover {
+    background: rgba(26, 79, 214, 0.06);
+}
+
+.divide-soft > * + * {
+    border-color: var(--border-soft);
+}
+
+.btn-soft-warn {
+    background: var(--warn-soft);
+    color: var(--warn);
+    border: 1px solid var(--warn);
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-soft-warn:hover {
+    background: var(--warn);
+    color: #ffffff;
 }
