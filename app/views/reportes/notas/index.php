@@ -9,314 +9,295 @@ include __DIR__ . "/../../layout/header.php";
 include __DIR__ . "/../../layout/navbar.php";
 ?>
 
-<body class="h-full bg-gray-900">
-    <div class="min-h-full">
+<header class="page-header">
+    <div class="mx-auto max-w-5xl px-4 py-5 sm:px-6 flex items-center justify-between flex-wrap gap-3">
+        <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-accent mb-0.5">
+                Reportes · Notas
+            </p>
+            <h1 class="text-2xl font-bold text-strong font-display">Reporte de Notas</h1>
+            <p class="text-sm text-muted mt-0.5">
+                Exporta informes de notas por alumno o por asignatura
+            </p>
+        </div>
+        <a href="index.php?action=reportes"
+            class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Volver a reportes
+        </a>
+    </div>
+</header>
 
-        <!-- HEADER -->
-        <header class="bg-gray-800 border-b border-white/10">
-            <div class="mx-auto max-w-5xl px-4 py-5 sm:px-6 flex items-center justify-between flex-wrap gap-3">
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-widest text-blue-400 mb-0.5">
-                        Reportes · Notas
-                    </p>
-                    <h1 class="text-2xl font-bold text-white">Reporte de Notas</h1>
-                    <p class="text-sm text-gray-400 mt-0.5">
-                        Exporta informes de notas por alumno o por asignatura
-                    </p>
-                </div>
-                <a href="index.php?action=reportes"
-                    class="flex items-center gap-2 text-sm text-gray-400 hover:text-white
-                           border border-gray-600 hover:border-gray-400 px-4 py-2 rounded-lg transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                    </svg>
-                    Volver a reportes
-                </a>
+<main class="mx-auto max-w-5xl px-4 py-8 sm:px-6 space-y-6">
+
+    <!-- ── FILTROS GLOBALES ── -->
+    <div class="panel rounded-xl p-5">
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-muted mb-4">
+            Seleccionar curso y año
+        </h2>
+        <div class="flex flex-wrap items-end gap-4">
+            <div>
+                <label class="block text-xs text-muted mb-1.5">Año académico</label>
+                <select id="sel-anio"
+                    class="input-field text-sm rounded-lg px-3 py-2">
+                    <?php foreach ($anios as $a): ?>
+                        <option value="<?= $a['id'] ?>" <?= $a['id'] == $anioId ? 'selected' : '' ?>>
+                            <?= $a['anio'] ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
-        </header>
-
-        <main class="mx-auto max-w-5xl px-4 py-8 sm:px-6 space-y-6">
-
-            <!-- ── FILTROS GLOBALES ── -->
-            <div class="bg-gray-800 border border-gray-700 rounded-xl p-5">
-                <h2 class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
-                    Seleccionar curso y año
-                </h2>
-                <div class="flex flex-wrap items-end gap-4">
-                    <div>
-                        <label class="block text-xs text-gray-500 mb-1.5">Año académico</label>
-                        <select id="sel-anio"
-                            class="bg-gray-900 text-white text-sm border border-gray-600 rounded-lg
-                                   px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <?php foreach ($anios as $a): ?>
-                                <option value="<?= $a['id'] ?>" <?= $a['id'] == $anioId ? 'selected' : '' ?>>
-                                    <?= $a['anio'] ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-500 mb-1.5">Curso</label>
-                        <select id="sel-curso"
-                            class="bg-gray-900 text-white text-sm border border-gray-600 rounded-lg
-                                   px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[180px]">
-                            <option value="">— Seleccionar curso —</option>
-                            <?php foreach ($cursos as $c): ?>
-                                <option value="<?= $c['curso_id'] ?>">
-                                    <?= htmlspecialchars($c['curso'] ?? $c['curso_nombre'] ?? '—') ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-500 mb-1.5">Semestre</label>
-                        <select id="sel-semestre"
-                            class="bg-gray-900 text-white text-sm border border-gray-600 rounded-lg
-                                   px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="1">1° Semestre</option>
-                            <option value="2">2° Semestre</option>
-                        </select>
-                    </div>
-                </div>
+            <div>
+                <label class="block text-xs text-muted mb-1.5">Curso</label>
+                <select id="sel-curso"
+                    class="input-field text-sm rounded-lg px-3 py-2 min-w-[180px]">
+                    <option value="">— Seleccionar curso —</option>
+                    <?php foreach ($cursos as $c): ?>
+                        <option value="<?= $c['curso_id'] ?>">
+                            <?= htmlspecialchars($c['curso'] ?? $c['curso_nombre'] ?? '—') ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
-
-            <!-- ── CARDS DE REPORTE (2 columnas, todas igual tamaño) ── -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-
-                <!-- CARD 1: Informe individual del alumno -->
-                <div class="bg-gray-800 border border-blue-700/40 rounded-xl overflow-hidden flex flex-col">
-                    <div class="px-5 py-4 border-b border-gray-700/60 flex items-start gap-4">
-                        <div class="w-11 h-11 rounded-xl bg-blue-900/30 flex items-center justify-center text-xl flex-shrink-0">
-                            👤
-                        </div>
-                        <div>
-                            <h3 class="text-white font-bold text-sm">Informe Individual del Alumno</h3>
-                            <p class="text-xs text-gray-400 mt-1 leading-relaxed">
-                                Genera el informe completo de un alumno con todas sus asignaturas
-                                en ambos semestres, promedios y asistencia.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="px-5 py-4 space-y-3 flex-1 flex flex-col justify-between">
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1.5">Seleccionar alumno</label>
-                            <select id="sel-alumno"
-                                class="w-full bg-gray-900 text-white text-xs border border-gray-600 rounded-lg
-                                       px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="">— Primero selecciona un curso —</option>
-                            </select>
-                        </div>
-                        <button id="btn-pdf-alumno" onclick="descargarPdfAlumno()" disabled
-                            class="w-full flex items-center justify-center gap-2 px-4 py-2.5
-                                   bg-blue-700 hover:bg-blue-600 text-white font-semibold
-                                   rounded-xl transition text-sm
-                                   disabled:opacity-40 disabled:cursor-not-allowed">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
-                                       M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
-                            </svg>
-                            Descargar informe
-                        </button>
-                    </div>
-                </div>
-
-                <!-- CARD 2: Notas por asignatura -->
-                <div class="bg-gray-800 border border-indigo-700/40 rounded-xl overflow-hidden flex flex-col">
-                    <div class="px-5 py-4 border-b border-gray-700/60 flex items-start gap-4">
-                        <div class="w-11 h-11 rounded-xl bg-indigo-900/30 flex items-center justify-center text-xl flex-shrink-0">
-                            📚
-                        </div>
-                        <div>
-                            <h3 class="text-white font-bold text-sm">Notas por Asignatura</h3>
-                            <p class="text-xs text-gray-400 mt-1 leading-relaxed">
-                                Exporta todas las notas de un ramo específico para el curso completo,
-                                con promedios por columna y porcentaje de aprobación.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="px-5 py-4 space-y-3 flex-1 flex flex-col justify-between">
-                        <div>
-                            <label class="block text-xs text-gray-500 mb-1.5">Seleccionar asignatura</label>
-                            <select id="sel-asignatura"
-                                class="w-full bg-gray-900 text-white text-xs border border-gray-600 rounded-lg
-                                       px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <option value="">— Primero selecciona un curso —</option>
-                            </select>
-                        </div>
-                        <button id="btn-pdf-asignatura" onclick="descargarPdfAsignatura()" disabled
-                            class="w-full flex items-center justify-center gap-2 px-4 py-2.5
-                                   bg-indigo-700 hover:bg-indigo-600 text-white font-semibold
-                                   rounded-xl transition text-sm
-                                   disabled:opacity-40 disabled:cursor-not-allowed">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
-                                       M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
-                            </svg>
-                            Descargar notas del ramo
-                        </button>
-                    </div>
-                </div>
-
-                <!-- CARD 3: Consolidado de notas -->
-                <div class="bg-gray-800 border border-teal-700/40 rounded-xl overflow-hidden flex flex-col">
-                    <div class="px-5 py-4 border-b border-gray-700/60 flex items-start gap-4">
-                        <div class="w-11 h-11 rounded-xl bg-teal-900/30 flex items-center justify-center text-xl flex-shrink-0">
-                            📊
-                        </div>
-                        <div>
-                            <h3 class="text-white font-bold text-sm">Consolidado de Notas</h3>
-                            <p class="text-xs text-gray-400 mt-1 leading-relaxed">
-                                Genera una tabla con todos los alumnos del curso y el promedio
-                                de cada asignatura en el semestre seleccionado.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="px-5 py-4 space-y-3 flex-1 flex flex-col justify-between">
-                        <p class="text-xs text-gray-500">
-                            Usa el curso, año y semestre seleccionados arriba.
-                        </p>
-                        <button id="btn-pdf-consolidado" onclick="descargarPdfConsolidado()" disabled
-                            class="w-full flex items-center justify-center gap-2 px-4 py-2.5
-                                   bg-teal-700 hover:bg-teal-600 text-white font-semibold
-                                   rounded-xl transition text-sm
-                                   disabled:opacity-40 disabled:cursor-not-allowed">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
-                                       M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
-                            </svg>
-                            Descargar consolidado
-                        </button>
-                    </div>
-                </div>
-
-                <!-- CARD 4: Ranking de Notas -->
-                <div class="bg-gray-800 border border-amber-700/40 rounded-xl overflow-hidden flex flex-col">
-                    <div class="px-5 py-4 border-b border-gray-700/60 flex items-start gap-4">
-                        <div class="w-11 h-11 rounded-xl bg-amber-900/30 flex items-center justify-center text-xl flex-shrink-0">
-                            🏆
-                        </div>
-                        <div>
-                            <h3 class="text-white font-bold text-sm">Ranking de Notas</h3>
-                            <p class="text-xs text-gray-400 mt-1 leading-relaxed">
-                                Todos los alumnos y asignaturas ordenados de menor a mayor promedio,
-                                agrupados por curso · Año <span id="ranking-anio-label">—</span>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="px-5 py-4 space-y-3 flex-1 flex flex-col justify-between">
-                        <p class="text-xs text-gray-500">
-                            El ranking incluye todos los cursos del año seleccionado automáticamente.
-                        </p>
-                        <div class="flex gap-3">
-                            <button onclick="abrirModalRanking('alumnos')"
-                                id="btn-ranking-alumnos" disabled
-                                class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5
-                                       bg-amber-700 hover:bg-amber-600 text-white font-semibold
-                                       rounded-xl transition text-sm
-                                       disabled:opacity-40 disabled:cursor-not-allowed">
-                                👤 Alumnos
-                            </button>
-                            <button onclick="abrirModalRanking('asignaturas')"
-                                id="btn-ranking-asignaturas" disabled
-                                class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5
-                                       bg-orange-700 hover:bg-orange-600 text-white font-semibold
-                                       rounded-xl transition text-sm
-                                       disabled:opacity-40 disabled:cursor-not-allowed">
-                                📚 Asignaturas
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
+            <div>
+                <label class="block text-xs text-muted mb-1.5">Semestre</label>
+                <select id="sel-semestre"
+                    class="input-field text-sm rounded-lg px-3 py-2">
+                    <option value="1">1° Semestre</option>
+                    <option value="2">2° Semestre</option>
+                </select>
             </div>
-
-            <div id="aviso-curso" class="hidden text-center py-6 text-gray-600 text-sm">
-                Selecciona un curso para cargar alumnos y asignaturas
-            </div>
-
-        </main>
+        </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════════
-         MODAL RANKING
-         ══════════════════════════════════════════════════════════ -->
-    <div id="modal-ranking"
-        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-        <div class="bg-gray-800 border border-gray-600 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl">
+    <!-- ── CARDS DE REPORTE (2 columnas, todas igual tamaño) ── -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
-            <!-- Header modal -->
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-700">
-                <div>
-                    <h2 class="text-white font-bold text-lg" id="modal-ranking-titulo">Ranking de Notas</h2>
-                    <p class="text-xs text-gray-400 mt-0.5" id="modal-ranking-subtitulo">—</p>
+        <!-- CARD 1: Informe individual del alumno -->
+        <div class="report-card report-blue rounded-xl overflow-hidden flex flex-col">
+            <div class="px-5 py-4 border-b divider-soft flex items-start gap-4">
+                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
+                    👤
                 </div>
-                <button onclick="cerrarModalRanking()"
-                    class="text-gray-400 hover:text-white transition p-1 rounded-lg hover:bg-gray-700">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
+                <div>
+                    <h3 class="text-strong font-bold text-sm font-display">Informe Individual del Alumno</h3>
+                    <p class="text-xs text-muted mt-1 leading-relaxed">
+                        Genera el informe completo de un alumno con todas sus asignaturas
+                        en ambos semestres, promedios y asistencia.
+                    </p>
+                </div>
             </div>
-
-            <!-- Pestañas + filtro curso -->
-            <div class="flex items-center border-b border-gray-700 px-6">
-                <button id="tab-alumnos" onclick="cambiarTab('alumnos')"
-                    class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 transition border-amber-500 text-amber-400">
-                    👤 Por Alumno
-                </button>
-                <button id="tab-asignaturas" onclick="cambiarTab('asignaturas')"
-                    class="tab-btn px-4 py-3 text-sm font-semibold border-b-2 transition border-transparent text-gray-400 hover:text-white">
-                    📚 Por Asignatura
-                </button>
-                <div id="filtro-curso-wrap" class="ml-auto flex items-center gap-2 py-2">
-                    <label class="text-xs text-gray-500 whitespace-nowrap">Filtrar curso:</label>
-                    <select id="sel-ranking-curso" onchange="filtrarCurso(this.value)"
-                        class="bg-gray-900 text-white text-xs border border-gray-600 rounded-lg
-                               px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-amber-500">
-                        <option value="">— Todos —</option>
+            <div class="px-5 py-4 space-y-3 flex-1 flex flex-col justify-between">
+                <div>
+                    <label class="block text-xs text-muted mb-1.5">Seleccionar alumno</label>
+                    <select id="sel-alumno"
+                        class="input-field w-full text-xs rounded-lg px-3 py-2">
+                        <option value="">— Primero selecciona un curso —</option>
                     </select>
                 </div>
-            </div>
-
-            <!-- Contenido scrolleable -->
-            <div class="flex-1 overflow-y-auto px-6 py-4" id="modal-ranking-contenido">
-                <div class="flex items-center justify-center py-12 text-gray-500 text-sm">
-                    <svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 5.373 0 0 12h4z"></path>
-                    </svg>
-                    Cargando ranking...
-                </div>
-            </div>
-
-            <!-- Footer modal -->
-            <div class="px-6 py-4 border-t border-gray-700 flex justify-between items-center">
-                <p class="text-xs text-gray-500">
-                    Ordenado de menor a mayor promedio · Semestre <span id="modal-sem-label">—</span>
-                </p>
-                <button onclick="descargarPdfRanking()"
-                    class="flex items-center gap-2 px-5 py-2.5 bg-amber-700 hover:bg-amber-600
-                           text-white font-semibold rounded-xl transition text-sm">
+                <button id="btn-pdf-alumno" onclick="descargarPdfAlumno()" disabled
+                    class="report-btn w-full flex items-center justify-center gap-2 px-4 py-2.5
+                           font-semibold rounded-xl transition text-sm
+                           disabled:opacity-40 disabled:cursor-not-allowed">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
                                M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
                     </svg>
-                    Descargar PDF
+                    Descargar informe
                 </button>
             </div>
-
         </div>
+
+        <!-- CARD 2: Notas por asignatura -->
+        <div class="report-card report-indigo rounded-xl overflow-hidden flex flex-col">
+            <div class="px-5 py-4 border-b divider-soft flex items-start gap-4">
+                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
+                    📚
+                </div>
+                <div>
+                    <h3 class="text-strong font-bold text-sm font-display">Notas por Asignatura</h3>
+                    <p class="text-xs text-muted mt-1 leading-relaxed">
+                        Exporta todas las notas de un ramo específico para el curso completo,
+                        con promedios por columna y porcentaje de aprobación.
+                    </p>
+                </div>
+            </div>
+            <div class="px-5 py-4 space-y-3 flex-1 flex flex-col justify-between">
+                <div>
+                    <label class="block text-xs text-muted mb-1.5">Seleccionar asignatura</label>
+                    <select id="sel-asignatura"
+                        class="input-field w-full text-xs rounded-lg px-3 py-2">
+                        <option value="">— Primero selecciona un curso —</option>
+                    </select>
+                </div>
+                <button id="btn-pdf-asignatura" onclick="descargarPdfAsignatura()" disabled
+                    class="report-btn w-full flex items-center justify-center gap-2 px-4 py-2.5
+                           font-semibold rounded-xl transition text-sm
+                           disabled:opacity-40 disabled:cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
+                               M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                    </svg>
+                    Descargar notas del ramo
+                </button>
+            </div>
+        </div>
+
+        <!-- CARD 3: Consolidado de notas -->
+        <div class="report-card report-teal rounded-xl overflow-hidden flex flex-col">
+            <div class="px-5 py-4 border-b divider-soft flex items-start gap-4">
+                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
+                    📊
+                </div>
+                <div>
+                    <h3 class="text-strong font-bold text-sm font-display">Consolidado de Notas</h3>
+                    <p class="text-xs text-muted mt-1 leading-relaxed">
+                        Genera una tabla con todos los alumnos del curso y el promedio
+                        de cada asignatura en el semestre seleccionado.
+                    </p>
+                </div>
+            </div>
+            <div class="px-5 py-4 space-y-3 flex-1 flex flex-col justify-between">
+                <p class="text-xs text-muted">
+                    Usa el curso, año y semestre seleccionados arriba.
+                </p>
+                <button id="btn-pdf-consolidado" onclick="descargarPdfConsolidado()" disabled
+                    class="report-btn w-full flex items-center justify-center gap-2 px-4 py-2.5
+                           font-semibold rounded-xl transition text-sm
+                           disabled:opacity-40 disabled:cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
+                               M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                    </svg>
+                    Descargar consolidado
+                </button>
+            </div>
+        </div>
+
+        <!-- CARD 4: Ranking de Notas -->
+        <div class="report-card report-amber rounded-xl overflow-hidden flex flex-col">
+            <div class="px-5 py-4 border-b divider-soft flex items-start gap-4">
+                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
+                    🏆
+                </div>
+                <div>
+                    <h3 class="text-strong font-bold text-sm font-display">Ranking de Notas</h3>
+                    <p class="text-xs text-muted mt-1 leading-relaxed">
+                        Todos los alumnos y asignaturas ordenados de menor a mayor promedio,
+                        agrupados por curso · Año <span id="ranking-anio-label">—</span>
+                    </p>
+                </div>
+            </div>
+            <div class="px-5 py-4 space-y-3 flex-1 flex flex-col justify-between">
+                <p class="text-xs text-muted">
+                    El ranking incluye todos los cursos del año seleccionado automáticamente.
+                </p>
+                <div class="flex gap-3">
+                    <button onclick="abrirModalRanking('alumnos')"
+                        id="btn-ranking-alumnos" disabled
+                        class="report-btn flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                               font-semibold rounded-xl transition text-sm
+                               disabled:opacity-40 disabled:cursor-not-allowed">
+                        👤 Alumnos
+                    </button>
+                    <button onclick="abrirModalRanking('asignaturas')"
+                        id="btn-ranking-asignaturas" disabled
+                        class="report-btn flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                               font-semibold rounded-xl transition text-sm
+                               disabled:opacity-40 disabled:cursor-not-allowed">
+                        📚 Asignaturas
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-</body>
+    <div id="aviso-curso" class="hidden text-center py-6 text-faint text-sm">
+        Selecciona un curso para cargar alumnos y asignaturas
+    </div>
+
+</main>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL RANKING
+     ══════════════════════════════════════════════════════════ -->
+<div id="modal-ranking"
+    class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+    <div class="report-amber modal-panel rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl">
+
+        <!-- Header modal -->
+        <div class="flex items-center justify-between px-6 py-4 border-b divider-soft">
+            <div>
+                <h2 class="text-strong font-bold text-lg font-display" id="modal-ranking-titulo">Ranking de Notas</h2>
+                <p class="text-xs text-muted mt-0.5" id="modal-ranking-subtitulo">—</p>
+            </div>
+            <button onclick="cerrarModalRanking()"
+                class="icon-btn transition p-1 rounded-lg">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Pestañas + filtro curso -->
+        <div class="flex items-center border-b divider-soft px-6">
+            <button id="tab-alumnos" onclick="cambiarTab('alumnos')"
+                class="tab-btn is-active px-4 py-3 text-sm font-semibold">
+                👤 Por Alumno
+            </button>
+            <button id="tab-asignaturas" onclick="cambiarTab('asignaturas')"
+                class="tab-btn px-4 py-3 text-sm font-semibold">
+                📚 Por Asignatura
+            </button>
+            <div id="filtro-curso-wrap" class="ml-auto flex items-center gap-2 py-2">
+                <label class="text-xs text-muted whitespace-nowrap">Filtrar curso:</label>
+                <select id="sel-ranking-curso" onchange="filtrarCurso(this.value)"
+                    class="input-field text-xs rounded-lg px-2 py-1.5">
+                    <option value="">— Todos —</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Contenido scrolleable -->
+        <div class="flex-1 overflow-y-auto px-6 py-4" id="modal-ranking-contenido">
+            <div class="flex items-center justify-center py-12 text-muted text-sm">
+                <svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 5.373 0 0 12h4z"></path>
+                </svg>
+                Cargando ranking...
+            </div>
+        </div>
+
+        <!-- Footer modal -->
+        <div class="px-6 py-4 border-t divider-soft flex justify-between items-center">
+            <p class="text-xs text-muted">
+                Ordenado de menor a mayor promedio · Semestre <span id="modal-sem-label">—</span>
+            </p>
+            <button onclick="descargarPdfRanking()"
+                class="report-btn flex items-center gap-2 px-5 py-2.5
+                       font-semibold rounded-xl transition text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
+                           M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                </svg>
+                Descargar PDF
+            </button>
+        </div>
+
+    </div>
+</div>
 
 <script>
 // ── Estado global ─────────────────────────────────────────────
@@ -470,14 +451,7 @@ function cambiarTab(tab) {
 
 function activarTab(tab) {
     ['alumnos', 'asignaturas'].forEach(t => {
-        const btn = document.getElementById('tab-' + t);
-        if (t === tab) {
-            btn.classList.add('border-amber-500', 'text-amber-400');
-            btn.classList.remove('border-transparent', 'text-gray-400');
-        } else {
-            btn.classList.remove('border-amber-500', 'text-amber-400');
-            btn.classList.add('border-transparent', 'text-gray-400');
-        }
+        document.getElementById('tab-' + t).classList.toggle('is-active', t === tab);
     });
     document.getElementById('modal-ranking-titulo').textContent =
         tab === 'alumnos' ? '🏆 Ranking de Alumnos por Promedio' : '📊 Ranking de Asignaturas por Promedio';
@@ -492,13 +466,13 @@ function cargarRanking(anioId, semestre) {
         .then(data => { rankingData = data; renderRanking(data); })
         .catch(() => {
             document.getElementById('modal-ranking-contenido').innerHTML =
-                '<p class="text-red-400 text-sm text-center py-8">Error al cargar el ranking.</p>';
+                '<p class="text-danger text-sm text-center py-8">Error al cargar el ranking.</p>';
         });
 }
 
 function mostrarCargando() {
     document.getElementById('modal-ranking-contenido').innerHTML = `
-        <div class="flex items-center justify-center py-12 text-gray-500 text-sm">
+        <div class="flex items-center justify-center py-12 text-muted text-sm">
             <svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 5.373 0 0 12h4z"></path>
@@ -515,7 +489,7 @@ function renderRanking(data) {
         const cursoKeys = Object.keys(cursos);
 
         if (cursoKeys.length === 0) {
-            contenido.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">Sin datos para este año/semestre.</p>';
+            contenido.innerHTML = '<p class="text-muted text-sm text-center py-8">Sin datos para este año/semestre.</p>';
             return;
         }
 
@@ -536,38 +510,37 @@ function renderRanking(data) {
             const alumnos = cursos[cursoNombre];
             html += `<div class="mb-6" data-curso="${cursoNombre}">
                 <div class="flex items-center gap-2 mb-2">
-                    <span class="bg-amber-900/40 text-amber-400 text-xs font-bold px-3 py-1 rounded-full border border-amber-700/40">
+                    <span class="report-badge text-xs font-bold px-3 py-1 rounded-full">
                         ${cursoNombre}
                     </span>
-                    <span class="text-gray-600 text-xs">${alumnos.length} alumno${alumnos.length !== 1 ? 's' : ''}</span>
+                    <span class="text-faint text-xs">${alumnos.length} alumno${alumnos.length !== 1 ? 's' : ''}</span>
                 </div>
-                <table class="w-full text-xs">
+                <table class="data-table w-full text-xs">
                     <thead>
-                        <tr class="bg-gray-700/50">
-                            <th class="text-left px-3 py-2 text-gray-400 font-semibold">#</th>
-                            <th class="text-left px-3 py-2 text-gray-400 font-semibold">Alumno</th>
-                            <th class="text-center px-3 py-2 text-gray-400 font-semibold">Promedio</th>
+                        <tr>
+                            <th class="text-left px-3 py-2 text-muted font-semibold">#</th>
+                            <th class="text-left px-3 py-2 text-muted font-semibold">Alumno</th>
+                            <th class="text-center px-3 py-2 text-muted font-semibold">Promedio</th>
                         </tr>
                     </thead>
                     <tbody>`;
 
             alumnos.forEach((a, i) => {
                 const prom    = a.promedio;
-                const color   = prom === null ? 'text-gray-500' : (prom >= 4.0 ? 'text-emerald-400' : 'text-red-400');
+                const color   = prom === null ? 'text-faint' : (prom >= 4.0 ? 'text-success' : 'text-danger');
                 const promTxt = prom !== null ? parseFloat(prom).toFixed(1) : 'S/N';
                 // Verifica pendiente usando matricula_id
                 const tienePendiente = data.pendientes_alumnos?.[cursoNombre]?.includes(a.matricula_id);
                 const badgePendiente = tienePendiente
-                    ? `<span class="ml-2 text-[10px] font-normal bg-yellow-900/50 text-yellow-400
-                               border border-yellow-700/40 px-1.5 py-0.5 rounded-full">⚠ Faltan notas</span>`
+                    ? `<span class="chip-warn ml-2 text-[10px] font-normal px-1.5 py-0.5 rounded-full">⚠ Faltan notas</span>`
                     : '';
 
                 html += `
-                    <tr class="border-t border-gray-700/50 hover:bg-gray-700/20">
-                        <td class="px-3 py-2 text-gray-500 font-bold">${i + 1}</td>
-                        <td class="px-3 py-2 text-white font-semibold">
+                    <tr>
+                        <td class="px-3 py-2 text-muted font-bold">${i + 1}</td>
+                        <td class="px-3 py-2 text-strong font-semibold">
                             ${a.apepat} ${a.apemat}
-                            <span class="text-gray-400 font-normal">${a.nombre}</span>
+                            <span class="text-muted font-normal">${a.nombre}</span>
                             ${badgePendiente}
                         </td>
                         <td class="px-3 py-2 text-center font-bold text-base ${color}">${promTxt}</td>
@@ -584,39 +557,38 @@ function renderRanking(data) {
         const asigs = data.asignaturas ?? [];
 
         if (asigs.length === 0) {
-            contenido.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">Sin datos para este año/semestre.</p>';
+            contenido.innerHTML = '<p class="text-muted text-sm text-center py-8">Sin datos para este año/semestre.</p>';
             return;
         }
 
         let html = `
-        <table class="w-full text-xs">
+        <table class="data-table w-full text-xs">
             <thead>
-                <tr class="bg-gray-700/50">
-                    <th class="text-left px-3 py-2 text-gray-400 font-semibold">#</th>
-                    <th class="text-left px-3 py-2 text-gray-400 font-semibold">Asignatura</th>
-                    <th class="text-left px-3 py-2 text-gray-400 font-semibold">Curso</th>
-                    <th class="text-center px-3 py-2 text-gray-400 font-semibold">Promedio</th>
+                <tr>
+                    <th class="text-left px-3 py-2 text-muted font-semibold">#</th>
+                    <th class="text-left px-3 py-2 text-muted font-semibold">Asignatura</th>
+                    <th class="text-left px-3 py-2 text-muted font-semibold">Curso</th>
+                    <th class="text-center px-3 py-2 text-muted font-semibold">Promedio</th>
                 </tr>
             </thead>
             <tbody>`;
 
         asigs.forEach((a, i) => {
             const prom    = a.promedio;
-            const color   = prom === null ? 'text-gray-500' : (prom >= 4.0 ? 'text-emerald-400' : 'text-red-400');
+            const color   = prom === null ? 'text-faint' : (prom >= 4.0 ? 'text-success' : 'text-danger');
             const promTxt = prom !== null ? parseFloat(prom).toFixed(1) : 'S/N';
             const faltanAlumnos = data.pendientes_asignaturas?.some(
                 p => p.asignatura === a.asignatura && p.curso === a.curso
             );
             const badgeAsig = faltanAlumnos
-                ? `<span class="ml-2 text-[10px] font-normal bg-yellow-900/50 text-yellow-400
-                           border border-yellow-700/40 px-1.5 py-0.5 rounded-full">⚠ Faltan alumnos con nota</span>`
+                ? `<span class="chip-warn ml-2 text-[10px] font-normal px-1.5 py-0.5 rounded-full">⚠ Faltan alumnos con nota</span>`
                 : '';
 
             html += `
-                <tr class="border-t border-gray-700/50 hover:bg-gray-700/20">
-                    <td class="px-3 py-2 text-gray-500 font-bold">${i + 1}</td>
-                    <td class="px-3 py-2 text-white font-semibold">${a.asignatura}${badgeAsig}</td>
-                    <td class="px-3 py-2 text-gray-400">${a.curso}</td>
+                <tr>
+                    <td class="px-3 py-2 text-muted font-bold">${i + 1}</td>
+                    <td class="px-3 py-2 text-strong font-semibold">${a.asignatura}${badgeAsig}</td>
+                    <td class="px-3 py-2 text-muted">${a.curso}</td>
                     <td class="px-3 py-2 text-center font-bold text-base ${color}">${promTxt}</td>
                 </tr>`;
         });
