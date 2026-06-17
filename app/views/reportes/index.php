@@ -39,12 +39,12 @@ $modulos = [
     ],
     [
         'titulo' => 'Reporte de Matrícula',
-        'descripcion' => 'Exporta nómina de alumnos matriculados por curso y año.',
+        'descripcion' => 'Exporta nómina de alumnos con matrícula activa por curso y año.',
         'icono' => '🎓',
         'color' => 'purple',
-        'url' => '#',
-        'disponible' => false,
-        'tags' => ['Próximamente'],
+        'url' => 'index.php?action=reportes_matricula',
+        'disponible' => true,
+        'tags' => ['PDF', 'Por curso', 'General'],
     ],
     [
         'titulo' => 'Reporte Alumnos Etnia',
@@ -57,12 +57,12 @@ $modulos = [
     ],
     [
         'titulo' => 'Reporte Alumnos Pie',
-        'descripcion' => 'Exporta filtro de Alumnos ingresados a PIE',
+        'descripcion' => 'Exporta el listado de alumnos PIE por curso y categoría, con porcentajes.',
         'icono' => '👦',
         'color' => 'cyan',
-        'url' => '',
-        'disponible' => false,
-        'tags' => ['Próximamente'],
+        'url' => 'index.php?action=reportes_pie',
+        'disponible' => true,
+        'tags' => ['PDF', 'Por curso', 'Por categoría'],
     ],
     [
         'titulo' => 'Alumno Regular',
@@ -72,7 +72,16 @@ $modulos = [
         'url' => 'index.php?action=reportes_cert_alumno_regular',
         'disponible' => true,          // ← activar
         'tags' => ['PDF', 'Normal', 'Con Asistencia',],
-    ]
+    ],
+    [
+        'titulo' => 'Alumnos Retirados',
+        'descripcion' => 'Exporta el listado de alumnos retirados por curso, con fecha de retiro y porcentaje.',
+        'icono' => '🚪',
+        'color' => 'rose',
+        'url' => 'index.php?action=reportes_retirados',
+        'disponible' => true,
+        'tags' => ['Por curso', 'General', '%'],
+    ],
 ];
 
 // Colores por tipo

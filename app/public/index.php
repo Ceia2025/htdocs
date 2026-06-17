@@ -31,6 +31,13 @@ require_once __DIR__ . '/../controllers/reportes/ReporteDashboardController.php'
 require_once __DIR__ . '/../controllers/reportes/ReporteNotasController.php';
 require_once __DIR__ . '/../controllers/reportes/etnia/ReporteEtniaController.php';
 require_once __DIR__ . '/../controllers/reportes/certificadoAlumnoRegular/CertificadoAlumnoRegularController.php';
+require_once __DIR__ . '/../controllers/reportes/retirados/ReporteRetiradosController.php';
+require_once __DIR__ . '/../controllers/reportes/matricula/ReporteMatriculaController.php';
+require_once __DIR__ . '/../controllers/reportes/pie/ReportePieController.php';
+
+
+
+
 
 
 // ── INSTANCIAS ───────────────────────────────────────────────
@@ -60,6 +67,9 @@ $procedenciaController = new ProcedenciaController();
 $categorizacionController = new CategorizacionController();
 $reporteEtnia = new ReporteEtniaController();
 $reporteNotasController = new ReporteNotasController();
+$reporteRetirosController = new ReporteRetiradosController();
+
+
 
 // ── PERMISOS GLOBAL ──────────────────────────────────────────
 $auth->checkPermiso($action);
@@ -634,6 +644,31 @@ switch ($action) {
 
     case 'cert_alumno_regular_buscar':
         (new CertificadoAlumnoRegularController())->buscar();
+        break;
+
+
+    case 'reportes_retirados':
+        (new ReporteRetiradosController())->index();
+        break;
+
+    case 'reportes_retirados_pdf':
+        (new ReporteRetiradosController())->pdfRetirados();
+        break;
+
+    case 'reportes_matricula':
+        (new ReporteMatriculaController())->index();
+        break;
+
+    case 'reportes_matricula_pdf':
+        (new ReporteMatriculaController())->pdfMatricula();
+        break;
+
+    case 'reportes_pie':
+        (new ReportePieController())->index();
+        break;
+
+    case 'reportes_pie_pdf':
+        (new ReportePieController())->pdfPie();
         break;
 
     // AJAX: datos del alumno (para la card previa en el buscador)
