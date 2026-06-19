@@ -21,8 +21,12 @@ include __DIR__ . "/../../layout/navbar.php";
             <p class="text-sm text-muted mt-0.5">Busca al alumno y selecciona el tipo de certificado a
                 generar</p>
         </div>
-        <a href="index.php?action=reportes" class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
-            ⬅ Reportes
+        <a href="index.php?action=reportes"
+            class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Volver a reportes
         </a>
     </div>
 </header>
@@ -38,28 +42,25 @@ include __DIR__ . "/../../layout/navbar.php";
         </div>
         <div class="px-6 py-5">
             <div class="relative">
-                <input type="text" id="buscador" placeholder="Escribe nombre o RUN del alumno..."
-                    autocomplete="off" class="input-field w-full rounded-xl px-4 py-3 text-sm transition" />
+                <input type="text" id="buscador" placeholder="Escribe nombre o RUN del alumno..." autocomplete="off"
+                    class="input-field w-full rounded-xl px-4 py-3 text-sm transition" />
                 <!-- Spinner -->
                 <div id="spinner" class="absolute right-3 top-3 hidden">
                     <svg class="animate-spin h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                            stroke-width="4" />
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                     </svg>
                 </div>
             </div>
 
             <!-- Resultados autocomplete -->
-            <ul id="resultados"
-                class="dropdown-panel divide-soft mt-1 rounded-xl overflow-hidden hidden divide-y">
+            <ul id="resultados" class="dropdown-panel divide-soft mt-1 rounded-xl overflow-hidden hidden divide-y">
             </ul>
         </div>
     </div>
 
     <!-- CARD ALUMNO SELECCIONADO -->
-    <div id="card-alumno"
-        class="hidden panel rounded-2xl overflow-hidden shadow-lg">
+    <div id="card-alumno" class="hidden panel rounded-2xl overflow-hidden shadow-lg">
         <div class="px-6 py-4 border-b divider-soft flex items-center gap-3">
             <div class="report-icon-bg w-10 h-10 rounded-xl flex items-center justify-center text-xl">👼</div>
             <div>
@@ -109,8 +110,7 @@ include __DIR__ . "/../../layout/navbar.php";
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3">
-                <a id="btn-normal" href="#" target="_blank"
-                    class="report-btn flex-1 inline-flex items-center justify-center gap-2 px-5 py-3
+                <a id="btn-normal" href="#" target="_blank" class="report-btn flex-1 inline-flex items-center justify-center gap-2 px-5 py-3
                            font-semibold rounded-xl shadow transition text-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -119,8 +119,7 @@ include __DIR__ . "/../../layout/navbar.php";
                     Certificado Normal
                 </a>
 
-                <a id="btn-asistencia" href="#" target="_blank"
-                    class="btn-success flex-1 inline-flex items-center justify-center gap-2 px-5 py-3
+                <a id="btn-asistencia" href="#" target="_blank" class="btn-success flex-1 inline-flex items-center justify-center gap-2 px-5 py-3
                            font-semibold rounded-xl shadow transition text-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

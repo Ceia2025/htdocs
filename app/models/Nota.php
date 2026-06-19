@@ -229,16 +229,47 @@ class Nota
     }
 
     // ── Actualizar la fecha de un conjunto de notas (columna) ────
-    public function actualizarFechaNotas(array $ids, string $fecha): bool
+    /* ==========================================
+   PROMEDIO POR CURSO — para ranking de cursos
+========================================== */
+    public function getPromediosPorCurso(int $anioId, int $semestre): array
     {
-        if (empty($ids))
-            return false;
+        $sql = "SELECT
+                c.id AS curso_id,
+                c.nombre AS curso,
+                COUNT(DISTINCT m.id) AS total_alumnos,
+                COUNT(n.id) AS total_notas,
+                AVG(n.nota) AS promedio,
+                SUM(CASE WHEN n.nota >= 4.0 THEN 1 ELSE 0 END) AS total_aprobadas,
+                SUM(CASE WHEN n.nota < 4.0 THEN 1 ELSE 0 END) AS total_reprobadas
+            FROM matriculas2 m
+            JOIN cursos2 c   ON c.id = m.curso_id
+            JOIN alumnos2 al ON al.id = m.alumno_id
+            LEFT JOIN alum_notas2 n ON n.matricula_id = m.id
+                AND n.semestre = :semestre
+            WHERE m.anio_id = :anio_id
+              AND al.deleted_at IS NULL
+              AND c.nombre != 'Test para cursos'
+            GROUP BY c.id, c.nombre
+            HAVING total_notas > 0
+            ORDER BY promedio ASC";
 
-        $placeholders = implode(',', array_fill(0, count($ids), '?'));
-        $sql = "UPDATE {$this->table} SET fecha = ? WHERE id IN ($placeholders)";
-
-        $params = array_merge([$fecha], $ids);
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute($params);
+        $stmt->execute([':anio_id' => $anioId, ':semestre' => $semestre]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($rows as &$r) {
+            $r['promedio'] = $r['promedio'] !== null
+                ? self::redondearNota((float) $r['promedio'], 1)
+                : null;
+            $r['total_alumnos'] = (int) $r['total_alumnos'];
+            $r['total_notas'] = (int) $r['total_notas'];
+            $r['total_aprobadas'] = (int) $r['total_aprobadas'];
+            $r['total_reprobadas'] = (int) $r['total_reprobadas'];
+            $r['pct_aprobacion'] = $r['total_notas'] > 0
+                ? self::redondearNota($r['total_aprobadas'] / $r['total_notas'] * 100, 1)
+                : 0.0;
+        }
+        return $rows;
     }
 }

@@ -22,8 +22,12 @@ $esGeneral = !$cursoId;
             <h1 class="text-2xl font-bold text-strong font-display">Centro de Reportes</h1>
             <p class="text-xs text-muted mt-0.5">Exporta datos de asistencia en PDF o CSV(Excel)</p>
         </div>
-        <a href="index.php?action=dashboard" class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
-            ⬅ Dashboard
+        <a href="index.php?action=reportes"
+            class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Volver a reportes
         </a>
     </div>
 </header>
@@ -84,8 +88,7 @@ $esGeneral = !$cursoId;
         </div>
 
         <div class="flex items-center gap-3">
-            <button type="submit"
-                class="btn-primary text-sm font-semibold px-4 py-2 rounded-lg transition">
+            <button type="submit" class="btn-primary text-sm font-semibold px-4 py-2 rounded-lg transition">
                 🔍 Generar reporte
             </button>
             <a href="index.php?action=reportes"
@@ -162,23 +165,17 @@ $esGeneral = !$cursoId;
                 <table class="data-table w-full text-sm">
                     <thead>
                         <tr>
-                            <th
-                                class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
                                 Curso</th>
-                            <th
-                                class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                 Alumnos</th>
-                            <th
-                                class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                 Clases</th>
-                            <th
-                                class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                 Presentes</th>
-                            <th
-                                class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                 % Asistencia</th>
-                            <th
-                                class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                 Ver detalle</th>
                         </tr>
                     </thead>
@@ -194,7 +191,8 @@ $esGeneral = !$cursoId;
                                 <td class="px-3 py-3 text-center text-soft"><?= $rc['total_alumnos'] ?></td>
                                 <td class="px-3 py-3 text-center text-soft"><?= $rc['total_clases'] ?></td>
                                 <td class="px-3 py-3 text-center text-success font-semibold">
-                                    <?= $rc['total_presentes'] ?></td>
+                                    <?= $rc['total_presentes'] ?>
+                                </td>
                                 <td class="px-3 py-3 text-center">
                                     <span class="font-bold text-base <?= $color ?>">
                                         <?= $pct !== null ? $pct . '%' : '—' ?>
@@ -231,27 +229,20 @@ $esGeneral = !$cursoId;
                 <table class="data-table w-full text-sm">
                     <thead>
                         <tr>
-                            <th
-                                class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
                                 Alumno</th>
-                            <th
-                                class="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
                                 RUN</th>
-                            <th
-                                class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                 Total clases</th>
-                            <th
-                                class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                 Presentes</th>
-                            <th
-                                class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                 % Acumulado</th>
                             <?php if ($mesKey): ?>
-                                <th
-                                    class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                                <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                     Días mes</th>
-                                <th
-                                    class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                                <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                     % Mes</th>
                             <?php endif ?>
                         </tr>
@@ -270,7 +261,8 @@ $esGeneral = !$cursoId;
                                     <?= htmlspecialchars($al['apepat'] . ' ' . $al['apemat'] . ', ' . $al['nombre']) ?>
                                 </td>
                                 <td class="px-3 py-2.5 text-muted font-mono text-xs">
-                                    <?= htmlspecialchars($al['run']) ?></td>
+                                    <?= htmlspecialchars($al['run']) ?>
+                                </td>
                                 <td class="px-3 py-2.5 text-center text-soft"><?= $al['total_clases'] ?></td>
                                 <td class="px-3 py-2.5 text-center text-success"><?= $al['presentes_acum'] ?></td>
                                 <td class="px-3 py-2.5 text-center">

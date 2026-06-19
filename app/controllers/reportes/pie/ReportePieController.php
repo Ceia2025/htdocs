@@ -105,4 +105,44 @@ class ReportePieController
             die("Error al generar PDF: " . $e->getMessage());
         }
     }
+
+    public function pdfPieNotas()
+    {
+        $anioId = (int) ($_GET['anio_id'] ?? 0);
+        $cursoId = isset($_GET['curso_id']) && $_GET['curso_id'] !== ''
+            ? (int) $_GET['curso_id']
+            : null;
+
+        if (!$anioId)
+            die("Falta anio_id.");
+
+        $reporteNotas = $this->model->getNotasPie($anioId, $cursoId);
+        $resumenGlobal = $this->model->getResumenGlobal($anioId, $cursoId);
+
+        $anios = $this->model->getAnios();
+        $anioNombre = '';
+        foreach ($anios as $a) {
+            if ($a['id'] == $anioId) {
+                $anioNombre = $a['anio'];
+                break;
+            }
+        }
+
+        $cursos = $this->model->getCursos($anioId);
+        $cursoNombre = 'Todos los cursos';
+        foreach ($cursos as $c) {
+            if ($c['id'] == $cursoId) {
+                $cursoNombre = $c['nombre'];
+                break;
+            }
+        }
+
+        ob_start();
+        require __DIR__ . '/../../../views/reportes/pie/reportesPieNotas_pdf.php';
+        $html = ob_get_clean();
+
+        $slug = $cursoId ? $cursoNombre : 'General';
+        $this->generarPDF($html, "ReportePieNotas_{$slug}_{$anioNombre}.pdf");
+    }
+
 }

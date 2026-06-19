@@ -19,8 +19,12 @@ $cursoId = $_GET['curso_id'] ?? '';
             <h1 class="text-2xl font-bold text-strong font-display">Reporte de Alumnos Retirados</h1>
             <p class="text-xs text-muted mt-0.5">Retiros por curso, con fecha y porcentaje</p>
         </div>
-        <a href="index.php?action=dashboard" class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
-            ⬅ Dashboard
+        <a href="index.php?action=reportes"
+            class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Volver a reportes
         </a>
     </div>
 </header>
@@ -120,17 +124,13 @@ $cursoId = $_GET['curso_id'] ?? '';
                 <table class="data-table w-full text-sm">
                     <thead>
                         <tr>
-                            <th
-                                class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
                                 Curso</th>
-                            <th
-                                class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                 Matriculados</th>
-                            <th
-                                class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                 Retirados</th>
-                            <th
-                                class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                            <th class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                 % Retiro</th>
                         </tr>
                     </thead>
@@ -141,10 +141,10 @@ $cursoId = $_GET['curso_id'] ?? '';
                                 </td>
                                 <td class="px-4 py-2.5 text-center text-soft"><?= $rc['total_matriculados'] ?></td>
                                 <td class="px-4 py-2.5 text-center text-danger font-semibold">
-                                    <?= $rc['total_retirados'] ?></td>
+                                    <?= $rc['total_retirados'] ?>
+                                </td>
                                 <td class="px-4 py-2.5 text-center">
-                                    <span
-                                        class="font-bold <?= $rc['porcentaje'] >= 15 ? 'text-danger' : 'text-accent' ?>">
+                                    <span class="font-bold <?= $rc['porcentaje'] >= 15 ? 'text-danger' : 'text-accent' ?>">
                                         <?= $rc['porcentaje'] ?>%
                                     </span>
                                 </td>
@@ -172,17 +172,13 @@ $cursoId = $_GET['curso_id'] ?? '';
                     <table class="data-table w-full text-sm">
                         <thead>
                             <tr>
-                                <th
-                                    class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
+                                <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
                                     Alumno</th>
-                                <th
-                                    class="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
+                                <th class="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
                                     RUN</th>
-                                <th
-                                    class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                                <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                     Matrícula</th>
-                                <th
-                                    class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                                <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                                     Fecha de retiro</th>
                             </tr>
                         </thead>

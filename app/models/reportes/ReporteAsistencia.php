@@ -28,10 +28,11 @@ class ReporteAsistencia
     public function getCursos(int $anioId): array
     {
         $sql = "SELECT DISTINCT c.id, c.nombre
-                FROM cursos2 c
-                JOIN matriculas2 m ON m.curso_id = c.id
-                WHERE m.anio_id = :anio_id
-                ORDER BY c.nombre ASC";
+            FROM cursos2 c
+            JOIN matriculas2 m ON m.curso_id = c.id
+            WHERE m.anio_id = :anio_id
+              AND c.nombre != 'Test para cursos'
+            ORDER BY c.nombre ASC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':anio_id' => $anioId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -93,24 +94,24 @@ class ReporteAsistencia
     {
         // Asistencia acumulada del año
         $sqlAcum = "SELECT
-                        m.id        AS matricula_id,
-                        al.apepat,
-                        al.apemat,
-                        al.nombre,
-                        al.run,
-                        c.nombre    AS curso,
-                        COUNT(a.id)            AS total_clases,
-                        SUM(a.presente = 1)    AS presentes_acum
-                    FROM matriculas2 m
-                    JOIN alumnos2 al ON al.id = m.alumno_id
-                    JOIN cursos2  c  ON c.id  = m.curso_id
-                    LEFT JOIN alum_asistencia2 a ON a.matricula_id = m.id
-                        AND (m.fecha_matricula IS NULL OR a.fecha >= m.fecha_matricula)
-                    WHERE m.anio_id  = :anio_id
-                      AND m.curso_id = :curso_id
-                      AND al.deleted_at IS NULL
-                    GROUP BY m.id
-                    ORDER BY al.apepat ASC, al.apemat ASC, al.nombre ASC";
+                    m.id        AS matricula_id,
+                    al.apepat,
+                    al.apemat,
+                    al.nombre,
+                    al.run,
+                    c.nombre    AS curso,
+                    COUNT(a.id)            AS total_clases,
+                    SUM(a.presente = 1)    AS presentes_acum
+                FROM matriculas2 m
+                JOIN alumnos2 al ON al.id = m.alumno_id
+                JOIN cursos2  c  ON c.id  = m.curso_id
+                LEFT JOIN alum_asistencia2 a ON a.matricula_id = m.id
+                    AND (m.fecha_matricula IS NULL OR a.fecha >= m.fecha_matricula)
+                WHERE m.anio_id  = :anio_id
+                  AND m.curso_id = :curso_id
+                  AND al.deleted_at IS NULL
+                GROUP BY m.id
+                ORDER BY al.apepat ASC, al.apemat ASC, al.nombre ASC";
 
         $stmt = $this->conn->prepare($sqlAcum);
         $stmt->execute([':anio_id' => $anioId, ':curso_id' => $cursoId]);
@@ -120,15 +121,15 @@ class ReporteAsistencia
         $asistenciaMes = [];
         if ($mesKey) {
             $sqlMes = "SELECT
-                            a.matricula_id,
-                            COUNT(a.id)         AS total_mes,
-                            SUM(a.presente = 1) AS presentes_mes
-                       FROM alum_asistencia2 a
-                       JOIN matriculas2 m ON m.id = a.matricula_id
-                       WHERE m.anio_id   = :anio_id
-                         AND m.curso_id  = :curso_id
-                         AND DATE_FORMAT(a.fecha, '%Y-%m') = :mes
-                       GROUP BY a.matricula_id";
+                        a.matricula_id,
+                        COUNT(a.id)         AS total_mes,
+                        SUM(a.presente = 1) AS presentes_mes
+                   FROM alum_asistencia2 a
+                   JOIN matriculas2 m ON m.id = a.matricula_id
+                   WHERE m.anio_id   = :anio_id
+                     AND m.curso_id  = :curso_id
+                     AND DATE_FORMAT(a.fecha, '%Y-%m') = :mes
+                   GROUP BY a.matricula_id";
             $stmtMes = $this->conn->prepare($sqlMes);
             $stmtMes->execute([
                 ':anio_id' => $anioId,
@@ -163,6 +164,18 @@ class ReporteAsistencia
                 $al['pct_mes'] = null;
             }
         }
+        unset($al);
+
+        // Ordenar de menor a mayor % acumulado (nulls al final)
+        usort($alumnos, function ($a, $b) {
+            if ($a['pct_acumulado'] === null && $b['pct_acumulado'] === null)
+                return 0;
+            if ($a['pct_acumulado'] === null)
+                return 1;
+            if ($b['pct_acumulado'] === null)
+                return -1;
+            return $a['pct_acumulado'] <=> $b['pct_acumulado'];
+        });
 
         return $alumnos;
     }
@@ -191,15 +204,15 @@ class ReporteAsistencia
     public function getResumenCursos(int $anioId, ?string $mesKey = null): array
     {
         $sql = "SELECT
-                    c.id,
-                    c.nombre AS curso,
-                    COUNT(DISTINCT m.id)        AS total_alumnos,
-                    COUNT(a.id)                 AS total_clases,
-                    SUM(a.presente = 1)         AS total_presentes
-                FROM cursos2 c
-                JOIN matriculas2 m     ON m.curso_id = c.id AND m.anio_id = :anio_id
-                JOIN alumnos2 al       ON al.id = m.alumno_id AND al.deleted_at IS NULL
-                LEFT JOIN alum_asistencia2 a ON a.matricula_id = m.id";
+                c.id,
+                c.nombre AS curso,
+                COUNT(DISTINCT m.id)        AS total_alumnos,
+                COUNT(a.id)                 AS total_clases,
+                SUM(a.presente = 1)         AS total_presentes
+            FROM cursos2 c
+            JOIN matriculas2 m     ON m.curso_id = c.id AND m.anio_id = :anio_id
+            JOIN alumnos2 al       ON al.id = m.alumno_id AND al.deleted_at IS NULL
+            LEFT JOIN alum_asistencia2 a ON a.matricula_id = m.id";
 
         $params = [':anio_id' => $anioId];
 
@@ -208,7 +221,7 @@ class ReporteAsistencia
             $params[':mes'] = $mesKey;
         }
 
-        $sql .= " GROUP BY c.id ORDER BY c.nombre ASC";
+        $sql .= " WHERE c.nombre != 'Test para cursos' GROUP BY c.id ORDER BY c.nombre ASC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
@@ -219,6 +232,18 @@ class ReporteAsistencia
                 ? round(($row['total_presentes'] / $row['total_clases']) * 100, 1)
                 : null;
         }
+        unset($row);
+
+        // Ordenar de menor a mayor % (nulls al final)
+        usort($rows, function ($a, $b) {
+            if ($a['pct'] === null && $b['pct'] === null)
+                return 0;
+            if ($a['pct'] === null)
+                return 1;
+            if ($b['pct'] === null)
+                return -1;
+            return $a['pct'] <=> $b['pct'];
+        });
 
         return $rows;
     }

@@ -554,4 +554,42 @@ class ReporteNotasController
         $dompdf->stream($filename, ['Attachment' => true]);
         exit;
     }
+    public function pdfRankingCursos()
+    {
+        require_once __DIR__ . '/../../models/Nota.php';
+        require_once __DIR__ . '/../../models/Anio.php';
+
+        $anioId = (int) ($_GET['anio_id'] ?? 0);
+        $semestre = (int) ($_GET['semestre'] ?? 1);
+
+        if (!$anioId)
+            die("Falta anio_id.");
+
+        $notaModel = new Nota();
+        $anioModel = new Anio();
+
+        $cursos = $notaModel->getPromediosPorCurso($anioId, $semestre);
+        $anioNombre = $anioModel->getById($anioId)['anio'] ?? $anioId;
+
+        ob_start();
+        require __DIR__ . '/../../views/reportes/notas/rankingCursos_pdf.php';
+        $html = ob_get_clean();
+
+        try {
+            $options = new \Dompdf\Options();
+            $options->set('isRemoteEnabled', true);
+            $options->set('defaultFont', 'DejaVu Sans');
+
+            $dompdf = new \Dompdf\Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('letter', 'portrait');
+            $dompdf->render();
+
+            header('Content-Type: application/pdf');
+            $dompdf->stream("RankingCursos_{$anioNombre}_Sem{$semestre}.pdf", ['Attachment' => true]);
+            exit;
+        } catch (Exception $e) {
+            die("Error al generar PDF: " . $e->getMessage());
+        }
+    }
 }

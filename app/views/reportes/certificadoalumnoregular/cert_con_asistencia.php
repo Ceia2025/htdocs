@@ -34,26 +34,33 @@
         .header-left {
             display: table-cell;
             width: 28%;
-            vertical-align: middle;
+            vertical-align: top;
         }
 
         .header-center {
             display: table-cell;
-            width: 44%;
-            vertical-align: middle;
+            width: 30%;
+            vertical-align: top;
             text-align: center;
         }
 
         .header-right {
             display: table-cell;
             width: 28%;
-            vertical-align: middle;
+            vertical-align: top;
             text-align: right;
         }
 
         .header img {
             height: 68px;
             width: auto;
+        }
+
+        .header-center img {
+            height: 28px;
+            width: auto;
+            display: block;
+            margin: -29px auto 0;
         }
 
         /* ── TÍTULO ── */
@@ -79,6 +86,10 @@
         }
 
         .bold {
+            font-weight: bold;
+        }
+
+        .quot {
             font-weight: bold;
         }
 
@@ -148,7 +159,7 @@
 
         /* ── FIRMA ── */
         .firma-wrap {
-            text-align: right;
+            text-align: center;
             margin-top: 50px;
             margin-bottom: 8px;
         }
@@ -157,7 +168,7 @@
             height: 160px;
             width: auto;
             display: block;
-            margin-left: auto;
+            margin: 0 auto;
         }
 
         .firma-nombre {
@@ -220,6 +231,7 @@
     $laEl = $esF ? 'la' : 'el';
     $alumnaO = $esF ? 'alumna' : 'alumno';
     $sraSr = $esF ? 'Srta.' : 'Sr.';
+    $tratamiento = 'Don (ña):';
 
     $mesesES = [
         'enero',
@@ -235,6 +247,12 @@
         'noviembre',
         'diciembre'
     ];
+
+    $nacTexto = '';
+    if (!empty($alumno['fechanac'] ?? $fechanac ?? '')) {
+        $fn = new DateTime($fechanac ?? '');
+        $nacTexto = $fn->format('d') . ' ' . $mesesES[(int) $fn->format('n') - 1] . ' ' . $fn->format('Y');
+    }
     $diasES = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
     $fechaTexto = $diasES[date('w')] . ', ' . date('j') . ' de ' . $mesesES[date('n') - 1] . ' de ' . date('Y');
 
@@ -278,23 +296,20 @@
         <div class="cert-body">
             <p>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                El director ADP que suscribe, certifica que
-                <?= $laEl ?> <?= $sraSr ?>
-                <span class="bold"><?= htmlspecialchars(ucwords(strtolower($nombreCompleto))) ?></span>,
-                RUT. <span class="bold"><?= htmlspecialchars($runCompleto) ?></span>,
-                <?php if (!empty($alumno['direccion'] ?? '')): ?>
-                    Domiciliado en <span class="bold"><?= htmlspecialchars($alumno['direccion'] ?? '') ?></span>,
-                    de la Ciudad de Parral,
+                El director ADP que suscribe, certifica que <?= $tratamiento ?>
+                <span class="bold upper"><?= htmlspecialchars($nombreCompleto) ?>.</span>
+                Rut. <span class="bold"><?= htmlspecialchars($runCompleto) ?></span>,
+                <?php if (!empty($nacTexto)): ?>
+                    Nacido (a) el <span class="bold"><?= $nacTexto ?></span>,
                 <?php endif ?>
-                es <?= $alumnaO ?> regular del
-                <span class="bold"><?= htmlspecialchars($curso) ?></span>,
-                de Adultos, del establecimiento a mi cargo, bajo el registro de matrícula
-                <span class="bold">N.º <?= str_pad($matricula_id ?? '0', 2, '0', STR_PAD_LEFT) ?></span>,
-                periodo escolar <span class="bold"><?= htmlspecialchars($anio) ?></span>.
+                Es Alumno (a) Regular del
+                <span class="quot">"<span class="bold upper"><?= htmlspecialchars($curso) ?></span>"</span>
+                Año de Enseñanza, matriculado (a),
+                para el Año <span class="bold"><?= htmlspecialchars($anio) ?></span>,
                 en el Centro de Educación Integrada de Adultos,
                 <span class="bold">"Juanita Zúñiga Fuentes"</span>,
-                Establecimiento Dependiente de La Ilustre Municipalidad de Parral,
-                Decreto Cooperador &nbsp;<span class="bold">N.º 3290 / 81</span>&nbsp;
+                Establecimiento Dependiente de La Servicio Local de educación pública los Álamos
+                &nbsp;<span class="bold">N.º 3290 / 81</span>&nbsp;
                 del Ministerio de Educación.
             </p>
         </div>
@@ -394,9 +409,6 @@
         <!-- ══ FECHA Y Vº Bº ══ -->
         <div class="fecha-vb">
             <p><?= ucfirst($fechaTexto) ?></p>
-            <p class="vb">
-                V° B°:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JJACH/MACA/PRPC/rlrd
-            </p>
         </div>
 
     </div><!-- /page -->

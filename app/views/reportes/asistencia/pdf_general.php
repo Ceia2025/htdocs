@@ -37,7 +37,7 @@ $totalGlobal = array_sum(array_map('count', $general));
     .rojo     { color: #dc2626; font-weight: bold; }
     .gris     { color: #94a3b8; }
     .footer { margin-top: 14px; border-top: 1px solid #e2e8f0; padding-top: 6px; font-size: 7.5px; color: #94a3b8; text-align: right; }
-    .page-break { page-break-before: always; }
+    /*.page-break { page-break-before: always; }*/
 </style>
 </head>
 <body>
@@ -93,10 +93,10 @@ $totalGlobal = array_sum(array_map('count', $general));
 </table>
 
 <!-- DETALLE POR CURSO -->
-<?php $primero = true; foreach ($general as $cursoNombre => $alumnos):
+<?php foreach ($general as $cursoNombre => $alumnos):
     $conMes = isset($alumnos[0]) && $alumnos[0]['pct_mes'] !== null;
 ?>
-<div class="<?= $primero ? '' : 'page-break' ?>">
+<div>
     <div class="curso-titulo">🎓 <?= htmlspecialchars($cursoNombre) ?> — <?= count($alumnos) ?> alumnos</div>
     <table class="detalle">
         <thead>
@@ -134,7 +134,7 @@ $totalGlobal = array_sum(array_map('count', $general));
         </tbody>
     </table>
 </div>
-<?php $primero = false; endforeach ?>
+<?php endforeach ?>
 
 <div class="footer">
     Reporte generado automáticamente — Sistema SAAT · C.E.I.A. Parral <?= date('Y') ?>

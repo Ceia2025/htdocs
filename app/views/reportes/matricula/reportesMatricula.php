@@ -19,9 +19,12 @@ $cursoId = $_GET['curso_id'] ?? '';
             <h1 class="text-2xl font-bold text-strong font-display">Reporte de Matrícula</h1>
             <p class="text-xs text-muted mt-0.5">Alumnos con matrícula activa por curso</p>
         </div>
-        <a href="index.php?action=dashboard"
+        <a href="index.php?action=reportes"
             class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
-            ⬅ Dashboard
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Volver a reportes
         </a>
     </div>
 </header>

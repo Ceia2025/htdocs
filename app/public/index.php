@@ -671,6 +671,10 @@ switch ($action) {
         (new ReportePieController())->pdfPie();
         break;
 
+    case 'reportes_pie_pdf_notas':
+        (new ReportePieController())->pdfPieNotas();
+        break;
+
     // AJAX: datos del alumno (para la card previa en el buscador)
     case 'cert_alumno_regular_datos':
         header('Content-Type: application/json; charset=utf-8');
@@ -897,6 +901,10 @@ switch ($action) {
 
     case 'reportes_notas_pdf_ranking':
         $reporteNotasController->pdfRanking();
+        break;
+
+    case 'reportes_notas_pdf_ranking_cursos':
+        (new ReporteNotasController())->pdfRankingCursos();
         break;
 
     // ── APIs JSON ────────────────────────────────────────────

@@ -25,10 +25,17 @@ body {
     width: 100%;
     margin-bottom: 24px;
 }
-.header-left   { display: table-cell; width: 28%; vertical-align: middle; }
-.header-center { display: table-cell; width: 44%; vertical-align: middle; text-align: center; }
-.header-right  { display: table-cell; width: 28%; vertical-align: middle; text-align: right; }
-.header img    { height: 68px; width: auto; }
+.header-left   { display: table-cell; width: 28%; vertical-align: top; }
+.header-center { display: table-cell; width: 30%; vertical-align: top; text-align: center; }
+.header-right  { display: table-cell; width: 28%; vertical-align: top; text-align: right; }
+.header img { height: 68px; width: auto; }
+
+.header-center img {
+    height: 28px;   /* 68px reducido un 30% */
+    width: auto;
+    display: block;
+    margin: -29px auto 0; 
+}
 
 /* ── TÍTULO ── */
 .cert-titulo {
@@ -62,7 +69,7 @@ body {
 
 /* ── FIRMA ── */
 .firma-wrap {
-    text-align: right;
+    text-align: center;
     margin-top: 60px;
     margin-bottom: 10px;
 }
@@ -86,7 +93,7 @@ body {
 
 /* ── FECHA Y VB ── */
 .fecha-vb {
-    margin-top: 30px;
+    margin-top: 420px;
     font-size: 11px;
 }
 .fecha-vb p { margin-bottom: 4px; }
@@ -155,7 +162,7 @@ if (!empty($alumno['fechanac'] ?? $fechanac ?? '')) {
             <img src="<?= $logo1 ?>" alt="Educación Pública">
         </div>
         <div class="header-center">
-            <img src="<?= $logo2 ?>" alt="Los Álamos">
+            <img src="<?= $logo2 ?>" alt="">
         </div>
         <div class="header-right">
             <img src="<?= $logo3 ?>" alt="CEIA">
@@ -169,28 +176,27 @@ if (!empty($alumno['fechanac'] ?? $fechanac ?? '')) {
     <div class="cert-body">
         <p>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            Certifico Que <?= $tratamiento ?>
+            El director ADP que suscribe, certifica que <?= $tratamiento ?>
             <span class="bold upper"><?= htmlspecialchars($nombreCompleto) ?>.</span>
             Rut. <span class="bold"><?= htmlspecialchars($runCompleto) ?></span>,
             <?php if (!empty($nacTexto)): ?>
-                Nacido (a) el <span class="bold"><?= $nacTexto ?></span>,
+            Nacido (a) el <span class="bold"><?= $nacTexto ?></span>,
             <?php endif ?>
             Es Alumno (a) Regular del
             <span class="quot">"<span class="bold upper"><?= htmlspecialchars($curso) ?></span>"</span>
-            Año de Enseñanza<?php /* Puedes ajustar el nivel aquí */ ?>,
-            matriculado (a) bajo el número de registro Escolar
-            <span class="bold">N°<?= str_pad($matricula_id ?? '0', 3, '0', STR_PAD_LEFT) ?></span>,
+            
+            matriculado (a),
             para el Año <span class="bold"><?= htmlspecialchars($anio) ?></span>,
             en el Centro de Educación Integrada de Adultos,
-            <span class="bold">"Juanita Zúñiga Fuentes"</span>,
-            Establecimiento Dependiente de La Ilustre Municipalidad de Parral,
-            Decreto Cooperador &nbsp;<span class="bold">N.º 3290 / 81</span>&nbsp;
+            <span class="bold">"Juanita Zúñiga Fuentes"</span>.
+            Establecimiento Dependiente de La Servicio Local de educación pública los Álamos 
+            &nbsp;<span class="bold">N.º 3290 / 81</span>&nbsp;
             del Ministerio de Educación.
         </p>
         <p style="margin-left:30px;">
             Se extiende el presente Certificado, para ser presentado por el interesado (a) en:
         </p>
-        <p class="presentado"><?= htmlspecialchars($motivo ?? 'los fines que estime conveniente') ?></p>
+        <p class="presentado"><?= htmlspecialchars(ucfirst($motivo ?? 'Los fines que estime conveniente')) ?></p>
     </div>
 
     <!-- ══ FIRMA ══ -->
@@ -198,12 +204,9 @@ if (!empty($alumno['fechanac'] ?? $fechanac ?? '')) {
         <img src="<?= $timbre ?>" alt="Firma Director">
     </div>
 
-    <!-- ══ FECHA Y Vº Bº ══ -->
+    <!-- ══ FECHA ══ -->
     <div class="fecha-vb">
         <p><?= ucfirst($fechaTexto) ?></p>
-        <p class="vb">
-            V° B°:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JJACH/MACA/PRPC/rlrd
-        </p>
     </div>
 
 </div><!-- /page -->

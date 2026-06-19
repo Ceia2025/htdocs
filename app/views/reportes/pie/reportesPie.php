@@ -2,13 +2,13 @@
 require_once __DIR__ . "/../../../controllers/AuthController.php";
 $auth = new AuthController();
 $auth->checkAuth();
-$user   = $_SESSION['user'];
+$user = $_SESSION['user'];
 $nombre = $user['nombre'];
-$rol    = $user['rol'];
+$rol = $user['rol'];
 include __DIR__ . "/../../layout/header.php";
 include __DIR__ . "/../../layout/navbar.php";
 
-$anioId  = $_GET['anio_id']  ?? ($anios[0]['id'] ?? '');
+$anioId = $_GET['anio_id'] ?? ($anios[0]['id'] ?? '');
 $cursoId = $_GET['curso_id'] ?? '';
 ?>
 
@@ -19,9 +19,12 @@ $cursoId = $_GET['curso_id'] ?? '';
             <h1 class="text-2xl font-bold text-strong font-display">Reporte de Alumnos PIE</h1>
             <p class="text-xs text-muted mt-0.5">Programa de Integración Escolar, por curso</p>
         </div>
-        <a href="index.php?action=dashboard"
+        <a href="index.php?action=reportes"
             class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
-            ⬅ Dashboard
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Volver a reportes
         </a>
     </div>
 </header>
@@ -69,7 +72,7 @@ $cursoId = $_GET['curso_id'] ?? '';
     <?php if ($anioId): ?>
         <?php
         $queryBase = http_build_query(array_filter([
-            'anio_id'  => $anioId,
+            'anio_id' => $anioId,
             'curso_id' => $cursoId ?: null,
         ]));
         ?>
@@ -82,7 +85,18 @@ $cursoId = $_GET['curso_id'] ?? '';
                 </svg>
                 Descargar PDF
             </a>
+
+            <a href="index.php?action=reportes_pie_pdf_notas&<?= $queryBase ?>"
+                class="report-btn inline-flex items-center gap-2 px-5 py-2.5 font-semibold text-sm rounded-xl shadow transition"
+                style="background: #155e75;">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586
+               a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                PDF con notas
+            </a>
         </div>
+
     <?php endif ?>
 
     <?php if ($anioId): ?>
@@ -115,8 +129,10 @@ $cursoId = $_GET['curso_id'] ?? '';
                 <table class="data-table w-full text-sm">
                     <thead>
                         <tr>
-                            <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">Categoría</th>
-                            <th class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">Total alumnos</th>
+                            <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
+                                Categoría</th>
+                            <th class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                                Total alumnos</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -143,10 +159,14 @@ $cursoId = $_GET['curso_id'] ?? '';
                 <table class="data-table w-full text-sm">
                     <thead>
                         <tr>
-                            <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">Curso</th>
-                            <th class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">Matriculados</th>
-                            <th class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">PIE</th>
-                            <th class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">% PIE</th>
+                            <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
+                                Curso</th>
+                            <th class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                                Matriculados</th>
+                            <th class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                                PIE</th>
+                            <th class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">%
+                                PIE</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -181,10 +201,14 @@ $cursoId = $_GET['curso_id'] ?? '';
                     <table class="data-table w-full text-sm">
                         <thead>
                             <tr>
-                                <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">Alumno</th>
-                                <th class="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">RUN</th>
-                                <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">Sexo</th>
-                                <th class="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">Problema de aprendizaje</th>
+                                <th class="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
+                                    Alumno</th>
+                                <th class="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">RUN
+                                </th>
+                                <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+                                    Sexo</th>
+                                <th class="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted">
+                                    Problema de aprendizaje</th>
                             </tr>
                         </thead>
                         <tbody>

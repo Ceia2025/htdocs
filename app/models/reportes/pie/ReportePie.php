@@ -112,7 +112,7 @@ class ReportePie
 
         foreach ($rows as &$r) {
             $r['total_matriculados'] = (int) $r['total_matriculados'];
-            $r['total_pie']          = (int) $r['total_pie'];
+            $r['total_pie'] = (int) $r['total_pie'];
             $r['porcentaje'] = $r['total_matriculados'] > 0
                 ? $this->redondear($r['total_pie'] / $r['total_matriculados'] * 100, 1)
                 : 0.0;
@@ -185,7 +185,7 @@ class ReportePie
 
         return [
             'total_matriculados' => $totalMat,
-            'total_pie'          => $totalPie,
+            'total_pie' => $totalPie,
             'porcentaje' => $totalMat > 0 ? $this->redondear($totalPie / $totalMat * 100, 1) : 0.0,
         ];
     }
@@ -194,5 +194,54 @@ class ReportePie
     {
         $factor = 10 ** $decimales;
         return round($valor * $factor + 1e-9) / $factor;
+    }
+
+    /* ==========================================
+   NOTAS PIE — promedio general por alumno
+========================================== */
+    public function getNotasPie(int $anioId, ?int $cursoId = null): array
+    {
+        $sql = "SELECT
+                c.nombre        AS curso,
+                al.run,
+                al.apepat,
+                al.apemat,
+                al.nombre,
+                al.sexo,
+                COUNT(n.id)     AS total_notas,
+                AVG(n.nota)     AS promedio
+            FROM matriculas2 m
+            JOIN alumnos2 al            ON al.id = m.alumno_id
+            JOIN cursos2  c             ON c.id  = m.curso_id
+            JOIN antecedente_escolar ae ON ae.alumno_id = al.id
+            LEFT JOIN alum_notas2 n     ON n.matricula_id = m.id
+            WHERE m.anio_id = :anio_id
+              AND al.deleted_at IS NULL
+              AND c.nombre != 'Test para cursos'
+              AND ae.pie = 'Si'";
+
+        $params = [':anio_id' => $anioId];
+
+        if ($cursoId) {
+            $sql .= " AND m.curso_id = :curso_id";
+            $params[':curso_id'] = $cursoId;
+        }
+
+        $sql .= " GROUP BY m.id, c.nombre, al.run, al.apepat, al.apemat, al.nombre, al.sexo
+              ORDER BY c.nombre ASC, al.apepat ASC, al.apemat ASC, al.nombre ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Agrupar por curso y aplicar redondeo correcto
+        $resultado = [];
+        foreach ($rows as $row) {
+            $row['promedio'] = $row['promedio'] !== null
+                ? $this->redondear((float) $row['promedio'], 1)
+                : null;
+            $resultado[$row['curso']][] = $row;
+        }
+        return $resultado;
     }
 }
