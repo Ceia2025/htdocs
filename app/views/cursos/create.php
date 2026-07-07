@@ -2,69 +2,50 @@
 require_once __DIR__ . "/../../controllers/AuthController.php";
 
 $auth = new AuthController();
-$auth->checkAuth(); // obliga a tener sesión iniciada
+$auth->checkAuth();
 
-$user = $_SESSION['user']; // usuario logueado
+$user = $_SESSION['user'];
 $nombre = $user['nombre'];
 $rol = $user['rol'];
 
-// Incluir layout
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 ?>
 
-<html class="h-full bg-gray-900">
-
-<body class="h-full">
-    <div class="min-h-full">
-
-        <!-- HEADER -->
-        <header
-            class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold tracking-tight text-white">Crear Curso</h1>
-            </div>
-        </header>
-
-        <!-- MAIN -->
-        <main>
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-
-                <!-- FORMULARIO -->
-                <div class="flex items-center justify-center">
-                    <div class="bg-gray-700 p-6 rounded-2xl shadow-lg w-full max-w-md">
-                        <h2 class="text-2xl font-bold text-white mb-6 text-center">Nuevo Curso</h2>
-
-                        <form method="POST" action="index.php?action=curso_store" class="space-y-4">
-
-                            <!-- Campo Nombre -->
-                            <div>
-                                <label for="nombre" class="block text-sm font-medium text-gray-200">Nombre del Curso</label>
-                                <input type="text" name="nombre" id="nombre" required
-                                    class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-4 py-2 
-                                    focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-
-                            <!-- Botón -->
-                            <button type="submit" 
-                                class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg 
-                                transition duration-200 ease-in-out">
-                                Guardar
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- VOLVER -->
-                <div class="mt-8 flex items-center justify-center">
-                    <a href="index.php?action=cursos"
-                        class="inline-block rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-gray-600">
-                        ⬅️ Volver
-                    </a>
-                </div>
-            </div>
-        </main>
+<header class="page-header">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold tracking-tight text-strong font-display">Crear Curso</h1>
     </div>
-</body>
-<?php include __DIR__ . "/../layout/footer.php"; ?>
+</header>
 
+<main>
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+
+        <div class="flex items-center justify-center">
+            <div class="panel p-6 rounded-2xl shadow-lg w-full max-w-md">
+                <h2 class="text-2xl font-bold text-strong font-display mb-6 text-center">Nuevo Curso</h2>
+
+                <form method="POST" action="index.php?action=curso_store" class="space-y-4">
+
+                    <div>
+                        <label for="nombre" class="block text-sm font-medium text-soft mb-2">Nombre del Curso</label>
+                        <input type="text" name="nombre" id="nombre" required
+                            class="input-field w-full rounded-lg px-4 py-2">
+                    </div>
+
+                    <button type="submit" class="btn-soft-success w-full font-semibold py-2 rounded-lg transition">
+                        Guardar
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="mt-8 flex items-center justify-center">
+            <a href="index.php?action=cursos" class="btn-secondary inline-block rounded-md px-4 py-2 text-sm font-semibold shadow">
+                ⬅️ Volver
+            </a>
+        </div>
+    </div>
+</main>
+
+<?php include __DIR__ . "/../layout/footer.php"; ?>

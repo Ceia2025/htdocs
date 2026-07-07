@@ -13,22 +13,26 @@ class Matricula
     }
 
     //Busca Por matricula
-    public function buscarMatriculas($nombre = null, $rut = null, $anio = null, $curso = null)
+    public function buscarMatriculas($nombre = null, $rut = null, $anio = null, $curso = null, $numeroMatricula = null)
     {
         $sql = "
-        SELECT m.id,
-               m.numero_lista,
-               m.fecha_retiro,
-               a.run, 
-               CONCAT(a.apepat, ' ', a.apemat, ', ', a.nombre) AS nombre_completo, 
-               c.nombre AS curso, 
-               an.anio AS anio, 
-               m.fecha_matricula
-        FROM matriculas2 m
-        INNER JOIN alumnos2 a ON m.alumno_id = a.id
-        INNER JOIN cursos2 c ON m.curso_id = c.id
-        INNER JOIN anios2 an ON m.anio_id = an.id
-        WHERE 1=1
+    SELECT m.id,
+       m.alumno_id,
+       m.curso_id,
+       m.anio_id,
+       m.numero_lista,
+       m.numero_matricula,
+       m.fecha_retiro,
+       a.run, 
+       CONCAT(a.apepat, ' ', a.apemat, ', ', a.nombre) AS nombre_completo, 
+       c.nombre AS curso, 
+       an.anio AS anio, 
+       m.fecha_matricula
+    FROM matriculas2 m
+    INNER JOIN alumnos2 a ON m.alumno_id = a.id
+    INNER JOIN cursos2 c ON m.curso_id = c.id
+    INNER JOIN anios2 an ON m.anio_id = an.id
+    WHERE 1=1
     ";
 
         $params = [];
@@ -53,11 +57,16 @@ class Matricula
             $params[':curso'] = "%$curso%";
         }
 
+        if (!empty($numeroMatricula)) {
+            $sql .= " AND m.numero_matricula LIKE :numero_matricula";
+            $params[':numero_matricula'] = "%$numeroMatricula%";
+        }
+
         // ORDER BY siempre al final, después de todos los filtros
         $sql .= " ORDER BY 
-        CASE WHEN m.numero_lista IS NULL THEN 1 ELSE 0 END,
-        m.numero_lista ASC,
-        a.apepat ASC";
+    CASE WHEN m.numero_lista IS NULL THEN 1 ELSE 0 END,
+    m.numero_lista ASC,
+    a.apepat ASC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
@@ -114,14 +123,15 @@ class Matricula
     public function create($data)
     {
         $sql = "INSERT INTO {$this->table} 
-                (alumno_id, curso_id, anio_id, fecha_matricula)
-                VALUES (:alumno_id, :curso_id, :anio_id, :fecha_matricula)";
+            (alumno_id, curso_id, anio_id, fecha_matricula, numero_matricula)
+            VALUES (:alumno_id, :curso_id, :anio_id, :fecha_matricula, :numero_matricula)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ':alumno_id' => $data['alumno_id'],
             ':curso_id' => $data['curso_id'],
             ':anio_id' => $data['anio_id'],
-            ':fecha_matricula' => $data['fecha_matricula'] ?? date('Y-m-d')
+            ':fecha_matricula' => $data['fecha_matricula'] ?? date('Y-m-d'),
+            ':numero_matricula' => !empty($data['numero_matricula']) ? $data['numero_matricula'] : null
         ]);
     }
 
@@ -129,12 +139,13 @@ class Matricula
     public function update($id, $data)
     {
         $sql = "UPDATE {$this->table} 
-                SET alumno_id = :alumno_id,
-                curso_id = :curso_id,
-                anio_id = :anio_id,
-                fecha_matricula = :fecha_matricula,
-                numero_lista = :numero_lista
-                WHERE id = :id";
+            SET alumno_id = :alumno_id,
+            curso_id = :curso_id,
+            anio_id = :anio_id,
+            fecha_matricula = :fecha_matricula,
+            numero_lista = :numero_lista,
+            numero_matricula = :numero_matricula
+            WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ':id' => $id,
@@ -142,7 +153,8 @@ class Matricula
             ':curso_id' => $data['curso_id'],
             ':anio_id' => $data['anio_id'],
             ':fecha_matricula' => !empty($data['fecha_matricula']) ? $data['fecha_matricula'] : null,
-            ':numero_lista' => $data['numero_lista'] !== '' ? $data['numero_lista'] : null
+            ':numero_lista' => $data['numero_lista'] !== '' ? $data['numero_lista'] : null,
+            ':numero_matricula' => !empty($data['numero_matricula']) ? $data['numero_matricula'] : null
         ]);
     }
 

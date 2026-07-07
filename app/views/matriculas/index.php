@@ -31,7 +31,7 @@ include __DIR__ . "/../layout/navbar.php";
 
                 <!-- 🔍 FORMULARIO DE BÚSQUEDA -->
                 <form method="GET" action="index.php" class="bg-gray-800/60 backdrop-blur-md border border-gray-700 rounded-2xl p-6 
-             grid grid-cols-1 md:grid-cols-6 gap-4 shadow-xl">
+             grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4 shadow-xl">
 
                     <input type="hidden" name="action" value="matriculas">
 
@@ -43,6 +43,11 @@ include __DIR__ . "/../layout/navbar.php";
                     <!-- RUT -->
                     <input type="text" name="rut" placeholder="RUT" value="<?= htmlspecialchars($_GET['rut'] ?? '') ?>"
                         class="rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3
+               focus:ring-2 focus:ring-indigo-500 transition">
+
+                    <!-- N° Matrícula -->
+                    <input type="text" name="numero_matricula" placeholder="N° Matrícula"
+                        value="<?= htmlspecialchars($_GET['numero_matricula'] ?? '') ?>" class="rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3
                focus:ring-2 focus:ring-indigo-500 transition">
 
                     <!-- Año -->
@@ -89,7 +94,7 @@ include __DIR__ . "/../layout/navbar.php";
                         <div>
                             <p class="text-white font-semibold">Total matrículas</p>
                             <p class="text-xs text-gray-400">
-                                <?php if (!empty($_GET['nombre']) || !empty($_GET['rut']) || !empty($_GET['anio']) || !empty($_GET['curso'])): ?>
+                                <?php if (!empty($_GET['nombre']) || !empty($_GET['rut']) || !empty($_GET['anio']) || !empty($_GET['curso']) || !empty($_GET['numero_matricula'])): ?>
                                     Resultado del filtro aplicado
                                 <?php else: ?>
                                     Sin filtros aplicados
@@ -140,6 +145,7 @@ include __DIR__ . "/../layout/navbar.php";
                         <thead class="bg-slate-950 text-slate-400 uppercase text-xs">
                             <tr>
                                 <th class="px-5 py-3 text-center">N° Lista</th>
+                                <th class="px-5 py-3 text-center">N° Matrícula</th>
                                 <th class="px-5 py-3 text-left">Alumno</th>
                                 <th class="px-5 py-3 text-left">Curso</th>
                                 <th class="px-5 py-3 text-left">Año</th>
@@ -164,6 +170,18 @@ include __DIR__ . "/../layout/navbar.php";
                                             <span class="inline-flex items-center justify-center w-7 h-7 rounded-full 
                                  bg-indigo-500/20 border border-indigo-500/30 text-xs font-bold text-indigo-400">
                                                 <?= $m['numero_lista'] ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="text-gray-600 text-xs">—</span>
+                                        <?php endif; ?>
+                                    </td>
+
+                                    <!-- N° Matrícula -->
+                                    <td class="px-5 py-4 text-center">
+                                        <?php if (!empty($m['numero_matricula'])): ?>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold
+                                         bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                                                <?= htmlspecialchars($m['numero_matricula']) ?>
                                             </span>
                                         <?php else: ?>
                                             <span class="text-gray-600 text-xs">—</span>
@@ -208,11 +226,21 @@ include __DIR__ . "/../layout/navbar.php";
                                                 Perfil Académico
                                             </a>
 
-                                            <a href="index.php?action=matricula_edit&id=<?= $m['id'] ?>" class="px-3 py-1.5 rounded-lg text-xs font-semibold
-                              bg-indigo-500/10 text-indigo-400 border border-indigo-500/20
-                              hover:bg-indigo-500/20">
+                                            <!-- Editar: abre modal (ya no redirige a otra vista) -->
+                                            <button type="button"
+                                                onclick="abrirModalEditar(this)"
+                                                data-id="<?= $m['id'] ?>"
+                                                data-alumno-id="<?= $m['alumno_id'] ?>"
+                                                data-curso-id="<?= $m['curso_id'] ?>"
+                                                data-anio-id="<?= $m['anio_id'] ?>"
+                                                data-fecha="<?= htmlspecialchars($m['fecha_matricula'] ?? '', ENT_QUOTES) ?>"
+                                                data-lista="<?= htmlspecialchars($m['numero_lista'] ?? '', ENT_QUOTES) ?>"
+                                                data-matricula-num="<?= htmlspecialchars($m['numero_matricula'] ?? '', ENT_QUOTES) ?>"
+                                                class="px-3 py-1.5 rounded-lg text-xs font-semibold
+                                                bg-indigo-500/10 text-indigo-400 border border-indigo-500/20
+                                                hover:bg-indigo-500/20 transition">
                                                 Editar
-                                            </a>
+                                            </button>
 
                                             <?php if (!empty($m['fecha_retiro'])): ?>
                                                 <!-- Alumno retirado: mostrar estado + botón reintegrar -->
@@ -233,21 +261,14 @@ include __DIR__ . "/../layout/navbar.php";
                                                 </form>
 
                                             <?php else: ?>
-                                                <!-- Alumno activo: botón retirar (modal) + eliminar -->
+                                                <!-- Alumno activo: botón retirar (modal) -->
                                                 <button type="button"
                                                     onclick="abrirModalRetiro(<?= $m['id'] ?>, '<?= htmlspecialchars($nombre) ?>')"
                                                     class="px-3 py-1.5 rounded-lg text-xs font-semibold
-                                       bg-orange-500/10 text-orange-400 border border-orange-500/20
-                                       hover:bg-orange-500/20 transition">
+                                                bg-orange-500/10 text-orange-400 border border-orange-500/20
+                                                hover:bg-orange-500/20 transition">
                                                     Retirar
                                                 </button>
-
-                                                <a href="index.php?action=matricula_delete&id=<?= $m['id'] ?>"
-                                                    onclick="return confirm('¿Eliminar matrícula definitivamente?')" class="px-3 py-1.5 rounded-lg text-xs font-semibold
-                                  bg-rose-500/10 text-rose-400 border border-rose-500/20
-                                  hover:bg-rose-500/20 transition">
-                                                    Eliminar
-                                                </a>
 
                                             <?php endif; ?>
 
@@ -335,7 +356,111 @@ include __DIR__ . "/../layout/navbar.php";
         </div>
     </div>
 
+
+    <!-- MODAL EDITAR MATRÍCULA -->
+    <div id="modal-editar" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="cerrarModalEditar()"></div>
+
+        <!-- Caja del modal -->
+        <div class="relative bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl p-6 w-full max-w-lg z-10 max-h-[90vh] overflow-y-auto">
+
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-5">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-0.5">
+                        Matrícula
+                    </p>
+                    <h3 class="text-lg font-bold text-white">Editar matrícula</h3>
+                </div>
+                <button onclick="cerrarModalEditar()"
+                    class="text-gray-500 hover:text-white transition p-1 rounded-lg hover:bg-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Form (la action se arma por JS con el id de la fila) -->
+            <form method="post" id="form-editar" class="space-y-5">
+
+                <!-- Alumno -->
+                <div>
+                    <label for="edit-alumno" class="block text-sm font-medium text-gray-200">Alumno</label>
+                    <select name="alumno_id" id="edit-alumno" required
+                        class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <?php foreach ($alumnos as $a): ?>
+                            <option value="<?= $a['id'] ?>">
+                                <?= htmlspecialchars($a['nombre'] . " " . $a['apepat'] . " " . $a['apemat']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <!-- Fecha de matrícula -->
+                <div>
+                    <label for="edit-fecha" class="block text-sm font-medium text-gray-200">Fecha de Matrícula</label>
+                    <input type="date" name="fecha_matricula" id="edit-fecha" max="<?= date('Y-m-d') ?>"
+                        class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+
+                <!-- Curso -->
+                <div>
+                    <label for="edit-curso" class="block text-sm font-medium text-gray-200">Curso</label>
+                    <select name="curso_id" id="edit-curso" required
+                        class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <?php foreach ($cursos as $c): ?>
+                            <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['nombre']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <!-- Año -->
+                <div>
+                    <label for="edit-anio" class="block text-sm font-medium text-gray-200">Año Académico</label>
+                    <select name="anio_id" id="edit-anio" required
+                        class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <?php foreach ($anios as $an): ?>
+                            <option value="<?= $an['id'] ?>"><?= htmlspecialchars($an['anio']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Número de lista -->
+                    <div>
+                        <label for="edit-lista" class="block text-sm font-medium text-gray-200">N° de Lista</label>
+                        <input type="number" name="numero_lista" id="edit-lista" min="1"
+                            class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <!-- Número de matrícula -->
+                    <div>
+                        <label for="edit-matricula" class="block text-sm font-medium text-gray-200">N° de Matrícula</label>
+                        <input type="text" name="numero_matricula" id="edit-matricula"
+                            class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="cerrarModalEditar()"
+                        class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2.5 rounded-xl transition text-sm">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                        class="flex-1 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold py-2.5 rounded-xl transition text-sm">
+                        Actualizar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
     <script>
+        // ---------- MODAL RETIRO ----------
         function abrirModalRetiro(matriculaId, nombreAlumno) {
             document.getElementById('modal-retiro-id').value = matriculaId;
             document.getElementById('modal-retiro-fecha').value = '<?= date('Y-m-d') ?>';
@@ -346,9 +471,34 @@ include __DIR__ . "/../layout/navbar.php";
             document.getElementById('modal-retiro').classList.add('hidden');
         }
 
-        // Cerrar con Escape
+        // ---------- MODAL EDITAR ----------
+        function abrirModalEditar(btn) {
+            const d = btn.dataset;
+            const form = document.getElementById('form-editar');
+
+            // La ruta de update lleva el id por querystring, igual que antes
+            form.action = 'index.php?action=matricula_update&id=' + d.id;
+
+            document.getElementById('edit-alumno').value = d.alumnoId;
+            document.getElementById('edit-curso').value = d.cursoId;
+            document.getElementById('edit-anio').value = d.anioId;
+            document.getElementById('edit-fecha').value = d.fecha || '';
+            document.getElementById('edit-lista').value = d.lista || '';
+            document.getElementById('edit-matricula').value = d.matriculaNum || '';
+
+            document.getElementById('modal-editar').classList.remove('hidden');
+        }
+
+        function cerrarModalEditar() {
+            document.getElementById('modal-editar').classList.add('hidden');
+        }
+
+        // Cerrar con Escape (ambos modales)
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') cerrarModalRetiro();
+            if (e.key === 'Escape') {
+                cerrarModalRetiro();
+                cerrarModalEditar();
+            }
         });
     </script>
 </body>
