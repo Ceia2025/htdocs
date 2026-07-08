@@ -795,9 +795,17 @@ switch ($action) {
             $inventarioController->store($_POST);
         }
         break;
+    case 'inventario_sugerir_codigo':   // AJAX (código auto-editable)
+        $inventarioController->sugerirCodigo();
+        break;
     case 'inventario_edit':
         $inventarioController->edit($_GET['id']);
         break;
+
+    case 'inventario_grupo':
+        $inventarioController->detalleGrupo();
+        break;
+
     case 'inventario_update':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $inventarioController->update($_GET['id'], $_POST);
@@ -806,11 +814,23 @@ switch ($action) {
     case 'inventario_delete':
         $inventarioController->delete($_GET['id']);
         break;
-    case 'inventario_showLugarGrupo':
-        $inventarioController->showLugarGrupo($_GET['lugar'], $_GET['codigo_general']);
+    case 'inventario_restore':
+        $inventarioController->restore($_GET['id']);
+        break;
+    case 'inventario_movimientos':      // historial por bien
+        $inventarioController->movimientos($_GET['id']);
+        break;
+    case 'inventario_movimiento_store':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $inventarioController->registrarMovimiento($_POST);
+        }
         break;
     case 'inventario_exportExcel':
         $inventarioController->exportExcel();
+        break;
+
+    case 'inventario_tipos':            // AJAX autocompletar tipo
+        $inventarioController->tiposSugeridos();
         break;
 
     // ── PROCEDENCIA ──────────────────────────────────────────

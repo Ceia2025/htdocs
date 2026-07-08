@@ -147,14 +147,14 @@ return [
     'pca_asignaturas_por_curso' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_DIRECCION],
 
     // ── INVENTARIO ──
-    'inventario_index' => [ROL_ADMINISTRADOR, ROL_SOPORTE],
-    'inventario_create' => [ROL_ADMINISTRADOR],
-    'inventario_store' => [ROL_ADMINISTRADOR],
-    'inventario_edit' => [ROL_ADMINISTRADOR],
-    'inventario_update' => [ROL_ADMINISTRADOR],
-    'inventario_delete' => [ROL_ADMINISTRADOR],
-    'inventario_exportExcel' => [ROL_ADMINISTRADOR, ROL_SOPORTE],
-    'inventario_showLugarGrupo' => [ROL_ADMINISTRADOR, ROL_SOPORTE],
+    'inventario_index' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_INSPECTOR_GENERAL],
+    'inventario_create' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL],
+    'inventario_store' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL],
+    'inventario_edit' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL],
+    'inventario_update' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL],
+    'inventario_delete' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL],
+    'inventario_exportExcel' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_INSPECTOR_GENERAL],
+    'inventario_showLugarGrupo' => [ROL_ADMINISTRADOR, ROL_SOPORTE], ROL_INSPECTOR_GENERAL,
     'procedencias' => [ROL_ADMINISTRADOR],
     'procedencia_create' => [ROL_ADMINISTRADOR],
     'procedencia_store' => [ROL_ADMINISTRADOR],
@@ -258,11 +258,11 @@ return [
 
     //---Reportes de certificado alumno regular y demas ----
     // ── CERTIFICADO ALUMNO REGULAR ──
-    'reportes_cert_alumno_regular' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
-    'cert_alumno_regular_buscar' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
-    'cert_alumno_regular_datos' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
-    'cert_alumno_regular_pdf' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
-    'cert_alumno_regular_pdf_asistencia' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO],
+    'reportes_cert_alumno_regular' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO, ROL_INSPECTOR_GENERAL],
+    'cert_alumno_regular_buscar' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO, ROL_INSPECTOR_GENERAL],
+    'cert_alumno_regular_datos' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO, ROL_INSPECTOR_GENERAL],
+    'cert_alumno_regular_pdf' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO, ROL_INSPECTOR_GENERAL],
+    'cert_alumno_regular_pdf_asistencia' => [ROL_ADMINISTRADOR, ROL_ADMINISTRATIVO, ROL_INSPECTOR_GENERAL],
 
 
 

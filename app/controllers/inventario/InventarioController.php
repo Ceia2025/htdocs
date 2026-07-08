@@ -1,187 +1,230 @@
 <?php
 require_once __DIR__ . '/../../models/inventario/Inventario.php';
+require_once __DIR__ . '/../../models/inventario/Movimiento.php';
 require_once __DIR__ . '/../../models/inventario/Catalogo.php';
-require_once __DIR__ . '/../../models/inventario/Procedencia.php';
-require_once __DIR__ . '/../../models/inventario/Individualizacion.php';
 
 class InventarioController
 {
+    private $inventario;
+
+    public function __construct()
+    {
+        $this->inventario = new Inventario();
+    }
+
+    // Catálogos que se mantienen (nivel, estado, lugar)
+    private function catalogos()
+    {
+        return [
+            'niveles' => (new Catalogo("nivel_educativo"))->getAll(),
+            'estados' => (new Catalogo("estado_conservacion"))->getAll(),
+            'lugares' => (new Catalogo("lugar_fisico"))->getAll(),
+        ];
+    }
+
+    // Listado + filtros
     public function index()
     {
-        $inventario = new Inventario();
+        // Solo consideramos filtros reales (ignorando 'action')
+        $filtros = $_GET;
+        unset($filtros['action']);
 
-        // Si hay filtros en GET, los aplicamos
-        if (!empty($_GET)) {
-            $items = $inventario->filter($_GET);
-        } else {
-            $items = $inventario->getAll();
-        }
+        $items = $this->inventario->getAgrupado($filtros);
 
-        // Catálogos para los select
-        $nivelesObj = new Catalogo("nivel_educativo");
-        $niveles = $nivelesObj->getAll();
+        extract($this->catalogos());// $niveles, $estados, $lugares
 
-        $categorizacionesObj = new Catalogo("categorizacion");
-        $categorizaciones = $categorizacionesObj->getAll();
-
-        $estadosObj = new Catalogo("estado_conservacion");
-        $estados = $estadosObj->getAll();
-
-        $lugaresObj = new Catalogo("lugar_fisico");
-        $lugares = $lugaresObj->getAll();
-
-        require_once __DIR__ . '/../../views/inventario/index.php';
+        require_once __DIR__ . '/../../views/inventario/inventario_index.php';
     }
 
+    // Formulario de creación
     public function create()
     {
-        $nivelesObj = new Catalogo("nivel_educativo");
-        $niveles = $nivelesObj->getAll();
-
-        $categorizacionesObj = new Catalogo("categorizacion");
-        $categorizaciones = $categorizacionesObj->getAll();
-
-        $estadosObj = new Catalogo("estado_conservacion");
-        $estados = $estadosObj->getAll();
-
-        $lugaresObj = new Catalogo("lugar_fisico");
-        $lugares = $lugaresObj->getAll();
-
-        $procedenciasObj = new Procedencia();
-        $procedencias = $procedenciasObj->getAll();
-
-        $individualizacionesObj = new Individualizacion();
-        $individualizaciones = $individualizacionesObj->getDisponibles();
-
-        require_once __DIR__ . '/../../views/inventario/create.php';
+        extract($this->catalogos());
+        $tipos = $this->inventario->getTipos();
+        require_once __DIR__ . '/../../views/inventario/inventario_create.php';
     }
 
+    // Guardar nuevo bien
+    // Guardar nuevo bien (soporta creación en lote para inventariables)
     public function store($post)
     {
-        $inventario = new Inventario();
-        $data = [
-            "nivel_id" => $post['nivel_id'],
-            "individualizacion_id" => $post['individualizacion_id'],
-            "categorizacion_id" => $post['categorizacion_id'],
-            "cantidad" => $post['cantidad'],
-            "estado_id" => $post['estado_id'],
-            "lugar_id" => $post['lugar_id'],
-            "procedencia_id" => $post['procedencia_id'],
-        ];
-        $inventario->create($data);
-        header("Location: index.php?action=inventario_index");
-    }
+        $naturaleza = $post['naturaleza'] ?? 'inventariable';
+        $n = (int) ($post['cantidad_fichas'] ?? 1);
 
-    public function showLugarGrupo($lugar, $codigo_general)
-    {
-        $inventario = new Inventario();
-        $items = $inventario->getByLugarYCodigo($lugar, $codigo_general);
+        if ($naturaleza === 'inventariable' && $n > 1) {
+            $creados = $this->inventario->createLote($post, $n);
+            header("Location: index.php?action=inventario_index&creados=$creados");
+            exit;
+        }
 
-        require_once __DIR__ . '/../../views/inventario/show_lugar_grupo.php';
-    }
-
-    public function edit($id)
-    {
-        $inventario = new Inventario();
-        $item = $inventario->getById($id);
-
-        $nivelesObj = new Catalogo("nivel_educativo");
-        $niveles = $nivelesObj->getAll();
-
-        $categorizacionesObj = new Catalogo("categorizacion");
-        $categorizaciones = $categorizacionesObj->getAll();
-
-        $estadosObj = new Catalogo("estado_conservacion");
-        $estados = $estadosObj->getAll();
-
-        $lugaresObj = new Catalogo("lugar_fisico");
-        $lugares = $lugaresObj->getAll();
-
-        $procedenciasObj = new Procedencia();
-        $procedencias = $procedenciasObj->getAll();
-
-        $individualizacionesObj = new Individualizacion();
-        $individualizaciones = $individualizacionesObj->getAll();
-
-        require_once __DIR__ . '/../../views/inventario/edit.php';
-    }
-
-    public function update($id, $post)
-    {
-        $inventario = new Inventario();
-        $data = [
-            "nivel_id" => $post['nivel_id'],
-            "individualizacion_id" => $post['individualizacion_id'],
-            "categorizacion_id" => $post['categorizacion_id'],
-            "cantidad" => $post['cantidad'],
-            "estado_id" => $post['estado_id'],
-            "lugar_id" => $post['lugar_id'],
-            "procedencia_id" => $post['procedencia_id'],
-        ];
-        $inventario->update($id, $data);
-        header("Location: index.php?action=inventario_index");
-    }
-
-    public function delete($id)
-    {
-        $inventario = new Inventario();
-        $inventario->delete($id);
-        header("Location: index.php?action=inventario_index");
+        $this->inventario->create($post);
+        header("Location: index.php?action=inventario_index&creado=1");
         exit;
     }
 
-    // Exportando a exel, primera prueba
+    // AJAX: sugerir número + código a partir del nombre
+    public function sugerirCodigo()
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        $nombre = $_GET['nombre'] ?? '';
+        if (trim($nombre) === '') {
+            echo json_encode(['numero' => 1, 'codigo_unico' => '']);
+            exit;
+        }
+        echo json_encode($this->inventario->sugerirCodigo($nombre));
+        exit;
+    }
+    public function tiposSugeridos()
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        $nombre = $_GET['nombre'] ?? null;
+        echo json_encode($this->inventario->getTipos($nombre));
+        exit;
+    }
+
+    // Formulario de edición
+    public function edit($id)
+    {
+        $item = $this->inventario->getById($id);
+        extract($this->catalogos());
+        require_once __DIR__ . '/../../views/inventario/edit.php';
+    }
+
+    // Actualizar bien
+    public function update($id, $post)
+    {
+        $this->inventario->update($id, $post);
+        header("Location: index.php?action=inventario_index&actualizado=1");
+        exit;
+    }
+
+    // Soft delete
+    public function delete($id)
+    {
+        $this->inventario->delete($id);
+        header("Location: index.php?action=inventario_index&eliminado=1");
+        exit;
+    }
+
+    // Restaurar
+    public function restore($id)
+    {
+        $this->inventario->restore($id);
+        header("Location: index.php?action=inventario_index&restaurado=1");
+        exit;
+    }
+
+    // Historial de movimientos de un bien
+    public function movimientos($id)
+    {
+        $item = $this->inventario->getById($id);
+        if (!$item) {
+            header("Location: index.php?action=inventario_index");
+            exit;
+        }
+
+        $movModel = new Movimiento();
+        $movimientos = $movModel->getByInventario($id);
+
+        $lugares = (new Catalogo("lugar_fisico"))->getAll();
+
+        require_once __DIR__ . '/../../views/inventario/movimientos.php';
+    }
+
+    // Registrar un movimiento (cambio de lugar / observación con fecha)
+    public function registrarMovimiento($post)
+    {
+        $inventarioId = $post['inventario_id'] ?? null;
+        $lugarDestino = $post['lugar_destino_id'] ?? null;
+
+        if (!$inventarioId) {
+            header("Location: index.php?action=inventario_index");
+            exit;
+        }
+
+        $item = $this->inventario->getById($inventarioId);
+        $lugarOrigen = $item['lugar_id'] ?? null;
+
+        $movModel = new Movimiento();
+        $movModel->create([
+            'inventario_id' => $inventarioId,
+            'lugar_origen_id' => $lugarOrigen,
+            'lugar_destino_id' => $lugarDestino ?: $lugarOrigen,
+            'observacion' => $post['observacion'] ?? null,
+            'fecha' => $post['fecha'] ?? date('Y-m-d'),
+            'usuario_id' => $_SESSION['user']['id'] ?? null,
+        ]);
+
+        // Si cambió de lugar, actualizamos el lugar actual del bien
+        if (!empty($lugarDestino) && $lugarDestino != $lugarOrigen) {
+            $this->inventario->cambiarLugar($inventarioId, $lugarDestino);
+        }
+
+        header("Location: index.php?action=inventario_movimientos&id=$inventarioId&mov=1");
+        exit;
+    }
+
+    // Exportar a Excel (mismos filtros que el index)
     public function exportExcel()
-{
-    // Incluimos el modelo
-    $inventario = new Inventario();
+    {
+        $filtros = $_GET;
+        unset($filtros['action']);
 
-    // Aplicar los mismos filtros que el index
-    if (!empty($_GET)) {
-        $items = $inventario->filter($_GET);
-    } else {
-        $items = $inventario->getAll();
+        $items = !empty($filtros)
+            ? $this->inventario->filter($_GET)
+            : $this->inventario->getAll();
+
+        $filename = "INVENTARIO_" . date('Y-m-d') . ".xls";
+
+        header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
+        header("Content-Disposition: attachment; filename=\"$filename\"");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        echo "<table border='1'>";
+        echo "<tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>N°</th>
+                <th>Naturaleza</th>
+                <th>Cantidad</th>
+                <th>Nivel Educativo</th>
+                <th>Estado</th>
+                <th>Lugar Físico</th>
+                <th>Observaciones</th>
+                <th>Fecha Registro</th>
+              </tr>";
+
+        foreach ($items as $row) {
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($row['codigo_unico']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['nombre']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['tipo'] ?? '') . "</td>";
+            echo "<td>" . htmlspecialchars($row['numero'] ?? '') . "</td>";
+            echo "<td>" . htmlspecialchars($row['naturaleza']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['cantidad']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['nivel_educativo']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['estado']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['lugar']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['observaciones'] ?? '') . "</td>";
+            echo "<td>" . htmlspecialchars($row['fecha_registro'] ?? '') . "</td>";
+            echo "</tr>";
+        }
+
+        echo "</table>";
+        exit;
     }
 
-    // Definir nombre del archivo
-    $filename = "INVENTARIOMUEBLES_" . date('Y-m-d') . ".xls";
+    public function detalleGrupo()
+    {
+        $nombre = $_GET['nombre'] ?? '';
+        $tipo = $_GET['tipo'] ?? '';
+        $lugarId = $_GET['lugar_id'] ?? null;
 
-    // Enviar cabeceras para forzar descarga como Excel
-    header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
-    header("Content-Disposition: attachment; filename=\"$filename\"");
-    header("Pragma: no-cache");
-    header("Expires: 0");
+        $items = $this->inventario->getGrupo($nombre, $tipo, $lugarId);
+        extract($this->catalogos()); // niveles, estados, lugares (para el modal)
 
-    // Imprimir encabezados según formato oficial
-    echo "<table border='1'>";
-    echo "<tr>
-            <th>Nivel educativo</th>
-            <th>Individualización del bien</th>
-            <th>Categorización</th>
-            <th>Cantidad</th>
-            <th>Estado de conservación</th>
-            <th>Lugar físico</th>
-            <th>Procedencia: Inversión o donación</th>
-            <th>Procedencia: Donador o fondo de adquisición</th>
-            <th>Procedencia: Fecha de adquisición</th>
-          </tr>";
-
-    // Imprimir los datos
-    foreach ($items as $row) {
-        echo "<tr>";
-        echo "<td>" . htmlspecialchars($row['nivel_educativo']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['individualizacion']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['categorizacion']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['cantidad_total']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['estado']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['lugar']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['procedencia_tipo']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['donador_fondo']) . "</td>";
-        echo "<td>" . htmlspecialchars($row['fecha_adquisicion']) . "</td>";
-        echo "</tr>";
+        require_once __DIR__ . '/../../views/inventario/detalle_grupo.php';
     }
-
-    echo "</table>";
-    exit;
-}
 }

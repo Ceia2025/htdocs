@@ -12,67 +12,61 @@ class Inventario
         $this->conn = $db->open();
     }
 
+    // Listado completo (solo activos: deleted_at IS NULL)
     public function getAll()
     {
         $sql = "SELECT 
-                lf.nombre AS lugar,
-                ind.codigo_general,
-                MIN(ind.nombre) AS individualizacion,
-                MIN(cat.descripcion) AS categorizacion,
-                SUM(inv.cantidad) AS cantidad_total,
-                COUNT(inv.id) AS registros,
-                MIN(ne.nombre) AS nivel_educativo,
-                MIN(ec.nombre) AS estado,
-                MIN(p.tipo) AS procedencia_tipo,
-                MIN(p.donador_fondo) AS donador_fondo,
-                MIN(p.fecha_adquisicion) AS fecha_adquisicion
-            FROM {$this->table} inv
-            JOIN nivel_educativo ne ON inv.nivel_id = ne.id
-            JOIN individualizacion ind ON inv.individualizacion_id = ind.id
-            JOIN categorizacion cat ON inv.categorizacion_id = cat.id
-            JOIN estado_conservacion ec ON inv.estado_id = ec.id
-            JOIN lugar_fisico lf ON inv.lugar_id = lf.id
-            JOIN procedencia p ON inv.procedencia_id = p.id
-            GROUP BY lf.nombre, ind.codigo_general
-            ORDER BY lf.nombre ASC, ind.codigo_general ASC";
-
+                    inv.id,
+                    inv.nombre,
+                    inv.tipo,
+                    inv.numero,
+                    inv.codigo_unico,
+                    inv.naturaleza,
+                    inv.cantidad,
+                    inv.observaciones,
+                    inv.fecha_registro,
+                    ne.nombre AS nivel_educativo,
+                    ec.nombre AS estado,
+                    lf.nombre AS lugar,
+                    inv.nivel_id,
+                    inv.estado_id,
+                    inv.lugar_id
+                FROM {$this->table} inv
+                JOIN nivel_educativo   ne ON inv.nivel_id  = ne.id
+                JOIN estado_conservacion ec ON inv.estado_id = ec.id
+                JOIN lugar_fisico      lf ON inv.lugar_id  = lf.id
+                WHERE inv.deleted_at IS NULL
+                ORDER BY inv.nombre ASC, inv.numero ASC";
         $stmt = $this->conn->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    
-
-
-    public function getById($id)
-    {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([":id" => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
+    // Listado con filtros
     public function filter($filters)
     {
-        $conditions = [];
+        $conditions = ["inv.deleted_at IS NULL"];
         $params = [];
+
+        // Búsqueda por nombre / tipo / código (insensible a mayúsculas y acentos)
+        if (!empty($filters['busqueda'])) {
+            $conditions[] = "(
+                LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(inv.nombre,'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'))
+                    LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(:busqueda,'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'))
+                OR LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(inv.tipo,'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'))
+                    LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(:busqueda,'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'))
+                OR UPPER(inv.codigo_unico) LIKE UPPER(:busqueda)
+            )";
+            $params[':busqueda'] = '%' . $filters['busqueda'] . '%';
+        }
 
         if (!empty($filters['nivel_id'])) {
             $conditions[] = "inv.nivel_id = :nivel_id";
             $params[':nivel_id'] = $filters['nivel_id'];
         }
 
-        if (!empty($filters['busqueda_individualizacion'])) {
-            $conditions[] = "(
-            LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(ind.nombre, 'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u')) 
-            LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(:busqueda,'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'))
-            OR UPPER(ind.codigo_general) LIKE UPPER(:busqueda)
-        )";
-            $params[':busqueda'] = '%' . $filters['busqueda_individualizacion'] . '%';
-        }
-
-        if (!empty($filters['categorizacion_id'])) {
-            $conditions[] = "inv.categorizacion_id = :categorizacion_id";
-            $params[':categorizacion_id'] = $filters['categorizacion_id'];
+        if (!empty($filters['naturaleza'])) {
+            $conditions[] = "inv.naturaleza = :naturaleza";
+            $params[':naturaleza'] = $filters['naturaleza'];
         }
 
         if (!empty($filters['estado_id'])) {
@@ -85,103 +79,314 @@ class Inventario
             $params[':lugar_id'] = $filters['lugar_id'];
         }
 
-        $where = count($conditions) ? 'WHERE ' . implode(' AND ', $conditions) : '';
+        $where = 'WHERE ' . implode(' AND ', $conditions);
 
         $sql = "SELECT 
-                lf.nombre AS lugar,
-                ind.codigo_general,
-                MIN(ind.nombre) AS individualizacion,
-                MIN(cat.descripcion) AS categorizacion,
-                SUM(inv.cantidad) AS cantidad_total,
-                COUNT(inv.id) AS registros,
-                MIN(ne.nombre) AS nivel_educativo,
-                MIN(ec.nombre) AS estado,
-                MIN(p.tipo) AS procedencia_tipo,
-                MIN(p.donador_fondo) AS donador_fondo,
-                MIN(p.fecha_adquisicion) AS fecha_adquisicion
-            FROM {$this->table} inv
-            JOIN nivel_educativo ne ON inv.nivel_id = ne.id
-            JOIN individualizacion ind ON inv.individualizacion_id = ind.id
-            JOIN categorizacion cat ON inv.categorizacion_id = cat.id
-            JOIN estado_conservacion ec ON inv.estado_id = ec.id
-            JOIN lugar_fisico lf ON inv.lugar_id = lf.id
-            JOIN procedencia p ON inv.procedencia_id = p.id
-            $where
-            GROUP BY lf.nombre, ind.codigo_general
-            ORDER BY lf.nombre ASC, ind.codigo_general ASC";
+                    inv.id,
+                    inv.nombre,
+                    inv.tipo,
+                    inv.numero,
+                    inv.codigo_unico,
+                    inv.naturaleza,
+                    inv.cantidad,
+                    inv.observaciones,
+                    inv.fecha_registro,
+                    ne.nombre AS nivel_educativo,
+                    ec.nombre AS estado,
+                    lf.nombre AS lugar,
+                    inv.nivel_id,
+                    inv.estado_id,
+                    inv.lugar_id
+                FROM {$this->table} inv
+                JOIN nivel_educativo   ne ON inv.nivel_id  = ne.id
+                JOIN estado_conservacion ec ON inv.estado_id = ec.id
+                JOIN lugar_fisico      lf ON inv.lugar_id  = lf.id
+                $where
+                ORDER BY inv.nombre ASC, inv.numero ASC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getByLugarYCodigo($lugar, $codigo)
+    // Obtener un bien por ID (con nombres de catálogos)
+    public function getById($id)
     {
         $sql = "SELECT 
-                inv.id,
-                ne.nombre AS nivel_educativo,
-                ind.nombre AS individualizacion,
-                ind.codigo_general,
-                ind.codigo_especifico,
-                cat.descripcion AS categorizacion,
-                inv.cantidad,
-                ec.nombre AS estado,
-                lf.nombre AS lugar,
-                p.tipo AS procedencia_tipo,
-                p.donador_fondo,
-                p.fecha_adquisicion
-            FROM {$this->table} inv
-            JOIN nivel_educativo ne ON inv.nivel_id = ne.id
-            JOIN individualizacion ind ON inv.individualizacion_id = ind.id
-            JOIN categorizacion cat ON inv.categorizacion_id = cat.id
-            JOIN estado_conservacion ec ON inv.estado_id = ec.id
-            JOIN lugar_fisico lf ON inv.lugar_id = lf.id
-            JOIN procedencia p ON inv.procedencia_id = p.id
-            WHERE lf.nombre = :lugar AND ind.codigo_general = :codigo_general
-            ORDER BY inv.id ASC";
-
+                    inv.*,
+                    ne.nombre AS nivel_educativo,
+                    ec.nombre AS estado,
+                    lf.nombre AS lugar
+                FROM {$this->table} inv
+                JOIN nivel_educativo   ne ON inv.nivel_id  = ne.id
+                JOIN estado_conservacion ec ON inv.estado_id = ec.id
+                JOIN lugar_fisico      lf ON inv.lugar_id  = lf.id
+                WHERE inv.id = :id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            ':lugar' => $lugar,
-            ':codigo_general' => $codigo
-        ]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->execute([":id" => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Siguiente número correlativo para un nombre dado
+    public function getNextNumero($nombre)
+    {
+        $sql = "SELECT MAX(numero) AS max_num 
+                FROM {$this->table} 
+                WHERE LOWER(nombre) = LOWER(:nombre)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([":nombre" => trim($nombre)]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return ($row['max_num'] ?? 0) + 1;
+    }
 
+    // Genera un prefijo limpio a partir del nombre (sin acentos ni espacios)
+    private function prefijo($nombre)
+    {
+        $nombre = trim($nombre);
+        $buscar = ['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú', 'ñ', 'Ñ', ' '];
+        $reemplazo = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U', 'n', 'N', ''];
+        $limpio = str_replace($buscar, $reemplazo, $nombre);
+        $limpio = preg_replace('/[^A-Za-z0-9]/', '', $limpio);
+        return strtoupper(substr($limpio, 0, 12));
+    }
+
+    // Sugerencia de código (para el AJAX del formulario): NOMBRE-001
+    public function sugerirCodigo($nombre)
+    {
+        $numero = $this->getNextNumero($nombre);
+        $codigo = $this->prefijo($nombre) . '-' . str_pad($numero, 3, '0', STR_PAD_LEFT);
+        return ['numero' => $numero, 'codigo_unico' => $codigo];
+    }
+
+    // Crear bien (código y número autogenerados si vienen vacíos)
     public function create($data)
     {
-        $sql = "INSERT INTO {$this->table} 
-            (nivel_id, individualizacion_id, categorizacion_id, cantidad, estado_id, lugar_id, procedencia_id)
-            VALUES 
-            (:nivel_id, :individualizacion_id, :categorizacion_id, :cantidad, :estado_id, :lugar_id, :procedencia_id)";
+        $numero = !empty($data['numero'])
+            ? (int) $data['numero']
+            : $this->getNextNumero($data['nombre']);
+
+        $codigo = !empty($data['codigo_unico'])
+            ? trim($data['codigo_unico'])
+            : $this->prefijo($data['nombre']) . '-' . str_pad($numero, 3, '0', STR_PAD_LEFT);
+
+        $sql = "INSERT INTO {$this->table}
+                (nombre, tipo, numero, codigo_unico, naturaleza, cantidad,
+                 nivel_id, estado_id, lugar_id, observaciones, fecha_registro)
+                VALUES
+                (:nombre, :tipo, :numero, :codigo_unico, :naturaleza, :cantidad,
+                 :nivel_id, :estado_id, :lugar_id, :observaciones, :fecha_registro)";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute($data);
+        return $stmt->execute([
+            ":nombre" => trim($data['nombre']),
+            ":tipo" => !empty($data['tipo']) ? trim($data['tipo']) : null,
+            ":numero" => $numero,
+            ":codigo_unico" => $codigo,
+            ":naturaleza" => $data['naturaleza'] ?? 'inventariable',
+            ":cantidad" => !empty($data['cantidad']) ? (int) $data['cantidad'] : 1,
+            ":nivel_id" => $data['nivel_id'],
+            ":estado_id" => $data['estado_id'],
+            ":lugar_id" => $data['lugar_id'],
+            ":observaciones" => !empty($data['observaciones']) ? trim($data['observaciones']) : null,
+            ":fecha_registro" => !empty($data['fecha_registro']) ? $data['fecha_registro'] : date('Y-m-d'),
+        ]);
     }
 
+    // Crear varias fichas correlativas de un mismo bien (ej: 20 mesas)
+    public function createLote($data, $n)
+    {
+        // En lote siempre se autogeneran numero y codigo, y cantidad = 1 por ficha
+        $data['numero'] = null;
+        $data['codigo_unico'] = null;
+        $data['naturaleza'] = 'inventariable';
+        $data['cantidad'] = 1;
+
+        $creados = 0;
+        $total = max(1, (int) $n);
+        for ($i = 0; $i < $total; $i++) {
+            // create() consulta el siguiente numero en cada vuelta,
+            // que ya refleja la ficha recién insertada -> correlativo perfecto
+            if ($this->create($data)) {
+                $creados++;
+            }
+        }
+        return $creados;
+    }
+
+    // Actualizar bien
     public function update($id, $data)
     {
         $sql = "UPDATE {$this->table} SET
-                    nivel_id = :nivel_id,
-                    individualizacion_id = :individualizacion_id,
-                    categorizacion_id = :categorizacion_id,
+                    nombre = :nombre,
+                    tipo = :tipo,
+                    numero = :numero,
+                    codigo_unico = :codigo_unico,
+                    naturaleza = :naturaleza,
                     cantidad = :cantidad,
+                    nivel_id = :nivel_id,
                     estado_id = :estado_id,
                     lugar_id = :lugar_id,
-                    procedencia_id = :procedencia_id,
-                    codigo_general = :codigo_general,
-                    codigo_especifico = :codigo_especifico
+                    observaciones = :observaciones,
+                    fecha_registro = :fecha_registro
                 WHERE id = :id";
-        $data['id'] = $id;
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute($data);
+        return $stmt->execute([
+            ":id" => $id,
+            ":nombre" => trim($data['nombre']),
+            ":tipo" => !empty($data['tipo']) ? trim($data['tipo']) : null,
+            ":numero" => $data['numero'] !== '' ? (int) $data['numero'] : null,
+            ":codigo_unico" => trim($data['codigo_unico']),
+            ":naturaleza" => $data['naturaleza'] ?? 'inventariable',
+            ":cantidad" => !empty($data['cantidad']) ? (int) $data['cantidad'] : 1,
+            ":nivel_id" => $data['nivel_id'],
+            ":estado_id" => $data['estado_id'],
+            ":lugar_id" => $data['lugar_id'],
+            ":observaciones" => !empty($data['observaciones']) ? trim($data['observaciones']) : null,
+            ":fecha_registro" => !empty($data['fecha_registro']) ? $data['fecha_registro'] : null,
+        ]);
     }
 
+    // Cambiar de lugar (registra el movimiento y actualiza el lugar actual)
+    // Requiere el modelo Movimiento (paso siguiente); se deja el update de lugar aquí.
+    public function cambiarLugar($id, $lugarDestinoId)
+    {
+        $sql = "UPDATE {$this->table} SET lugar_id = :lugar WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([":lugar" => $lugarDestinoId, ":id" => $id]);
+    }
+
+    // Soft delete (marca deleted_at; conserva el historial)
     public function delete($id)
     {
-        $sql = "DELETE FROM {$this->table} WHERE id = :id";
+        $sql = "UPDATE {$this->table} SET deleted_at = :hoy WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([":hoy" => date('Y-m-d'), ":id" => $id]);
+    }
+
+    // Restaurar un bien eliminado
+    public function restore($id)
+    {
+        $sql = "UPDATE {$this->table} SET deleted_at = NULL WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([":id" => $id]);
+    }
+
+    // Verificar si un código ya existe (para validación en el formulario)
+    public function codigoExiste($codigo, $exceptId = null)
+    {
+        $sql = "SELECT COUNT(*) FROM {$this->table} WHERE codigo_unico = :codigo";
+        $params = [":codigo" => trim($codigo)];
+        if ($exceptId) {
+            $sql .= " AND id <> :id";
+            $params[":id"] = $exceptId;
+        }
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
+    public function getTipos($nombre = null)
+    {
+        if (!empty($nombre)) {
+            $sql = "SELECT DISTINCT tipo FROM {$this->table}
+                WHERE tipo IS NOT NULL AND tipo <> ''
+                  AND LOWER(nombre) = LOWER(:nombre)
+                  AND deleted_at IS NULL
+                ORDER BY tipo ASC";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':nombre' => trim($nombre)]);
+        } else {
+            $sql = "SELECT DISTINCT tipo FROM {$this->table}
+                WHERE tipo IS NOT NULL AND tipo <> ''
+                  AND deleted_at IS NULL
+                ORDER BY tipo ASC";
+            $stmt = $this->conn->query($sql);
+        }
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    // Resumen agrupado por nombre + tipo + lugar (para el index)
+    public function getAgrupado($filters = [])
+    {
+        $conditions = ["inv.deleted_at IS NULL"];
+        $params = [];
+
+        if (!empty($filters['busqueda'])) {
+            $conditions[] = "(
+            LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(inv.nombre,'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'))
+                LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(:busqueda,'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'))
+            OR LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(inv.tipo,'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'))
+                LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(:busqueda,'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'))
+            OR UPPER(inv.codigo_unico) LIKE UPPER(:busqueda)
+        )";
+            $params[':busqueda'] = '%' . $filters['busqueda'] . '%';
+        }
+        if (!empty($filters['nivel_id'])) {
+            $conditions[] = "inv.nivel_id = :nivel_id";
+            $params[':nivel_id'] = $filters['nivel_id'];
+        }
+        if (!empty($filters['naturaleza'])) {
+            $conditions[] = "inv.naturaleza = :naturaleza";
+            $params[':naturaleza'] = $filters['naturaleza'];
+        }
+        if (!empty($filters['estado_id'])) {
+            $conditions[] = "inv.estado_id = :estado_id";
+            $params[':estado_id'] = $filters['estado_id'];
+        }
+        if (!empty($filters['lugar_id'])) {
+            $conditions[] = "inv.lugar_id = :lugar_id";
+            $params[':lugar_id'] = $filters['lugar_id'];
+        }
+
+        $where = 'WHERE ' . implode(' AND ', $conditions);
+
+        $sql = "SELECT
+                inv.nombre,
+                inv.tipo,
+                inv.naturaleza,
+                inv.lugar_id,
+                lf.nombre AS lugar,
+                COUNT(*)               AS unidades,
+                SUM(inv.cantidad)      AS stock_total,
+                MIN(ne.nombre)         AS nivel,
+                COUNT(DISTINCT inv.nivel_id)  AS niveles_distintos,
+                MIN(ec.nombre)         AS estado,
+                COUNT(DISTINCT inv.estado_id) AS estados_distintos
+            FROM {$this->table} inv
+            JOIN nivel_educativo    ne ON inv.nivel_id  = ne.id
+            JOIN estado_conservacion ec ON inv.estado_id = ec.id
+            JOIN lugar_fisico       lf ON inv.lugar_id  = lf.id
+            $where
+            GROUP BY inv.nombre, inv.tipo, inv.naturaleza, inv.lugar_id, lf.nombre
+            ORDER BY lf.nombre ASC, inv.nombre ASC, inv.tipo ASC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Items individuales de un grupo (para el detalle)
+    public function getGrupo($nombre, $tipo, $lugarId)
+    {
+        $tipoVacio = ($tipo === null || $tipo === '');
+        $sql = "SELECT 
+                inv.id, inv.nombre, inv.tipo, inv.numero, inv.codigo_unico,
+                inv.naturaleza, inv.cantidad, inv.observaciones, inv.fecha_registro,
+                inv.nivel_id, inv.estado_id, inv.lugar_id,
+                ne.nombre AS nivel_educativo, ec.nombre AS estado, lf.nombre AS lugar
+            FROM {$this->table} inv
+            JOIN nivel_educativo    ne ON inv.nivel_id  = ne.id
+            JOIN estado_conservacion ec ON inv.estado_id = ec.id
+            JOIN lugar_fisico       lf ON inv.lugar_id  = lf.id
+            WHERE inv.deleted_at IS NULL
+              AND LOWER(inv.nombre) = LOWER(:nombre)
+              AND inv.lugar_id = :lugar_id
+              AND " . ($tipoVacio ? "(inv.tipo IS NULL OR inv.tipo = '')" : "inv.tipo = :tipo") . "
+            ORDER BY inv.numero ASC, inv.id ASC";
+        $params = [':nombre' => $nombre, ':lugar_id' => $lugarId];
+        if (!$tipoVacio)
+            $params[':tipo'] = $tipo;
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 }
