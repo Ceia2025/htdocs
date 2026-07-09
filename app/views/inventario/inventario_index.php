@@ -11,6 +11,14 @@ $rol = $user['rol'];
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 
+// Formato Titulo para mostrar (solo visual; la BD conserva el original)
+if (!function_exists('titulo')) {
+    function titulo($str)
+    {
+        return mb_convert_case(mb_strtolower(trim((string) $str), 'UTF-8'), MB_CASE_TITLE, 'UTF-8');
+    }
+}
+
 // Agrupar los resultados por lugar (solo apareceran lugares con items)
 $porLugar = [];
 foreach ($items as $g) {
@@ -163,7 +171,7 @@ foreach ($items as $g) {
                             <!-- Encabezado de la sala -->
                             <div class="px-5 py-3 bg-gray-900/40 border-b border-gray-700 flex items-center justify-between gap-3">
                                 <h2 class="text-white font-bold flex items-center gap-2">
-                                    &#128205; <?= htmlspecialchars($lugarNombre) ?>
+                                    &#128205; <?= htmlspecialchars(titulo($lugarNombre)) ?>
                                 </h2>
                                 <span class="inline-flex items-center gap-1 text-xs text-gray-300">
                                     <span class="px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-bold">
@@ -197,8 +205,8 @@ foreach ($items as $g) {
                                                     . '&lugar_id=' . urlencode($g['lugar_id']);
                                             ?>
                                             <tr class="border-b border-gray-700/70 hover:bg-gray-700/40">
-                                                <td class="px-5 py-3 font-semibold text-white"><?= htmlspecialchars($g['nombre']) ?></td>
-                                                <td class="px-5 py-3"><?= htmlspecialchars($g['tipo'] ?? '') ?: '&mdash;' ?></td>
+                                                <td class="px-5 py-3 font-semibold text-white"><?= htmlspecialchars(titulo($g['nombre'])) ?></td>
+                                                <td class="px-5 py-3"><?= $g['tipo'] ? htmlspecialchars(titulo($g['tipo'])) : '&mdash;' ?></td>
 
                                                 <td class="px-5 py-3 text-center">
                                                     <?php if ($g['naturaleza'] === 'consumible'): ?>

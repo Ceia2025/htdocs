@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../../models/inventario/Inventario.php';
 require_once __DIR__ . '/../../models/inventario/Movimiento.php';
 require_once __DIR__ . '/../../models/inventario/Catalogo.php';
+require_once __DIR__ . '/../../models/inventario/Procedencia.php';
 
 class InventarioController
 {
@@ -19,6 +20,7 @@ class InventarioController
             'niveles' => (new Catalogo("nivel_educativo"))->getAll(),
             'estados' => (new Catalogo("estado_conservacion"))->getAll(),
             'lugares' => (new Catalogo("lugar_fisico"))->getAll(),
+            'procedencias' => (new Procedencia())->getAll(),
         ];
     }
 
@@ -164,15 +166,19 @@ class InventarioController
         exit;
     }
 
-    // Exportar a Excel (mismos filtros que el index)
+// =====================================================================
+// Reemplaza el metodo exportExcel() en InventarioController.php
+//  - Ordena por Lugar Fisico (luego nombre y numero)
+//  - Agrega BOM UTF-8 para que Excel muestre bien los acentos
+// =====================================================================
+
     public function exportExcel()
     {
         $filtros = $_GET;
         unset($filtros['action']);
 
-        $items = !empty($filtros)
-            ? $this->inventario->filter($_GET)
-            : $this->inventario->getAll();
+        // Ordenado por lugar fisico
+        $items = $this->inventario->getParaExportar($filtros);
 
         $filename = "INVENTARIO_" . date('Y-m-d') . ".xls";
 
@@ -181,8 +187,13 @@ class InventarioController
         header("Pragma: no-cache");
         header("Expires: 0");
 
+        // BOM UTF-8: sin esto Excel rompe los acentos (Ã³, Ã¡, etc.)
+        echo "\xEF\xBB\xBF";
+        echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
+
         echo "<table border='1'>";
         echo "<tr>
+                <th>Lugar Físico</th>
                 <th>Código</th>
                 <th>Nombre</th>
                 <th>Tipo</th>
@@ -191,13 +202,26 @@ class InventarioController
                 <th>Cantidad</th>
                 <th>Nivel Educativo</th>
                 <th>Estado</th>
-                <th>Lugar Físico</th>
+                <th>Procedencia: Tipo</th>
+                <th>Procedencia: Donador o Fondo</th>
+                <th>Procedencia: Fecha de Adquisición</th>
                 <th>Observaciones</th>
                 <th>Fecha Registro</th>
               </tr>";
 
+        $lugarActual = null;
+
         foreach ($items as $row) {
+            // Separador visual al cambiar de lugar
+            if ($lugarActual !== $row['lugar']) {
+                $lugarActual = $row['lugar'];
+                echo "<tr><td colspan='14' style='background:#DCE6F1;font-weight:bold;'>"
+                    . htmlspecialchars(mb_convert_case(mb_strtolower($lugarActual, 'UTF-8'), MB_CASE_TITLE, 'UTF-8'))
+                    . "</td></tr>";
+            }
+
             echo "<tr>";
+            echo "<td>" . htmlspecialchars($row['lugar']) . "</td>";
             echo "<td>" . htmlspecialchars($row['codigo_unico']) . "</td>";
             echo "<td>" . htmlspecialchars($row['nombre']) . "</td>";
             echo "<td>" . htmlspecialchars($row['tipo'] ?? '') . "</td>";
@@ -206,7 +230,9 @@ class InventarioController
             echo "<td>" . htmlspecialchars($row['cantidad']) . "</td>";
             echo "<td>" . htmlspecialchars($row['nivel_educativo']) . "</td>";
             echo "<td>" . htmlspecialchars($row['estado']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['lugar']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['proc_tipo'] ?? '') . "</td>";
+            echo "<td>" . htmlspecialchars($row['proc_fondo'] ?? '') . "</td>";
+            echo "<td>" . htmlspecialchars(!empty($row['proc_fecha']) ? date('d/m/Y', strtotime($row['proc_fecha'])) : '') . "</td>";
             echo "<td>" . htmlspecialchars($row['observaciones'] ?? '') . "</td>";
             echo "<td>" . htmlspecialchars($row['fecha_registro'] ?? '') . "</td>";
             echo "</tr>";
@@ -215,6 +241,7 @@ class InventarioController
         echo "</table>";
         exit;
     }
+
 
     public function detalleGrupo()
     {
@@ -226,5 +253,28 @@ class InventarioController
         extract($this->catalogos()); // niveles, estados, lugares (para el modal)
 
         require_once __DIR__ . '/../../views/inventario/detalle_grupo.php';
+    }
+
+    // AJAX: crear procedencia al vuelo (ventana flotante). Devuelve id + etiqueta.
+    public function procedenciaStoreAjax()
+    {
+        header('Content-Type: application/json; charset=utf-8');
+
+        $tipo = $_POST['tipo'] ?? 'Sin información';
+        $fondo = $_POST['donador_fondo'] ?? null;
+        $fecha = $_POST['fecha_adquisicion'] ?? null;
+
+        $proc = new Procedencia();
+        $id = $proc->create($tipo, $fondo, $fecha);
+
+        echo json_encode([
+            'id' => $id,
+            'etiqueta' => Procedencia::etiqueta([
+                'tipo' => $tipo,
+                'donador_fondo' => $fondo,
+                'fecha_adquisicion' => $fecha,
+            ]),
+        ]);
+        exit;
     }
 }

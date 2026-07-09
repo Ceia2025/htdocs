@@ -11,7 +11,15 @@ $rol = $user['rol'];
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 
-// Datos de encabezado (del primer item o del querystring)
+// Formato Titulo para mostrar (solo visual)
+if (!function_exists('titulo')) {
+    function titulo($str)
+    {
+        return mb_convert_case(mb_strtolower(trim((string) $str), 'UTF-8'), MB_CASE_TITLE, 'UTF-8');
+    }
+}
+
+// Datos de encabezado
 $g_nombre = $items[0]['nombre'] ?? ($_GET['nombre'] ?? '');
 $g_tipo   = $items[0]['tipo']   ?? ($_GET['tipo'] ?? '');
 $g_lugar  = $items[0]['lugar']  ?? '';
@@ -27,11 +35,11 @@ $g_lugar  = $items[0]['lugar']  ?? '';
             class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                 <h1 class="text-3xl font-bold tracking-tight text-white">
-                    <?= htmlspecialchars($g_nombre) ?>
-                    <?= !empty($g_tipo) ? '<span class="text-gray-400 font-normal">/ ' . htmlspecialchars($g_tipo) . '</span>' : '' ?>
+                    <?= htmlspecialchars(titulo($g_nombre)) ?>
+                    <?= !empty($g_tipo) ? '<span class="text-gray-400 font-normal">/ ' . htmlspecialchars(titulo($g_tipo)) . '</span>' : '' ?>
                 </h1>
                 <p class="mt-1 text-sm text-gray-400">
-                    &#128205; <?= htmlspecialchars($g_lugar) ?>
+                    &#128205; <?= htmlspecialchars(titulo($g_lugar)) ?>
                     &middot; <span class="text-indigo-300 font-semibold"><?= count($items) ?></span> unidad(es)
                 </p>
             </div>
@@ -67,12 +75,22 @@ $g_lugar  = $items[0]['lugar']  ?? '';
                                 <th class="px-5 py-3 text-center">Cant.</th>
                                 <th class="px-5 py-3">Estado</th>
                                 <th class="px-5 py-3">Nivel</th>
+                                <th class="px-5 py-3">Procedencia</th>
                                 <th class="px-5 py-3">Observaciones</th>
                                 <th class="px-5 py-3 text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($items as $item): ?>
+                                <?php
+                                    $procTexto = !empty($item['procedencia_id'])
+                                        ? Procedencia::etiqueta([
+                                            'tipo'              => $item['proc_tipo'],
+                                            'donador_fondo'     => $item['proc_fondo'],
+                                            'fecha_adquisicion' => $item['proc_fecha'],
+                                          ])
+                                        : null;
+                                ?>
                                 <tr class="border-b border-gray-700 hover:bg-gray-700/50">
                                     <td class="px-5 py-3">
                                         <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold
@@ -80,11 +98,25 @@ $g_lugar  = $items[0]['lugar']  ?? '';
                                             <?= htmlspecialchars($item['codigo_unico']) ?>
                                         </span>
                                     </td>
-                                    <td class="px-5 py-3 text-center"><?= htmlspecialchars($item['numero'] ?? '&mdash;') ?></td>
+                                    <td class="px-5 py-3 text-center"><?= htmlspecialchars($item['numero'] ?? '') ?: '&mdash;' ?></td>
                                     <td class="px-5 py-3 text-center"><?= (int) $item['cantidad'] ?></td>
                                     <td class="px-5 py-3"><?= htmlspecialchars($item['estado']) ?></td>
                                     <td class="px-5 py-3"><?= htmlspecialchars($item['nivel_educativo']) ?></td>
+
+                                    <!-- Procedencia -->
+                                    <td class="px-5 py-3">
+                                        <?php if ($procTexto): ?>
+                                            <span class="inline-flex px-2 py-0.5 rounded-lg text-[11px] font-semibold
+                                             bg-violet-500/10 text-violet-300 border border-violet-500/20">
+                                                <?= htmlspecialchars($procTexto) ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="text-gray-600 text-xs">&mdash;</span>
+                                        <?php endif; ?>
+                                    </td>
+
                                     <td class="px-5 py-3 text-gray-400"><?= htmlspecialchars($item['observaciones'] ?? '') ?: '&mdash;' ?></td>
+
                                     <td class="px-5 py-3">
                                         <div class="flex justify-center gap-2 flex-wrap">
                                             <button type="button"
@@ -99,6 +131,7 @@ $g_lugar  = $items[0]['lugar']  ?? '';
                                                 data-nivel="<?= $item['nivel_id'] ?>"
                                                 data-estado="<?= $item['estado_id'] ?>"
                                                 data-lugar="<?= $item['lugar_id'] ?>"
+                                                data-procedencia="<?= $item['procedencia_id'] ?? '' ?>"
                                                 data-fecha="<?= htmlspecialchars($item['fecha_registro'] ?? '', ENT_QUOTES) ?>"
                                                 data-obs="<?= htmlspecialchars($item['observaciones'] ?? '', ENT_QUOTES) ?>"
                                                 class="px-3 py-1.5 rounded-lg text-xs font-semibold
@@ -213,11 +246,31 @@ $g_lugar  = $items[0]['lugar']  ?? '';
                     <input type="date" name="fecha_registro" id="edit-fecha" max="<?= date('Y-m-d') ?>"
                         class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                 </div>
+
+                <!-- Procedencia (opcional) + boton ventana flotante -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-200">Procedencia <span class="text-gray-400 text-xs">(opcional)</span></label>
+                    <div class="mt-2 flex gap-2">
+                        <select name="procedencia_id" id="edit-procedencia"
+                            class="flex-1 rounded-lg bg-gray-900 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <option value="">-- Sin procedencia --</option>
+                            <?php foreach (($procedencias ?? []) as $p): ?>
+                                <option value="<?= $p['id'] ?>"><?= htmlspecialchars(Procedencia::etiqueta($p)) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <button type="button" onclick="abrirModalProc()"
+                            class="shrink-0 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition">
+                            &#10133; Nueva
+                        </button>
+                    </div>
+                </div>
+
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-200">Observaciones</label>
                     <textarea name="observaciones" id="edit-obs" rows="2"
                         class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
                 </div>
+
                 <div class="md:col-span-2 flex gap-3 pt-2">
                     <button type="button" onclick="cerrarModalEditarInv()"
                         class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2.5 rounded-xl transition text-sm">
@@ -231,6 +284,63 @@ $g_lugar  = $items[0]['lugar']  ?? '';
             </form>
         </div>
     </div>
+
+
+    <!-- ===================== MODAL NUEVA PROCEDENCIA ===================== -->
+    <div id="modal-proc" class="hidden fixed inset-0 z-[60] flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="cerrarModalProc()"></div>
+        <div class="relative bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl p-6 w-full max-w-md z-10">
+
+            <div class="flex items-center justify-between mb-5">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-0.5">Catalogo</p>
+                    <h3 class="text-lg font-bold text-white">Nueva procedencia</h3>
+                </div>
+                <button type="button" onclick="cerrarModalProc()"
+                    class="text-gray-500 hover:text-white transition p-1 rounded-lg hover:bg-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-200">Tipo</label>
+                    <select id="proc-tipo"
+                        class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <option value="Proyecto">Proyecto</option>
+                        <option value="Donación">Donación</option>
+                        <option value="Inversión">Inversión</option>
+                        <option value="Compra">Compra</option>
+                        <option value="Sin información">Sin información</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-200">Fondo / Donante <span class="text-gray-400 text-xs">(opcional)</span></label>
+                    <input type="text" id="proc-fondo" placeholder="Ej: Proyecto FNDR 2024, Apoderados..."
+                        class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-200">Fecha de adquisicion <span class="text-gray-400 text-xs">(opcional)</span></label>
+                    <input type="date" id="proc-fecha" max="<?= date('Y-m-d') ?>"
+                        class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="cerrarModalProc()"
+                        class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2.5 rounded-xl transition text-sm">
+                        Cancelar
+                    </button>
+                    <button type="button" id="btn-guardar-proc" onclick="guardarProcedencia()"
+                        class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl transition text-sm">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         const modalEdit = document.getElementById('modal-editar-inv');
@@ -247,17 +357,18 @@ $g_lugar  = $items[0]['lugar']  ?? '';
         function abrirModalEditarInv(btn) {
             const d = btn.dataset;
             formEdit.action = 'index.php?action=inventario_update&id=' + d.id;
-            document.getElementById('edit-nombre').value     = d.nombre || '';
-            document.getElementById('edit-tipo').value       = d.tipo || '';
-            document.getElementById('edit-numero').value     = d.numero || '';
-            document.getElementById('edit-codigo').value     = d.codigo || '';
-            document.getElementById('edit-naturaleza').value = d.naturaleza || 'inventariable';
-            document.getElementById('edit-cantidad').value   = d.cantidad || 1;
-            document.getElementById('edit-nivel').value      = d.nivel;
-            document.getElementById('edit-estado').value     = d.estado;
-            document.getElementById('edit-lugar').value      = d.lugar;
-            document.getElementById('edit-fecha').value      = d.fecha || '';
-            document.getElementById('edit-obs').value        = d.obs || '';
+            document.getElementById('edit-nombre').value      = d.nombre || '';
+            document.getElementById('edit-tipo').value        = d.tipo || '';
+            document.getElementById('edit-numero').value      = d.numero || '';
+            document.getElementById('edit-codigo').value      = d.codigo || '';
+            document.getElementById('edit-naturaleza').value  = d.naturaleza || 'inventariable';
+            document.getElementById('edit-cantidad').value    = d.cantidad || 1;
+            document.getElementById('edit-nivel').value       = d.nivel;
+            document.getElementById('edit-estado').value      = d.estado;
+            document.getElementById('edit-lugar').value       = d.lugar;
+            document.getElementById('edit-procedencia').value = d.procedencia || '';
+            document.getElementById('edit-fecha').value       = d.fecha || '';
+            document.getElementById('edit-obs').value         = d.obs || '';
             toggleCantidadEdit();
             modalEdit.classList.remove('hidden');
         }
@@ -266,8 +377,49 @@ $g_lugar  = $items[0]['lugar']  ?? '';
             modalEdit.classList.add('hidden');
         }
 
+        // ---------- VENTANA FLOTANTE: NUEVA PROCEDENCIA ----------
+        const modalProc = document.getElementById('modal-proc');
+        const selProc   = document.getElementById('edit-procedencia');
+
+        function abrirModalProc() { modalProc.classList.remove('hidden'); }
+        function cerrarModalProc() { modalProc.classList.add('hidden'); }
+
+        async function guardarProcedencia() {
+            const btn = document.getElementById('btn-guardar-proc');
+            btn.disabled = true;
+
+            const body = new URLSearchParams({
+                tipo:              document.getElementById('proc-tipo').value,
+                donador_fondo:     document.getElementById('proc-fondo').value,
+                fecha_adquisicion: document.getElementById('proc-fecha').value,
+            });
+
+            try {
+                const resp = await fetch('index.php?action=inventario_procedencia_ajax', { method: 'POST', body });
+                const data = await resp.json();
+
+                const opt = document.createElement('option');
+                opt.value = data.id;
+                opt.textContent = data.etiqueta;
+                opt.selected = true;
+                selProc.appendChild(opt);
+
+                document.getElementById('proc-fondo').value = '';
+                document.getElementById('proc-fecha').value = '';
+                cerrarModalProc();
+            } catch (e) {
+                console.error('No se pudo crear la procedencia', e);
+                alert('No se pudo crear la procedencia.');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // Escape: cierra primero el de procedencia, luego el de edicion
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') cerrarModalEditarInv();
+            if (e.key !== 'Escape') return;
+            if (!modalProc.classList.contains('hidden')) cerrarModalProc();
+            else cerrarModalEditarInv();
         });
     </script>
 </body>

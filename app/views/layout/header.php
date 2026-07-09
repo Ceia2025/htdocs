@@ -36,7 +36,13 @@
         }
     </style>
 
-    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="//unpkg.com/alpinejs" defer>
+        if (!function_exists('titulo')) {
+            function titulo($str) {
+                return mb_convert_case(mb_strtolower(trim((string) $str), 'UTF-8'), MB_CASE_TITLE, 'UTF-8');
+            }
+        }
+    </script>
 
     <title>SAAT</title>
 </head>

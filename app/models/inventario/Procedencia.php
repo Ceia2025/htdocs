@@ -14,7 +14,7 @@ class Procedencia
 
     public function getAll()
     {
-        $sql = "SELECT id, tipo, donador_fondo, fecha_adquisicion 
+        $sql = "SELECT id, tipo, donador_fondo, fecha_adquisicion
                 FROM {$this->table}
                 ORDER BY tipo ASC, donador_fondo ASC";
         $stmt = $this->conn->query($sql);
@@ -24,38 +24,37 @@ class Procedencia
     public function getById($id)
     {
         $sql = "SELECT id, tipo, donador_fondo, fecha_adquisicion
-                FROM {$this->table} 
-                WHERE id = :id";
+                FROM {$this->table} WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([":id" => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function create($tipo, $donador_fondo, $fecha_adquisicion)
+    // Devuelve el ID recien creado (para el AJAX de la ventana flotante)
+    public function create($tipo, $donador_fondo = null, $fecha_adquisicion = null)
     {
         $sql = "INSERT INTO {$this->table} (tipo, donador_fondo, fecha_adquisicion)
                 VALUES (:tipo, :donador_fondo, :fecha_adquisicion)";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
-            ":tipo" => $tipo,
-            ":donador_fondo" => $donador_fondo,
-            ":fecha_adquisicion" => $fecha_adquisicion
+        $stmt->execute([
+            ":tipo"              => $tipo ?: 'Sin información',
+            ":donador_fondo"     => !empty($donador_fondo) ? trim($donador_fondo) : null,
+            ":fecha_adquisicion" => !empty($fecha_adquisicion) ? $fecha_adquisicion : null,
         ]);
+        return (int) $this->conn->lastInsertId();
     }
 
-    public function update($id, $tipo, $donador_fondo, $fecha_adquisicion)
+    public function update($id, $tipo, $donador_fondo = null, $fecha_adquisicion = null)
     {
-        $sql = "UPDATE {$this->table} 
-                SET tipo = :tipo,
-                    donador_fondo = :donador_fondo,
-                    fecha_adquisicion = :fecha_adquisicion
+        $sql = "UPDATE {$this->table}
+                SET tipo = :tipo, donador_fondo = :donador_fondo, fecha_adquisicion = :fecha_adquisicion
                 WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
-            ":id" => $id,
-            ":tipo" => $tipo,
-            ":donador_fondo" => $donador_fondo,
-            ":fecha_adquisicion" => $fecha_adquisicion
+            ":id"                => $id,
+            ":tipo"              => $tipo ?: 'Sin información',
+            ":donador_fondo"     => !empty($donador_fondo) ? trim($donador_fondo) : null,
+            ":fecha_adquisicion" => !empty($fecha_adquisicion) ? $fecha_adquisicion : null,
         ]);
     }
 
@@ -64,5 +63,15 @@ class Procedencia
         $sql = "DELETE FROM {$this->table} WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([":id" => $id]);
+    }
+
+    // Etiqueta legible para mostrar en selects / tablas
+    public static function etiqueta($row)
+    {
+        if (empty($row)) return 'Sin procedencia';
+        $partes = [$row['tipo']];
+        if (!empty($row['donador_fondo']))     $partes[] = $row['donador_fondo'];
+        if (!empty($row['fecha_adquisicion']))  $partes[] = date('d/m/Y', strtotime($row['fecha_adquisicion']));
+        return implode(' - ', $partes);
     }
 }

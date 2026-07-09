@@ -209,6 +209,11 @@
       "url": "index.php?action=alumnos"
     },
     {
+      "title": "Mantenedor de Matrículas",
+      "desc": "Gestionar matrículas existentes",
+      "url": "index.php?action=matriculas"
+    },
+    {
       "title": "Retiros",
       "desc": "Gestión de retiros de alumnos",
       "url": "index.php?action=retiros"

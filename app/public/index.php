@@ -806,6 +806,12 @@ switch ($action) {
         $inventarioController->detalleGrupo();
         break;
 
+    case 'inventario_procedencia_ajax':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $inventarioController->procedenciaStoreAjax();
+        }
+        break;
+
     case 'inventario_update':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $inventarioController->update($_GET['id'], $_POST);
