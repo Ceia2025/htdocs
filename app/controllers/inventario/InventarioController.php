@@ -53,7 +53,7 @@ class InventarioController
         $naturaleza = $post['naturaleza'] ?? 'inventariable';
         $n = (int) ($post['cantidad_fichas'] ?? 1);
 
-        if ($naturaleza === 'inventariable' && $n > 1) {
+        if ($naturaleza !== 'consumible' && $n > 1) {
             $creados = $this->inventario->createLote($post, $n);
             header("Location: index.php?action=inventario_index&creados=$creados");
             exit;
@@ -166,7 +166,7 @@ class InventarioController
         exit;
     }
 
-// =====================================================================
+    // =====================================================================
 // Reemplaza el metodo exportExcel() en InventarioController.php
 //  - Ordena por Lugar Fisico (luego nombre y numero)
 //  - Agrega BOM UTF-8 para que Excel muestre bien los acentos

@@ -316,9 +316,9 @@ class ReporteNotasController
 
                 foreach ($asignaturas as $asig) {
                     $ns = $notas[$asig['id']][$mid] ?? [];
-                    if (count($ns) > 0) {
-                        $proms[] = array_sum(array_column($ns, 'nota')) / count($ns);
-                    }
+                    $p = Nota::promedio($ns);
+                    if ($p !== null)
+                        $proms[] = $p;
                 }
 
                 $conNotas = count($proms);
@@ -327,7 +327,7 @@ class ReporteNotasController
                     $pendientesAlumnos[$cursoNombre][] = $mid;
                 }
 
-                $promedio = $conNotas > 0 ? round(array_sum($proms) / $conNotas, 1) : null;
+                $promedio = Nota::promedio($proms);
 
                 $filaAlumnos[] = [
                     'matricula_id' => $mid,
@@ -377,7 +377,7 @@ class ReporteNotasController
                     ];
                 }
 
-                $promAsig = $alumnosConNota > 0 ? round(array_sum($vals) / $alumnosConNota, 1) : null;
+                $promAsig = Nota::promedio($vals);
                 $resultAsignaturas[] = [
                     'asignatura' => $asig['nombre'],
                     'curso' => $cursoNombre,
@@ -497,8 +497,9 @@ class ReporteNotasController
                     if (!empty($alumno['fecha_retiro']))
                         continue;
                     $ns = $notas[$asigId][$alumno['matricula_id']] ?? [];
-                    if (count($ns) > 0)
-                        $vals[] = array_sum(array_column($ns, 'nota')) / count($ns);
+                    $p = Nota::promedio($ns);
+                    if ($p !== null)
+                        $vals[] = $p;
                 }
                 $alumnosConNota = count($vals);
                 // ← nuevo: detectar pendiente

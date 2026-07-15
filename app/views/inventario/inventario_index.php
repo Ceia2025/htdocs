@@ -46,28 +46,34 @@ foreach ($items as $g) {
                 <!-- FLASH MESSAGES -->
                 <?php
                 $flash = null;
-                if (isset($_GET['creado']))       $flash = 'Bien registrado correctamente.';
-                if (isset($_GET['creados']))      $flash = ((int) $_GET['creados']) . ' bienes registrados correctamente.';
-                if (isset($_GET['actualizado']))  $flash = 'Bien actualizado correctamente.';
-                if (isset($_GET['eliminado']))    $flash = 'Bien eliminado (puedes restaurarlo).';
-                if (isset($_GET['restaurado']))   $flash = 'Bien restaurado correctamente.';
+                if (isset($_GET['creado']))
+                    $flash = 'Bien registrado correctamente.';
+                if (isset($_GET['creados']))
+                    $flash = ((int) $_GET['creados']) . ' bienes registrados correctamente.';
+                if (isset($_GET['actualizado']))
+                    $flash = 'Bien actualizado correctamente.';
+                if (isset($_GET['eliminado']))
+                    $flash = 'Bien eliminado (puedes restaurarlo).';
+                if (isset($_GET['restaurado']))
+                    $flash = 'Bien restaurado correctamente.';
                 ?>
                 <?php if ($flash): ?>
-                    <div class="mb-4 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 px-4 py-3 text-sm">
+                    <div
+                        class="mb-4 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 px-4 py-3 text-sm">
                         &#10004; <?= htmlspecialchars($flash) ?>
                     </div>
                 <?php endif; ?>
 
                 <!-- FILTRO DE BUSQUEDA -->
-                <form method="GET" action="index.php" class="mb-6 bg-gray-800 p-4 md:p-6 rounded-xl shadow-xl text-white">
+                <form method="GET" action="index.php"
+                    class="mb-6 bg-gray-800 p-4 md:p-6 rounded-xl shadow-xl text-white">
                     <input type="hidden" name="action" value="inventario_index">
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 items-end">
 
                         <div>
                             <label class="block text-sm font-semibold mb-1">Nombre, tipo o codigo</label>
-                            <input type="text" name="busqueda"
-                                value="<?= htmlspecialchars($_GET['busqueda'] ?? '') ?>"
+                            <input type="text" name="busqueda" value="<?= htmlspecialchars($_GET['busqueda'] ?? '') ?>"
                                 placeholder="Ej: Silla, Plastica o SILLA-001"
                                 class="w-full h-[42px] rounded-md bg-gray-700 text-white px-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
@@ -92,6 +98,7 @@ foreach ($items as $g) {
                                 <option value="">-- Todas --</option>
                                 <option value="inventariable" <?= ($_GET['naturaleza'] ?? '') === 'inventariable' ? 'selected' : '' ?>>Inventariable</option>
                                 <option value="consumible" <?= ($_GET['naturaleza'] ?? '') === 'consumible' ? 'selected' : '' ?>>Consumible</option>
+                                <option value="transitorio" <?= ($_GET['naturaleza'] ?? '') === 'transitorio' ? 'selected' : '' ?>>Transitorio</option>
                             </select>
                         </div>
 
@@ -158,23 +165,25 @@ foreach ($items as $g) {
                 <?php if (!empty($porLugar)): ?>
                     <?php foreach ($porLugar as $lugarNombre => $grupos): ?>
                         <?php
-                            // Total de unidades en este lugar
-                            $totalLugar = 0;
-                            foreach ($grupos as $gg) {
-                                $totalLugar += ($gg['naturaleza'] === 'consumible')
-                                    ? (int) $gg['stock_total']
-                                    : (int) $gg['unidades'];
-                            }
+                        // Total de unidades en este lugar
+                        $totalLugar = 0;
+                        foreach ($grupos as $gg) {
+                            $totalLugar += ($gg['naturaleza'] === 'consumible')
+                                ? (int) $gg['stock_total']
+                                : (int) $gg['unidades'];
+                        }
                         ?>
                         <section class="mb-6 bg-gray-800 border border-gray-700 rounded-xl shadow overflow-hidden">
 
                             <!-- Encabezado de la sala -->
-                            <div class="px-5 py-3 bg-gray-900/40 border-b border-gray-700 flex items-center justify-between gap-3">
+                            <div
+                                class="px-5 py-3 bg-gray-900/40 border-b border-gray-700 flex items-center justify-between gap-3">
                                 <h2 class="text-white font-bold flex items-center gap-2">
                                     &#128205; <?= htmlspecialchars(titulo($lugarNombre)) ?>
                                 </h2>
                                 <span class="inline-flex items-center gap-1 text-xs text-gray-300">
-                                    <span class="px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-bold">
+                                    <span
+                                        class="px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-bold">
                                         <?= $totalLugar ?>
                                     </span>
                                     items &middot; <?= count($grupos) ?> grupo(s)
@@ -198,28 +207,34 @@ foreach ($items as $g) {
                                     <tbody>
                                         <?php foreach ($grupos as $g): ?>
                                             <?php
-                                                $unidades = (int) $g['unidades'];
-                                                $cantidad = $g['naturaleza'] === 'consumible' ? (int) $g['stock_total'] : $unidades;
-                                                $qs = 'nombre=' . urlencode($g['nombre'])
-                                                    . '&tipo=' . urlencode($g['tipo'] ?? '')
-                                                    . '&lugar_id=' . urlencode($g['lugar_id']);
+                                            $unidades = (int) $g['unidades'];
+                                            $cantidad = $g['naturaleza'] === 'consumible' ? (int) $g['stock_total'] : $unidades;
+                                            $qs = 'nombre=' . urlencode($g['nombre'])
+                                                . '&tipo=' . urlencode($g['tipo'] ?? '')
+                                                . '&lugar_id=' . urlencode($g['lugar_id']);
                                             ?>
                                             <tr class="border-b border-gray-700/70 hover:bg-gray-700/40">
-                                                <td class="px-5 py-3 font-semibold text-white"><?= htmlspecialchars(titulo($g['nombre'])) ?></td>
-                                                <td class="px-5 py-3"><?= $g['tipo'] ? htmlspecialchars(titulo($g['tipo'])) : '&mdash;' ?></td>
+                                                <td class="px-5 py-3 font-semibold text-white">
+                                                    <?= htmlspecialchars(titulo($g['nombre'])) ?></td>
+                                                <td class="px-5 py-3">
+                                                    <?= $g['tipo'] ? htmlspecialchars(titulo($g['tipo'])) : '&mdash;' ?></td>
 
                                                 <td class="px-5 py-3 text-center">
                                                     <?php if ($g['naturaleza'] === 'consumible'): ?>
                                                         <span class="inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold
-                                                         bg-amber-500/10 text-amber-300 border border-amber-500/20">Consumible</span>
+                                                        bg-amber-500/10 text-amber-300 border border-amber-500/20">Consumible</span>
+                                                    <?php elseif ($g['naturaleza'] === 'transitorio'): ?>
+                                                        <span class="inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold
+                                                        bg-orange-500/10 text-orange-300 border border-orange-500/20">Transitorio</span>
                                                     <?php else: ?>
                                                         <span class="inline-flex px-2 py-0.5 rounded-full text-[11px] font-semibold
-                                                         bg-sky-500/10 text-sky-300 border border-sky-500/20">Inventariable</span>
+                                                        bg-sky-500/10 text-sky-300 border border-sky-500/20">Inventariable</span>
                                                     <?php endif; ?>
                                                 </td>
 
                                                 <td class="px-5 py-3 text-center">
-                                                    <span class="inline-flex items-center justify-center min-w-[2.2rem] px-2 py-1 rounded-lg
+                                                    <span
+                                                        class="inline-flex items-center justify-center min-w-[2.2rem] px-2 py-1 rounded-lg
                                                      text-sm font-bold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
                                                         <?= $cantidad ?>
                                                     </span>
@@ -241,7 +256,8 @@ foreach ($items as $g) {
                                                         bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/20 transition">
                                                         Gestionar
                                                         <?php if ($unidades > 1): ?>
-                                                            <span class="ml-1 px-1.5 py-0.5 rounded-full bg-indigo-500/30 text-[10px]"><?= $unidades ?></span>
+                                                            <span
+                                                                class="ml-1 px-1.5 py-0.5 rounded-full bg-indigo-500/30 text-[10px]"><?= $unidades ?></span>
                                                         <?php endif; ?>
                                                     </a>
                                                 </td>

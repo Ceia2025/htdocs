@@ -207,6 +207,7 @@ $g_lugar  = $items[0]['lugar']  ?? '';
                         class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         <option value="inventariable">Inventariable</option>
                         <option value="consumible">Consumible</option>
+                        <option value="transitorio">Transitorio</option>
                     </select>
                 </div>
                 <div id="edit-wrap-cantidad" class="hidden">

@@ -318,7 +318,7 @@ class Inventario
     {
         $data['numero'] = null;
         $data['codigo_unico'] = null;
-        $data['naturaleza'] = 'inventariable';
+        $data['naturaleza'] = $data['naturaleza'] ?? 'inventariable';
         $data['cantidad'] = 1;
 
         $creados = 0;

@@ -24,52 +24,49 @@ foreach ($notasPorMatricula as $ns) {
 ksort($fechasUnicas);
 $fechasUnicas = array_keys($fechasUnicas);
 
+
 $totalAlumnos = 0;
 $totalAprobados = 0;
 $totalReprobados = 0;
 $totalPendientes = 0;
-$sumaProms = 0;
-$cntProms = 0;
+$promsAlumnos = [];
 $notasPorColumna = [];
 $totalNotasDelCurso = count($fechasUnicas);
 
 foreach ($alumnos as $alumno) {
-    if (!empty($alumno['fecha_retiro'])) continue;
+    if (!empty($alumno['fecha_retiro']))
+        continue;
     $totalAlumnos++;
     $mid = $alumno['matricula_id'];
     $ns = $notasPorMatricula[$mid] ?? [];
     $cantNotasAlumno = count($ns);
 
+    // Acumular notas por columna (para promedio de columna al final)
     foreach ($ns as $n) {
         if (isset($n['fecha']) && is_numeric($n['nota'])) {
-            $notasPorColumna[$n['fecha']][] = floatval($n['nota']);
+            $notasPorColumna[$n['fecha']][] = (float)($n['nota']);
         }
     }
 
     if ($cantNotasAlumno < $totalNotasDelCurso || $totalNotasDelCurso === 0) {
         $totalPendientes++;
     } else {
-        $suma = array_sum(array_column($ns, 'nota'));
-        $prom = $suma / $cantNotasAlumno;
-        $sumaProms += $prom;
-        $cntProms++;
-        if ($prom >= 4.0) $totalAprobados++;
-        else $totalReprobados++;
-    }
-
-    $promediosColumnas = [];
-    foreach ($fechasUnicas as $fecha) {
-        $notasCol = $notasPorColumna[$fecha] ?? [];
-        $promediosColumnas[$fecha] = count($notasCol) > 0
-            ? Nota::redondearNota(array_sum($notasCol) / count($notasCol), 1)
-            : null;
+        $prom = Nota::promedio($ns);
+        $promsAlumnos[] = $prom;
+        Nota::aprobada($prom) ? $totalAprobados++ : $totalReprobados++;
     }
 }
 
-$promGeneral = $cntProms > 0 ? Nota::redondearNota($sumaProms / $cntProms, 1) : null;
+// Promedios por columna — calculados UNA vez, fuera del bucle de alumnos
+$promediosColumnas = [];
+foreach ($fechasUnicas as $fecha) {
+    $promediosColumnas[$fecha] = Nota::promedio($notasPorColumna[$fecha] ?? []);
+}
+
+$promGeneral = Nota::promedio($promsAlumnos);
 $pctAprobados = $totalAlumnos > 0 ? round($totalAprobados / $totalAlumnos * 100) : 0;
-$colorProm = $promGeneral === null ? 'text-faint'
-    : ($promGeneral >= 4.0 ? 'text-success' : 'text-danger');
+$colorProm = Nota::clase($promGeneral);
+
 ?>
 
 <header class="page-header">
@@ -114,7 +111,8 @@ $colorProm = $promGeneral === null ? 'text-faint'
                 $activo = $semestre == $num; ?>
                 <a href="index.php?action=notas_panel_asignatura&curso_id=<?= $cursoId ?>&anio_id=<?= $anioId ?>&asignatura_id=<?= $asignaturaId ?>&semestre=<?= $num ?>"
                     class="text-xs font-semibold px-3 py-1.5 rounded-lg border transition <?= $activo ? '' : 'btn-secondary' ?>"
-                    <?php if ($activo): ?> style="background: var(--azul-vivo); border-color: var(--azul-vivo); color: #fff;" <?php endif; ?>>
+                    <?php if ($activo): ?>
+                        style="background: var(--azul-vivo); border-color: var(--azul-vivo); color: #fff;" <?php endif; ?>>
                     <?= $label ?>
                 </a>
             <?php endforeach; ?>
@@ -153,7 +151,8 @@ $colorProm = $promGeneral === null ? 'text-faint'
                 <thead>
                     <tr>
                         <th class="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider text-muted w-10">#</th>
-                        <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-muted min-w-[180px]">Alumno</th>
+                        <th class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-muted min-w-[180px]">
+                            Alumno</th>
 
                         <?php foreach ($fechasUnicas as $idx => $fecha): ?>
                             <th class="px-3 py-3 text-center min-w-[90px]">
@@ -186,11 +185,7 @@ $colorProm = $promGeneral === null ? 'text-faint'
                             $notasPorFecha[$n['fecha']] = $n;
                         }
 
-                        $suma = 0; $cant = 0;
-                        foreach ($notasAlumno as $n) {
-                            if (is_numeric($n['nota'])) { $suma += $n['nota']; $cant++; }
-                        }
-                        $promedio = $cant > 0 ? Nota::redondearNota($suma / $cant, 1) : null;
+                        $promedio = Nota::promedio($notasAlumno);
                         $colorNum = $alumno['numero_lista'] ? 'text-accent' : 'text-faint';
                         $colorPromedio = $promedio !== null
                             ? ($promedio >= 4.0 ? 'text-success' : 'text-danger')
@@ -211,7 +206,8 @@ $colorProm = $promGeneral === null ? 'text-faint'
                                     <?= htmlspecialchars($alumno['nombre']) ?>
                                 </p>
                                 <?php if ($estaRetirado): ?>
-                                    <span class="chip-danger inline-flex items-center gap-1 mt-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded-full">
+                                    <span
+                                        class="chip-danger inline-flex items-center gap-1 mt-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded-full">
                                         Retirado
                                     </span>
                                 <?php endif; ?>
@@ -230,7 +226,7 @@ $colorProm = $promGeneral === null ? 'text-faint'
                                             <span class="text-faint text-xs">—</span>
                                         <?php elseif ($n): ?>
                                             <?php
-                                            $v = Nota::redondearNota(floatval($n['nota']), 1);
+                                            $v = Nota::redondearNota((float)($n['nota']), 1);
                                             $bgNota = $v >= 4.0
                                                 ? 'banner-success'
                                                 : 'banner-danger';
@@ -241,7 +237,8 @@ $colorProm = $promGeneral === null ? 'text-faint'
                                                     <a href="index.php?action=notas_edit&id=<?= $n['id'] ?>"
                                                         class="text-warn hover:opacity-80 transition" title="Editar nota">
                                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15H9v-2.828z" />
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15H9v-2.828z" />
                                                         </svg>
                                                     </a>
                                                     <a href="index.php?action=notas_delete&id=<?= $n['id'] ?>&curso_id=<?= $cursoId ?>&anio_id=<?= $anioId ?>&asignatura_id=<?= $asignaturaId ?>&semestre=<?= $semestre ?>"
@@ -289,7 +286,8 @@ $colorProm = $promGeneral === null ? 'text-faint'
                             ?>
                             <td class="px-3 py-3 text-center">
                                 <div class="flex flex-col items-center justify-center">
-                                    <span class="inline-flex items-center justify-center w-12 h-6 rounded-md text-xs font-bold <?= $colorCol ?>
+                                    <span
+                                        class="inline-flex items-center justify-center w-12 h-6 rounded-md text-xs font-bold <?= $colorCol ?>
                                                  <?= $promCol !== null ? ($promCol >= 4.0 ? 'banner-success' : 'banner-danger') : '' ?>">
                                         <?= $promCol !== null ? number_format($promCol, 1) : '—' ?>
                                     </span>
@@ -307,7 +305,8 @@ $colorProm = $promGeneral === null ? 'text-faint'
                                 <span class="text-success text-xs font-semibold">✓ <?= $totalAprobados ?> Aprobados</span>
                                 <span class="text-accent text-xs font-semibold">-- <?= $totalPendientes ?> Pendientes</span>
                                 <span class="text-danger text-xs font-semibold">✗ <?= $totalReprobados ?> Reprobados</span>
-                                <span class="inline-flex items-center justify-center w-14 h-7 mt-1 rounded-lg text-sm font-bold <?= $colorProm ?>
+                                <span
+                                    class="inline-flex items-center justify-center w-14 h-7 mt-1 rounded-lg text-sm font-bold <?= $colorProm ?>
                                         <?= $promGeneral === null ? '' : ($promGeneral >= 4.0 ? 'banner-success' : 'banner-danger') ?>">
                                     <?= $promGeneral ?? '—' ?>
                                 </span>
@@ -328,8 +327,7 @@ $colorProm = $promGeneral === null ? 'text-faint'
         <p class="text-xs font-semibold uppercase tracking-wider text-muted mb-3">Exportar PDF</p>
 
         <a href="index.php?action=reportes_notas_pdf_asignatura&curso_id=<?= $cursoId ?>&anio_id=<?= $anioId ?>&asignatura_id=<?= $asignaturaId ?>&semestre=<?= $semestre ?>"
-            target="_blank"
-            class="btn-soft-info flex items-center gap-3 w-full px-4 py-3 rounded-xl mb-3 transition">
+            target="_blank" class="btn-soft-info flex items-center gap-3 w-full px-4 py-3 rounded-xl mb-3 transition">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586
                      a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -373,7 +371,7 @@ $colorProm = $promGeneral === null ? 'text-faint'
     function togglePdf() {
         document.getElementById('panel-pdf').classList.toggle('hidden');
     }
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         const panel = document.getElementById('panel-pdf');
         if (!e.target.closest('#panel-pdf') && !e.target.closest('button[onclick="togglePdf()"]')) {
             panel.classList.add('hidden');

@@ -63,18 +63,12 @@ $notas = $notaModel->getByMatriculaAndSemestre($matricula_id, $semestreSeleccion
                 </thead>
                 <tbody>
                     <?php
-                    $sumaGeneral = 0;
-                    $countGeneral = 0;
+                    $promsAsig = [];
 
                     foreach ($asignaturas as $asig):
                         $notasAsig = array_filter($notas, fn($n) => $n['asignatura_nombre'] === $asig['nombre']);
-                        $promedio = null;
-                        if (count($notasAsig) > 0) {
-                            $total = array_sum(array_column($notasAsig, 'nota'));
-                            $promedio = $total / count($notasAsig);
-                            $sumaGeneral += $promedio;
-                            $countGeneral++;
-                        }
+                        $promedio  = Nota::promedio($notasAsig);
+                        if ($promedio !== null) $promsAsig[] = $promedio;
                         ?>
                         <tr>
                             <td class="px-6 py-3 font-medium text-strong"><?= htmlspecialchars($asig['nombre']) ?></td>
@@ -82,7 +76,7 @@ $notas = $notaModel->getByMatriculaAndSemestre($matricula_id, $semestreSeleccion
                                 <?php if ($notasAsig): ?>
                                     <?php foreach ($notasAsig as $n): ?>
                                         <span class="inline-block report-badge text-xs px-2 py-1 rounded-lg mx-1 mb-1">
-                                            <?= number_format($n['nota'], 1) ?>
+                                            <?= Nota::fmt((float)$n['nota']) ?>
                                         </span>
                                     <?php endforeach; ?>
                                 <?php else: ?>
@@ -90,7 +84,7 @@ $notas = $notaModel->getByMatriculaAndSemestre($matricula_id, $semestreSeleccion
                                 <?php endif; ?>
                             </td>
                             <td class="px-6 py-3 text-center text-accent font-semibold">
-                                <?= $promedio ? number_format($promedio, 1) : '-' ?>
+                                <?= Nota::fmt($promedio, '-') ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -102,7 +96,7 @@ $notas = $notaModel->getByMatriculaAndSemestre($matricula_id, $semestreSeleccion
             <p class="text-soft font-semibold">
                 Promedio <?= $semestreSeleccionado ?>° Semestre:
                 <span class="text-accent font-bold">
-                    <?= $countGeneral > 0 ? number_format($sumaGeneral / $countGeneral, 1) : '-' ?>
+                    <?= Nota::fmt(Nota::promedio($promsAsig), '-') ?>
                 </span>
             </p>
         </div>

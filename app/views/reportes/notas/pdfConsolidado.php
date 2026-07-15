@@ -168,67 +168,51 @@ $logo2  = $base . 'certificado_3.png';
 $logo3  = $base . 'certificado_2.png';
 $piePag = $base . 'pie_pagina_certificado.png';
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-function colorV($v) {
-    if ($v === null) return '#94a3b8';
-    return $v >= 4.0 ? '#16a34a' : '#dc2626';
-}
-
-// ── Calcular promedio por semestre de cada alumno × asignatura ───────────────
-// $notas[$asignaturaId][$matriculaId] = promedio float|null
-$promMatrix = [];        // [matricula_id][asignatura_id] = float|null
-$promAsig   = [];        // [asignatura_id] = promedio del curso en esa asig
+// ── Promedio por alumno × asignatura ─────────────────────────────
+$promMatrix = []; 
+$promAsig   = [];  
 
 foreach ($asignaturas as $asig) {
     $asigId = $asig['id'];
-    $sumaAsig = 0; $cntAsig = 0;
+    $promsCol = [];
 
     foreach ($alumnos as $alumno) {
         $mid = $alumno['matricula_id'];
         $ns  = $notas[$asigId][$mid] ?? [];
-        if (count($ns) > 0) {
-            $prom = array_sum(array_column($ns, 'nota')) / count($ns);
-            $promMatrix[$mid][$asigId] = round($prom, 1);
-            $sumaAsig += $prom;
-            $cntAsig++;
-        } else {
-            $promMatrix[$mid][$asigId] = null;
-        }
+        $p   = Nota::promedio($ns);
+        $promMatrix[$mid][$asigId] = $p;
+        if ($p !== null) $promsCol[] = $p;
     }
 
-    $promAsig[$asigId] = $cntAsig > 0 ? round($sumaAsig / $cntAsig, 1) : null;
+    $promAsig[$asigId] = Nota::promedio($promsCol);
 }
 
-// ── Promedio general del alumno (promedio de sus promedios por asig) ─────────
+// ── Promedio general del alumno ──────────────────────────────────
 $promAlumno = [];
 foreach ($alumnos as $alumno) {
-    $mid = $alumno['matricula_id'];
+    $mid  = $alumno['matricula_id'];
     $vals = array_filter($promMatrix[$mid] ?? [], fn($v) => $v !== null);
-    $promAlumno[$mid] = count($vals) > 0 ? round(array_sum($vals) / count($vals), 1) : null;
+    $promAlumno[$mid] = Nota::promedio($vals);
 }
 
-// ── Stats generales ──────────────────────────────────────────────────────────
-$totalActivos = 0;
-$aprobados    = 0;
+// ── Stats generales ──────────────────────────────────────────────
+$totalActivos = 0; $aprobados = 0;
 foreach ($alumnos as $alumno) {
     if (!empty($alumno['fecha_retiro'])) continue;
     $totalActivos++;
-    $p = $promAlumno[$alumno['matricula_id']] ?? null;
-    if ($p !== null && $p >= 4.0) $aprobados++;
+    if (Nota::aprobada($promAlumno[$alumno['matricula_id']] ?? null)) $aprobados++;
 }
 $reprobados   = $totalActivos - $aprobados;
 $pctAprobados = $totalActivos > 0 ? round($aprobados / $totalActivos * 100) : 0;
 
-// Promedio general del curso (promedio de los promedios generales de alumnos)
+// Promedio general del curso
 $vals = array_filter($promAlumno, fn($v) => $v !== null);
-$promCursoGeneral = count($vals) > 0 ? round(array_sum($vals) / count($vals), 1) : null;
+$promCursoGeneral = Nota::promedio($vals);
 
-// Ancho de columna por asignatura (distribución equitativa)
-$numAsig    = count($asignaturas);
-$anchoAlumno = 85; // px fijo para columna nombre
-$anchoProm   = 30;  // px fijo columna prom. alumno
-// Las asignaturas reparten el resto — dompdf ignora % con table-layout:fixed,
-// así que lo ponemos inline en cada <th>
+// Anchos de columna
+$numAsig     = count($asignaturas);
+$anchoAlumno = 85;
+$anchoProm   = 30;
 ?>
 
 <!-- PIE FIJO -->
@@ -265,7 +249,7 @@ $anchoProm   = 30;  // px fijo columna prom. alumno
             </div>
         </div>
         <div class="ib-right">
-            <div class="ib-prom" style="color:<?= colorV($promCursoGeneral) ?>">
+            <div class="ib-prom" style="color:<?= Nota::color($promCursoGeneral) ?>">
                 <?= $promCursoGeneral !== null ? $promCursoGeneral : '—' ?>
             </div>
             <div class="ib-prom-lb">Promedio general del curso</div>
@@ -352,7 +336,7 @@ $anchoProm   = 30;  // px fijo columna prom. alumno
                     </td>
                 <?php endforeach; ?>
                 <!-- Promedio general alumno -->
-                <td class="sep" style="color:<?= colorV($pGeneral) ?>; font-weight:bold; font-size:11px;">
+                <td class="sep" style="color:<?= Nota::color($pGeneral) ?>; font-weight:bold; font-size:11px;">
                     <?= $pGeneral !== null ? number_format($pGeneral, 1) : '<span class="nd">S/N</span>' ?>
                 </td>
             </tr>
@@ -366,11 +350,11 @@ $anchoProm   = 30;  // px fijo columna prom. alumno
                     $pa = $promAsig[$asig['id']] ?? null;
                 ?>
                     <td class="<?= $idx === 0 ? 'sep-dark' : '' ?>"
-                        style="color:<?= colorV($pa) ?>;">
+                        style="color:<?= Nota::color($pa) ?>;">
                         <?= $pa !== null ? number_format($pa, 1) : '—' ?>
                     </td>
                 <?php endforeach; ?>
-                <td class="sep" style="color:<?= colorV($promCursoGeneral) ?>; font-size:12px;">
+                <td class="sep" style="color:<?= Nota::color($promCursoGeneral) ?>; font-size:12px;">
                     <?= $promCursoGeneral !== null ? number_format($promCursoGeneral, 1) : '—' ?>
                 </td>
             </tr>

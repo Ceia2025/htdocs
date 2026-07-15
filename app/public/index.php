@@ -317,9 +317,9 @@ switch ($action) {
         break;
 
     // ── CONTACTOS DE EMERGENCIA ──────────────────────────────
-    case 'alum_emergencia':
+    /*case 'alum_emergencia':
         $alumnoemergencia->index();
-        break;
+        break;*/
     case 'alum_emergencia_create':
         $alumnoemergencia->create();
         break;

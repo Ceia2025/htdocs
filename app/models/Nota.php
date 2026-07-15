@@ -12,13 +12,15 @@ class Nota
         $this->conn = $db->open();
     }
 
+    /*
+
     public static function redondearNota(float $valor, int $decimales = 1): float
     {
         $factor = 10 ** $decimales;
         // El +1e-9 compensa el ruido de precisión binaria sin afectar
         // ningún valor real de nota (la diferencia mínima entre notas es 0.01)
         return round($valor * $factor + 1e-9) / $factor;
-    }
+    }*/
 
     // Obtener nota por ID
     public function getById($id)
@@ -271,5 +273,67 @@ class Nota
                 : 0.0;
         }
         return $rows;
+    }
+
+    /* ═══════════ HELPERS DE CÁLCULO — fuente única de verdad ═══════════ */
+
+    /** Redondeo canónico a N decimales. El +1e-9 corrige el ruido binario
+     *  para que, por ejemplo, un promedio de 5.35 no caiga erróneamente a 5.3. */
+    public static function redondear(?float $valor, int $decimales = 1): ?float
+    {
+        if ($valor === null)
+            return null;
+        $factor = 10 ** $decimales;
+        return round($valor * $factor + 1e-9) / $factor;
+    }
+
+    /** Promedio REDONDEADO de un conjunto de notas.
+     *  Acepta un arreglo de floats o de filas con clave 'nota'.
+     *  Devuelve null si no hay valores numéricos. */
+    public static function promedio(array $items, int $decimales = 1): ?float
+    {
+        $vals = [];
+        foreach ($items as $it) {
+            $v = is_array($it) ? ($it['nota'] ?? null) : $it;
+            if (is_numeric($v))
+                $vals[] = (float) $v;
+        }
+        if (!$vals)
+            return null;
+        return self::redondear(array_sum($vals) / count($vals), $decimales);
+    }
+
+    /** ¿Aprobado? (≥ 4.0) */
+    public static function aprobada(?float $valor): bool
+    {
+        return $valor !== null && $valor >= 4.0;
+    }
+
+    /** Texto para mostrar: "5.4" o placeholder si es null. */
+    public static function fmt(?float $valor, string $placeholder = '—'): string
+    {
+        return $valor !== null ? number_format($valor, 1) : $placeholder;
+    }
+
+    /** Color HEX para PDFs (verde aprobado / rojo reprobado / gris sin nota). */
+    public static function color(?float $valor): string
+    {
+        if ($valor === null)
+            return '#94a3b8';
+        return $valor >= 4.0 ? '#16a34a' : '#dc2626';
+    }
+
+    /** Clase CSS para vistas web. */
+    public static function clase(?float $valor): string
+    {
+        if ($valor === null)
+            return 'text-faint';
+        return $valor >= 4.0 ? 'text-success' : 'text-danger';
+    }
+
+    /** @deprecated usar redondear() */
+    public static function redondearNota(float $valor, int $decimales = 1): float
+    {
+        return self::redondear($valor, $decimales);
     }
 }

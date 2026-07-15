@@ -87,27 +87,13 @@
                 </thead>
                 <tbody>
                     <?php
-                    $sumaGeneral = 0;
-                    $countGeneral = 0;
+                    $promsAsig = [];
 
                     foreach ($asignaturas as $asig):
                         $notasAsig = array_filter($notas, fn($n) => $n['asignatura_nombre'] === $asig['nombre']);
-                        $promedio = 0;
-                        $total = 0;
-                        $cant = 0;
-
-                        foreach ($notasAsig as $n) {
-                            if (is_numeric($n['nota'])) {
-                                $total += $n['nota'];
-                                $cant++;
-                            }
-                        }
-
-                        $promedio = $cant > 0 ? $total / $cant : null;
-                        if ($promedio !== null) {
-                            $sumaGeneral += $promedio;
-                            $countGeneral++;
-                        }
+                        $promedio = Nota::promedio($notasAsig);
+                        if ($promedio !== null)
+                            $promsAsig[] = $promedio;
                         ?>
                         <tr class="border-b border-gray-700 hover:bg-gray-700/40 transition-colors duration-200">
                             <td class="px-6 py-3 font-medium text-gray-100">
@@ -117,7 +103,7 @@
                                 <?php if (!empty($notasAsig)): ?>
                                     <?php foreach ($notasAsig as $n): ?>
                                         <span class="inline-block bg-gray-700 text-indigo-300 px-2 py-1 rounded-lg mx-1 mb-1">
-                                            <?= htmlspecialchars(number_format($n['nota'], 1)) ?>
+                                            <?= Nota::fmt((float) $n['nota']) ?>
                                             <!-- Botón editar -->
                                             <a href="index.php?action=notas_edit&id=<?= $n['id'] ?>"
                                                 class="ml-2 text-yellow-400 hover:text-yellow-300" title="Editar nota">
@@ -130,7 +116,7 @@
                                 <?php endif; ?>
                             </td>
                             <td class="px-6 py-3 text-center text-indigo-400 font-semibold">
-                                <?= $promedio ? number_format($promedio, 1) : '-' ?>
+                                <?= Nota::fmt($promedio, '-') ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -143,53 +129,40 @@
             <p class="text-lg font-semibold">
                 Promedio <?= $semestreSeleccionado ?>° Semestre:
                 <span class="text-indigo-400">
-                    <?= $countGeneral > 0 ? number_format($sumaGeneral / $countGeneral, 1) : '-' ?>
+                    <?= Nota::fmt(Nota::promedio($promsAsig), '-') ?>
                 </span>
             </p>
         </div>
 
         <!-- 📘 Promedio anual -->
         <?php
-        $notasSem1 = $notaModel->getByMatriculaAndSemestre($matricula['id'], 1);
-        $notasSem2 = $notaModel->getByMatriculaAndSemestre($matricula['id'], 2);
-
-        $promSem1 = 0;
-        $promSem2 = 0;
-        $cnt1 = 0;
-        $cnt2 = 0;
-
-        foreach ([1 => $notasSem1, 2 => $notasSem2] as $sem => $ns) {
-            $total = 0;
-            $c = 0;
-            foreach ($ns as $n) {
-                if (is_numeric($n['nota'])) {
-                    $total += $n['nota'];
-                    $c++;
-                }
+        $generalSemestre = function ($sem) use ($notaModel, $matricula, $asignaturas) {
+            $notasSem = $notaModel->getByMatriculaAndSemestre($matricula['id'], $sem);
+            $proms = [];
+            foreach ($asignaturas as $asig) {
+                $na = array_filter($notasSem, fn($n) => $n['asignatura_nombre'] === $asig['nombre']);
+                $p = Nota::promedio($na);
+                if ($p !== null)
+                    $proms[] = $p;
             }
-            if ($c > 0) {
-                if ($sem == 1) {
-                    $promSem1 = $total / $c;
-                    $cnt1 = $c;
-                }
-                if ($sem == 2) {
-                    $promSem2 = $total / $c;
-                    $cnt2 = $c;
-                }
-            }
-        }
+            return Nota::promedio($proms);
+        };
 
-        if ($cnt1 > 0 && $cnt2 > 0):
-            $promFinal = ($promSem1 + $promSem2) / 2;
+        $promSem1 = $generalSemestre(1);
+        $promSem2 = $generalSemestre(2);
+
+        if ($promSem1 !== null && $promSem2 !== null):
+            $promFinal = Nota::promedio([$promSem1, $promSem2]);
+
             ?>
             <div class="mt-10 bg-gray-800 border border-gray-700 rounded-2xl p-6 text-center shadow-lg">
                 <h3 class="text-xl font-semibold text-gray-100 mb-2">📊 Promedio Final Anual</h3>
                 <p class="text-gray-300">
-                    1° Sem: <span class="text-indigo-400"><?= number_format($promSem1, 1) ?></span> |
-                    2° Sem: <span class="text-indigo-400"><?= number_format($promSem2, 1) ?></span>
+                    1° Sem: <span class="text-indigo-400"><?= Nota::fmt($promSem1, 1) ?></span> |
+                    2° Sem: <span class="text-indigo-400"><?= Nota::fmt($promSem2, 1) ?></span>
                 </p>
                 <p class="mt-2 text-lg font-bold text-indigo-400">
-                    Promedio Final: <?= number_format($promFinal, 1) ?>
+                    Promedio Final: <?= Nota::fmt($promFinal, 1) ?>
                 </p>
             </div>
         <?php endif; ?>

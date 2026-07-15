@@ -35,8 +35,10 @@ include __DIR__ . "/../layout/navbar.php";
 
                         <!-- Tipo (autocompletado) -->
                         <div>
-                            <label for="tipo" class="block text-sm font-medium text-gray-200">Tipo <span class="text-gray-400 text-xs">(opcional)</span></label>
-                            <input type="text" name="tipo" id="tipo" list="tipos-list" autocomplete="off" placeholder="Ej: Redonda, Trapezoidal..."
+                            <label for="tipo" class="block text-sm font-medium text-gray-200">Tipo <span
+                                    class="text-gray-400 text-xs">(opcional)</span></label>
+                            <input type="text" name="tipo" id="tipo" list="tipos-list" autocomplete="off"
+                                placeholder="Ej: Redonda, Trapezoidal..."
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <datalist id="tipos-list">
                                 <?php foreach (($tipos ?? []) as $t): ?>
@@ -52,20 +54,24 @@ include __DIR__ . "/../layout/navbar.php";
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                                 <option value="inventariable">Inventariable (mesa, silla...)</option>
                                 <option value="consumible">Consumible (hojas, plumones...)</option>
+                                <option value="transitorio">Transitorio (de un funcionario)</option>
                             </select>
                         </div>
 
                         <!-- Cantidad a crear (solo inventariable) -->
                         <div id="wrap-fichas">
-                            <label for="cantidad_fichas" class="block text-sm font-medium text-gray-200">Cantidad a crear</label>
+                            <label for="cantidad_fichas" class="block text-sm font-medium text-gray-200">Cantidad a
+                                crear</label>
                             <input type="number" name="cantidad_fichas" id="cantidad_fichas" min="1" value="1"
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            <p class="text-xs text-gray-400 mt-1">Genera fichas correlativas (MESA-001, 002...). Si es &gt;1, el N y codigo se generan solos.</p>
+                            <p class="text-xs text-gray-400 mt-1">Genera fichas correlativas (MESA-001, 002...). Si es
+                                &gt;1, el N y codigo se generan solos.</p>
                         </div>
 
                         <!-- Cantidad (solo consumible) -->
                         <div id="wrap-cantidad" class="hidden">
-                            <label for="cantidad" class="block text-sm font-medium text-gray-200">Cantidad (stock)</label>
+                            <label for="cantidad" class="block text-sm font-medium text-gray-200">Cantidad
+                                (stock)</label>
                             <input type="number" name="cantidad" id="cantidad" min="1" value="1"
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
@@ -80,7 +86,8 @@ include __DIR__ . "/../layout/navbar.php";
 
                         <!-- Codigo unico -->
                         <div>
-                            <label for="codigo_unico" class="block text-sm font-medium text-gray-200">Codigo unico</label>
+                            <label for="codigo_unico" class="block text-sm font-medium text-gray-200">Codigo
+                                unico</label>
                             <input type="text" name="codigo_unico" id="codigo_unico" placeholder="Ej: MESA-001"
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 font-mono focus:ring-2 focus:ring-indigo-500 focus:outline-none disabled:opacity-40">
                             <p class="text-xs text-gray-400 mt-1">Autogenerado (editable). Vacio = se genera solo.</p>
@@ -88,7 +95,8 @@ include __DIR__ . "/../layout/navbar.php";
 
                         <!-- Nivel Educativo -->
                         <div>
-                            <label for="nivel_id" class="block text-sm font-medium text-gray-200">Nivel Educativo</label>
+                            <label for="nivel_id" class="block text-sm font-medium text-gray-200">Nivel
+                                Educativo</label>
                             <select name="nivel_id" id="nivel_id" required
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                                 <option value="">-- Seleccione --</option>
@@ -100,7 +108,8 @@ include __DIR__ . "/../layout/navbar.php";
 
                         <!-- Estado -->
                         <div>
-                            <label for="estado_id" class="block text-sm font-medium text-gray-200">Estado de Conservacion</label>
+                            <label for="estado_id" class="block text-sm font-medium text-gray-200">Estado de
+                                Conservacion</label>
                             <select name="estado_id" id="estado_id" required
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                                 <option value="">-- Seleccione --</option>
@@ -124,7 +133,8 @@ include __DIR__ . "/../layout/navbar.php";
 
                         <!-- Fecha de registro -->
                         <div>
-                            <label for="fecha_registro" class="block text-sm font-medium text-gray-200">Fecha de registro</label>
+                            <label for="fecha_registro" class="block text-sm font-medium text-gray-200">Fecha de
+                                registro</label>
                             <input type="date" name="fecha_registro" id="fecha_registro" max="<?= date('Y-m-d') ?>"
                                 value="<?= date('Y-m-d') ?>"
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
@@ -132,13 +142,15 @@ include __DIR__ . "/../layout/navbar.php";
 
                         <!-- Procedencia (opcional) + boton ventana flotante -->
                         <div class="md:col-span-2">
-                            <label for="procedencia_id" class="block text-sm font-medium text-gray-200">Procedencia <span class="text-gray-400 text-xs">(opcional)</span></label>
+                            <label for="procedencia_id" class="block text-sm font-medium text-gray-200">Procedencia
+                                <span class="text-gray-400 text-xs">(opcional)</span></label>
                             <div class="mt-2 flex gap-2">
                                 <select name="procedencia_id" id="procedencia_id"
                                     class="flex-1 rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                                     <option value="">-- Sin procedencia --</option>
                                     <?php foreach (($procedencias ?? []) as $p): ?>
-                                        <option value="<?= $p['id'] ?>"><?= htmlspecialchars(Procedencia::etiqueta($p)) ?></option>
+                                        <option value="<?= $p['id'] ?>"><?= htmlspecialchars(Procedencia::etiqueta($p)) ?>
+                                        </option>
                                     <?php endforeach; ?>
                                 </select>
                                 <button type="button" onclick="abrirModalProc()"
@@ -150,7 +162,8 @@ include __DIR__ . "/../layout/navbar.php";
 
                         <!-- Observaciones -->
                         <div class="md:col-span-2">
-                            <label for="observaciones" class="block text-sm font-medium text-gray-200">Observaciones <span class="text-gray-400 text-xs">(opcional)</span></label>
+                            <label for="observaciones" class="block text-sm font-medium text-gray-200">Observaciones
+                                <span class="text-gray-400 text-xs">(opcional)</span></label>
                             <textarea name="observaciones" id="observaciones" rows="2"
                                 class="mt-2 w-full rounded-lg bg-gray-800 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
                         </div>
@@ -187,7 +200,8 @@ include __DIR__ . "/../layout/navbar.php";
                 <button type="button" onclick="cerrarModalProc()"
                     class="text-gray-500 hover:text-white transition p-1 rounded-lg hover:bg-gray-700">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -205,12 +219,14 @@ include __DIR__ . "/../layout/navbar.php";
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-200">Fondo / Donante <span class="text-gray-400 text-xs">(opcional)</span></label>
+                    <label class="block text-sm font-medium text-gray-200">Fondo / Donante <span
+                            class="text-gray-400 text-xs">(opcional)</span></label>
                     <input type="text" id="proc-fondo" placeholder="Ej: Proyecto FNDR 2024, Apoderados..."
                         class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-200">Fecha de adquisicion <span class="text-gray-400 text-xs">(opcional)</span></label>
+                    <label class="block text-sm font-medium text-gray-200">Fecha de adquisicion <span
+                            class="text-gray-400 text-xs">(opcional)</span></label>
                     <input type="date" id="proc-fecha" max="<?= date('Y-m-d') ?>"
                         class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                 </div>
@@ -231,14 +247,14 @@ include __DIR__ . "/../layout/navbar.php";
 
 
     <script>
-        const naturaleza   = document.getElementById('naturaleza');
+        const naturaleza = document.getElementById('naturaleza');
         const wrapCantidad = document.getElementById('wrap-cantidad');
-        const wrapFichas   = document.getElementById('wrap-fichas');
-        const inpFichas    = document.getElementById('cantidad_fichas');
-        const inpCantidad  = document.getElementById('cantidad');
-        const inpNombre    = document.getElementById('nombre');
-        const inpNumero    = document.getElementById('numero');
-        const inpCodigo    = document.getElementById('codigo_unico');
+        const wrapFichas = document.getElementById('wrap-fichas');
+        const inpFichas = document.getElementById('cantidad_fichas');
+        const inpCantidad = document.getElementById('cantidad');
+        const inpNombre = document.getElementById('nombre');
+        const inpNumero = document.getElementById('numero');
+        const inpCodigo = document.getElementById('codigo_unico');
 
         let codigoTocado = false;
         inpCodigo.addEventListener('input', () => codigoTocado = true);
@@ -257,7 +273,7 @@ include __DIR__ . "/../layout/navbar.php";
         }
 
         function toggleSerie() {
-            const enSerie = naturaleza.value === 'inventariable' && parseInt(inpFichas.value || '1', 10) > 1;
+            const enSerie = naturaleza.value !== 'consumible' && parseInt(inpFichas.value || '1', 10) > 1;
             inpNumero.disabled = enSerie;
             inpCodigo.disabled = enSerie;
             if (enSerie) { inpNumero.value = ''; inpCodigo.value = ''; }
@@ -293,7 +309,7 @@ include __DIR__ . "/../layout/navbar.php";
 
         // ---------- VENTANA FLOTANTE: NUEVA PROCEDENCIA ----------
         const modalProc = document.getElementById('modal-proc');
-        const selProc   = document.getElementById('procedencia_id');
+        const selProc = document.getElementById('procedencia_id');
 
         function abrirModalProc() { modalProc.classList.remove('hidden'); }
         function cerrarModalProc() { modalProc.classList.add('hidden'); }
@@ -303,8 +319,8 @@ include __DIR__ . "/../layout/navbar.php";
             btn.disabled = true;
 
             const body = new URLSearchParams({
-                tipo:              document.getElementById('proc-tipo').value,
-                donador_fondo:     document.getElementById('proc-fondo').value,
+                tipo: document.getElementById('proc-tipo').value,
+                donador_fondo: document.getElementById('proc-fondo').value,
                 fecha_adquisicion: document.getElementById('proc-fecha').value,
             });
 

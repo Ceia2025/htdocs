@@ -370,7 +370,6 @@ class NotasController
         exit;
     }
 
-    // ── AJAX: actualizar nota existente ─────────────────────────
     public function ajaxUpdate(): void
     {
         header('Content-Type: application/json');
@@ -399,7 +398,6 @@ class NotasController
         exit;
     }
 
-    // ── AJAX: actualizar fecha de múltiples notas (columna) ─────
     public function ajaxUpdateFecha(): void
     {
         header('Content-Type: application/json');
