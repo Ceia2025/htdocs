@@ -4,12 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
             font-family: DejaVu Sans, sans-serif;
             font-size: 8px;
@@ -283,34 +277,30 @@
 <body>
 
     <?php
+    require_once __DIR__ . '/../../../models/Nota.php';
+
     $base = 'http://localhost:8080/app/public/img/';
     $logo1 = $base . 'certificado_1.png';
     $logo2 = $base . 'certificado_3.png';
     $logo3 = $base . 'certificado_2.png';
     $piePag = $base . 'pie_pagina_certificado.png';
 
-    function colorR($v)
-    {
-        if ($v === null)
-            return '#94a3b8';
-        return $v >= 4.0 ? '#16a34a' : '#dc2626';
-    }
-    function claseR($v)
-    {
-        if ($v === null)
-            return 'nd';
-        return $v >= 4.0 ? 'ok' : 'mal';
-    }
-    // Barra proporcional: max referencia = 7.0
-    function barraHtml($v)
+    // ── Helpers de presentación propios del PDF ──────────────────
+    // El cálculo y el color de las notas viven en Nota.php; aquí solo
+    // queda lo que es específico de este documento.
+    
+    /** Barra proporcional: max referencia = 7.0 */
+    function barraHtml(?float $v): string
     {
         if ($v === null)
             return '';
         $pct = min(100, round(($v / 7.0) * 100));
-        $color = $v >= 4.0 ? '#16a34a' : '#dc2626';
+        $color = Nota::aprobada($v) ? '#16a34a' : '#dc2626';
         return '<span class="barra-wrap"><span class="barra-fill" style="width:' . $pct . '%;background:' . $color . ';"></span></span>';
     }
-    function medallaClase($i)
+
+    /** Clase de medalla según la posición en el ranking. */
+    function medallaClase(int $i): string
     {
         if ($i === 0)
             return 'med-1';
@@ -374,10 +364,18 @@
                     continue;
 
                 // Stats del curso
-                $aprobados = count(array_filter($filaAlumnos, fn($a) => $a['promedio'] !== null && $a['promedio'] >= 4.0));
                 $total = count($filaAlumnos);
-                $proms = array_filter(array_column($filaAlumnos, 'promedio'), fn($v) => $v !== null);
-                $promCurso = count($proms) > 0 ? round(array_sum($proms) / count($proms), 1) : null;
+                $aprobados = count(array_filter(
+                    $filaAlumnos,
+                    fn($a) => Nota::aprobada($a['promedio'])
+                ));
+
+                // Promedio del curso: promedio de los promedios de sus alumnos
+                $proms = array_filter(
+                    array_column($filaAlumnos, 'promedio'),
+                    fn($v) => $v !== null
+                );
+                $promCurso = Nota::promedio($proms);
                 ?>
                 <div class="curso-bloque">
                     <span class="curso-label"><?= htmlspecialchars($cursoNombre) ?></span>
@@ -394,7 +392,7 @@
                         </thead>
                         <tbody>
                             <?php foreach ($filaAlumnos as $i => $a):
-                                $p = $a['promedio'];
+                                $p = $a['promedio'] !== null ? (float) $a['promedio'] : null;
                                 ?>
                                 <tr>
                                     <td class="<?= medallaClase($i) ?>">
@@ -417,8 +415,8 @@
                                             </span>
                                         <?php endif; ?>
                                     </td>
-                                    <td style="color:<?= colorR($p) ?>;font-weight:bold;font-size:9px;">
-                                        <?= $p !== null ? number_format($p, 1) : '<span class="nd">S/N</span>' ?>
+                                    <td style="color:<?= Nota::color($p) ?>;font-weight:bold;font-size:9px;">
+                                        <?= $p !== null ? Nota::fmt($p) : '<span class="nd">S/N</span>' ?>
                                     </td>
                                     <td>
                                         <?= barraHtml($p) ?>
@@ -426,7 +424,7 @@
                                     <td>
                                         <?php if ($p === null): ?>
                                             <span class="nd">Sin notas</span>
-                                        <?php elseif ($p >= 4.0): ?>
+                                        <?php elseif (Nota::aprobada($p)): ?>
                                             <span class="ok">Aprobado</span>
                                         <?php else: ?>
                                             <span class="mal">Reprobado</span>
@@ -440,11 +438,11 @@
                                 <td></td>
                                 <td class="td-al">Promedio del curso</td>
                                 <td></td>
-                                <td style="color:<?= colorR($promCurso) ?>">
-                                    <?= $promCurso !== null ? number_format($promCurso, 1) : '—' ?>
+                                <td style="color:<?= Nota::color($promCurso) ?>">
+                                    <?= Nota::fmt($promCurso) ?>
                                 </td>
                                 <td></td>
-                                <td style="color:<?= colorR($promCurso) ?>">
+                                <td style="color:<?= Nota::color($promCurso) ?>">
                                     <?= $aprobados ?>/<?= $total ?> aprobados
                                 </td>
                             </tr>
@@ -458,9 +456,15 @@
 
             <?php
             // Stats globales
-            $promsAsig = array_filter(array_column($rankingAsignaturas, 'promedio'), fn($v) => $v !== null);
-            $promGlobal = count($promsAsig) > 0 ? round(array_sum($promsAsig) / count($promsAsig), 1) : null;
-            $bajoCuatro = count(array_filter($rankingAsignaturas, fn($a) => $a['promedio'] !== null && $a['promedio'] < 4.0));
+            $promsAsig = array_filter(
+                array_column($rankingAsignaturas, 'promedio'),
+                fn($v) => $v !== null
+            );
+            $promGlobal = Nota::promedio($promsAsig);
+            $bajoCuatro = count(array_filter(
+                $rankingAsignaturas,
+                fn($a) => $a['promedio'] !== null && !Nota::aprobada((float) $a['promedio'])
+            ));
             ?>
 
             <table class="rk">
@@ -476,7 +480,7 @@
                 </thead>
                 <tbody>
                     <?php foreach ($rankingAsignaturas as $i => $a):
-                        $p = $a['promedio'];
+                        $p = $a['promedio'] !== null ? (float) $a['promedio'] : null;
                         ?>
                         <tr>
                             <td class="<?= medallaClase($i) ?>"><?= $i + 1 ?></td>
@@ -485,7 +489,7 @@
                                 <?php
                                 $esPendienteAsig = array_filter(
                                     $pendientesAsignaturas ?? [],
-                                    fn($p) => $p['asignatura'] === $a['asignatura'] && $p['curso'] === $a['curso']
+                                    fn($pen) => $pen['asignatura'] === $a['asignatura'] && $pen['curso'] === $a['curso']
                                 );
                                 if (!empty($esPendienteAsig)):
                                     ?>
@@ -497,14 +501,14 @@
                                 <?php endif; ?>
                             </td>
                             <td style="color:#64748b;"><?= htmlspecialchars($a['curso']) ?></td>
-                            <td style="color:<?= colorR($p) ?>;font-weight:bold;font-size:9px;">
-                                <?= $p !== null ? number_format($p, 1) : '<span class="nd">S/N</span>' ?>
+                            <td style="color:<?= Nota::color($p) ?>;font-weight:bold;font-size:9px;">
+                                <?= $p !== null ? Nota::fmt($p) : '<span class="nd">S/N</span>' ?>
                             </td>
                             <td><?= barraHtml($p) ?></td>
                             <td>
                                 <?php if ($p === null): ?>
                                     <span class="nd">Sin notas</span>
-                                <?php elseif ($p >= 4.0): ?>
+                                <?php elseif (Nota::aprobada($p)): ?>
                                     <span class="ok">Sobre 4.0</span>
                                 <?php else: ?>
                                     <span class="mal">Bajo 4.0</span>
@@ -518,8 +522,8 @@
                         <td></td>
                         <td class="td-al">Promedio general (todas las asignaturas)</td>
                         <td></td>
-                        <td style="color:<?= colorR($promGlobal) ?>">
-                            <?= $promGlobal !== null ? number_format($promGlobal, 1) : '—' ?>
+                        <td style="color:<?= Nota::color($promGlobal) ?>">
+                            <?= Nota::fmt($promGlobal) ?>
                         </td>
                         <td></td>
                         <td style="color:#dc2626;"><?= $bajoCuatro ?> bajo 4.0</td>

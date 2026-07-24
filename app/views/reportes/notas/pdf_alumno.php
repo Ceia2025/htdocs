@@ -301,49 +301,49 @@
 <body>
 
     <?php
+    require_once __DIR__ . '/../../../models/Nota.php';
+
     $base = 'http://localhost:8080/app/public/img/';
     $logo1 = $base . 'certificado_1.png';
     $logo2 = $base . 'certificado_3.png';
     $logo3 = $base . 'certificado_2.png';
     $piePag = $base . 'pie_pagina_certificado.png';
 
-    // Calcular promedios
-    $sumaGenSem1 = 0;
-    $cntGenSem1 = 0;
-    $sumaGenSem2 = 0;
-    $cntGenSem2 = 0;
+    // ── Promedios por asignatura y semestre ──────────────────────────
+    // Fuente única de verdad: Nota::promedio() ya devuelve el valor REDONDEADO.
+    $promsSem1 = [];
+    $promsSem2 = [];
     $filas = [];
 
     foreach ($asignaturas as $asig) {
         $id = $asig['id'];
         $ns1 = $notasSem[1][$id] ?? [];
         $ns2 = $notasSem[2][$id] ?? [];
-        $p1 = count($ns1) > 0 ? array_sum(array_column($ns1, 'nota')) / count($ns1) : null;
-        $p2 = count($ns2) > 0 ? array_sum(array_column($ns2, 'nota')) / count($ns2) : null;
-        if ($p1 !== null) {
-            $sumaGenSem1 += $p1;
-            $cntGenSem1++;
-        }
-        if ($p2 !== null) {
-            $sumaGenSem2 += $p2;
-            $cntGenSem2++;
-        }
-        $filas[] = ['nombre' => $asig['nombre'], 'sem1' => $ns1, 'sem2' => $ns2, 'p1' => $p1, 'p2' => $p2];
+
+        $p1 = Nota::promedio($ns1);
+        $p2 = Nota::promedio($ns2);
+
+        if ($p1 !== null) $promsSem1[] = $p1;
+        if ($p2 !== null) $promsSem2[] = $p2;
+
+        // Promedio final de la asignatura: solo si ambos semestres tienen nota
+        $pFinal = ($p1 !== null && $p2 !== null)
+            ? Nota::promedio([$p1, $p2])
+            : null;
+
+        $filas[] = [
+            'nombre' => $asig['nombre'],
+            'sem1'   => $ns1,
+            'sem2'   => $ns2,
+            'p1'     => $p1,
+            'p2'     => $p2,
+            'pFinal' => $pFinal,
+        ];
     }
 
-    $promGenSem1 = $cntGenSem1 > 0 ? $sumaGenSem1 / $cntGenSem1 : null;
-    $promGenSem2 = $cntGenSem2 > 0 ? $sumaGenSem2 / $cntGenSem2 : null;
-
-    function colorN($v)
-    {
-        if ($v === null)
-            return '#94a3b8';
-        return $v >= 4.0 ? '#16a34a' : '#dc2626';
-    }
-    function fmtN($v, $dec = 1)
-    {
-        return $v !== null ? number_format($v, $dec) : '—';
-    }
+    // ── Promedios generales (promedio de promedios) ──────────────────
+    $promGenSem1 = Nota::promedio($promsSem1);
+    $promGenSem2 = Nota::promedio($promsSem2);
 
     $cursosPrimerNivel = [2, 5, 8];
     $esPrimerNivel = in_array((int) ($curso['id'] ?? 0), $cursosPrimerNivel);
@@ -423,36 +423,36 @@
                     $ns2 = array_values($fila['sem2']);
                     $p1 = $fila['p1'];
                     $p2 = $fila['p2'];
-                    $pFinal = ($p1 !== null && $p2 !== null) ? ($p1 + $p2) / 2 : null;
+                    $pFinal = $fila['pFinal'];
                     ?>
                     <tr>
                         <td class="td-a"><?= htmlspecialchars($fila['nombre']) ?></td>
                         <?php for ($i = 0; $i < $maxCols[1]; $i++):
                             $n = $ns1[$i] ?? null;
-                            $v = $n ? floatval($n['nota']) : null;
+                            $v = $n !== null ? Nota::redondear((float) $n['nota']) : null;
                             ?>
                             <td><?php if ($v !== null): ?>
-                                    <span class="<?= $v >= 4.0 ? 'ok' : 'mal' ?>"><?= number_format($v, 1) ?></span>
+                                    <span class="<?= Nota::aprobada($v) ? 'ok' : 'mal' ?>"><?= Nota::fmt($v) ?></span>
                                 <?php else: ?><span class="nd">—</span><?php endif; ?>
                             </td>
                         <?php endfor; ?>
                         <?php for ($i = 0; $i < $maxCols[2]; $i++):
                             $n = $ns2[$i] ?? null;
-                            $v = $n ? floatval($n['nota']) : null;
+                            $v = $n !== null ? Nota::redondear((float) $n['nota']) : null;
                             ?>
                             <td class="<?= $i === 0 ? 'sep' : '' ?>"><?php if ($v !== null): ?>
-                                    <span class="<?= $v >= 4.0 ? 'ok' : 'mal' ?>"><?= number_format($v, 1) ?></span>
+                                    <span class="<?= Nota::aprobada($v) ? 'ok' : 'mal' ?>"><?= Nota::fmt($v) ?></span>
                                 <?php else: ?><span class="nd">—</span><?php endif; ?>
                             </td>
                         <?php endfor; ?>
-                        <td style="color:<?= colorN($p1) ?>;font-weight:bold;">
-                            <?= $p1 !== null ? number_format($p1, 1) : '<span class="pen">Pend.</span>' ?>
+                        <td style="color:<?= Nota::color($p1) ?>;font-weight:bold;">
+                            <?= $p1 !== null ? Nota::fmt($p1) : '<span class="pen">Pend.</span>' ?>
                         </td>
-                        <td style="color:<?= colorN($p2) ?>;font-weight:bold;" class="sep">
-                            <?= $p2 !== null ? number_format($p2, 1) : '<span class="pen">Pend.</span>' ?>
+                        <td style="color:<?= Nota::color($p2) ?>;font-weight:bold;" class="sep">
+                            <?= $p2 !== null ? Nota::fmt($p2) : '<span class="pen">Pend.</span>' ?>
                         </td>
-                        <td style="color:<?= colorN($pFinal) ?>;font-weight:bold;">
-                            <?= $pFinal !== null ? number_format($pFinal, 1) : '<span class="pen">Pend.</span>' ?>
+                        <td style="color:<?= Nota::color($pFinal) ?>;font-weight:bold;">
+                            <?= $pFinal !== null ? Nota::fmt($pFinal) : '<span class="pen">Pend.</span>' ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -465,8 +465,8 @@
                     <?php for ($i = 0; $i < $maxCols[2]; $i++): ?>
                         <td class="<?= $i === 0 ? 'sep' : '' ?>"></td>
                     <?php endfor; ?>
-                    <td style="color:<?= colorN($promGenSem1) ?>"><?= fmtN($promGenSem1) ?></td>
-                    <td style="color:<?= colorN($promGenSem2) ?>" class="sep"><?= fmtN($promGenSem2) ?></td>
+                    <td style="color:<?= Nota::color($promGenSem1) ?>"><?= Nota::fmt($promGenSem1) ?></td>
+                    <td style="color:<?= Nota::color($promGenSem2) ?>" class="sep"><?= Nota::fmt($promGenSem2) ?></td>
                     <td>—</td>
                 </tr>
             </tfoot>

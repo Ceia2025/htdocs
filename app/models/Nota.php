@@ -230,7 +230,93 @@ class Nota
         return (int) $this->conn->lastInsertId();
     }
 
-    // ── Actualizar la fecha de un conjunto de notas (columna) ────
+    /* ═══════════ OPERACIONES SOBRE UNA COLUMNA (EVALUACIÓN) ═══════════
+       En la grilla, una "columna" es el conjunto de notas de un mismo
+       curso + año + asignatura + semestre que comparten una fecha.        */
+
+    /**
+     * Actualiza la fecha de un conjunto de notas identificadas por ID.
+     * Se usa al cambiar la fecha de una columna completa en el libro de notas.
+     */
+    public function actualizarFechaNotas(array $ids, string $fecha): bool
+    {
+        $ids = array_values(array_filter(array_map('intval', $ids)));
+        if (empty($ids)) {
+            return false;
+        }
+
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $sql = "UPDATE {$this->table} SET fecha = ? WHERE id IN ($placeholders)";
+
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute(array_merge([$fecha], $ids));
+    }
+
+    /**
+     * Cuenta las notas de una columna completa.
+     * Se llama ANTES de eliminar para advertir al usuario: puede haber
+     * notas duplicadas en la misma fecha que la grilla no alcanza a mostrar.
+     */
+    public function contarNotasColumna(
+        int $cursoId,
+        int $anioId,
+        int $asignaturaId,
+        int $semestre,
+        string $fecha
+    ): int {
+        $sql = "SELECT COUNT(*)
+                FROM {$this->table} n
+                JOIN matriculas2 m ON m.id = n.matricula_id
+                WHERE m.curso_id      = :curso_id
+                  AND m.anio_id       = :anio_id
+                  AND n.asignatura_id = :asignatura_id
+                  AND n.semestre      = :semestre
+                  AND DATE(n.fecha)   = :fecha";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':curso_id' => $cursoId,
+            ':anio_id' => $anioId,
+            ':asignatura_id' => $asignaturaId,
+            ':semestre' => $semestre,
+            ':fecha' => $fecha,
+        ]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * Elimina TODAS las notas de una columna, incluidas las duplicadas.
+     * Devuelve la cantidad de filas efectivamente borradas.
+     */
+    public function eliminarColumna(
+        int $cursoId,
+        int $anioId,
+        int $asignaturaId,
+        int $semestre,
+        string $fecha
+    ): int {
+        $sql = "DELETE n
+                FROM {$this->table} n
+                JOIN matriculas2 m ON m.id = n.matricula_id
+                WHERE m.curso_id      = :curso_id
+                  AND m.anio_id       = :anio_id
+                  AND n.asignatura_id = :asignatura_id
+                  AND n.semestre      = :semestre
+                  AND DATE(n.fecha)   = :fecha";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':curso_id' => $cursoId,
+            ':anio_id' => $anioId,
+            ':asignatura_id' => $asignaturaId,
+            ':semestre' => $semestre,
+            ':fecha' => $fecha,
+        ]);
+
+        return $stmt->rowCount();
+    }
+
     /* ==========================================
    PROMEDIO POR CURSO — para ranking de cursos
 ========================================== */

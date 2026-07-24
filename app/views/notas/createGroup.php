@@ -10,14 +10,15 @@ $rol = $user['rol'];
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 
-$asignaturaSeleccionada = (int)($_GET['asignatura_id'] ?? 0);
+$asignaturaSeleccionada = (int) ($_GET['asignatura_id'] ?? 0);
 ?>
 
 <header class="page-header">
     <div class="flex items-center justify-between mb-0 flex-wrap gap-4 max-w-screen-2xl mx-auto px-4 py-5 sm:px-6">
         <div class="flex items-center gap-3">
             <div class="card-icon-badge w-10 h-10 rounded-xl">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2
                          M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
@@ -46,8 +47,7 @@ $asignaturaSeleccionada = (int)($_GET['asignatura_id'] ?? 0);
                     <label class="block text-xs font-semibold uppercase tracking-wider text-muted mb-2">
                         Asignatura <span class="text-danger">*</span>
                     </label>
-                    <select id="sel-asignatura"
-                        class="input-field w-full text-sm rounded-lg px-3 py-2.5">
+                    <select id="sel-asignatura" class="input-field w-full text-sm rounded-lg px-3 py-2.5">
                         <option value="">— Seleccionar asignatura —</option>
                         <?php foreach ($asignaturas as $asig): ?>
                             <option value="<?= $asig['id'] ?>" data-nombre="<?= htmlspecialchars($asig['nombre']) ?>"
@@ -62,7 +62,8 @@ $asignaturaSeleccionada = (int)($_GET['asignatura_id'] ?? 0);
                     <?= $semestreActual ?>° Semestre activo
                 </span>
 
-                <div id="toast-estado" class="hidden items-center gap-2 text-xs font-semibold px-3 py-2 rounded-full border"></div>
+                <div id="toast-estado"
+                    class="hidden items-center gap-2 text-xs font-semibold px-3 py-2 rounded-full border"></div>
             </div>
         </div>
 
@@ -113,13 +114,70 @@ $asignaturaSeleccionada = (int)($_GET['asignatura_id'] ?? 0);
     const ALUMNOS = <?= json_encode(array_values($alumnos)) ?>;
     const NOTAS_EXIST = <?= json_encode($notasExistentes) ?>;
     const SEMESTRE = <?= $semestreActual ?>;
-    const CURSO_ID = <?= (int)($_GET['curso_id'] ?? 0) ?>;
-    const ANIO_ID = <?= (int)($_GET['anio_id'] ?? 0) ?>;
+    const CURSO_ID = <?= (int) ($_GET['curso_id'] ?? 0) ?>;
+    const ANIO_ID = <?= (int) ($_GET['anio_id'] ?? 0) ?>;
     const PUEDE_EDITAR = <?= $puedeEditar ? 'true' : 'false' ?>;
     const HOY = '<?= date('Y-m-d') ?>';
 
     const evaluaciones = {};
     let asignaturaId = <?= $asignaturaSeleccionada ?: 0 ?>;
+
+    // ═══════════════ HELPERS DE CÁLCULO — espejo de Nota.php ═══════════════
+
+    /**
+     * Redondeo canónico — equivalente a Nota::redondear() en PHP.
+     * El +1e-9 compensa el ruido de precisión binaria: sin él, 5.05 se
+     * almacena como 5.04999999... y cae erróneamente a 5.0.
+     */
+    function redondearNota(valor, decimales = 1) {
+        if (valor === null || valor === undefined || isNaN(valor)) return null;
+        const factor = Math.pow(10, decimales);
+        return Math.round(valor * factor + 1e-9) / factor;
+    }
+
+    /**
+     * Promedio REDONDEADO — equivalente a Nota::promedio().
+     * Devuelve null si no hay valores numéricos.
+     */
+    function promedioNotas(valores, decimales = 1) {
+        const vals = valores
+            .map(v => parseFloat(v))
+            .filter(v => !isNaN(v));
+        if (vals.length === 0) return null;
+        const suma = vals.reduce((a, b) => a + b, 0);
+        return redondearNota(suma / vals.length, decimales);
+    }
+
+    /** Texto para mostrar — equivalente a Nota::fmt(). */
+    function fmtNota(valor, placeholder = '—') {
+        return valor !== null && valor !== undefined
+            ? valor.toFixed(1)
+            : placeholder;
+    }
+
+    /** ¿Aprobado? — equivalente a Nota::aprobada(). */
+    function aprobada(valor) {
+        return valor !== null && valor !== undefined && valor >= 4.0;
+    }
+
+    /** Clase CSS — equivalente a Nota::clase(). */
+    function claseNota(valor) {
+        if (valor === null || valor === undefined) return 'text-faint';
+        return valor >= 4.0 ? 'text-success' : 'text-danger';
+    }
+
+    /** Recolecta las notas de un alumno a lo largo de todas las evaluaciones. */
+    function notasDeAlumno(asigId, matId) {
+        const evals = evaluaciones[asigId] ?? [];
+        const out = [];
+        evals.forEach(ev => {
+            const n = ev.notas[matId];
+            if (n) out.push(n.valor);
+        });
+        return out;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
 
     document.addEventListener('DOMContentLoaded', () => {
         const sel = document.getElementById('sel-asignatura');
@@ -204,14 +262,8 @@ $asignaturaSeleccionada = (int)($_GET['asignatura_id'] ?? 0);
             const matId = String(al.matricula_id);
             const bgFila = retirado ? 'background: var(--table-danger);' : '';
 
-            let suma = 0, cnt = 0;
-            evals.forEach(ev => {
-                const n = ev.notas[matId];
-                if (n) { suma += n.valor; cnt++; }
-            });
-            const prom = cnt > 0 ? (suma / cnt).toFixed(1) : null;
-            const clsProm = prom === null ? 'text-faint'
-                : parseFloat(prom) >= 4.0 ? 'text-success' : 'text-danger';
+            const prom = promedioNotas(notasDeAlumno(asigId, matId));
+            const clsProm = claseNota(prom);
 
             const celdas = evals.map((ev, idx) => {
                 if (retirado) {
@@ -221,18 +273,18 @@ $asignaturaSeleccionada = (int)($_GET['asignatura_id'] ?? 0);
                 }
 
                 const n = ev.notas[matId];
-                const val = n ? n.valor.toFixed(1) : '';
+                const val = n ? fmtNota(n.valor, '') : '';
                 const nid = n ? n.id : '';
 
                 if (!PUEDE_EDITAR) {
-                    const cls = n ? (n.valor >= 4.0 ? 'text-success' : 'text-danger') : 'text-faint';
+                    const cls = n ? claseNota(n.valor) : 'text-faint';
                     return `<td style="${borderL} border-top: 1px solid var(--border-soft);" class="px-2 py-2 text-center">
-                            <span class="font-bold text-sm ${cls}">${n ? n.valor.toFixed(1) : '—'}</span>
+                            <span class="font-bold text-sm ${cls}">${n ? fmtNota(n.valor) : '—'}</span>
                         </td>`;
                 }
 
                 const inputStyle = n
-                    ? (n.valor >= 4.0
+                    ? (aprobada(n.valor)
                         ? 'border-color: var(--success); background: var(--success-soft); color: var(--success);'
                         : 'border-color: var(--danger); background: var(--danger-soft); color: var(--danger);')
                     : 'border-color: var(--border-soft); background: var(--surface-1); color: var(--text-primary);';
@@ -268,7 +320,7 @@ $asignaturaSeleccionada = (int)($_GET['asignatura_id'] ?? 0);
             <td style="border-top: 1px solid var(--border-soft); border-left: 2px solid var(--border-soft);"
                 class="px-3 py-2.5 text-center font-bold text-sm ${clsProm}"
                 id="prom-${matId}">
-                ${prom ?? '—'}
+                ${fmtNota(prom)}
             </td>
         </tr>`;
         }).join('');
@@ -287,7 +339,7 @@ $asignaturaSeleccionada = (int)($_GET['asignatura_id'] ?? 0);
 
         if (val === '') {
             const prev = ev.notas[matId];
-            input.value = prev ? prev.valor.toFixed(1) : '';
+            input.value = prev ? fmtNota(prev.valor, '') : '';
             return;
         }
 
@@ -296,7 +348,7 @@ $asignaturaSeleccionada = (int)($_GET['asignatura_id'] ?? 0);
             toast('⚠️ Rango inválido (1.0 – 7.0)', 'error');
             setTimeout(() => {
                 const prev = ev.notas[matId];
-                input.value = prev ? prev.valor.toFixed(1) : '';
+                input.value = prev ? fmtNota(prev.valor, '') : '';
             }, 1500);
             return;
         }
@@ -366,22 +418,16 @@ $asignaturaSeleccionada = (int)($_GET['asignatura_id'] ?? 0);
     }
 
     function actualizarProm(asigId, matId) {
-        const evals = evaluaciones[asigId] ?? [];
-        let suma = 0, cnt = 0;
-        evals.forEach(ev => {
-            const n = ev.notas[matId];
-            if (n) { suma += n.valor; cnt++; }
-        });
-        const prom = cnt > 0 ? (suma / cnt).toFixed(1) : null;
+        const prom = promedioNotas(notasDeAlumno(asigId, matId));
         const el = document.getElementById('prom-' + matId);
         if (!el) return;
-        el.textContent = prom ?? '—';
+        el.textContent = fmtNota(prom);
         el.className = el.className.replace(/text-(success|danger|faint)\S*/g, '').trim()
-            + ' ' + (prom === null ? 'text-faint' : parseFloat(prom) >= 4.0 ? 'text-success' : 'text-danger');
+            + ' ' + claseNota(prom);
     }
 
     function recolorInput(input, nota) {
-        const s = nota >= 4.0
+        const s = aprobada(nota)
             ? 'border-color: var(--success); background: var(--success-soft); color: var(--success);'
             : 'border-color: var(--danger); background: var(--danger-soft); color: var(--danger);';
         input.style.cssText = s + 'border-width: 1px; border-style: solid;';
@@ -400,9 +446,9 @@ $asignaturaSeleccionada = (int)($_GET['asignatura_id'] ?? 0);
     function toast(msg, tipo) {
         const el = document.getElementById('toast-estado');
         const map = {
-            ok:    'banner-success',
+            ok: 'banner-success',
             error: 'banner-danger',
-            info:  'banner-info',
+            info: 'banner-info',
         };
         clearTimeout(toastTimer);
         el.className = `flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-full border ${map[tipo] ?? map.info}`;

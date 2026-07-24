@@ -1,128 +1,112 @@
 <?php
 require_once __DIR__ . "/../../controllers/AuthController.php";
-
 $auth = new AuthController();
 $auth->checkAuth();
-
 $user = $_SESSION['user'];
 $nombre = $user['nombre'];
 $rol = $user['rol'];
-
-// Incluir layout
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 ?>
 
-<body class="h-screen">
-    <header
-        class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
-        <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold tracking-tight text-white">Editar Asignatura</h1>
+<header class="page-header">
+    <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold tracking-tight text-strong font-display">Crear Usuario</h1>
+    </div>
+</header>
+
+<main class="flex items-center justify-center px-6 py-12">
+
+    <div class="panel w-full max-w-2xl rounded-2xl shadow-xl p-10">
+
+        <div class="text-center mb-8">
+            <h2 class="text-2xl font-bold text-strong font-display">Nuevo usuario</h2>
+            <p class="text-muted mt-2 text-sm">Completa el formulario para registrar un nuevo usuario</p>
         </div>
-    </header>
 
-    <div class="h-screen isolate bg-gray-900 flex items-center justify-center px-6 py-24 sm:py-32 lg:px-8">
+        <form method="POST" action="index.php?action=user_store" class="space-y-5">
 
-
-        <!-- HEADER -->
-
-        <div class="w-full max-w-2xl bg-gray-800/60 backdrop-blur-md rounded-2xl shadow-xl p-10 mt-12">
-            <!-- Título -->
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-white">Crear Usuario</h1>
-                <p class="text-gray-400 mt-2">Completa el formulario para registrar un nuevo usuario</p>
+            <!-- Email y Contraseña -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-sm font-medium text-soft mb-2">Email</label>
+                    <input type="email" name="email" required
+                        class="input-field w-full rounded-lg px-4 py-2.5">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-soft mb-2">Contraseña</label>
+                    <input type="password" name="password" required
+                        class="input-field w-full rounded-lg px-4 py-2.5">
+                </div>
             </div>
-            <form method="post" action="index.php?action=user_store" class="space-y-6">
 
-                <!-- Email y Password -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-200">Email</label>
-                        <input type="email" name="email" required
-                            class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-200">Contraseña</label>
-                        <input type="password" name="password" required
-                            class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                    </div>
-                </div>
+            <!-- Username -->
+            <div>
+                <label class="block text-sm font-medium text-soft mb-2">Nombre de usuario (Alias)</label>
+                <input type="text" name="username" required
+                    class="input-field w-full rounded-lg px-4 py-2.5">
+            </div>
 
-                <!-- Usuario -->
+            <!-- Nombre completo -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 <div>
-                    <label class="block text-sm font-medium text-gray-200">Nombre de usuario (Alias)</label>
-                    <input type="text" name="username" required
-                        class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <label class="block text-sm font-medium text-soft mb-2">Nombre</label>
+                    <input type="text" name="nombre" required
+                        class="input-field w-full rounded-lg px-4 py-2.5">
                 </div>
-
-                <!-- Nombre completo -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-200">Nombre</label>
-                        <input type="text" name="nombre" required
-                            class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-200">Apellido Paterno</label>
-                        <input type="text" name="ape_paterno" required
-                            class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-200">Apellido Materno</label>
-                        <input type="text" name="ape_materno" required
-                            class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                    </div>
-                </div>
-
-                <!-- RUN y Teléfono -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-200">RUT</label>
-                        <input type="text" name="run" required
-                            class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-200">Teléfono</label>
-                        <input type="text" name="telefono" required
-                            class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                    </div>
-                </div>
-
-                <!-- Rol -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-200">Rol</label>
-                    <select name="rol_id" required
-                        class="mt-2 w-full rounded-lg bg-gray-900 border border-gray-700 text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        <option value="">-- Selecciona un rol --</option>
-                        <?php foreach ($roles as $rol): ?>
-                            <option value="<?= $rol['id'] ?>"><?= htmlspecialchars($rol['nombre']) ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                    <label class="block text-sm font-medium text-soft mb-2">Apellido Paterno</label>
+                    <input type="text" name="ape_paterno" required
+                        class="input-field w-full rounded-lg px-4 py-2.5">
                 </div>
-
-                <!-- Botones -->
-                <div class="flex justify-between items-center pt-6">
-                    <button type="submit"
-                        class="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-indigo-600 text-white font-semibold shadow hover:bg-indigo-500 transition">
-                        Guardar
-                    </button>
-                    <div class="space-x-4 text-sm">
-                        <a href="index.php?action=users"
-                            class="ml-4 px-6 py-2.5 rounded-lg bg-gray-700 text-white font-medium hover:bg-gray-600 transition">
-                            Regresar
-                        </a>
-
-
-                    </div>
-
+                <div>
+                    <label class="block text-sm font-medium text-soft mb-2">Apellido Materno</label>
+                    <input type="text" name="ape_materno" required
+                        class="input-field w-full rounded-lg px-4 py-2.5">
                 </div>
+            </div>
 
-            </form>
+            <!-- RUN y Teléfono -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-sm font-medium text-soft mb-2">RUN</label>
+                    <input type="text" name="run" required
+                        class="input-field w-full rounded-lg px-4 py-2.5">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-soft mb-2">Teléfono</label>
+                    <input type="text" name="telefono" required
+                        class="input-field w-full rounded-lg px-4 py-2.5">
+                </div>
+            </div>
 
-        </div>
+            <!-- Rol -->
+            <div>
+                <label class="block text-sm font-medium text-soft mb-2">Rol</label>
+                <select name="rol_id" required
+                    class="input-field w-full rounded-lg px-4 py-2.5 cursor-pointer">
+                    <option value="">— Selecciona un rol —</option>
+                    <?php foreach ($roles as $rol): ?>
+                        <option value="<?= $rol['id'] ?>"><?= htmlspecialchars($rol['nombre']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
+            <!-- Botones -->
+            <div class="flex items-center justify-between gap-4 pt-4">
+                <button type="submit"
+                    class="btn-soft-success px-6 py-2.5 rounded-lg font-semibold shadow transition">
+                    Guardar
+                </button>
+                <a href="index.php?action=users"
+                    class="btn-secondary px-6 py-2.5 rounded-lg font-medium transition">
+                    Regresar
+                </a>
+            </div>
+
+        </form>
     </div>
 
-</body>
+</main>
 
 <?php include __DIR__ . "/../layout/footer.php"; ?>

@@ -1368,6 +1368,12 @@ body.login-page {
     background: var(--table-danger);
 }
 
+.row-retired td{
+    text-decoration-thickness: 2px;
+    text-decoration-skip-ink: none;
+    background-color: rgb(119, 40, 40);
+}
+
 .attendance-table tr.row-total,
 .attendance-table tr.row-total .sticky-col {
     background: var(--table-head-bg);
@@ -1530,3 +1536,9 @@ body.login-page {
 .text-r-accent {
     color: var(--r-accent);
 }
+
+
+
+
+/*NO BORRAR*/
+

@@ -70,6 +70,13 @@
                 </div>
 
                 <!-- INVENTARIO -->
+                 <div class="relative">
+                    <a href="index.php?action=inventario_index" target="_blank" rel="noopener noreferrer"
+                        class="nav-link px-3 py-2 rounded-lg transition inline-block">Inventario</a>
+                </div>
+               <!-- 
+                
+               
                 <div class="relative">
                     <button class="nav-btn nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition"
                         data-menu="inventario">
@@ -89,7 +96,7 @@
                             class="dropdown-link block px-4 py-2">Individualización</a>
                     </div>
                 </div>
-
+-->
                 <!-- ALUMNOS -->
                 <div class="relative">
                     <button class="nav-btn nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition"
