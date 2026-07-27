@@ -310,34 +310,66 @@
     $piePag = $base . 'pie_pagina_certificado.png';
 
     // ── Promedios por asignatura y semestre ──────────────────────────
-    // Fuente única de verdad: Nota::promedio() ya devuelve el valor REDONDEADO.
+    // El total esperado de cada asignatura es su cantidad de FECHAS únicas
+    // en ese semestre. Si al alumno le falta alguna → promedioCompleto()
+    // devuelve null y la asignatura queda "Pend." (mismo criterio que la web).
     $promsSem1 = [];
     $promsSem2 = [];
     $filas = [];
 
+    // Ubica cada nota en su columna según la posición de su fecha entre
+    // TODAS las fechas de esa asignatura. Así una nota "salteada" (ej. la
+    // 3ª evaluación) cae en su columna real, no en la primera libre.
+    $ubicarEnColumnas = function (array $notas, array $fechasColumna): array {
+        $posDeFecha = array_flip($fechasColumna); // fecha => índice de columna
+        $cols = array_fill(0, max(1, count($fechasColumna)), null);
+        foreach ($notas as $n) {
+            $f = substr($n['fecha'], 0, 10);
+            if (isset($posDeFecha[$f])) {
+                $cols[$posDeFecha[$f]] = $n;
+            }
+        }
+        return $cols;
+    };
+
     foreach ($asignaturas as $asig) {
         $id = $asig['id'];
-        $ns1 = $notasSem[1][$id] ?? [];
-        $ns2 = $notasSem[2][$id] ?? [];
+        $raw1 = $notasSem[1][$id] ?? [];
+        $raw2 = $notasSem[2][$id] ?? [];
 
-        $p1 = Nota::promedio($ns1);
-        $p2 = Nota::promedio($ns2);
+        // Fechas de referencia del curso para ESA asignatura y semestre
+        $fechas1 = $fechasRef[1][$id] ?? [];
+        $fechas2 = $fechasRef[2][$id] ?? [];
 
-        if ($p1 !== null) $promsSem1[] = $p1;
-        if ($p2 !== null) $promsSem2[] = $p2;
+        // Notas ubicadas en su columna real (huecos null donde falta)
+        $cols1 = $ubicarEnColumnas($raw1, $fechas1);
+        $cols2 = $ubicarEnColumnas($raw2, $fechas2);
 
-        // Promedio final de la asignatura: solo si ambos semestres tienen nota
+        // Total esperado = cantidad de columnas del CURSO en esa asignatura
+        $esperado1 = count($fechas1);
+        $esperado2 = count($fechas2);
+
+        $p1 = Nota::promedioCompleto($raw1, $esperado1);
+        $p2 = Nota::promedioCompleto($raw2, $esperado2);
+
+        if ($p1 !== null)
+            $promsSem1[] = $p1;
+        if ($p2 !== null)
+            $promsSem2[] = $p2;
+
         $pFinal = ($p1 !== null && $p2 !== null)
             ? Nota::promedio([$p1, $p2])
             : null;
 
         $filas[] = [
             'nombre' => $asig['nombre'],
-            'sem1'   => $ns1,
-            'sem2'   => $ns2,
-            'p1'     => $p1,
-            'p2'     => $p2,
+            'cols1' => $cols1,
+            'cols2' => $cols2,
+            'p1' => $p1,
+            'p2' => $p2,
             'pFinal' => $pFinal,
+            'tiene1' => count($raw1) > 0,
+            'tiene2' => count($raw2) > 0,
         ];
     }
 
@@ -419,8 +451,8 @@
             </thead>
             <tbody>
                 <?php foreach ($filas as $fila):
-                    $ns1 = array_values($fila['sem1']);
-                    $ns2 = array_values($fila['sem2']);
+                    $cols1 = $fila['cols1'];
+                    $cols2 = $fila['cols2'];
                     $p1 = $fila['p1'];
                     $p2 = $fila['p2'];
                     $pFinal = $fila['pFinal'];
@@ -428,7 +460,7 @@
                     <tr>
                         <td class="td-a"><?= htmlspecialchars($fila['nombre']) ?></td>
                         <?php for ($i = 0; $i < $maxCols[1]; $i++):
-                            $n = $ns1[$i] ?? null;
+                            $n = $cols1[$i] ?? null;
                             $v = $n !== null ? Nota::redondear((float) $n['nota']) : null;
                             ?>
                             <td><?php if ($v !== null): ?>
@@ -437,7 +469,7 @@
                             </td>
                         <?php endfor; ?>
                         <?php for ($i = 0; $i < $maxCols[2]; $i++):
-                            $n = $ns2[$i] ?? null;
+                            $n = $cols2[$i] ?? null;
                             $v = $n !== null ? Nota::redondear((float) $n['nota']) : null;
                             ?>
                             <td class="<?= $i === 0 ? 'sep' : '' ?>"><?php if ($v !== null): ?>
@@ -446,18 +478,41 @@
                             </td>
                         <?php endfor; ?>
                         <td style="color:<?= Nota::color($p1) ?>;font-weight:bold;">
-                            <?= $p1 !== null ? Nota::fmt($p1) : '<span class="pen">Pend.</span>' ?>
+                            <?php if ($p1 !== null): ?>
+                                <?= Nota::fmt($p1) ?>
+                            <?php elseif ($fila['tiene1']): ?>
+                                <span class="pen">Pend.</span>
+                            <?php else: ?>
+                                <span class="nd">—</span>
+                            <?php endif; ?>
                         </td>
                         <td style="color:<?= Nota::color($p2) ?>;font-weight:bold;" class="sep">
-                            <?= $p2 !== null ? Nota::fmt($p2) : '<span class="pen">Pend.</span>' ?>
+                            <?php if ($p2 !== null): ?>
+                                <?= Nota::fmt($p2) ?>
+                            <?php elseif ($fila['tiene2']): ?>
+                                <span class="pen">Pend.</span>
+                            <?php else: ?>
+                                <span class="nd">—</span>
+                            <?php endif; ?>
                         </td>
                         <td style="color:<?= Nota::color($pFinal) ?>;font-weight:bold;">
-                            <?= $pFinal !== null ? Nota::fmt($pFinal) : '<span class="pen">Pend.</span>' ?>
+                            <?php if ($pFinal !== null): ?>
+                                <?= Nota::fmt($pFinal) ?>
+                            <?php elseif ($fila['tiene1'] || $fila['tiene2']): ?>
+                                <span class="pen">Pend.</span>
+                            <?php else: ?>
+                                <span class="nd">—</span>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
             <tfoot>
+                <?php
+                $promFinalGeneral = ($promGenSem1 !== null && $promGenSem2 !== null)
+                    ? Nota::promedio([$promGenSem1, $promGenSem2])
+                    : null;
+                ?>
                 <tr>
                     <td class="td-a">Promedio General</td>
                     <?php for ($i = 0; $i < $maxCols[1]; $i++): ?>
@@ -467,7 +522,15 @@
                     <?php endfor; ?>
                     <td style="color:<?= Nota::color($promGenSem1) ?>"><?= Nota::fmt($promGenSem1) ?></td>
                     <td style="color:<?= Nota::color($promGenSem2) ?>" class="sep"><?= Nota::fmt($promGenSem2) ?></td>
-                    <td>—</td>
+                    <td style="color:<?= Nota::color($promFinalGeneral) ?>;font-weight:bold;">
+                        <?php if ($promFinalGeneral !== null): ?>
+                            <?= Nota::fmt($promFinalGeneral) ?>
+                        <?php elseif ($promGenSem1 !== null || $promGenSem2 !== null): ?>
+                            <span class="pen">Pend.</span>
+                        <?php else: ?>
+                            <span class="nd">—</span>
+                        <?php endif; ?>
+                    </td>
                 </tr>
             </tfoot>
         </table>

@@ -293,11 +293,13 @@
     }
 
     // ── Recolección para promedios por columna y stats ───────────────
-// Solo alumnos activos: los retirados no distorsionan las estadísticas.
+    // Solo alumnos activos: los retirados no distorsionan las estadísticas.
+    $promAlumno = [];
     $notasPorColumna = $maxCols > 0 ? array_fill(0, $maxCols, []) : [];
     $promsActivos = [];
     $totalActivos = 0;
     $aprobados = 0;
+    $pendientes = 0;
 
     foreach ($alumnos as $a) {
         if (!empty($a['fecha_retiro']))
@@ -307,17 +309,22 @@
         $mid = $a['matricula_id'];
         $ns = array_values($notas[$mid] ?? []);
 
-        foreach ($ns as $i => $n) {
-            if (isset($notasPorColumna[$i]) && is_numeric($n['nota'])) {
-                $notasPorColumna[$i][] = (float) $n['nota'];
+        foreach ($ns as $n) {
+            $f = substr($n['fecha'], 0, 10);
+            if (is_numeric($n['nota'])) {
+                $notasPorColumna[$f][] = (float) $n['nota'];
             }
         }
 
-        $p = $promAlumno[$mid];
+        $p = Nota::promedioCompleto($ns, $maxCols);
+        $promAlumno[$mid] = $p; // sobrescribe el parcial para que la fila use el mismo valor
+    
         if ($p !== null) {
             $promsActivos[] = $p;
             if (Nota::aprobada($p))
                 $aprobados++;
+        } elseif (count($ns) > 0) {
+            $pendientes++;
         }
     }
 
@@ -403,9 +410,14 @@
                 <tr>
                     <th class="th-n">#</th>
                     <th class="th-al">Alumno</th>
-                    <?php for ($i = 1; $i <= $maxCols; $i++): ?>
-                        <th>Nota <?= $i ?></th>
-                    <?php endfor; ?>
+                    <?php foreach ($fechas as $idx => $f): ?>
+                        <th>
+                            Nota <?= $idx + 1 ?>
+                            <br><span style="font-weight:normal;font-size:6px;">
+                                <?= date('d/m/Y', strtotime($f)) ?>
+                            </span>
+                        </th>
+                    <?php endforeach; ?>
                     <th class="sep">Promedio</th>
                 </tr>
             </thead>
@@ -414,7 +426,7 @@
                     $mid = $alumno['matricula_id'];
                     $ns = array_values($notas[$mid] ?? []);
                     $estaRet = !empty($alumno['fecha_retiro']);
-                    $promFila = $promAlumno[$mid];
+                    $promFila = $promAlumno[$mid] ?? null;
                     ?>
                     <tr <?= $estaRet ? 'style="opacity:0.5;"' : '' ?>>
                         <td style="font-weight:bold;color:#6366f1;font-size:8px;">
@@ -427,17 +439,24 @@
                                 <br><span style="color:#ef4444;font-size:6px;">Retirado</span>
                             <?php endif; ?>
                         </td>
-                        <?php for ($i = 0; $i < $maxCols; $i++):
-                            $n = $ns[$i] ?? null;
+                        <?php foreach ($fechas as $f):
+                            $n = $notasPorFecha[$mid][$f] ?? null;
                             $v = $n !== null ? Nota::redondear((float) $n['nota']) : null;
                             ?>
                             <td><?php if ($v !== null): ?>
                                     <span class="<?= Nota::aprobada($v) ? 'ok' : 'mal' ?>"><?= Nota::fmt($v) ?></span>
                                 <?php else: ?><span class="nd">—</span><?php endif; ?>
                             </td>
-                        <?php endfor; ?>
-                        <td class="sep" style="color:<?= Nota::color($promFila) ?>;font-weight:bold;font-size:8.5px;">
-                            <?= Nota::fmt($promFila) ?>
+                        <?php endforeach; ?>
+                        <td class="sep" style="font-weight:bold;font-size:8.5px;
+                    <?= $promFila !== null ? 'color:' . Nota::color($promFila) . ';' : 'color:#d97706;' ?>">
+                            <?php if ($promFila !== null): ?>
+                                <?= Nota::fmt($promFila) ?>
+                            <?php elseif (count($ns) > 0): ?>
+                                Pend.
+                            <?php else: ?>
+                                <span class="nd">—</span>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -446,13 +465,13 @@
                 <tr>
                     <td></td>
                     <td class="td-al">Promedio por nota</td>
-                    <?php for ($i = 0; $i < $maxCols; $i++):
-                        $pCol = $promsColumnas[$i] ?? null;
+                    <?php foreach ($fechas as $f):
+                        $pCol = Nota::promedio($notasPorColumna[$f] ?? []);
                         ?>
                         <td style="color:<?= Nota::color($pCol) ?>">
                             <?= Nota::fmt($pCol) ?>
                         </td>
-                    <?php endfor; ?>
+                    <?php endforeach; ?>
                     <td class="sep" style="color:<?= Nota::color($promCurso) ?>;font-size:9px;">
                         <?= Nota::fmt($promCurso) ?>
                     </td>

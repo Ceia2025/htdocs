@@ -102,13 +102,22 @@ class ReporteNotasController
             }
         }
 
-        $maxCols = [1 => 0, 2 => 0];
+
+        $fechasRef = [1 => [], 2 => []];
         foreach ([1, 2] as $sem) {
-            foreach ($notasSem[$sem] as $asigNotas) {
-                $maxCols[$sem] = max($maxCols[$sem], count($asigNotas));
+            $fechasRef[$sem] = $this->notaModel->getFechasPorAsignaturaCurso(
+                $matricula['curso_id'],
+                $matricula['anio_id'],
+                $sem
+            );
+        }
+
+
+        $maxCols = [1 => 1, 2 => 1];
+        foreach ([1, 2] as $sem) {
+            foreach ($fechasRef[$sem] as $fechasAsig) {
+                $maxCols[$sem] = max($maxCols[$sem], count($fechasAsig));
             }
-            if ($maxCols[$sem] === 0)
-                $maxCols[$sem] = 1;
         }
 
         $todasAsist = $asistenciaModel->getAsistenciaCalendarioAlumno($matriculaId);
@@ -173,14 +182,32 @@ class ReporteNotasController
             $semestre
         );
 
+        $fechas = [];
+        foreach ($notasRaw as $n) {
+            $fechas[substr($n['fecha'], 0, 10)] = true;
+        }
+        $fechas = array_keys($fechas);
+        sort($fechas);
+
+        // maxCols = cantidad de columnas (fechas), NO el máximo de notas
+        // de un alumno. Esto define cuántas notas se esperan para el promedio.
+        $maxCols = count($fechas);
+
+        // Mapa [matricula_id][fecha] => nota, para alinear cada nota con su
+        // columna. Los huecos quedan vacíos → el alumno sale "Pend." si le faltan.
+        $notasPorFecha = [];
+        foreach ($notasRaw as $n) {
+            $f = substr($n['fecha'], 0, 10);
+            // Si hubiera duplicados en la misma fecha, se queda el último;
+            // los duplicados reales se limpian aparte (ver dedupe pendiente).
+            $notasPorFecha[$n['matricula_id']][$f] = $n;
+        }
+
+        // También agrupamos plano por matrícula, para calcular el promedio
+        // (promedioCompleto solo cuenta las notas que existen).
         $notas = [];
         foreach ($notasRaw as $n) {
             $notas[$n['matricula_id']][] = $n;
-        }
-
-        $maxCols = 1;
-        foreach ($notas as $ns) {
-            $maxCols = max($maxCols, count($ns));
         }
 
         $logoPath = __DIR__ . '/../../public/img/LOGO CEIA.jpg';

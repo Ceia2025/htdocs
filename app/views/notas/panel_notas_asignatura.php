@@ -44,14 +44,15 @@ foreach ($alumnos as $alumno) {
     // Acumular notas por columna (para promedio de columna al final)
     foreach ($ns as $n) {
         if (isset($n['fecha']) && is_numeric($n['nota'])) {
-            $notasPorColumna[$n['fecha']][] = (float)($n['nota']);
+            $notasPorColumna[$n['fecha']][] = (float) ($n['nota']);
         }
     }
 
-    if ($cantNotasAlumno < $totalNotasDelCurso || $totalNotasDelCurso === 0) {
+    $prom = Nota::promedioCompleto($ns, $totalNotasDelCurso);
+
+    if ($prom === null) {
         $totalPendientes++;
     } else {
-        $prom = Nota::promedio($ns);
         $promsAlumnos[] = $prom;
         Nota::aprobada($prom) ? $totalAprobados++ : $totalReprobados++;
     }
@@ -185,11 +186,12 @@ $colorProm = Nota::clase($promGeneral);
                             $notasPorFecha[$n['fecha']] = $n;
                         }
 
-                        $promedio = Nota::promedio($notasAlumno);
+                        $promedio = Nota::promedioCompleto($notasAlumno, $totalNotasDelCurso);
                         $colorNum = $alumno['numero_lista'] ? 'text-accent' : 'text-faint';
                         $colorPromedio = $promedio !== null
                             ? ($promedio >= 4.0 ? 'text-success' : 'text-danger')
-                            : 'text-faint';
+                            : 'text-warn';
+
                         $bgFila = $estaRetirado ? 'row-retired' : '';
                         ?>
                         <tr class="<?= $bgFila ?>">
@@ -226,7 +228,7 @@ $colorProm = Nota::clase($promGeneral);
                                             <span class="text-faint text-xs">—</span>
                                         <?php elseif ($n): ?>
                                             <?php
-                                            $v = Nota::redondearNota((float)($n['nota']), 1);
+                                            $v = Nota::redondearNota((float) ($n['nota']), 1);
                                             $bgNota = $v >= 4.0
                                                 ? 'banner-success'
                                                 : 'banner-danger';
@@ -262,10 +264,15 @@ $colorProm = Nota::clase($promGeneral);
                                 <?php if ($promedio !== null): ?>
                                     <span class="inline-flex items-center justify-center w-14 h-7 rounded-lg text-sm font-bold <?= $colorPromedio ?>
                                              <?= $promedio >= 4.0 ? 'banner-success' : 'banner-danger' ?>">
-                                        <?= number_format($promedio, 1) ?>
+                                        <?= Nota::fmt($promedio) ?>
+                                    </span>
+                                <?php elseif (!empty($notasAlumno)): ?>
+                                    <span
+                                        class="chip-warn inline-flex items-center justify-center px-2 h-7 rounded-lg text-xs font-semibold">
+                                        Pendiente
                                     </span>
                                 <?php else: ?>
-                                    <span class="text-faint text-sm">—</span>
+                                    <span class="text-faint text-sm">Sin notas</span>
                                 <?php endif; ?>
                             </td>
 

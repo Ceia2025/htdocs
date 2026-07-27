@@ -422,4 +422,67 @@ class Nota
     {
         return self::redondear($valor, $decimales);
     }
+
+    /**
+     * Promedio SOLO si el conjunto está completo.
+     *
+     * Devuelve el promedio redondeado únicamente cuando el alumno tiene
+     * tantas notas como se esperan ($totalEsperado, normalmente la cantidad
+     * de columnas/fechas de la asignatura). Si falta alguna, devuelve null
+     * para que la vista muestre "Pendiente" en vez de un promedio parcial.
+     *
+     * $totalEsperado === 0 significa que la asignatura aún no tiene
+     * evaluaciones: no hay nada que promediar → null.
+     */
+    public static function promedioCompleto(
+        array $items,
+        int $totalEsperado,
+        int $decimales = 1
+    ): ?float {
+        if ($totalEsperado <= 0) {
+            return null;
+        }
+
+        // Contar solo valores numéricos reales (misma lógica que promedio())
+        $cant = 0;
+        foreach ($items as $it) {
+            $v = is_array($it) ? ($it['nota'] ?? null) : $it;
+            if (is_numeric($v)) {
+                $cant++;
+            }
+        }
+
+        if ($cant < $totalEsperado) {
+            return null; // incompleto → pendiente
+        }
+
+        return self::promedio($items, $decimales);
+    }
+
+    public function getFechasPorAsignaturaCurso(
+        int $cursoId,
+        int $anioId,
+        int $semestre
+    ): array {
+        $sql = "SELECT DISTINCT n.asignatura_id, DATE(n.fecha) AS fecha
+                FROM {$this->table} n
+                JOIN matriculas2 m ON m.id = n.matricula_id
+                WHERE m.curso_id = :curso_id
+                  AND m.anio_id  = :anio_id
+                  AND n.semestre = :semestre
+                ORDER BY n.asignatura_id, fecha";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':curso_id' => $cursoId,
+            ':anio_id' => $anioId,
+            ':semestre' => $semestre,
+        ]);
+
+        $out = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $r) {
+            $out[$r['asignatura_id']][] = $r['fecha'];
+        }
+        return $out;
+    }
 }
