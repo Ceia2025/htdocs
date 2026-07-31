@@ -34,6 +34,7 @@ require_once __DIR__ . '/../controllers/reportes/certificadoAlumnoRegular/Certif
 require_once __DIR__ . '/../controllers/reportes/retirados/ReporteRetiradosController.php';
 require_once __DIR__ . '/../controllers/reportes/matricula/ReporteMatriculaController.php';
 require_once __DIR__ . '/../controllers/reportes/pie/ReportePieController.php';
+require_once __DIR__ . '/../controllers/RecuperarController.php';
 
 
 
@@ -68,7 +69,7 @@ $categorizacionController = new CategorizacionController();
 $reporteEtnia = new ReporteEtniaController();
 $reporteNotasController = new ReporteNotasController();
 $reporteRetirosController = new ReporteRetiradosController();
-
+$recuperarController = new RecuperarController();
 
 
 // ── PERMISOS GLOBAL ──────────────────────────────────────────
@@ -92,6 +93,27 @@ switch ($action) {
     case 'dashboard':
         $auth->dashboard();
         break;
+
+
+    // ── RECUPERAR CONTRASEÑA ─────────────────────────────────
+    case 'recuperar':
+        $recuperarController->index();
+        break;
+    case 'recuperar_check':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $recuperarController->check($_POST);
+        }
+        break;
+    case 'recuperar_nueva':
+        $recuperarController->nueva();
+        break;
+    case 'recuperar_guardar':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $recuperarController->guardar($_POST);
+        }
+        break;
+
+
 
     // ── USUARIOS ─────────────────────────────────────────────
     case 'users':

@@ -50,7 +50,7 @@
                     <div class="form-group">
                         <div class="label-row">
                             <label for="password" style="margin-bottom:0">Contraseña</label>
-                            <a href="#" class="forgot">¿Olvidó su contraseña?</a>
+                            <a href="index.php?action=recuperar" class="forgot">¿Olvidó su contraseña?</a>
                         </div>
                         <div class="input-wrap">
                             <input id="password" type="password" name="password" required placeholder="••••••••"
@@ -65,9 +65,23 @@
 
                     <button type="submit" class="btn-submit">Ingresar al Sistema</button>
 
+                    <?php if (!empty($_SESSION['reset_exito'])): ?>
+                        <div class="banner-success"
+                            style="margin-top:1rem;display:flex;align-items:center;gap:.5rem;border-radius:10px;padding:.7rem 1rem;font-size:1rem;">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span><?= htmlspecialchars($_SESSION['reset_exito']) ?></span>
+                        </div>
+                        <?php unset($_SESSION['reset_exito']); ?>
+                    <?php endif; ?>
+
                     <?php if (!empty($error)): ?>
                         <div class="error-box">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M12 9v3m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.72-3L13.72 4c-.77-1.33-2.67-1.33-3.44 0L3.35 16c-.78 1.33.18 3 1.72 3z" />
                             </svg>

@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config/Connection.php';
 class User
 {
     private $conn;
-    private $table = "usuarios2"; 
+    private $table = "usuarios2";
 
     public function __construct()
     {
@@ -148,6 +148,18 @@ class User
                 ":rol" => $rol
             ]);
         }
+    }
+
+    public function updatePassword($id, $nuevaPassword)
+    {
+        $sql = "UPDATE $this->table SET password = :password WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $hashed = password_hash($nuevaPassword, PASSWORD_DEFAULT);
+
+        return $stmt->execute([
+            ":id" => $id,
+            ":password" => $hashed,
+        ]);
     }
 
     // Eliminar

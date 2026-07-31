@@ -12,6 +12,13 @@ class Alumno
         $this->conn = $db->open();
     }
 
+    // Normaliza el sexo a un valor válido del ENUM o null
+    private function normalizarSexo($sexo)
+    {
+        $sexo = strtoupper(trim((string) $sexo));
+        return in_array($sexo, ['F', 'M', 'X'], true) ? $sexo : null;
+    }
+
     // Obtener todos los alumnos
     public function getAll()
     {
@@ -53,9 +60,6 @@ class Alumno
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
-
-
     // Crear un alumno
     public function create($data)
     {
@@ -66,15 +70,19 @@ class Alumno
             ? (int) $data['numerohijos']
             : null;
 
+        // tiene_run: 1 = tiene RUN chileno, 0 = extranjero con documento libre
+        $tieneRun = isset($data['tiene_run']) ? (int) $data['tiene_run'] : 1;
+
         $sql = "INSERT INTO {$this->table} 
-            (run, codver, nombre, apepat, apemat, fechanac, mayoredad, numerohijos, telefono, email, sexo, nacionalidades, region, ciudad, direccion, cod_etnia, deleted_at) 
+            (run, codver, tiene_run, nombre, apepat, apemat, fechanac, mayoredad, numerohijos, telefono, email, sexo, nacionalidades, region, ciudad, direccion, cod_etnia, deleted_at) 
         VALUES 
-            (:run, :codver, :nombre, :apepat, :apemat, :fechanac, :mayoredad, :numerohijos, :telefono, :email, :sexo, :nacionalidades, :region, :ciudad, :direccion, :cod_etnia, :deleted_at)";
+            (:run, :codver, :tiene_run, :nombre, :apepat, :apemat, :fechanac, :mayoredad, :numerohijos, :telefono, :email, :sexo, :nacionalidades, :region, :ciudad, :direccion, :cod_etnia, :deleted_at)";
 
         $stmt = $this->conn->prepare($sql);
         $success = $stmt->execute([
             ":run" => $data['run'],
             ":codver" => $data['codver'] ?? null,
+            ":tiene_run" => $tieneRun,
             ":nombre" => $data['nombre'] ?? null,
             ":apepat" => $data['apepat'] ?? null,
             ":apemat" => $data['apemat'] ?? null,
@@ -83,7 +91,7 @@ class Alumno
             ":numerohijos" => $numerohijos,
             ":telefono" => $data['telefono'] ?? null,
             ":email" => $data['email'] ?? null,
-            ":sexo" => $data['sexo'] ?? null,
+            ":sexo" => $this->normalizarSexo($data['sexo'] ?? null),
             ":nacionalidades" => $data['nacionalidades'] ?? null,
             ":region" => $data['region'] ?? null,
             ":ciudad" => $data['ciudad'] ?? null,
@@ -92,7 +100,6 @@ class Alumno
             ":deleted_at" => $data['deleted_at'] ?? null,
         ]);
 
-        // ✅ Devolver ID del alumno insertado
         return $success ? $this->conn->lastInsertId() : false;
     }
 
@@ -130,22 +137,18 @@ class Alumno
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-
-
     // Actualizar un alumno
     public function update($id, $data)
     {
         $data['fechanac'] = !empty($data['fechanac']) ? $data['fechanac'] : null;
         $data['deleted_at'] = $data['deleted_at'] ?? null;
 
-
         $numerohijos = !empty($data['numerohijos']) ? (int) $data['numerohijos'] : null;
 
-        // Asegurar null si no viene en el formulario
-        $data['deleted_at'] = $data['deleted_at'] ?? null;
+        $tieneRun = isset($data['tiene_run']) ? (int) $data['tiene_run'] : 1;
 
         $sql = "UPDATE {$this->table} 
-                SET run = :run, codver = :codver, nombre = :nombre, apepat = :apepat, apemat = :apemat,
+                SET run = :run, codver = :codver, tiene_run = :tiene_run, nombre = :nombre, apepat = :apepat, apemat = :apemat,
                     fechanac = :fechanac, mayoredad = :mayoredad, numerohijos = :numerohijos,
                     telefono = :telefono, email = :email, sexo = :sexo,
                     nacionalidades = :nacionalidades, region = :region,
@@ -158,6 +161,7 @@ class Alumno
             ":id" => $id,
             ":run" => $data['run'],
             ":codver" => $data['codver'],
+            ":tiene_run" => $tieneRun,
             ":nombre" => $data['nombre'],
             ":apepat" => $data['apepat'],
             ":apemat" => $data['apemat'],
@@ -166,19 +170,18 @@ class Alumno
             ":numerohijos" => $numerohijos,
             ":telefono" => $data['telefono'],
             ":email" => $data['email'],
-            ":sexo" => $data['sexo'],
+            ":sexo" => $this->normalizarSexo($data['sexo'] ?? null),
             ":nacionalidades" => $data['nacionalidades'],
             ":region" => $data['region'],
             ":ciudad" => $data['ciudad'],
-            ":direccion" => $data['direccion'] ?? null, // <-- NUEVO
+            ":direccion" => $data['direccion'] ?? null,
             ":cod_etnia" => $data['cod_etnia'],
             ":deleted_at" => $data['deleted_at'],
             ":created_at" => !empty($data['created_at']) ? $data['created_at'] : null,
         ]);
     }
 
-
-    // 🔹 Marcar alumno como retirado (soft delete)
+    // Marcar alumno como retirado (soft delete)
     public function markAsRetired($id, $fecha)
     {
         $sql = "UPDATE {$this->table} SET deleted_at = :fecha WHERE id = :id";
@@ -198,7 +201,7 @@ class Alumno
         return $success;
     }
 
-    // 🔹 Reintegrar alumno (anular retiro)
+    // Reintegrar alumno (anular retiro)
     public function restore($id)
     {
         $sql = "UPDATE {$this->table} SET deleted_at = NULL WHERE id = :id";
@@ -206,8 +209,7 @@ class Alumno
         return $stmt->execute([':id' => $id]);
     }
 
-
-    //Verificar existencia de rut
+    // Verificar existencia de RUN / documento (único método de verdad)
     public function runExists($run)
     {
         $sql = "SELECT COUNT(*) FROM {$this->table} WHERE run = :run";
@@ -216,17 +218,13 @@ class Alumno
         return $stmt->fetchColumn() > 0;
     }
 
+    // Alias mantenido por compatibilidad (usado en storeStepper)
     public function existsByRun($run)
     {
-        $sql = "SELECT COUNT(*) FROM {$this->table} WHERE run = :run";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([':run' => $run]);
-        return $stmt->fetchColumn() > 0;
+        return $this->runExists($run);
     }
 
-
-    //Busqyeda de aliumno para el aprtado de ajax en la creación de matricula
-    // Método NUEVO — solo para crear matrículas, incluye retirados pero no eliminados del sistema
+    // Búsqueda para crear matrículas: incluye retirados, no eliminados del sistema
     public function searchForMatricula($term)
     {
         $cleanRut = preg_replace('/[^0-9kK]/', '', $term);
@@ -257,7 +255,6 @@ class Alumno
             $rutParams[':rut_clean'] = "%$cleanRut%";
         }
 
-        // Incluye alumnos con deleted_at (retirados de sistema) pero los marca
         $sql = "
     SELECT id, nombre, apepat, apemat, run, codver, deleted_at
     FROM alumnos2
@@ -274,7 +271,7 @@ class Alumno
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Restaurar el método original — solo alumnos activos en el sistema
+    // Búsqueda para autocomplete: solo alumnos activos
     public function searchForAutocomplete($term)
     {
         $cleanRut = preg_replace('/[^0-9kK]/', '', $term);
@@ -305,7 +302,6 @@ class Alumno
             $rutParams[':rut_clean'] = "%$cleanRut%";
         }
 
-        // Solo alumnos activos en el sistema
         $sql = "
     SELECT id, nombre, apepat, apemat, run, codver
     FROM alumnos2
@@ -323,7 +319,6 @@ class Alumno
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
     // Obtener años que tienen matrículas registradas
     public function getAniosConMatriculas()
     {
@@ -335,7 +330,7 @@ class Alumno
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Obtener alumnos de un año con su curso, ordenados por curso y apellido
+    // Obtener alumnos de un año con su curso
     public function getByAnioConCurso($anio_id)
     {
         $sql = "SELECT 
@@ -353,7 +348,6 @@ class Alumno
         $stmt->execute([':anio_id' => $anio_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
 
     // Eliminar un alumno
     public function delete($id)

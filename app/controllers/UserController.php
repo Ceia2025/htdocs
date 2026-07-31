@@ -67,6 +67,8 @@ class UserController
 
         if ($user && password_verify($password, $user['password'])) {
 
+            session_regenerate_id(true);   // ← evita fijación de sesión
+
             $_SESSION['user'] = [
                 'id' => $user['id'],
                 'username' => $user['username'],

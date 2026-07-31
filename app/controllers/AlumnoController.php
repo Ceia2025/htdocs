@@ -73,17 +73,44 @@ class AlumnosController
     {
         $alumnoModel = new Alumno();
 
-        // ✅ Comprobar si el RUN ya existe antes de insertar
-        if ($alumnoModel->existsByRun($data['run'])) {
+        // ✅ Comprobar si el RUN / documento ya existe antes de insertar
+        if (!empty($data['run']) && $alumnoModel->existsByRun($data['run'])) {
             echo "<script>
-            alert('⚠️ El RUN \"{$data['run']}\" ya está registrado. Por favor, verifícalo.');
-            window.history.back();
-        </script>";
+                alert('⚠️ El documento \"{$data['run']}\" ya está registrado. Por favor, verifícalo.');
+                window.history.back();
+            </script>";
             exit;
+        }
+
+        // ── Normalización según chileno / extranjero ──
+        $tieneRun = isset($data['tiene_run']) ? (int) $data['tiene_run'] : 1;
+        $data['tiene_run'] = $tieneRun;
+
+        if ($tieneRun === 0) {
+            // Extranjero: sin dígito verificador y etnia forzada a "Otro"
+            $data['codver'] = '';
+            $data['cod_etnia'] = 'Otro';
+        }
+
+        // Calcular mayoría de edad (fechanac ahora es obligatoria en el front)
+        if (!empty($data['fechanac'])) {
+            $data['mayoredad'] = $this->calcularMayorEdad($data['fechanac']);
+        } else {
+            $data['mayoredad'] = "No";
         }
 
         // 👉 Crear alumno principal
         $alumnoId = $alumnoModel->create($data);
+
+        if (!$alumnoId) {
+            $_SESSION['flash_error'] = "No se pudo crear el alumno. Revisa los datos e inténtalo de nuevo.";
+            header("Location: index.php?action=alumnos_stepper");
+            exit;
+        }
+
+        // 👉 Registrar en el control de modificaciones
+        $ctrl = new ControlModificacionAlumnoController();
+        $ctrl->registrar((int) $alumnoId, 'alumnos2', 'crear', 'Alumno creado desde ficha completa');
 
         // 👉 Guardar contactos de emergencia
         if (!empty($data['emergencias'])) {
@@ -114,6 +141,27 @@ class AlumnosController
             $escolarModel = new AntecedenteEscolar();
             $escolar = $data['antecedente_escolar'];
             $escolar['alumno_id'] = $alumnoId;
+
+            // Campos ENUM que aceptan NULL: si vienen vacíos, van como null
+            // (nunca como '' que rompería el enum → "Data truncated")
+            $enumsNullable = [
+                'ultimo_curso',
+                'prob_apren',
+                'pie',
+                'chile_solidario_cual',
+                'isapre',
+            ];
+            foreach ($enumsNullable as $campo) {
+                if (!isset($escolar[$campo]) || $escolar[$campo] === '') {
+                    $escolar[$campo] = null;
+                }
+            }
+
+            // grupo_fonasa es NOT NULL: nunca debe viajar vacío
+            if (empty($escolar['grupo_fonasa'])) {
+                $escolar['grupo_fonasa'] = 'Ninguno';
+            }
+
             $escolarModel->create($escolar);
         }
 
@@ -128,7 +176,9 @@ class AlumnosController
             ]);
         }
 
-        header("Location: index.php?action=alumnos");
+        // ✅ Redirigir a la ficha del alumno recién creado
+        $_SESSION['flash_success'] = "✅ Alumno registrado correctamente.";
+        header("Location: index.php?action=alumno_profile&id=" . urlencode($alumnoId));
         exit;
     }
 
