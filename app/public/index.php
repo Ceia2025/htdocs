@@ -553,6 +553,10 @@ switch ($action) {
         $notasController->panelNotasAsignatura();
         break;
 
+    case 'notas_ajax_eliminar_columna':
+        $notasController->ajaxEliminarColumna();
+        break;
+
     // ── ATRASOS ──────────────────────────────────────────────
     case 'atrasos_registro':
         $atrasoController->formRegistro();

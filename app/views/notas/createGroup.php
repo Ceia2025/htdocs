@@ -26,7 +26,7 @@ $asignaturaSeleccionada = (int) ($_GET['asignatura_id'] ?? 0);
             <div>
                 <p class="text-xs font-semibold uppercase tracking-widest text-accent mb-0.5">Ingreso de Notas</p>
                 <h1 class="text-xl font-bold text-strong font-display">Libro de Notas</h1>
-                <p class="text-xs text-muted mt-0.5"><?= $semestreActual ?>° Semestre</p>
+                <p class="text-xs text-muted mt-0.5"><?= $semestreSeleccionado ?>° Semestre</p>
             </div>
         </div>
         <a href="index.php?action=notas_panel_asignaturas&curso_id=<?= $_GET['curso_id'] ?>&anio_id=<?= $_GET['anio_id'] ?>"
@@ -58,9 +58,15 @@ $asignaturaSeleccionada = (int) ($_GET['asignatura_id'] ?? 0);
                     </select>
                 </div>
 
-                <span class="banner-info inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-full font-semibold">
-                    <?= $semestreActual ?>° Semestre activo
-                </span>
+                <div class="min-w-[160px]">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-muted mb-2">
+                        Semestre
+                    </label>
+                    <select id="sel-semestre" class="input-field w-full text-sm rounded-lg px-3 py-2.5">
+                        <option value="1" <?= $semestreSeleccionado === 1 ? 'selected' : '' ?>>1° Semestre</option>
+                        <option value="2" <?= $semestreSeleccionado === 2 ? 'selected' : '' ?>>2° Semestre</option>
+                    </select>
+                </div>
 
                 <div id="toast-estado"
                     class="hidden items-center gap-2 text-xs font-semibold px-3 py-2 rounded-full border"></div>
@@ -113,7 +119,7 @@ $asignaturaSeleccionada = (int) ($_GET['asignatura_id'] ?? 0);
     // ── DATOS PHP → JS ───────────────────────────────────────────────────────────
     const ALUMNOS = <?= json_encode(array_values($alumnos)) ?>;
     const NOTAS_EXIST = <?= json_encode($notasExistentes) ?>;
-    const SEMESTRE = <?= $semestreActual ?>;
+    const SEMESTRE = <?= $semestreSeleccionado ?>;
     const CURSO_ID = <?= (int) ($_GET['curso_id'] ?? 0) ?>;
     const ANIO_ID = <?= (int) ($_GET['anio_id'] ?? 0) ?>;
     const PUEDE_EDITAR = <?= $puedeEditar ? 'true' : 'false' ?>;
@@ -182,6 +188,16 @@ $asignaturaSeleccionada = (int) ($_GET['asignatura_id'] ?? 0);
     document.addEventListener('DOMContentLoaded', () => {
         const sel = document.getElementById('sel-asignatura');
 
+        // Cambio de semestre → recarga conservando acción, curso, año y asignatura
+        document.getElementById('sel-semestre').addEventListener('change', (e) => {
+            const url = new URL(window.location.href);
+            url.searchParams.set('semestre', e.target.value);
+            const asig = document.getElementById('sel-asignatura').value;
+            if (asig) url.searchParams.set('asignatura_id', asig);
+            else url.searchParams.delete('asignatura_id');
+            window.location.href = url.toString();
+        });
+
         sel.addEventListener('change', () => {
             asignaturaId = parseInt(sel.value) || 0;
             const grilla = document.getElementById('contenedor-grilla');
@@ -241,7 +257,18 @@ $asignaturaSeleccionada = (int) ($_GET['asignatura_id'] ?? 0);
                     ? `<input type="date" value="${ev.fecha}" max="${HOY}"
                               onchange="cambiarFechaEval(${asigId}, ${idx}, this.value)"
                               style="background: var(--surface-1); border: 1px solid var(--border-soft); color: var(--text-primary);"
-                              class="w-[90px] text-[10px] rounded px-1 py-0.5 focus:outline-none">`
+                              class="w-[90px] text-[10px] rounded px-1 py-0.5 focus:outline-none">
+                       <button type="button" title="Eliminar evaluación"
+                               onclick="eliminarEvaluacion(${asigId}, ${idx})"
+                               class="mt-0.5 inline-flex items-center justify-center w-5 h-5 rounded transition"
+                               style="color: var(--danger);"
+                               onmouseover="this.style.background='var(--danger-soft)'"
+                               onmouseout="this.style.background='transparent'">
+                           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                           </svg>
+                       </button>`
                     : `<span class="text-[10px] text-muted">${d}/${m}</span>`
                 }
             </div>
@@ -415,6 +442,51 @@ $asignaturaSeleccionada = (int) ($_GET['asignatura_id'] ?? 0);
         renderGrilla(asignaturaId);
         const inputs = document.querySelectorAll('#thead-grilla input[type="date"]');
         if (inputs.length) inputs[inputs.length - 1].focus();
+    }
+
+    async function eliminarEvaluacion(asigId, evalIdx) {
+        const evals = evaluaciones[asigId] ?? [];
+        const ev = evals[evalIdx];
+        if (!ev) return;
+
+        // IDs guardados en esta columna
+        const ids = Object.values(ev.notas).map(n => n.id).filter(Boolean);
+        const [y, m, d] = ev.fecha.split('-');
+        const fechaLbl = `${d}/${m}/${y}`;
+
+        // Columna solo local (sin notas guardadas) → quitar sin tocar el servidor.
+        // Esto evita borrar por fecha una columna hermana que comparta el mismo día.
+        if (ids.length === 0) {
+            evals.splice(evalIdx, 1);
+            if (evals.length === 0) evals.push({ fecha: HOY, notas: {} });
+            renderGrilla(asigId);
+            toast('✓ Evaluación eliminada', 'ok');
+            return;
+        }
+
+        if (!confirm(`¿Eliminar la evaluación del ${fechaLbl} y sus ${ids.length} nota(s)? Esta acción no se puede deshacer.`)) return;
+
+        try {
+            const body = new URLSearchParams({
+                curso_id: CURSO_ID, anio_id: ANIO_ID,
+                asignatura_id: asigId, semestre: SEMESTRE, fecha: ev.fecha,
+            });
+            const res = await fetch('index.php?action=notas_ajax_eliminar_columna', { method: 'POST', body });
+            const json = await res.json();
+            if (!json.ok) throw new Error(json.msg ?? 'Error');
+
+            evals.splice(evalIdx, 1);
+            if (evals.length === 0) evals.push({ fecha: HOY, notas: {} });
+            renderGrilla(asigId);
+
+            const extra = (json.eliminadas ?? ids.length) - ids.length;
+            toast(extra > 0
+                ? `✓ Eliminada (${json.eliminadas} notas, incluidos ${extra} duplicados)`
+                : '✓ Evaluación eliminada', 'ok');
+        } catch (err) {
+            toast('✗ Error al eliminar', 'error');
+            console.error(err);
+        }
     }
 
     function actualizarProm(asigId, matId) {

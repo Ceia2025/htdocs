@@ -31,14 +31,20 @@ class NotasController
         $mesActual = intval(date('n'));
         $semestreActual = ($mesActual >= 3 && $mesActual <= 7) ? 1 : 2;
 
-        // Cargar notas existentes por asignatura y semestre
+        // Semestre seleccionado (1 o 2); por defecto el actual según el mes
+        $semestreSeleccionado = intval($_GET['semestre'] ?? $semestreActual);
+        if ($semestreSeleccionado !== 1 && $semestreSeleccionado !== 2) {
+            $semestreSeleccionado = $semestreActual;
+        }
+
+        // Cargar notas existentes por asignatura y semestre seleccionado
         $notasExistentes = [];
         foreach ($asignaturas as $asig) {
             $notas = $this->model->getNotasPorCursoAsignaturaSemestre(
                 $curso_id,
                 $anio_id,
                 $asig['id'],
-                $semestreActual
+                $semestreSeleccionado
             );
             foreach ($notas as $n) {
                 $notasExistentes[$asig['id']][$n['matricula_id']][] = $n;
@@ -418,6 +424,41 @@ class NotasController
 
         $ok = $this->model->actualizarFechaNotas($ids, $fecha);
         echo json_encode(['ok' => (bool) $ok]);
+        exit;
+    }
+
+    public function ajaxEliminarColumna(): void
+    {
+        header('Content-Type: application/json');
+
+        $cursoId = (int) ($_POST['curso_id'] ?? 0);
+        $anioId = (int) ($_POST['anio_id'] ?? 0);
+        $asignaturaId = (int) ($_POST['asignatura_id'] ?? 0);
+        $semestre = (int) ($_POST['semestre'] ?? 1);
+        $fecha = trim($_POST['fecha'] ?? '');
+
+        if (!$cursoId || !$anioId || !$asignaturaId || !$fecha) {
+            echo json_encode(['ok' => false, 'msg' => 'Faltan parámetros.']);
+            exit;
+        }
+
+        // Guard server-side: solo roles con permiso de edición pueden borrar
+        $rolId = $_SESSION['user']['rol_id'] ?? 0;
+        $rolesAdmin = [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_INSPECTOR_GENERAL, ROL_UTP];
+        if (!in_array($rolId, $rolesAdmin)) {
+            echo json_encode(['ok' => false, 'msg' => 'Sin permiso.']);
+            exit;
+        }
+
+        $eliminadas = $this->model->eliminarColumna(
+            $cursoId,
+            $anioId,
+            $asignaturaId,
+            $semestre,
+            $fecha
+        );
+
+        echo json_encode(['ok' => true, 'eliminadas' => $eliminadas]);
         exit;
     }
 
