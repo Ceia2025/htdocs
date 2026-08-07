@@ -77,6 +77,21 @@ class CursoDocente
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /* Todos los usuarios registrados, con su rol, para agrupar en el select */
+    public function getUsuariosParaAsignar(): array
+    {
+        $sql = "SELECT u.id, u.nombre, u.ape_paterno, u.ape_materno, u.email,
+                       u.rol_id, r.nombre AS rol_nombre
+                FROM usuarios2 u
+                JOIN roles2 r ON r.id = u.rol_id
+                ORDER BY r.nombre, u.ape_paterno, u.nombre";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     /* Desasignar por id de la tabla curso_docente */
     public function desasignar(int $id): bool
     {

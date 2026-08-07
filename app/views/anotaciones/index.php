@@ -7,11 +7,10 @@ $nombre = $user['nombre'];
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 ?>
-<main>
-    <header
-        class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
+<main class="min-h-screen app-shell">
+    <header class="page-header relative">
         <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold tracking-tight text-white">Anotaciones</h1>
+            <h1 class="text-3xl font-bold tracking-tight text-strong">Anotaciones</h1>
         </div>
     </header>
 
@@ -19,14 +18,14 @@ include __DIR__ . "/../layout/navbar.php";
 
         <!-- FILTROS -->
         <form method="GET" action="index.php" id="formFiltros"
-            class="bg-gray-800/60 border border-gray-700 rounded-2xl p-6 grid grid-cols-1 md:grid-cols-4 gap-4 shadow-xl mb-8">
+            class="panel rounded-2xl p-6 grid grid-cols-1 md:grid-cols-4 gap-4 shadow-xl mb-8">
             <input type="hidden" name="action" value="anotaciones">
 
             <!-- Año -->
             <div class="flex flex-col gap-1">
-                <label class="text-xs text-gray-400 uppercase tracking-wider">Año Escolar</label>
+                <label class="text-xs text-faint uppercase tracking-wider">Año Escolar</label>
                 <select name="anio_id" id="sel_anio" onchange="this.form.submit()"
-                    class="rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition">
+                    class="input-field rounded-xl px-4 py-3 transition">
                     <option value="">Seleccionar año...</option>
                     <?php foreach ($anios as $a): ?>
                         <option value="<?= $a['id'] ?>" <?= ($_GET['anio_id'] ?? '') == $a['id'] ? 'selected' : '' ?>>
@@ -38,9 +37,9 @@ include __DIR__ . "/../layout/navbar.php";
 
             <!-- Curso -->
             <div class="flex flex-col gap-1">
-                <label class="text-xs text-gray-400 uppercase tracking-wider">Curso</label>
+                <label class="text-xs text-faint uppercase tracking-wider">Curso</label>
                 <select name="curso_id" id="sel_curso" onchange="this.form.submit()"
-                    class="rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition"
+                    class="input-field rounded-xl px-4 py-3 transition"
                     <?= (empty($cursos) && empty($_GET['anio_id'])) ? 'disabled' : '' ?>>
                     <option value="">Seleccionar curso...</option>
                     <?php foreach ($cursos as $c): ?>
@@ -54,9 +53,9 @@ include __DIR__ . "/../layout/navbar.php";
 
             <!-- Semestre -->
             <div class="flex flex-col gap-1">
-                <label class="text-xs text-gray-400 uppercase tracking-wider">Semestre</label>
+                <label class="text-xs text-faint uppercase tracking-wider">Semestre</label>
                 <select name="semestre" onchange="this.form.submit()"
-                    class="rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition">
+                    class="input-field rounded-xl px-4 py-3 transition">
                     <option value="">Todos</option>
                     <option value="1" <?= ($_GET['semestre'] ?? '') == '1' ? 'selected' : '' ?>>1° Semestre</option>
                     <option value="2" <?= ($_GET['semestre'] ?? '') == '2' ? 'selected' : '' ?>>2° Semestre</option>
@@ -67,12 +66,12 @@ include __DIR__ . "/../layout/navbar.php";
             <div class="flex flex-col justify-end">
                 <?php if (!empty($_GET['anio_id']) && !empty($_GET['curso_id'])): ?>
                     <a href="index.php?action=anotacion_create&anio_id=<?= $_GET['anio_id'] ?>&curso_id=<?= $_GET['curso_id'] ?>"
-                        class="text-center bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white font-semibold rounded-xl px-4 py-3 shadow-lg transition">
+                        class="btn-primary text-center font-semibold rounded-xl px-4 py-3 shadow-lg transition">
                         ➕ Nueva Anotación
                     </a>
                 <?php else: ?>
                     <button disabled
-                        class="text-center bg-gray-700 text-gray-500 font-semibold rounded-xl px-4 py-3 cursor-not-allowed">
+                        class="btn-disabled text-center font-semibold rounded-xl px-4 py-3">
                         ➕ Nueva Anotación
                     </button>
                 <?php endif ?>
@@ -85,90 +84,94 @@ include __DIR__ . "/../layout/navbar.php";
             <!-- Encabezado del curso seleccionado -->
             <?php if (!empty($cursoSeleccionado)): ?>
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-lg font-bold text-white">
-                        Curso: <span class="text-indigo-400"><?= htmlspecialchars($cursoSeleccionado['nombre']) ?></span>
+                    <h2 class="text-lg font-bold text-strong">
+                        Curso: <span class="text-accent"><?= htmlspecialchars($cursoSeleccionado['nombre']) ?></span>
                         <?php if (!empty($_GET['semestre'])): ?>
-                            — <span class="text-gray-300 text-base font-normal"><?= $_GET['semestre'] ?>° Semestre</span>
+                            — <span class="text-soft text-base font-normal"><?= $_GET['semestre'] ?>° Semestre</span>
                         <?php endif ?>
                     </h2>
-                    <span class="text-sm text-gray-400"><?= count($alumnos) ?> alumnos</span>
+                    <span class="text-sm text-faint"><?= count($alumnos) ?> alumnos</span>
                 </div>
             <?php endif ?>
 
-            <div class="overflow-x-auto bg-gray-900 rounded-3xl shadow-lg">
-                <table class="min-w-full divide-y divide-gray-700">
-                    <thead class="bg-gray-950/50">
+            <div class="panel overflow-x-auto rounded-3xl shadow-lg">
+                <table class="data-table min-w-full">
+                    <thead>
                         <tr>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                                 Alumno</th>
-                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-200 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-soft uppercase tracking-wider">
                                 Total</th>
-                            <th class="px-4 py-3 text-center text-xs font-medium text-blue-400 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-soft uppercase tracking-wider">
                                 Registros</th>
-                            <th class="px-4 py-3 text-center text-xs font-medium text-green-400 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-soft uppercase tracking-wider">
                                 Positivas</th>
-                            <th class="px-4 py-3 text-center text-xs font-medium text-yellow-400 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-soft uppercase tracking-wider">
                                 Leves</th>
-                            <th class="px-4 py-3 text-center text-xs font-medium text-orange-400 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-soft uppercase tracking-wider">
                                 Graves</th>
-                            <th class="px-4 py-3 text-center text-xs font-medium text-red-400 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-soft uppercase tracking-wider">
                                 Gravísimas</th>
-                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-200 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-center text-xs font-medium text-soft uppercase tracking-wider">
                                 Acciones</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-700">
+                    <tbody>
                         <?php foreach ($alumnos as $al): ?>
                             <?php
                             $urlVer = "index.php?action=anotacion_ver&matricula_id={$al['matricula_id']}&anio_id={$_GET['anio_id']}&curso_id={$_GET['curso_id']}";
                             if (!empty($_GET['semestre']))
                                 $urlVer .= "&semestre={$_GET['semestre']}";
                             ?>
-                            <tr class="bg-gray-900/20 hover:bg-gray-700/50 transition cursor-pointer"
-                                onclick="window.location='<?= $urlVer ?>'">
-                                <td class="px-4 py-3 text-sm text-gray-100 capitalize font-medium">
+                            <tr class="cursor-pointer" onclick="window.location='<?= $urlVer ?>'">
+                                <td class="px-4 py-3 text-sm text-strong capitalize font-medium">
                                     <?= htmlspecialchars($al['apepat'] . ' ' . $al['apemat'] . ', ' . $al['nombre']) ?>
-                                    <span class="text-xs text-gray-400 ml-1"><?= htmlspecialchars($al['run']) ?></span>
+                                    <span class="text-xs text-faint ml-1"><?= htmlspecialchars($al['run']) ?></span>
                                 </td>
                                 <td class="px-4 py-3 text-center">
-                                    <span class="text-white font-bold"><?= $al['total_anotaciones'] ?: '—' ?></span>
+                                    <span class="text-strong font-bold"><?= $al['total_anotaciones'] ?: '—' ?></span>
                                 </td>
-                                <td class="px-4 py-3 text-center">
+                                <td class="px-4 py-3 text-center report-blue">
                                     <?php if (($al['registros'] ?? 0) > 0): ?>
                                         <span
-                                            class="inline-flex items-center justify-center w-7 h-7 bg-blue-900/40 border border-blue-500 text-blue-300 rounded-full text-xs font-bold">
+                                            class="report-icon-bg inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold border"
+                                            style="border-color: var(--r-border)">
                                             <?= $al['registros'] ?>
                                         </span>
-                                    <?php else: ?><span class="text-gray-600">—</span>
+                                    <?php else: ?><span class="text-faint">—</span>
                                     <?php endif ?>
                                 </td>
-                                <td class="px-4 py-3 text-center">
+                                <td class="px-4 py-3 text-center report-emerald">
                                     <?php if ($al['positivas'] > 0): ?>
                                         <span
-                                            class="inline-flex items-center justify-center w-7 h-7 bg-green-900/40 border border-green-500 text-green-300 rounded-full text-xs font-bold"><?= $al['positivas'] ?></span>
-                                    <?php else: ?><span class="text-gray-600">—</span><?php endif ?>
+                                            class="report-icon-bg inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold border"
+                                            style="border-color: var(--r-border)"><?= $al['positivas'] ?></span>
+                                    <?php else: ?><span class="text-faint">—</span><?php endif ?>
                                 </td>
-                                <td class="px-4 py-3 text-center">
+                                <td class="px-4 py-3 text-center report-yellow">
                                     <?php if ($al['leves'] > 0): ?>
                                         <span
-                                            class="inline-flex items-center justify-center w-7 h-7 bg-yellow-900/40 border border-yellow-500 text-yellow-300 rounded-full text-xs font-bold"><?= $al['leves'] ?></span>
-                                    <?php else: ?><span class="text-gray-600">—</span><?php endif ?>
+                                            class="report-icon-bg inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold border"
+                                            style="border-color: var(--r-border)"><?= $al['leves'] ?></span>
+                                    <?php else: ?><span class="text-faint">—</span><?php endif ?>
                                 </td>
-                                <td class="px-4 py-3 text-center">
+                                <td class="px-4 py-3 text-center report-amber">
                                     <?php if ($al['graves'] > 0): ?>
                                         <span
-                                            class="inline-flex items-center justify-center w-7 h-7 bg-orange-900/40 border border-orange-500 text-orange-300 rounded-full text-xs font-bold"><?= $al['graves'] ?></span>
-                                    <?php else: ?><span class="text-gray-600">—</span><?php endif ?>
+                                            class="report-icon-bg inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold border"
+                                            style="border-color: var(--r-border)"><?= $al['graves'] ?></span>
+                                    <?php else: ?><span class="text-faint">—</span><?php endif ?>
                                 </td>
-                                <td class="px-4 py-3 text-center">
+                                <td class="px-4 py-3 text-center report-red">
                                     <?php if ($al['gravisimas'] > 0): ?>
                                         <span
-                                            class="inline-flex items-center justify-center w-7 h-7 bg-red-900/40 border border-red-500 text-red-300 rounded-full text-xs font-bold"><?= $al['gravisimas'] ?></span>
-                                    <?php else: ?><span class="text-gray-600">—</span><?php endif ?>
+                                            class="report-icon-bg inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold border"
+                                            style="border-color: var(--r-border)"><?= $al['gravisimas'] ?></span>
+                                    <?php else: ?><span class="text-faint">—</span><?php endif ?>
                                 </td>
                                 <td class="px-4 py-3 text-center" onclick="event.stopPropagation()">
                                     <a href="index.php?action=anotacion_create&anio_id=<?= $_GET['anio_id'] ?>&curso_id=<?= $_GET['curso_id'] ?>&alumno_id=<?= $al['id'] ?>&matricula_id=<?= $al['matricula_id'] ?>"
-                                        class="text-indigo-400 hover:text-indigo-300 font-medium text-sm">+ Anotar</a>
+                                        class="link-action font-medium text-sm">+ Anotar</a>
                                 </td>
                             </tr>
                         <?php endforeach ?>
@@ -177,18 +180,18 @@ include __DIR__ . "/../layout/navbar.php";
             </div>
 
         <?php elseif (!empty($_GET['anio_id']) && !empty($_GET['curso_id'])): ?>
-            <div class="text-center py-12 text-gray-400">No hay alumnos matriculados en este curso y año.</div>
+            <div class="text-center py-12 text-faint">No hay alumnos matriculados en este curso y año.</div>
 
         <?php else: ?>
-            <div class="text-center py-16 text-gray-500">
+            <div class="text-center py-16 text-muted">
                 <p class="text-5xl mb-4">📝</p>
-                <p class="text-lg">Selecciona un año y curso para ver las anotaciones.</p>
+                <p class="text-lg text-faint">Selecciona un año y curso para ver las anotaciones.</p>
             </div>
         <?php endif ?>
 
         <div class="mt-8 flex justify-center">
             <a href="index.php?action=dashboard"
-                class="inline-block rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-gray-600">
+                class="btn-secondary inline-block rounded-md px-4 py-2 text-sm font-semibold shadow">
                 ⬅️ Dashboard
             </a>
         </div>
@@ -199,7 +202,7 @@ include __DIR__ . "/../layout/navbar.php";
 <?php if (!empty($_GET['anio_id']) && !empty($_GET['curso_id'])): ?>
     <a href="index.php?action=anotaciones_pdf&anio_id=<?= $_GET['anio_id'] ?>&curso_id=<?= $_GET['curso_id'] ?>&semestre=<?= htmlspecialchars($_GET['semestre'] ?? '') ?>"
         target="_blank"
-        class="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-full shadow-2xl transition-all hover:scale-105">
+        class="btn-danger fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 font-bold rounded-full shadow-2xl transition-all hover:scale-105">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />

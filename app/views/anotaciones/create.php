@@ -7,16 +7,15 @@ $nombre = $user['nombre'];
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 ?>
-<main>
-    <header
-        class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
+<main class="min-h-screen app-shell">
+    <header class="page-header">
         <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold tracking-tight text-white">Nueva Anotación</h1>
+            <h1 class="text-3xl font-bold tracking-tight text-strong">Nueva Anotación</h1>
         </div>
     </header>
 
     <div class="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
-        <div class="bg-gray-800/60 border border-gray-700 rounded-2xl p-8 shadow-xl">
+        <div class="panel rounded-2xl p-8 shadow-xl">
 
             <form action="index.php?action=anotacion_store" method="POST" class="space-y-6">
                 <input type="hidden" name="anio_id" value="<?= htmlspecialchars($anio_id ?? '') ?>">
@@ -28,17 +27,17 @@ include __DIR__ . "/../layout/navbar.php";
 
                 <!-- ALUMNO -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-200 mb-1">Alumno</label>
+                    <label class="block text-sm font-medium text-strong mb-1">Alumno</label>
 
                     <?php if ($alumnoPreseleccionado): ?>
                         <!-- Alumno preseleccionado desde el listado -->
-                        <div class="flex items-center gap-3 bg-indigo-900/30 border border-indigo-600 rounded-xl px-4 py-3">
+                        <div class="banner-info flex items-center gap-3 rounded-xl px-4 py-3">
                             <span class="text-2xl">👤</span>
                             <div>
-                                <p class="text-white font-semibold capitalize">
+                                <p class="text-strong font-semibold capitalize">
                                     <?= htmlspecialchars($alumnoPreseleccionado['apepat'] . ' ' . $alumnoPreseleccionado['apemat'] . ', ' . $alumnoPreseleccionado['nombre']) ?>
                                 </p>
-                                <p class="text-xs text-indigo-300">
+                                <p class="text-xs text-accent">
                                     <?= htmlspecialchars($alumnoPreseleccionado['curso_nombre']) ?> — RUN:
                                     <?= htmlspecialchars($alumnoPreseleccionado['run']) ?>
                                 </p>
@@ -49,31 +48,31 @@ include __DIR__ . "/../layout/navbar.php";
                         <!-- Buscador libre -->
                         <div class="relative">
                             <input type="text" id="buscar_alumno" placeholder="Buscar por RUN o nombre..."
-                                class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition"
+                                class="input-field w-full rounded-xl px-4 py-3 transition"
                                 autocomplete="off">
                             <div id="resultados_alumno"
-                                class="hidden absolute z-50 w-full bg-gray-800 border border-gray-700 rounded-xl mt-1 shadow-xl max-h-56 overflow-y-auto">
+                                class="dropdown-panel hidden absolute z-50 w-full rounded-xl mt-1 shadow-xl max-h-56 overflow-y-auto">
                             </div>
                         </div>
 
                         <div id="alumno_seleccionado"
-                            class="hidden mt-3 flex items-center gap-3 bg-indigo-900/30 border border-indigo-600 rounded-xl px-4 py-3">
+                            class="banner-info hidden mt-3 flex items-center gap-3 rounded-xl px-4 py-3">
                             <span class="text-2xl">👤</span>
                             <div>
-                                <p id="alumno_nombre_display" class="text-white font-semibold capitalize"></p>
-                                <p id="alumno_curso_display" class="text-xs text-indigo-300"></p>
+                                <p id="alumno_nombre_display" class="text-strong font-semibold capitalize"></p>
+                                <p id="alumno_curso_display" class="text-xs text-accent"></p>
                             </div>
                             <button type="button" onclick="limpiarAlumno()"
-                                class="ml-auto text-gray-400 hover:text-white text-sm">✕</button>
+                                class="ml-auto text-faint hover:text-strong text-sm">✕</button>
                         </div>
                     <?php endif ?>
                 </div>
 
                 <!-- ASIGNATURA -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-200 mb-1">Asignatura</label>
+                    <label class="block text-sm font-medium text-strong mb-1">Asignatura</label>
                     <select name="asignatura_id" id="sel_asignatura" required
-                        class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition">
+                        class="input-field w-full rounded-xl px-4 py-3 transition">
                         <option value="">Seleccionar asignatura...</option>
 
                         <?php
@@ -114,24 +113,23 @@ include __DIR__ . "/../layout/navbar.php";
 
                 <!-- TIPO -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-200 mb-2">Tipo de Anotación</label>
+                    <label class="block text-sm font-medium text-strong mb-2">Tipo de Anotación</label>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                         <?php
                         $tipos = [
-                            'Registro' => ['color' => 'blue', 'icon' => '📋'],
-                            'Positiva' => ['color' => 'green', 'icon' => '✅'],
-                            'Leve' => ['color' => 'yellow', 'icon' => '⚠️'],
-                            'Grave' => ['color' => 'orange', 'icon' => '🔶'],
-                            'Gravísima' => ['color' => 'red', 'icon' => '🚨'],
+                            'Registro'  => ['palette' => 'report-blue',    'icon' => '📋'],
+                            'Positiva'  => ['palette' => 'report-emerald', 'icon' => '✅'],
+                            'Leve'      => ['palette' => 'report-yellow',  'icon' => '⚠️'],
+                            'Grave'     => ['palette' => 'report-amber',   'icon' => '🔶'],
+                            'Gravísima' => ['palette' => 'report-red',     'icon' => '🚨'],
                         ];
                         foreach ($tipos as $tipo => $cfg): ?>
-                            <label class="cursor-pointer">
+                            <label class="cursor-pointer <?= $cfg['palette'] ?>">
                                 <input type="radio" name="tipo" value="<?= $tipo ?>" class="sr-only peer" required>
-                                <div
-                                    class="text-center border-2 border-gray-600 peer-checked:border-<?= $cfg['color'] ?>-500
-                                            peer-checked:bg-<?= $cfg['color'] ?>-900/40 rounded-xl px-3 py-4 transition hover:border-gray-500">
+                                <div class="text-center border-2 divider-soft rounded-xl px-3 py-4 transition
+                                            peer-checked:border-[color:var(--r-accent)] peer-checked:bg-[var(--r-soft)]">
                                     <p class="text-2xl mb-1"><?= $cfg['icon'] ?></p>
-                                    <p class="text-sm font-semibold text-gray-200"><?= $tipo ?></p>
+                                    <p class="text-sm font-semibold text-soft"><?= $tipo ?></p>
                                 </div>
                             </label>
                         <?php endforeach ?>
@@ -140,9 +138,9 @@ include __DIR__ . "/../layout/navbar.php";
 
                 <!-- SEMESTRE -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-200 mb-1">Semestre</label>
+                    <label class="block text-sm font-medium text-strong mb-1">Semestre</label>
                     <select name="semestre" required
-                        class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition">
+                        class="input-field w-full rounded-xl px-4 py-3 transition">
                         <option value="">Seleccionar...</option>
                         <option value="1">1° Semestre</option>
                         <option value="2">2° Semestre</option>
@@ -151,52 +149,52 @@ include __DIR__ . "/../layout/navbar.php";
 
                 <!-- FECHA -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-200 mb-1">Fecha de la Anotación</label>
+                    <label class="block text-sm font-medium text-strong mb-1">Fecha de la Anotación</label>
                     <input type="date" name="fecha_anotacion" value="<?= date('Y-m-d') ?>" required
-                        class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition">
+                        class="input-field w-full rounded-xl px-4 py-3 transition">
                 </div>
 
                 <!-- CONTENIDO -->
-                <!-- CONTENIDO -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-200 mb-1">Descripción</label>
+                    <label class="block text-sm font-medium text-strong mb-1">Descripción</label>
                     <textarea name="contenido" id="contenido" rows="4" required placeholder="Describe la situación..."
                         maxlength="800"
-                        class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition resize-none"></textarea>
+                        class="input-field w-full rounded-xl px-4 py-3 transition resize-none"></textarea>
 
                     <!-- Contador -->
                     <div class="flex justify-end mt-1">
-                        <span id="char_count" class="text-xs font-medium text-green-400 transition-colors duration-300">
+                        <span id="char_count" class="text-xs font-medium text-success transition-colors duration-300">
                             0 / 800
                         </span>
                     </div>
                 </div>
+
                 <!-- ACCIÓN REALIZADA -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-200 mb-1">
+                    <label class="block text-sm font-medium text-strong mb-1">
                         Acción Realizada
-                        <span class="text-gray-500 font-normal text-xs ml-1">(opcional)</span>
+                        <span class="text-faint font-normal text-xs ml-1">(opcional)</span>
                     </label>
                     <input type="text" name="accion_realizada" maxlength="500"
-                        placeholder="Ej: Se llamó al apoderado, se envió citación..." class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3 
-               focus:ring-2 focus:ring-indigo-500 transition">
+                        placeholder="Ej: Se llamó al apoderado, se envió citación..."
+                        class="input-field w-full rounded-xl px-4 py-3 transition">
                 </div>
 
                 <!-- NOTIFICADO APODERADO -->
                 <div class="flex items-center gap-3">
                     <input type="checkbox" name="notificado_apoderado" id="notif" value="Si"
-                        class="w-5 h-5 rounded bg-gray-700 border-gray-600 text-indigo-500 focus:ring-indigo-500">
-                    <label for="notif" class="text-sm text-gray-200">Apoderado notificado</label>
+                        class="w-5 h-5 rounded border divider-soft accent-indigo-600 focus:ring-indigo-500">
+                    <label for="notif" class="text-sm text-soft">Apoderado notificado</label>
                 </div>
 
                 <!-- BOTONES -->
                 <div class="flex gap-4 pt-2">
                     <button type="submit"
-                        class="w-full bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white font-semibold rounded-xl py-3 shadow-lg transition">
+                        class="btn-primary w-full font-semibold rounded-xl py-3 shadow-lg transition">
                         Guardar Anotación
                     </button>
                     <a href="index.php?action=anotaciones&anio_id=<?= $anio_id ?>&curso_id=<?= $curso_id ?>"
-                        class="w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-xl py-3 transition">
+                        class="btn-secondary w-full text-center font-semibold rounded-xl py-3 transition">
                         Cancelar
                     </a>
                 </div>
@@ -227,11 +225,11 @@ include __DIR__ . "/../layout/navbar.php";
 
                 resultadosDiv.innerHTML = '';
                 if (data.length === 0) {
-                    resultadosDiv.innerHTML = '<p class="px-4 py-3 text-gray-400 text-sm">Sin resultados</p>';
+                    resultadosDiv.innerHTML = '<p class="px-4 py-3 text-faint text-sm">Sin resultados</p>';
                 } else {
                     data.forEach(a => {
                         const div = document.createElement('div');
-                        div.className = "px-4 py-3 hover:bg-gray-700 cursor-pointer text-sm text-gray-100 capitalize border-b border-gray-700/50";
+                        div.className = "dropdown-link px-4 py-3 cursor-pointer text-sm capitalize border-b divider-soft";
                         div.textContent = `${a.apepat} ${a.apemat}, ${a.nombre} — ${a.run} (${a.curso_nombre})`;
                         div.onclick = () => seleccionarAlumno(a);
                         resultadosDiv.appendChild(div);
@@ -278,6 +276,7 @@ include __DIR__ . "/../layout/navbar.php";
             sel.innerHTML += `<option value="${a.id}">${a.nombre}</option>`;
         });
     }
+
     // Contador de caracteres
     const textarea = document.getElementById('contenido');
     const charCount = document.getElementById('char_count');
@@ -289,11 +288,11 @@ include __DIR__ . "/../layout/navbar.php";
 
         charCount.textContent = `${len} / ${max}`;
 
-        // Cambio de color según porcentaje usado
+        // Cambio de color según porcentaje usado (theme-aware)
         charCount.className = 'text-xs font-medium transition-colors duration-300 ' + (
-            pct >= 0.9 ? 'text-red-400' :   // 90%+ → rojo
-                pct >= 0.65 ? 'text-yellow-400' :   // 65%+ → amarillo
-                    'text-green-400'       // menos → verde
+            pct >= 0.9 ? 'text-danger' :
+                pct >= 0.65 ? 'text-warn' :
+                    'text-success'
         );
     });
 </script>

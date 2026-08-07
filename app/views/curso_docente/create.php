@@ -11,21 +11,20 @@ include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 ?>
 
-<main class="min-h-screen bg-gray-900">
+<main class="min-h-screen app-shell">
 
-    <header class="bg-gray-800 border-b border-white/10">
+    <header class="page-header">
         <div class="mx-auto max-w-xl px-4 py-6 sm:px-6">
-            <p class="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-0.5">Gestión Académica</p>
-            <h1 class="text-2xl font-bold text-white">Asignar Profesor Jefe</h1>
+            <p class="text-xs font-semibold uppercase tracking-widest text-accent mb-0.5">Gestión Académica</p>
+            <h1 class="text-2xl font-bold text-strong">Asignar Profesor Jefe</h1>
         </div>
     </header>
 
     <div class="mx-auto max-w-xl px-4 py-8 sm:px-6">
-        <div class="bg-gray-800 border border-gray-700 rounded-2xl p-6">
+        <div class="panel rounded-2xl p-6">
 
             <?php if ($asignacionActual): ?>
-                <div class="mb-5 flex items-center gap-3 bg-amber-900/30 border border-amber-700/50
-                        text-amber-300 px-4 py-3 rounded-xl text-sm">
+                <div class="banner-warning mb-5 flex items-center gap-3 px-4 py-3 rounded-xl text-sm">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -40,11 +39,11 @@ include __DIR__ . "/../layout/navbar.php";
 
                 <!-- Año (informativo) -->
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-faint mb-1.5">
                         Año lectivo
                     </label>
-                    <select name="anio_id_display" disabled class="w-full bg-gray-900/50 text-gray-400 text-sm border border-gray-700
-                                   rounded-xl px-3 py-2.5 cursor-not-allowed">
+                    <select name="anio_id_display" disabled
+                        class="input-field w-full text-sm rounded-xl px-3 py-2.5 cursor-not-allowed opacity-70">
                         <?php foreach ($anios as $a): ?>
                             <option <?= $a['id'] == $anioId ? 'selected' : '' ?>>
                                 <?= $a['anio'] ?>
@@ -55,11 +54,11 @@ include __DIR__ . "/../layout/navbar.php";
 
                 <!-- Curso -->
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-faint mb-1.5">
                         Curso
                     </label>
-                    <select name="curso_id" required class="w-full bg-gray-900 text-white text-sm border border-gray-600 rounded-xl
-                                   px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <select name="curso_id" required
+                        class="input-field w-full text-sm rounded-xl px-3 py-2.5">
                         <option value="">Selecciona un curso…</option>
                         <?php foreach ($cursos as $c): ?>
                             <option value="<?= $c['id'] ?>" <?= ($cursoId && $cursoId == $c['id']) ? 'selected' : '' ?>>
@@ -69,44 +68,50 @@ include __DIR__ . "/../layout/navbar.php";
                     </select>
                 </div>
 
-                <!-- Docente -->
+                <!-- Profesor Jefe (todos los usuarios, agrupados por rol) -->
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1.5">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-faint mb-1.5">
                         Profesor Jefe
                     </label>
-                    <?php if (empty($docentes)): ?>
-                        <p class="text-sm text-red-400 bg-red-900/30 border border-red-700/50
-                                  rounded-xl px-4 py-3">
-                            No hay usuarios con rol Docente registrados en el sistema.
+                    <?php if (empty($usuarios)): ?>
+                        <p class="banner-danger text-sm rounded-xl px-4 py-3">
+                            No hay usuarios registrados en el sistema.
                         </p>
                     <?php else: ?>
-                        <select name="docente_id" required class="w-full bg-gray-900 text-white text-sm border border-gray-600 rounded-xl
-                                   px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="">Selecciona un docente…</option>
-                            <?php foreach ($docentes as $d): ?>
-                                <option value="<?= $d['id'] ?>" <?= ($asignacionActual && $asignacionActual['id'] == $d['id']) ? 'selected' : '' ?>>
+                        <select name="docente_id" required
+                            class="input-field w-full text-sm rounded-xl px-3 py-2.5">
+                            <option value="">Selecciona un profesor…</option>
+                            <?php $rolActual = null; ?>
+                            <?php foreach ($usuarios as $u): ?>
+                                <?php if ($u['rol_nombre'] !== $rolActual): ?>
+                                    <?php if ($rolActual !== null): ?></optgroup><?php endif ?>
+                                    <optgroup label="<?= htmlspecialchars($u['rol_nombre']) ?>">
+                                    <?php $rolActual = $u['rol_nombre']; ?>
+                                <?php endif ?>
+                                <option value="<?= $u['id'] ?>" <?= ($asignacionActual && $asignacionActual['id'] == $u['id']) ? 'selected' : '' ?>>
                                     <?= htmlspecialchars(
-                                        $d['ape_paterno'] . ' ' .
-                                        ($d['ape_materno'] ?? '') . ', ' .
-                                        $d['nombre']
+                                        $u['ape_paterno'] . ' ' .
+                                        ($u['ape_materno'] ?? '') . ', ' .
+                                        $u['nombre']
                                     ) ?>
-                                    <?php if ($d['email']): ?>
-                                        — <?= htmlspecialchars($d['email']) ?>
+                                    <?php if ($u['email']): ?>
+                                        — <?= htmlspecialchars($u['email']) ?>
                                     <?php endif ?>
                                 </option>
                             <?php endforeach ?>
+                            <?php if ($rolActual !== null): ?></optgroup><?php endif ?>
                         </select>
                     <?php endif ?>
                 </div>
 
                 <div class="flex gap-3 pt-2">
-                    <button type="submit" <?= empty($docentes) ? 'disabled' : '' ?> class="flex-1 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40
-                                   disabled:cursor-not-allowed text-white font-bold
-                                   py-2.5 rounded-xl transition active:scale-95">
+                    <button type="submit" <?= empty($usuarios) ? 'disabled' : '' ?>
+                        class="btn-primary flex-1 font-bold py-2.5 rounded-xl transition active:scale-95
+                               disabled:opacity-40 disabled:cursor-not-allowed">
                         Guardar asignación
                     </button>
-                    <a href="index.php?action=curso_docente&anio_id=<?= $anioId ?>" class="flex-1 text-center bg-gray-700 hover:bg-gray-600 text-gray-300
-                              font-semibold py-2.5 rounded-xl transition">
+                    <a href="index.php?action=curso_docente&anio_id=<?= $anioId ?>"
+                        class="btn-secondary flex-1 text-center font-semibold py-2.5 rounded-xl transition">
                         Cancelar
                     </a>
                 </div>

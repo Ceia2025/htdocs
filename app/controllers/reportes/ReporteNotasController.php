@@ -159,6 +159,10 @@ class ReporteNotasController
         $asignaturaId = (int) ($_GET['asignatura_id'] ?? 0);
         $semestre = (int) ($_GET['semestre'] ?? 1);
 
+        // Por defecto incluye retirados (comportamiento previo).
+        // El botón "sin retirados" manda incluir_retirados=0.
+        $incluirRetirados = ($_GET['incluir_retirados'] ?? '1') !== '0';
+
         if (!$cursoId || !$anioId || !$asignaturaId)
             die('Faltan parámetros.');
 
@@ -175,6 +179,17 @@ class ReporteNotasController
             die('Esta asignatura no está disponible en reportes.');
 
         $alumnos = $this->notaModel->getByCursoYAnio($cursoId, $anioId);
+
+        // Filtro de retirados: si el botón pide "sin retirados", los sacamos
+        // de la lista antes de armar el PDF. Los promedios por columna y del
+        // curso se calcularán solo sobre alumnos activos.
+        if (!$incluirRetirados) {
+            $alumnos = array_values(array_filter(
+                $alumnos,
+                fn($a) => empty($a['fecha_retiro'])
+            ));
+        }
+
         $notasRaw = $this->notaModel->getNotasPorCursoAsignaturaSemestre(
             $cursoId,
             $anioId,
@@ -216,8 +231,9 @@ class ReporteNotasController
         require __DIR__ . '/../../views/reportes/notas/pdf_asignatura.php';
         $html = ob_get_clean();
 
+        $sufijo = $incluirRetirados ? 'ConRetirados' : 'SinRetirados';
         $nombreArchivo = 'Notas_' . $asignatura['nombre'] . '_'
-            . $curso['nombre'] . '_Sem' . $semestre . '.pdf';
+            . $curso['nombre'] . '_Sem' . $semestre . '_' . $sufijo . '.pdf';
 
         $this->_streamPdf($html, 'A4', 'landscape', $nombreArchivo);
     }

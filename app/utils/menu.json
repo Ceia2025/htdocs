@@ -1,6 +1,16 @@
 {
   "administrador": [
     {
+      "title": "Centro de Reportes",
+      "desc": "Exportar asistencia en PDF y CSV por curso o general",
+      "url": "index.php?action=reportes"
+    },
+    {
+      "title": "Control de Asistencia",
+      "desc": "Gestión de asistencia por nivel y curso",
+      "url": "index.php?action=asistencia_cursos"
+    },
+    {
       "title": "Reglamentos C.E.I.A.",
       "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
       "url": "https://reglamentos-ceia-2026.vercel.app/"
@@ -29,11 +39,6 @@
       "title": "Gestión de Anotaciones",
       "desc": "Administración y consulta de anotaciones por alumno",
       "url": "index.php?action=anotaciones"
-    },
-    {
-      "title": "Control de Asistencia",
-      "desc": "Gestión de asistencia por nivel y curso",
-      "url": "index.php?action=asistencia_cursos"
     },
     {
       "title": "Registro de Atrasos Estudiantiles",
@@ -89,14 +94,14 @@
       "title": "Profesor Jefe por Curso",
       "desc": "Asignación de profesor jefe a cada curso por año lectivo",
       "url": "index.php?action=curso_docente"
-    },
+    }
+  ],
+  "administrativo": [
     {
       "title": "Centro de Reportes",
       "desc": "Exportar asistencia en PDF y CSV por curso o general",
       "url": "index.php?action=reportes"
-    }
-  ],
-  "administrativo": [
+    },
     {
       "title": "Reglamentos C.E.I.A.",
       "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
@@ -130,6 +135,11 @@
   ],
   "soporte": [
     {
+      "title": "Centro de Reportes",
+      "desc": "Exportar asistencia en PDF y CSV por curso o general",
+      "url": "index.php?action=reportes"
+    },
+    {
       "title": "Reglamentos C.E.I.A.",
       "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
       "url": "https://reglamentos-ceia-2026.vercel.app/"
@@ -146,6 +156,11 @@
     }
   ],
   "direccion": [
+    {
+      "title": "Centro de Reportes",
+      "desc": "Exportar asistencia en PDF y CSV por curso o general",
+      "url": "index.php?action=reportes"
+    },
     {
       "title": "Reglamentos C.E.I.A.",
       "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
@@ -170,14 +185,14 @@
       "title": "Cuerpo Docente",
       "desc": "Nómina y gestión administrativa de profesores",
       "url": "index.php?action=profesores"
-    },
+    }
+  ],
+  "Inspector general y Convivencia escolar": [
     {
       "title": "Centro de Reportes",
       "desc": "Exportar asistencia en PDF y CSV por curso o general",
       "url": "index.php?action=reportes"
-    }
-  ],
-  "Inspector general y Convivencia escolar": [
+    },
     {
       "title": "Reglamentos C.E.I.A.",
       "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
@@ -227,14 +242,14 @@
       "title": "Reportes de Retiros",
       "desc": "Generar reportes de retiros",
       "url": "index.php?action=retiros_reportes"
-    },
+    }
+  ],
+  "docente": [
     {
       "title": "Centro de Reportes",
       "desc": "Exportar asistencia en PDF y CSV por curso o general",
       "url": "index.php?action=reportes"
-    }
-  ],
-  "docente": [
+    },
     {
       "title": "Reglamentos C.E.I.A.",
       "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
@@ -264,14 +279,14 @@
       "title": "Notas",
       "desc": "Gestionar notas de alumnos",
       "url": "index.php?action=notas_panel"
-    },
+    }
+  ],
+  "asistente social": [
     {
       "title": "Centro de Reportes",
       "desc": "Exportar asistencia en PDF y CSV por curso o general",
       "url": "index.php?action=reportes"
-    }
-  ],
-  "asistente social": [
+    },
     {
       "title": "Reglamentos C.E.I.A.",
       "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
@@ -286,15 +301,15 @@
       "title": "Gestión de Anotaciones",
       "desc": "Administración y consulta de anotaciones por alumno",
       "url": "index.php?action=anotaciones"
-    },
+    }
+  ],
+  "registro de anotaciones": [
     {
       "title": "Centro de Reportes",
       "desc": "Exportar asistencia en PDF y CSV por curso o general",
       "url": "index.php?action=reportes"
     }
-  ],
-  "registro de anotaciones": [
-    {
+    ,{
       "title": "Reglamentos C.E.I.A.",
       "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
       "url": "https://reglamentos-ceia-2026.vercel.app/"
@@ -312,6 +327,11 @@
   ],
   "registro asistencias": [
     {
+      "title": "Centro de Reportes",
+      "desc": "Exportar asistencia en PDF y CSV por curso o general",
+      "url": "index.php?action=reportes"
+    },
+    {
       "title": "Reglamentos C.E.I.A.",
       "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
       "url": "https://reglamentos-ceia-2026.vercel.app/"
@@ -320,11 +340,6 @@
       "title": "Control de Asistencia",
       "desc": "Gestión de asistencia por nivel y curso",
       "url": "index.php?action=asistencia_cursos"
-    },
-    {
-      "title": "🧪 Test Asistencias",
-      "desc": "Ver registros de asistencia",
-      "url": "index.php?action=asistencias"
     }
   ],
   "registro atrasos y salidas": [

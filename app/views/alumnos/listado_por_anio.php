@@ -13,11 +13,10 @@ include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 ?>
 
-<main>
-    <header
-        class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
+<main class="min-h-screen app-shell">
+    <header class="page-header">
         <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold tracking-tight text-white">Listado por Año Escolar</h1>
+            <h1 class="text-3xl font-bold tracking-tight text-strong">Listado por Año Escolar</h1>
         </div>
     </header>
 
@@ -25,12 +24,12 @@ include __DIR__ . "/../layout/navbar.php";
 
         <!-- SELECTOR DE AÑO -->
         <form method="GET" action="index.php"
-            class="bg-gray-800/60 border border-gray-700 rounded-2xl p-6 flex flex-wrap gap-4 items-end shadow-xl mb-8">
+            class="panel rounded-2xl p-6 flex flex-wrap gap-4 items-end shadow-xl mb-8">
             <input type="hidden" name="action" value="listado_por_anio">
             <div class="flex flex-col gap-1">
-                <label class="text-xs text-gray-400 uppercase tracking-wider">Año Escolar</label>
+                <label class="text-xs text-faint uppercase tracking-wider">Año Escolar</label>
                 <select name="anio_id"
-                    class="rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition min-w-[160px]">
+                    class="input-field rounded-xl px-4 py-3 transition min-w-[160px]">
                     <option value="">Seleccionar año...</option>
                     <?php foreach ($anios as $a): ?>
                         <option value="<?= $a['id'] ?>" <?= ($_GET['anio_id'] ?? '') == $a['id'] ? 'selected' : '' ?>>
@@ -40,7 +39,7 @@ include __DIR__ . "/../layout/navbar.php";
                 </select>
             </div>
             <button type="submit"
-                class="bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white font-semibold rounded-xl px-6 py-3 shadow-lg transition">
+                class="btn-primary font-semibold rounded-xl px-6 py-3 shadow-lg transition">
                 Ver Listado
             </button>
         </form>
@@ -49,30 +48,29 @@ include __DIR__ . "/../layout/navbar.php";
 
             <!-- CONTADORES GLOBALES -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                <div class="bg-gray-800/60 border border-gray-700 rounded-2xl px-6 py-4 flex items-center gap-4 shadow">
-                    <span class="text-4xl font-bold text-indigo-400"><?= $totalActivos + $totalRetirados ?></span>
+                <div class="chip-counter rounded-2xl px-6 py-4 flex items-center gap-4 shadow">
+                    <span class="text-4xl font-bold text-accent"><?= $totalActivos + $totalRetirados ?></span>
                     <div>
-                        <p class="text-white font-semibold">Total Alumnos</p>
-                        <p class="text-xs text-gray-400">Año <?= $anioSeleccionado['anio'] ?></p>
+                        <p class="text-strong font-semibold">Total Alumnos</p>
+                        <p class="text-xs text-faint">Año <?= $anioSeleccionado['anio'] ?></p>
                     </div>
                 </div>
-                <div class="bg-gray-800/60 border border-green-800 rounded-2xl px-6 py-4 flex items-center gap-4 shadow">
-                    <span class="text-4xl font-bold text-green-400"><?= $totalActivos ?></span>
+                <div class="chip-counter chip-counter--all rounded-2xl px-6 py-4 flex items-center gap-4 shadow">
+                    <span class="text-4xl font-bold"><?= $totalActivos ?></span>
                     <div>
-                        <p class="text-white font-semibold">Activos</p>
-                        <p class="text-xs text-gray-400">Sin fecha de retiro</p>
+                        <p class="text-strong font-semibold">Activos</p>
+                        <p class="text-xs text-faint">Sin fecha de retiro</p>
                     </div>
                 </div>
-                <div class="bg-gray-800/60 border border-red-800 rounded-2xl px-6 py-4 flex items-center gap-4 shadow">
-                    <span class="text-4xl font-bold text-red-400"><?= $totalRetirados ?></span>
+                <div class="chip-counter chip-counter--none rounded-2xl px-6 py-4 flex items-center gap-4 shadow">
+                    <span class="text-4xl font-bold"><?= $totalRetirados ?></span>
                     <div>
-                        <p class="text-white font-semibold">Retirados</p>
-                        <p class="text-xs text-gray-400">Con fecha de retiro</p>
+                        <p class="text-strong font-semibold">Retirados</p>
+                        <p class="text-xs text-faint">Con fecha de retiro</p>
                     </div>
                 </div>
             </div>
 
-            <!-- LISTADO POR CURSO -->
             <!-- LISTADO POR CURSO - ACCORDION -->
             <?php if (!empty($alumnosPorCurso)): ?>
                 <div class="space-y-3">
@@ -83,34 +81,31 @@ include __DIR__ . "/../layout/navbar.php";
                         $cursoId = 'curso-' . preg_replace('/[^a-z0-9]/i', '-', $cursoNombre);
                         ?>
 
-                        <div class="rounded-2xl border border-gray-700 overflow-hidden shadow-lg">
+                        <div class="accordion-item shadow-lg">
 
                             <!-- CABECERA CLICKEABLE -->
                             <button onclick="toggleCurso('<?= $cursoId ?>')"
-                                class="w-full flex items-center justify-between bg-gray-800 hover:bg-gray-750 px-6 py-4 transition group">
+                                class="accordion-trigger w-full flex items-center justify-between px-6 py-4 transition group">
 
                                 <div class="flex items-center gap-4">
                                     <!-- Ícono chevron -->
-                                    <svg id="icon-<?= $cursoId ?>" class="w-5 h-5 text-indigo-400 transition-transform duration-300"
+                                    <svg id="icon-<?= $cursoId ?>" class="w-5 h-5 text-accent transition-transform duration-300"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                                     </svg>
-                                    <span class="text-lg font-bold text-white"><?= htmlspecialchars($cursoNombre) ?></span>
+                                    <span class="text-lg font-bold text-strong"><?= htmlspecialchars($cursoNombre) ?></span>
                                 </div>
 
                                 <!-- Badges contadores -->
                                 <div class="flex items-center gap-2 text-sm">
-                                    <span
-                                        class="bg-indigo-900/50 border border-indigo-600 text-indigo-300 rounded-lg px-3 py-1 font-semibold">
+                                    <span class="report-blue report-badge rounded-lg px-3 py-1 font-semibold">
                                         <?= count($alumnos) ?> alumnos
                                     </span>
-                                    <span
-                                        class="bg-green-900/40 border border-green-600 text-green-300 rounded-lg px-3 py-1 font-semibold">
+                                    <span class="report-emerald report-badge rounded-lg px-3 py-1 font-semibold">
                                         ✅ <?= $activos ?>
                                     </span>
                                     <?php if ($retirados > 0): ?>
-                                        <span
-                                            class="bg-red-900/40 border border-red-600 text-red-300 rounded-lg px-3 py-1 font-semibold">
+                                        <span class="report-red report-badge rounded-lg px-3 py-1 font-semibold">
                                             🚪 <?= $retirados ?>
                                         </span>
                                     <?php endif ?>
@@ -119,62 +114,51 @@ include __DIR__ . "/../layout/navbar.php";
 
                             <!-- CONTENIDO DESPLEGABLE -->
                             <div id="<?= $cursoId ?>" class="hidden">
-                                <div class="overflow-x-auto bg-gray-900">
-                                    <table class="min-w-full divide-y divide-gray-700">
-                                        <thead class="bg-gray-950/50">
+                                <div class="accordion-content overflow-x-auto">
+                                    <table class="data-table min-w-full">
+                                        <thead>
                                             <tr>
-                                                <th
-                                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                                                     #</th>
-                                                <th
-                                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                                                     RUN</th>
-                                                <th
-                                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                                                     Nombre Completo</th>
-                                                <th
-                                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                                                     Sexo</th>
-                                                <th
-                                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                                                     Estado</th>
-                                                <th
-                                                    class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                                                     Acciones</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="divide-y divide-gray-700">
+                                        <tbody>
                                             <?php foreach ($alumnos as $i => $a): ?>
-                                                <tr class="transition-all duration-150 cursor-pointer
-                                        <?= !empty($a['deleted_at'])
-                                            ? 'bg-red-950/30 hover:bg-red-900/40'
-                                            : 'bg-gray-900/20 hover:bg-gray-700/50' ?>"
+                                                <tr class="cursor-pointer <?= !empty($a['deleted_at']) ? 'row-inactive' : '' ?>"
                                                     onclick="window.location='index.php?action=alumno_profile&id=<?= $a['id'] ?>'">
-                                                    <td class="px-4 py-3 text-sm text-gray-400"><?= $i + 1 ?></td>
-                                                    <td class="px-4 py-3 text-sm text-gray-100">
+                                                    <td class="px-4 py-3 text-sm text-faint"><?= $i + 1 ?></td>
+                                                    <td class="px-4 py-3 text-sm text-soft">
                                                         <?= htmlspecialchars($a['run'] . '-' . $a['codver']) ?>
                                                     </td>
-                                                    <td class="px-4 py-3 text-sm text-gray-100 capitalize font-medium">
+                                                    <td class="px-4 py-3 text-sm text-strong capitalize font-medium">
                                                         <?= htmlspecialchars($a['apepat'] . ' ' . $a['apemat'] . ', ' . $a['nombre']) ?>
                                                     </td>
-                                                    <td class="px-4 py-3 text-sm text-gray-100"><?= htmlspecialchars($a['sexo']) ?></td>
+                                                    <td class="px-4 py-3 text-sm text-soft"><?= htmlspecialchars($a['sexo']) ?></td>
                                                     <td class="px-4 py-3 text-sm">
                                                         <?php if (!empty($a['deleted_at'])): ?>
-                                                            <span
-                                                                class="inline-flex items-center px-2 py-1 bg-red-900/40 border border-red-500 text-red-300 rounded-md text-xs font-semibold">
+                                                            <span class="report-red report-badge inline-flex items-center px-2 py-1 rounded-md text-xs font-semibold">
                                                                 Retirado <?= (new DateTime($a['deleted_at']))->format('d/m/Y') ?>
                                                             </span>
                                                         <?php else: ?>
-                                                            <span
-                                                                class="inline-flex items-center px-2 py-1 bg-green-900/40 border border-green-500 text-green-300 rounded-md text-xs font-semibold">
+                                                            <span class="report-emerald report-badge inline-flex items-center px-2 py-1 rounded-md text-xs font-semibold">
                                                                 ✅ Activo
                                                             </span>
                                                         <?php endif ?>
                                                     </td>
-                                                    <td class="px-4 py-3 text-sm text-gray-100 space-x-3"
+                                                    <td class="px-4 py-3 text-sm space-x-3"
                                                         onclick="event.stopPropagation()">
                                                         <a href="index.php?action=alumno_edit&id=<?= $a['id'] ?>"
-                                                            class="text-indigo-400 hover:text-indigo-300 font-medium">Editar</a>
+                                                            class="link-action font-medium">Editar</a>
                                                     </td>
                                                 </tr>
                                             <?php endforeach ?>
@@ -187,12 +171,12 @@ include __DIR__ . "/../layout/navbar.php";
                     <?php endforeach ?>
                 </div>
             <?php else: ?>
-                <div class="text-center text-gray-400 py-12">No hay alumnos matriculados en este año.</div>
+                <div class="text-center text-faint py-12">No hay alumnos matriculados en este año.</div>
             <?php endif ?>
 
         <?php else: ?>
             <!-- Estado inicial sin año seleccionado -->
-            <div class="text-center py-16 text-gray-500">
+            <div class="text-center py-16 text-faint">
                 <p class="text-5xl mb-4">📋</p>
                 <p class="text-lg">Selecciona un año escolar para ver el listado de alumnos.</p>
             </div>
@@ -201,7 +185,7 @@ include __DIR__ . "/../layout/navbar.php";
         <!-- VOLVER -->
         <div class="mt-8 flex items-center justify-center">
             <a href="index.php?action=dashboard"
-                class="inline-block rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-gray-600">
+                class="btn-secondary inline-block rounded-md px-4 py-2 text-sm font-semibold shadow">
                 ⬅️ Volver al Dashboard
             </a>
         </div>

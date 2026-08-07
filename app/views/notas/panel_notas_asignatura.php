@@ -333,15 +333,27 @@ $colorProm = Nota::clase($promGeneral);
     <div id="panel-pdf" class="dropdown-panel hidden rounded-2xl p-4 shadow-2xl w-72 mb-1">
         <p class="text-xs font-semibold uppercase tracking-wider text-muted mb-3">Exportar PDF</p>
 
-        <a href="index.php?action=reportes_notas_pdf_asignatura&curso_id=<?= $cursoId ?>&anio_id=<?= $anioId ?>&asignatura_id=<?= $asignaturaId ?>&semestre=<?= $semestre ?>"
+        <a href="index.php?action=reportes_notas_pdf_asignatura&curso_id=<?= $cursoId ?>&anio_id=<?= $anioId ?>&asignatura_id=<?= $asignaturaId ?>&semestre=<?= $semestre ?>&incluir_retirados=1"
+            target="_blank" class="btn-soft-info flex items-center gap-3 w-full px-4 py-3 rounded-xl mb-2 transition">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586
+                     a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <div>
+                <p class="text-xs font-semibold">Notas del ramo · con retirados</p>
+                <p class="text-[10px] text-faint mt-0.5">Todos los alumnos · <?= $semestre ?>° Sem</p>
+            </div>
+        </a>
+
+        <a href="index.php?action=reportes_notas_pdf_asignatura&curso_id=<?= $cursoId ?>&anio_id=<?= $anioId ?>&asignatura_id=<?= $asignaturaId ?>&semestre=<?= $semestre ?>&incluir_retirados=0"
             target="_blank" class="btn-soft-info flex items-center gap-3 w-full px-4 py-3 rounded-xl mb-3 transition">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586
                      a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <div>
-                <p class="text-xs font-semibold">Notas del ramo completo</p>
-                <p class="text-[10px] text-faint mt-0.5">Todos los alumnos · <?= $semestre ?>° Sem</p>
+                <p class="text-xs font-semibold">Notas del ramo · sin retirados</p>
+                <p class="text-[10px] text-faint mt-0.5">Solo alumnos activos · <?= $semestre ?>° Sem</p>
             </div>
         </a>
 

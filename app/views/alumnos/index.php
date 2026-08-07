@@ -13,12 +13,11 @@ include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 ?>
 
-<main>
+<main class="min-h-screen app-shell">
     <!-- HEADER -->
-    <header
-        class="relative bg-gray-800 after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
+    <header class="page-header">
         <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold tracking-tight text-white">Ficha de Alumnos</h1>
+            <h1 class="text-3xl font-bold tracking-tight text-strong">Ficha de Alumnos</h1>
         </div>
     </header>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -26,33 +25,33 @@ include __DIR__ . "/../layout/navbar.php";
         <!-- BOTÓN NUEVO ALUMNO -->
         <div class="mb-6 flex justify-between">
             <input id="searchInput" type="text" placeholder="Buscar por RUN o Nombre..."
-                class="px-4 py-2 rounded-lg border border-gray-600 bg-gray-800 text-gray-200 focus:ring focus:ring-indigo-500 w-1/2" />
+                class="input-field px-4 py-2 rounded-lg w-1/2" />
 
             <a href="index.php?action=alumnos_stepper"
-                class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow transition duration-200">
+                class="btn-primary inline-flex items-center px-4 py-2 font-semibold rounded-lg shadow transition duration-200">
                 Nueva Ficha de Alumno
             </a>
         </div>
 
 
         <!-- TABLA -->
-        <div class="overflow-x-auto bg-gray-900 rounded-3xl shadow-lg">
-            <table class="min-w-full divide-y divide-gray-700">
-                <thead class="bg-gray-950/50">
+        <div class="panel overflow-x-auto rounded-3xl shadow-lg">
+            <table class="data-table min-w-full">
+                <thead>
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                        <th class="px-4 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                             Nombre Completo</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                        <th class="px-4 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                             Contacto</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                        <th class="px-4 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                             Fecha Nac.</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                        <th class="px-4 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                             Estado</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                        <th class="px-4 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                             Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-800">
+                <tbody>
                     <?php foreach ($alumnos as $alumno):
                         $edad = null;
                         if (!empty($alumno['fechanac'])) {
@@ -66,25 +65,24 @@ include __DIR__ . "/../layout/navbar.php";
                             substr($alumno['apepat'] ?? '', 0, 1)
                         );
                         ?>
-                        <tr class="hover:bg-gray-800/50 transition group cursor-pointer"
+                        <tr class="cursor-pointer group"
                             onclick="window.location='index.php?action=alumno_profile&id=<?= $alumno['id'] ?>';">
 
                             <!-- 👤 Alumno -->
                             <td class="px-5 py-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-xl bg-indigo-600/20 border border-indigo-600/30 
-                flex items-center justify-center text-indigo-400 text-xs font-bold">
+                                    <div class="avatar-badge w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold">
                                         <?= $iniciales ?>
                                     </div>
 
                                     <div>
-                                        <p class="text-sm font-semibold text-white capitalize">
+                                        <p class="text-sm font-semibold text-strong capitalize">
                                             <?= htmlspecialchars($alumno['nombre'] . " " . $alumno['apepat'] . " " . $alumno['apemat']) ?>
                                         </p>
-                                        <p class="text-xs text-gray-500 font-mono">
+                                        <p class="text-xs text-faint font-mono">
                                             <?= htmlspecialchars($alumno['run'] . '-' . $alumno['codver']) ?>
                                         </p>
-                                        <p class="text-xs text-gray-400">
+                                        <p class="text-xs text-faint">
                                             <?= $edad ? $edad . " años" : "Edad no registrada" ?>
                                         </p>
                                     </div>
@@ -93,19 +91,19 @@ include __DIR__ . "/../layout/navbar.php";
 
                             <!-- 📞 Contacto -->
                             <td class="px-5 py-4">
-                                <p class="text-sm text-gray-300"><?= htmlspecialchars($alumno['email']) ?></p>
-                                <p class="text-xs text-gray-500 mt-0.5">
+                                <p class="text-sm text-soft"><?= htmlspecialchars($alumno['email']) ?></p>
+                                <p class="text-xs text-faint mt-0.5">
                                     <?= !empty($alumno['telefono']) ? '📞 ' . htmlspecialchars($alumno['telefono']) : '<span class="italic">Sin teléfono</span>' ?>
                                 </p>
                             </td>
 
                             <!-- 📅 Fechas -->
-                            <td class="px-5 py-4 text-sm text-gray-300">
+                            <td class="px-5 py-4 text-sm text-soft">
                                 <p>
                                     🎂
                                     <?= !empty($alumno['fechanac']) ? (new DateTime($alumno['fechanac']))->format('d/m/Y') : 'No registrada' ?>
                                 </p>
-                                <p class="text-xs text-gray-500 mt-1">
+                                <p class="text-xs text-faint mt-1">
                                     📌 Ingreso:
                                     <?= !empty($alumno['created_at']) ? (new DateTime($alumno['created_at']))->format('d/m/Y') : '—' ?>
                                 </p>
@@ -114,14 +112,12 @@ include __DIR__ . "/../layout/navbar.php";
                             <!-- Estado -->
                             <td class="px-5 py-4">
                                 <?php if (!empty($alumno['deleted_at'])): ?>
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg border text-xs font-semibold 
-                bg-red-900/40 border-red-500 text-red-300">
+                                    <span class="report-red report-badge inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold">
                                         ❌ Retirado<br>
                                         <?= (new DateTime($alumno['deleted_at']))->format('d/m/Y') ?>
                                     </span>
                                 <?php else: ?>
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-lg border text-xs font-semibold 
-                bg-green-900/40 border-green-500 text-green-300">
+                                    <span class="report-emerald report-badge inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold">
                                         ✅ Activo
                                     </span>
                                 <?php endif; ?>
@@ -130,16 +126,14 @@ include __DIR__ . "/../layout/navbar.php";
                             <!-- Acciones -->
                             <td class="px-5 py-4 text-center">
                                 <div class="flex items-center justify-center gap-2">
-                                    <a href="index.php?action=alumno_edit&id=<?= $alumno['id'] ?>" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg
-                bg-indigo-700/30 hover:bg-indigo-700/60 border border-indigo-600/40
-                text-indigo-300 text-xs font-semibold transition">
+                                    <a href="index.php?action=alumno_edit&id=<?= $alumno['id'] ?>"
+                                        class="btn-soft-info inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition">
                                         ✏️ Editar
                                     </a>
 
                                     <a href="index.php?action=alumno_delete&id=<?= $alumno['id'] ?>"
-                                        onclick="return confirm('¿Eliminar este alumno?')" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg
-                bg-red-900/30 hover:bg-red-900/60 border border-red-700/40
-                text-red-400 text-xs font-semibold transition">
+                                        onclick="return confirm('¿Eliminar este alumno?')"
+                                        class="btn-soft-danger inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition">
                                         🗑️ Eliminar
                                     </a>
                                 </div>
@@ -155,7 +149,7 @@ include __DIR__ . "/../layout/navbar.php";
         <!-- VOLVER -->
         <div class="mt-8 flex items-center justify-center">
             <a href="index.php?action=dashboard"
-                class="inline-block rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-gray-600">
+                class="btn-secondary inline-block rounded-md px-4 py-2 text-sm font-semibold shadow">
                 ⬅️ Volver al Dashboard
             </a>
         </div>
@@ -195,7 +189,7 @@ include __DIR__ . "/../layout/navbar.php";
         if (alumnos.length === 0) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-300">
+                    <td colspan="5" class="px-6 py-4 text-center text-sm text-soft">
                         No se encontraron resultados
                     </td>
                 </tr>`;
@@ -219,51 +213,48 @@ include __DIR__ . "/../layout/navbar.php";
                 : '—';
 
             const estadoHtml = alumno.deleted_at
-                ? `<span class="inline-flex items-center px-2.5 py-1 rounded-lg border text-xs font-semibold
-                        bg-red-900/40 border-red-500 text-red-300">
+                ? `<span class="report-red report-badge inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold">
                         ❌ Retirado<br>${new Date(alumno.deleted_at).toLocaleDateString('es-CL', { timeZone: 'UTC' })}
                    </span>`
-                : `<span class="inline-flex items-center px-2.5 py-1 rounded-lg border text-xs font-semibold
-                        bg-green-900/40 border-green-500 text-green-300">
+                : `<span class="report-emerald report-badge inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold">
                         ✅ Activo
                    </span>`;
 
             const row = document.createElement('tr');
-            row.className = "hover:bg-gray-800/50 transition group cursor-pointer";
+            row.className = "cursor-pointer group";
             row.onclick = () => window.location = `index.php?action=alumno_profile&id=${alumno.id}`;
 
             row.innerHTML = `
                 <!-- Alumno -->
                 <td class="px-5 py-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-indigo-600/20 border border-indigo-600/30
-                            flex items-center justify-center text-indigo-400 text-xs font-bold">
+                        <div class="avatar-badge w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold">
                             ${iniciales}
                         </div>
                         <div>
-                            <p class="text-sm font-semibold text-white capitalize">
+                            <p class="text-sm font-semibold text-strong capitalize">
                                 ${alumno.nombre} ${alumno.apepat} ${alumno.apemat}
                             </p>
-                            <p class="text-xs text-gray-500 font-mono">
+                            <p class="text-xs text-faint font-mono">
                                 ${alumno.run}-${alumno.codver}
                             </p>
-                            <p class="text-xs text-gray-400">${edadTexto}</p>
+                            <p class="text-xs text-faint">${edadTexto}</p>
                         </div>
                     </div>
                 </td>
 
                 <!-- Contacto -->
                 <td class="px-5 py-4">
-                    <p class="text-sm text-gray-300">${alumno.email ?? ''}</p>
-                    <p class="text-xs text-gray-500 mt-0.5">
+                    <p class="text-sm text-soft">${alumno.email ?? ''}</p>
+                    <p class="text-xs text-faint mt-0.5">
                         ${alumno.telefono ? '📞 ' + alumno.telefono : '<span class="italic">Sin teléfono</span>'}
                     </p>
                 </td>
 
                 <!-- Fechas -->
-                <td class="px-5 py-4 text-sm text-gray-300">
+                <td class="px-5 py-4 text-sm text-soft">
                     <p>🎂 ${fechaNac}</p>
-                    <p class="text-xs text-gray-500 mt-1">📌 Ingreso: ${fechaIngreso}</p>
+                    <p class="text-xs text-faint mt-1">📌 Ingreso: ${fechaIngreso}</p>
                 </td>
 
                 <!-- Estado -->
@@ -273,16 +264,12 @@ include __DIR__ . "/../layout/navbar.php";
                 <td class="px-5 py-4 text-center">
                     <div class="flex items-center justify-center gap-2" onclick="event.stopPropagation()">
                         <a href="index.php?action=alumno_edit&id=${alumno.id}"
-                           class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg
-                                  bg-indigo-700/30 hover:bg-indigo-700/60 border border-indigo-600/40
-                                  text-indigo-300 text-xs font-semibold transition">
+                           class="btn-soft-info inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition">
                             ✏️ Editar
                         </a>
                         <a href="index.php?action=alumno_delete&id=${alumno.id}"
                            onclick="return confirm('¿Eliminar este alumno?')"
-                           class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg
-                                  bg-red-900/30 hover:bg-red-900/60 border border-red-700/40
-                                  text-red-400 text-xs font-semibold transition">
+                           class="btn-soft-danger inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition">
                             🗑️ Eliminar
                         </a>
                     </div>

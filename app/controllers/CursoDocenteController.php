@@ -21,11 +21,12 @@ class CursoDocenteController
     }
 
     /* Formulario asignar/cambiar docente */
+    /* Formulario asignar/cambiar docente */
     public function create()
     {
         $anioId   = (int) ($_GET['anio_id'] ?? $this->model->getAnioActualId());
         $cursoId  = (int) ($_GET['curso_id'] ?? 0);
-        $docentes = $this->model->getDocentes();
+        $usuarios = $this->model->getUsuariosParaAsignar();
         $anios    = $this->model->getAnios();
 
         // Pre-cargar asignación actual si ya existe
