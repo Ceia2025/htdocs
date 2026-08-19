@@ -278,51 +278,16 @@
 
     <?php
     require_once __DIR__ . '/../../../models/Nota.php';
-
-    $base = 'http://localhost:8080/app/public/img/';
-    $logo1 = $base . 'certificado_1.png';
-    $logo2 = $base . 'certificado_3.png';
-    $logo3 = $base . 'certificado_2.png';
-    $piePag = $base . 'pie_pagina_certificado.png';
-
-    // ── Helpers de presentación propios del PDF ──────────────────
-    // El cálculo y el color de las notas viven en Nota.php; aquí solo
-    // queda lo que es específico de este documento.
-    
-    /** Barra proporcional: max referencia = 7.0 */
-    function barraHtml(?float $v): string
-    {
-        if ($v === null)
-            return '';
-        $pct = min(100, round(($v / 7.0) * 100));
-        $color = Nota::aprobada($v) ? '#16a34a' : '#dc2626';
-        return '<span class="barra-wrap"><span class="barra-fill" style="width:' . $pct . '%;background:' . $color . ';"></span></span>';
-    }
-
-    /** Clase de medalla según la posición en el ranking. */
-    function medallaClase(int $i): string
-    {
-        if ($i === 0)
-            return 'med-1';
-        if ($i === 1)
-            return 'med-2';
-        if ($i === 2)
-            return 'med-3';
-        return '';
-    }
+    require_once __DIR__ . '/helperPDF.php';
     ?>
 
     <!-- PIE FIJO -->
-    <div class="pie-pagina"><img src="<?= $piePag ?>" alt="Pie"></div>
+    <?php pdfNotasPiePagina(); ?>
 
     <div class="page">
 
         <!-- ENCABEZADO -->
-        <div class="header">
-            <div class="h-left"><img src="<?= $logo1 ?>" alt="Educación Pública"></div>
-            <div class="h-center"><img src="<?= $logo2 ?>" alt="Los Álamos"></div>
-            <div class="h-right"><img src="<?= $logo3 ?>" alt="CEIA"></div>
-        </div>
+        <?php pdfNotasHeaderTresLogos(); ?>
 
         <!-- TÍTULO -->
         <div class="doc-header">
@@ -395,7 +360,7 @@
                                 $p = $a['promedio'] !== null ? (float) $a['promedio'] : null;
                                 ?>
                                 <tr>
-                                    <td class="<?= medallaClase($i) ?>">
+                                    <td class="<?= pdfNotasMedallaClase($i) ?>">
                                         <?= $i + 1 ?>
                                     </td>
                                     <td class="td-al">
@@ -419,7 +384,7 @@
                                         <?= $p !== null ? Nota::fmt($p) : '<span class="nd">S/N</span>' ?>
                                     </td>
                                     <td>
-                                        <?= barraHtml($p) ?>
+                                        <?= pdfNotasBarraHtml($p) ?>
                                     </td>
                                     <td>
                                         <?php if ($p === null): ?>
@@ -483,7 +448,7 @@
                         $p = $a['promedio'] !== null ? (float) $a['promedio'] : null;
                         ?>
                         <tr>
-                            <td class="<?= medallaClase($i) ?>"><?= $i + 1 ?></td>
+                            <td class="<?= pdfNotasMedallaClase($i) ?>"><?= $i + 1 ?></td>
                             <td class="td-al">
                                 <strong><?= htmlspecialchars($a['asignatura']) ?></strong>
                                 <?php
@@ -504,7 +469,7 @@
                             <td style="color:<?= Nota::color($p) ?>;font-weight:bold;font-size:9px;">
                                 <?= $p !== null ? Nota::fmt($p) : '<span class="nd">S/N</span>' ?>
                             </td>
-                            <td><?= barraHtml($p) ?></td>
+                            <td><?= pdfNotasBarraHtml($p) ?></td>
                             <td>
                                 <?php if ($p === null): ?>
                                     <span class="nd">Sin notas</span>

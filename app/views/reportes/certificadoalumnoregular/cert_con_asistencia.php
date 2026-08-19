@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../../helper/certificado_alumno_regular_helper.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -5,11 +6,7 @@
     <meta charset="UTF-8">
     <title>Certificado Alumno Regular – Con Asistencia</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: Arial, sans-serif;
@@ -20,48 +17,15 @@
             padding: 0;
         }
 
-        .page {
-            margin: 28px 45px 0 45px;
-        }
+        .page { margin: 28px 45px 0 45px; }
 
         /* ── ENCABEZADO 3 LOGOS ── */
-        .header {
-            display: table;
-            width: 100%;
-            margin-bottom: 24px;
-        }
-
-        .header-left {
-            display: table-cell;
-            width: 28%;
-            vertical-align: top;
-        }
-
-        .header-center {
-            display: table-cell;
-            width: 30%;
-            vertical-align: top;
-            text-align: center;
-        }
-
-        .header-right {
-            display: table-cell;
-            width: 28%;
-            vertical-align: top;
-            text-align: right;
-        }
-
-        .header img {
-            height: 68px;
-            width: auto;
-        }
-
-        .header-center img {
-            height: 28px;
-            width: auto;
-            display: block;
-            margin: -29px auto 0;
-        }
+        .header { display: table; width: 100%; margin-bottom: 24px; }
+        .header-left   { display: table-cell; width: 28%; vertical-align: top; }
+        .header-center { display: table-cell; width: 30%; vertical-align: top; text-align: center; }
+        .header-right  { display: table-cell; width: 28%; vertical-align: top; text-align: right; }
+        .header img { height: 68px; width: auto; }
+        .header-center img { height: 28px; width: auto; display: block; margin: -29px auto 0; }
 
         /* ── TÍTULO ── */
         .cert-titulo {
@@ -80,32 +44,15 @@
             font-size: 11.5px;
             margin-bottom: 12px;
         }
+        .cert-body p { margin-bottom: 8px; }
 
-        .cert-body p {
-            margin-bottom: 8px;
-        }
-
-        .bold {
-            font-weight: bold;
-        }
-
-        .quot {
-            font-weight: bold;
-        }
-
-        .upper {
-            text-transform: uppercase;
-        }
-
-        .italic {
-            font-style: italic;
-        }
+        .bold   { font-weight: bold; }
+        .quot   { font-weight: bold; }
+        .upper  { text-transform: uppercase; }
+        .italic { font-style: italic; }
 
         /* ── BULLETS ── */
-        .bullets {
-            margin: 8px 0 10px 30px;
-        }
-
+        .bullets { margin: 8px 0 10px 30px; }
         .bullets li {
             list-style: disc;
             font-style: italic;
@@ -113,23 +60,16 @@
             line-height: 1.7;
             margin-bottom: 3px;
         }
-
-        .bullets li strong {
-            font-style: normal;
-        }
+        .bullets li strong { font-style: normal; }
 
         /* ── TABLA ASISTENCIA ── */
-        .tabla-wrap {
-            margin: 10px 60px 12px 60px;
-        }
-
+        .tabla-wrap { margin: 10px 60px 12px 60px; }
         .tabla-asistencia {
             width: 100%;
             border-collapse: collapse;
             font-size: 11px;
             font-style: italic;
         }
-
         .tabla-asistencia th {
             border-bottom: 1px solid #000;
             font-weight: bold;
@@ -138,128 +78,50 @@
             text-align: left;
             font-size: 10.5px;
         }
-
-        .tabla-asistencia td {
-            padding: 3px 8px;
-            font-style: italic;
-        }
-
-        .tabla-asistencia tr:nth-child(even) td {
-            background: #f5f5f5;
-        }
-
-        .tabla-asistencia tfoot td {
-            border-top: 1px solid #000;
-            font-weight: bold;
-        }
-
-        .tabla-asistencia .num {
-            text-align: right;
-        }
+        .tabla-asistencia td { padding: 3px 8px; font-style: italic; }
+        .tabla-asistencia tr:nth-child(even) td { background: #f5f5f5; }
+        .tabla-asistencia tfoot td { border-top: 1px solid #000; font-weight: bold; }
+        .tabla-asistencia .num { text-align: right; }
 
         /* ── FIRMA ── */
-        .firma-wrap {
-            text-align: center;
-            margin-top: 50px;
-            margin-bottom: 8px;
-        }
-
-        .firma-wrap img {
-            height: 160px;
-            width: auto;
-            display: block;
-            margin: 0 auto;
-        }
-
-        .firma-nombre {
-            font-weight: bold;
-            font-size: 11.5px;
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-
-        .firma-cargo {
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
+        .firma-wrap { text-align: center; margin-top: 50px; margin-bottom: 8px; }
+        .firma-wrap img { height: 160px; width: auto; display: block; margin: 0 auto; }
+        .firma-nombre { font-weight: bold; font-size: 11.5px; text-transform: uppercase; margin-top: 4px; }
+        .firma-cargo  { font-size: 11px; font-weight: bold; text-transform: uppercase; }
 
         /* ── FECHA Y VB ── */
-        .fecha-vb {
-            margin-top: 28px;
-            font-size: 11px;
-        }
-
-        .fecha-vb p {
-            margin-bottom: 4px;
-        }
-
-        .vb img {
-            height: 28px;
-            width: auto;
-            vertical-align: middle;
-        }
+        .fecha-vb { margin-top: 28px; font-size: 11px; }
+        .fecha-vb p { margin-bottom: 4px; }
+        .vb img { height: 28px; width: auto; vertical-align: middle; }
 
         /* ── PIE DE PÁGINA ── */
-        .pie-pagina {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-        }
-
-        .pie-pagina img {
-            width: 100%;
-            display: block;
-        }
+        .pie-pagina { position: fixed; bottom: 0; left: 0; width: 100%; }
+        .pie-pagina img { width: 100%; display: block; }
     </style>
 </head>
 
 <body>
 
     <?php
-    $base = 'http://localhost:8080/app/public/img/';
-    $logo1 = $base . 'certificado_1.png';
-    $logo2 = $base . 'certificado_3.png';   // orden: 1, 3, 2
-    $logo3 = $base . 'certificado_2.png';
-    $timbre = $base . 'TIMBRE_JJACH.png';
-    $piePag = $base . 'pie_pagina_certificado.png';
+    // ── Recursos e info del alumno (centralizados en el helper) ──
+    $img = certImagenes();
+    $a   = certDatosAlumno([
+        'nombre' => $nombre ?? '',
+        'apepat' => $apepat ?? '',
+        'apemat' => $apemat ?? '',
+        'run'    => $run ?? '',
+        'codver' => $codver ?? '',
+        'sexo'   => $sexo ?? '',
+    ]);
 
-    $nombreCompleto = strtoupper(trim("$nombre $apepat " . ($apemat ?? '')));
-    $runCompleto = $run . ($codver ? '-' . $codver : '');
-    $esF = ($sexo ?? '') === 'F';
-    $laEl = $esF ? 'la' : 'el';
-    $alumnaO = $esF ? 'alumna' : 'alumno';
-    $sraSr = $esF ? 'Srta.' : 'Sr.';
-    $tratamiento = 'Don (ña):';
+    // ── Fecha larga: manual si viene del index, hoy si viene vacía ──
+    $fechaTexto = certFechaLarga($fecha ?? ($_GET['fecha'] ?? null));
 
-    $mesesES = [
-        'enero',
-        'febrero',
-        'marzo',
-        'abril',
-        'mayo',
-        'junio',
-        'julio',
-        'agosto',
-        'septiembre',
-        'octubre',
-        'noviembre',
-        'diciembre'
-    ];
+    // ── Fecha de nacimiento ──
+    $nacTexto = certFechaNacimiento($alumno['fechanac'] ?? $fechanac ?? '');
 
-    $nacTexto = '';
-    if (!empty($alumno['fechanac'] ?? $fechanac ?? '')) {
-        $fn = new DateTime($fechanac ?? '');
-        $nacTexto = $fn->format('d') . ' ' . $mesesES[(int) $fn->format('n') - 1] . ' ' . $fn->format('Y');
-    }
-    $diasES = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-    $fechaTexto = $diasES[date('w')] . ', ' . date('j') . ' de ' . $mesesES[date('n') - 1] . ' de ' . date('Y');
-
-    // Fecha de inasistencia = hoy
+    // ── Fechas cortas de la vista (inasistencia = hoy; matrícula si viene) ──
     $hoyTexto = date('d/m/Y');
-
-    // Fecha matrícula — si viene en los datos
     $fechaMatTexto = '';
     if (!empty($fecha_matricula ?? '')) {
         $fm = new DateTime($fecha_matricula);
@@ -267,26 +129,27 @@
     }
 
     $asistencia_mensual = $asistencia_mensual ?? [];
+
+    // Nombres de mes por número (para la tabla)
+    $nombresMes = [
+        1 => 'ENERO', 2 => 'FEBRERO', 3 => 'MARZO', 4 => 'ABRIL',
+        5 => 'MAYO', 6 => 'JUNIO', 7 => 'JULIO', 8 => 'AGOSTO',
+        9 => 'SEPTIEMBRE', 10 => 'OCTUBRE', 11 => 'NOVIEMBRE', 12 => 'DICIEMBRE',
+    ];
     ?>
 
     <!-- ══ PIE (fixed) ══ -->
     <div class="pie-pagina">
-        <img src="<?= $piePag ?>" alt="Pie de página">
+        <img src="<?= $img['pie'] ?>" alt="Pie de página">
     </div>
 
     <div class="page">
 
         <!-- ══ ENCABEZADO ══ -->
         <div class="header">
-            <div class="header-left">
-                <img src="<?= $logo1 ?>" alt="Educación Pública">
-            </div>
-            <div class="header-center">
-                <img src="<?= $logo2 ?>" alt="Los Álamos">
-            </div>
-            <div class="header-right">
-                <img src="<?= $logo3 ?>" alt="CEIA">
-            </div>
+            <div class="header-left">   <img src="<?= $img['logo1'] ?>" alt="Educación Pública"></div>
+            <div class="header-center"> <img src="<?= $img['logo2'] ?>" alt="Los Álamos"></div>
+            <div class="header-right">  <img src="<?= $img['logo3'] ?>" alt="CEIA"></div>
         </div>
 
         <!-- ══ TÍTULO ══ -->
@@ -296,9 +159,9 @@
         <div class="cert-body">
             <p>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                El director ADP que suscribe, certifica que <?= $tratamiento ?>
-                <span class="bold upper"><?= htmlspecialchars($nombreCompleto) ?>.</span>
-                Rut. <span class="bold"><?= htmlspecialchars($runCompleto) ?></span>,
+                El director ADP que suscribe, certifica que <?= $a['tratamiento'] ?>
+                <span class="bold upper"><?= htmlspecialchars($a['nombreCompleto']) ?>.</span>
+                Rut. <span class="bold"><?= htmlspecialchars($a['runCompleto']) ?></span>,
                 <?php if (!empty($nacTexto)): ?>
                     Nacido (a) el <span class="bold"><?= $nacTexto ?></span>,
                 <?php endif ?>
@@ -317,49 +180,11 @@
         <!-- ══ BULLETS ══ -->
         <ul class="bullets">
             <li>
-                El alumno (a) durante lo que va corrido de este año presenta la siguiente
-                situación de acuerdo a su inasistencia.
+                El alumno (a) durante l ranscurso del presente año, mantiene la siguiente asistencia:
             </li>
-            <li>La inasistencia es parcial al día <strong><?= $hoyTexto ?></strong></li>
-            <?php if (!empty($fechaMatTexto)): ?>
-                <li>
-                    La Alumna (o) <?= htmlspecialchars($apepat) ?>,
-                    fue matriculada con fecha <strong><?= $fechaMatTexto ?></strong>
-                </li>
-            <?php endif ?>
         </ul>
 
         <!-- ══ TABLA MENSUAL ══ -->
-        <?php
-        $mesesNombre = [
-            1 => 'MARZO',
-            2 => 'MARZO',
-            3 => 'MARZO',
-            4 => 'ABRIL',
-            5 => 'MAYO',
-            6 => 'JUNIO',
-            7 => 'JULIO',
-            8 => 'AGOSTO',
-            9 => 'SEPTIEMBRE',
-            10 => 'OCTUBRE',
-            11 => 'NOVIEMBRE',
-            12 => 'DICIEMBRE'
-        ];
-        $nombresMes = [
-            1 => 'ENERO',
-            2 => 'FEBRERO',
-            3 => 'MARZO',
-            4 => 'ABRIL',
-            5 => 'MAYO',
-            6 => 'JUNIO',
-            7 => 'JULIO',
-            8 => 'AGOSTO',
-            9 => 'SEPTIEMBRE',
-            10 => 'OCTUBRE',
-            11 => 'NOVIEMBRE',
-            12 => 'DICIEMBRE'
-        ];
-        ?>
         <div class="tabla-wrap">
             <table class="tabla-asistencia">
                 <thead>
@@ -403,7 +228,7 @@
 
         <!-- ══ FIRMA ══ -->
         <div class="firma-wrap">
-            <img src="<?= $timbre ?>" alt="Firma Director">
+            <img src="<?= $img['timbre'] ?>" alt="Firma Director">
         </div>
 
         <!-- ══ FECHA Y Vº Bº ══ -->

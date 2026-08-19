@@ -93,16 +93,24 @@ include __DIR__ . "/../../layout/navbar.php";
                         <option value="">— Primero selecciona un curso —</option>
                     </select>
                 </div>
-                <button id="btn-pdf-alumno" onclick="descargarPdfAlumno()" disabled class="report-btn w-full flex items-center justify-center gap-2 px-4 py-2.5
-                           font-semibold rounded-xl transition text-sm
-                           disabled:opacity-40 disabled:cursor-not-allowed">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
-                               M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                    </svg>
-                    Descargar informe
-                </button>
+                <div class="flex gap-2">
+                    <button id="btn-ver-alumno" onclick="descargarPdfAlumno(true)" disabled
+                        class="btn-secondary flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                               font-semibold rounded-xl transition text-sm
+                               disabled:opacity-40 disabled:cursor-not-allowed">
+                        👁️ Ver
+                    </button>
+                    <button id="btn-pdf-alumno" onclick="descargarPdfAlumno(false)" disabled class="report-btn flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                               font-semibold rounded-xl transition text-sm
+                               disabled:opacity-40 disabled:cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
+                                   M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>
+                        Descargar
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -127,16 +135,24 @@ include __DIR__ . "/../../layout/navbar.php";
                         <option value="">— Primero selecciona un curso —</option>
                     </select>
                 </div>
-                <button id="btn-pdf-asignatura" onclick="descargarPdfAsignatura()" disabled class="report-btn w-full flex items-center justify-center gap-2 px-4 py-2.5
-                           font-semibold rounded-xl transition text-sm
-                           disabled:opacity-40 disabled:cursor-not-allowed">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
-                               M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                    </svg>
-                    Descargar notas del ramo
-                </button>
+                <div class="flex gap-2">
+                    <button id="btn-ver-asignatura" onclick="descargarPdfAsignatura(true)" disabled
+                        class="btn-secondary flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                               font-semibold rounded-xl transition text-sm
+                               disabled:opacity-40 disabled:cursor-not-allowed">
+                        👁️ Ver
+                    </button>
+                    <button id="btn-pdf-asignatura" onclick="descargarPdfAsignatura(false)" disabled class="report-btn flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                               font-semibold rounded-xl transition text-sm
+                               disabled:opacity-40 disabled:cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
+                                   M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>
+                        Descargar
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -158,16 +174,24 @@ include __DIR__ . "/../../layout/navbar.php";
                 <p class="text-xs text-muted">
                     Usa el curso, año y semestre seleccionados arriba.
                 </p>
-                <button id="btn-pdf-consolidado" onclick="descargarPdfConsolidado()" disabled class="report-btn w-full flex items-center justify-center gap-2 px-4 py-2.5
-                           font-semibold rounded-xl transition text-sm
-                           disabled:opacity-40 disabled:cursor-not-allowed">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
-                               M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                    </svg>
-                    Descargar consolidado
-                </button>
+                <div class="flex gap-2">
+                    <button id="btn-ver-consolidado" onclick="descargarPdfConsolidado(true)" disabled
+                        class="btn-secondary flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                               font-semibold rounded-xl transition text-sm
+                               disabled:opacity-40 disabled:cursor-not-allowed">
+                        👁️ Ver
+                    </button>
+                    <button id="btn-pdf-consolidado" onclick="descargarPdfConsolidado(false)" disabled class="report-btn flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                               font-semibold rounded-xl transition text-sm
+                               disabled:opacity-40 disabled:cursor-not-allowed">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
+                                   M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>
+                        Descargar
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -222,15 +246,21 @@ include __DIR__ . "/../../layout/navbar.php";
                 <p class="text-xs text-muted">
                     Usa el año y semestre seleccionados arriba. No requiere seleccionar curso.
                 </p>
-                <button onclick="descargarPdfRankingCursos()" class="report-btn w-full flex items-center justify-center gap-2 px-4 py-2.5
-                   font-semibold rounded-xl transition text-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
-                       M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                    </svg>
-                    Descargar ranking de cursos
-                </button>
+                <div class="flex gap-2">
+                    <button onclick="descargarPdfRankingCursos(true)" class="btn-secondary flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                       font-semibold rounded-xl transition text-sm">
+                        👁️ Ver
+                    </button>
+                    <button onclick="descargarPdfRankingCursos(false)" class="report-btn flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                       font-semibold rounded-xl transition text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
+                           M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>
+                        Descargar
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -297,15 +327,21 @@ include __DIR__ . "/../../layout/navbar.php";
             <p class="text-xs text-muted">
                 Ordenado de menor a mayor promedio · Semestre <span id="modal-sem-label">—</span>
             </p>
-            <button onclick="descargarPdfRanking()" class="report-btn flex items-center gap-2 px-5 py-2.5
-                       font-semibold rounded-xl transition text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="1.8">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
-                           M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                </svg>
-                Descargar PDF
-            </button>
+            <div class="flex gap-2">
+                <button onclick="descargarPdfRanking(true)" class="btn-secondary flex items-center gap-2 px-5 py-2.5
+                           font-semibold rounded-xl transition text-sm">
+                    👁️ Ver PDF
+                </button>
+                <button onclick="descargarPdfRanking(false)" class="report-btn flex items-center gap-2 px-5 py-2.5
+                           font-semibold rounded-xl transition text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5
+                               M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    Descargar PDF
+                </button>
+            </div>
         </div>
 
     </div>
@@ -331,8 +367,11 @@ include __DIR__ . "/../../layout/navbar.php";
         selAlumno.innerHTML = '<option value="">— Cargando... —</option>';
         selAsig.innerHTML = '<option value="">— Cargando... —</option>';
         document.getElementById('btn-pdf-alumno').disabled = true;
+        document.getElementById('btn-ver-alumno').disabled = true;
         document.getElementById('btn-pdf-asignatura').disabled = true;
+        document.getElementById('btn-ver-asignatura').disabled = true;
         document.getElementById('btn-pdf-consolidado').disabled = true;
+        document.getElementById('btn-ver-consolidado').disabled = true;
 
         if (!cursoId) {
             selAlumno.innerHTML = '<option value="">— Primero selecciona un curso —</option>';
@@ -341,6 +380,7 @@ include __DIR__ . "/../../layout/navbar.php";
         }
 
         document.getElementById('btn-pdf-consolidado').disabled = false;
+        document.getElementById('btn-ver-consolidado').disabled = false;
 
         fetch(`index.php?action=api_alumnos_curso&curso_id=${cursoId}&anio_id=${anioVal}`)
             .then(r => r.json())
@@ -372,9 +412,11 @@ include __DIR__ . "/../../layout/navbar.php";
     // ── Habilitar botones al seleccionar ─────────────────────────
     document.getElementById('sel-alumno').addEventListener('change', function () {
         document.getElementById('btn-pdf-alumno').disabled = !this.value;
+        document.getElementById('btn-ver-alumno').disabled = !this.value;
     });
     document.getElementById('sel-asignatura').addEventListener('change', function () {
         document.getElementById('btn-pdf-asignatura').disabled = !this.value;
+        document.getElementById('btn-ver-asignatura').disabled = !this.value;
     });
 
     // ── Ranking: habilitar al cargar (año siempre presente) ───────
@@ -386,40 +428,39 @@ include __DIR__ . "/../../layout/navbar.php";
         document.getElementById('btn-ranking-asignaturas').disabled = false;
     })();
 
-    // ── Descargas ─────────────────────────────────────────────────
-    function descargarPdfAlumno() {
+    // ── Descargas / Vista previa ────────────────────────────────────
+    function descargarPdfAlumno(preview = false) {
         const id = document.getElementById('sel-alumno').value;
         if (!id) return;
-        window.open('index.php?action=reportes_notas_pdf_alumno&matricula_id=' + id, '_blank');
+        let url = 'index.php?action=reportes_notas_pdf_alumno&matricula_id=' + id;
+        if (preview) url += '&preview=1';
+        window.open(url, '_blank');
     }
-    function descargarPdfAsignatura() {
+    function descargarPdfAsignatura(preview = false) {
         const cursoId = document.getElementById('sel-curso').value;
         const anioVal = document.getElementById('sel-anio').value;
         const asignaturaId = document.getElementById('sel-asignatura').value;
         const semestre = document.getElementById('sel-semestre').value;
         if (!cursoId || !asignaturaId) return;
-        window.open(
-            `index.php?action=reportes_notas_pdf_asignatura&curso_id=${cursoId}&anio_id=${anioVal}&asignatura_id=${asignaturaId}&semestre=${semestre}`,
-            '_blank'
-        );
+        let url = `index.php?action=reportes_notas_pdf_asignatura&curso_id=${cursoId}&anio_id=${anioVal}&asignatura_id=${asignaturaId}&semestre=${semestre}`;
+        if (preview) url += '&preview=1';
+        window.open(url, '_blank');
     }
-    function descargarPdfConsolidado() {
+    function descargarPdfConsolidado(preview = false) {
         const cursoId = document.getElementById('sel-curso').value;
         const anioVal = document.getElementById('sel-anio').value;
         const semestre = document.getElementById('sel-semestre').value;
         if (!cursoId) return;
-        window.open(
-            `index.php?action=reportes_notas_pdf_consolidado&curso_id=${cursoId}&anio_id=${anioVal}&semestre=${semestre}`,
-            '_blank'
-        );
+        let url = `index.php?action=reportes_notas_pdf_consolidado&curso_id=${cursoId}&anio_id=${anioVal}&semestre=${semestre}`;
+        if (preview) url += '&preview=1';
+        window.open(url, '_blank');
     }
-    function descargarPdfRanking() {
+    function descargarPdfRanking(preview = false) {
         const anioVal = document.getElementById('sel-anio').value;
         const semestre = document.getElementById('sel-semestre').value;
-        window.open(
-            `index.php?action=reportes_notas_pdf_ranking&anio_id=${anioVal}&semestre=${semestre}&tipo=${rankingTab}`,
-            '_blank'
-        );
+        let url = `index.php?action=reportes_notas_pdf_ranking&anio_id=${anioVal}&semestre=${semestre}&tipo=${rankingTab}`;
+        if (preview) url += '&preview=1';
+        window.open(url, '_blank');
     }
 
     // ════════════════════════════════════════════════════════════
@@ -616,13 +657,12 @@ include __DIR__ . "/../../layout/navbar.php";
         });
     }
 
-    function descargarPdfRankingCursos() {
+    function descargarPdfRankingCursos(preview = false) {
         const anioVal = document.getElementById('sel-anio').value;
         const semestre = document.getElementById('sel-semestre').value;
-        window.open(
-            `index.php?action=reportes_notas_pdf_ranking_cursos&anio_id=${anioVal}&semestre=${semestre}`,
-            '_blank'
-        );
+        let url = `index.php?action=reportes_notas_pdf_ranking_cursos&anio_id=${anioVal}&semestre=${semestre}`;
+        if (preview) url += '&preview=1';
+        window.open(url, '_blank');
     }
 </script>
 

@@ -1,6 +1,8 @@
 <?php
+//require_once __DIR__ . '/../../libs/dompdf/vendor/autoload.php';
+
 require_once __DIR__ . '/../../models/reportes/ReporteAsistencia.php';
-require_once __DIR__ . '/../../libs/dompdf/vendor/autoload.php';
+require_once __DIR__ . '/../../helpers/PdfHelper.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -167,6 +169,7 @@ class ReporteController
         $anioId = (int) ($_GET['anio_id'] ?? 0);
         $cursoId = (int) ($_GET['curso_id'] ?? 0);
         $mesKey = $_GET['mes'] ?? null;
+        $inline  = ($_GET['preview'] ?? '') === '1'; 
 
         if (!$anioId || !$cursoId)
             die("Faltan parámetros.");
@@ -204,7 +207,7 @@ class ReporteController
         require __DIR__ . '/../../views/reportes/asistencia/pdf_curso.php';
         $html = ob_get_clean();
 
-        $this->generarPDF($html, "Asistencia_{$cursoNombre}.pdf");
+        PdfHelper::stream($html, "Asistencia_{$cursoNombre}.pdf", $inline);
     }
 
     /* ==========================================
@@ -214,6 +217,7 @@ class ReporteController
     {
         $anioId = (int) ($_GET['anio_id'] ?? 0);
         $mesKey = $_GET['mes'] ?? null;
+        $inline = ($_GET['preview'] ?? '') === '1';
 
         if (!$anioId)
             die("Falta anio_id.");
@@ -243,12 +247,13 @@ class ReporteController
         require __DIR__ . '/../../views/reportes/asistencia/pdf_general.php';
         $html = ob_get_clean();
 
-        $this->generarPDF($html, "Asistencia_General_{$anioNombre}.pdf");
+        PdfHelper::stream($html, "Asistencia_General_{$anioNombre}.pdf", $inline);
     }
 
     /* ==========================================
        HELPER: generar y enviar PDF
     ========================================== */
+    /*
     private function generarPDF(string $html, string $filename): void
     {
         try {
@@ -257,7 +262,7 @@ class ReporteController
             $options->set('defaultFont', 'DejaVu Sans');
 
             $dompdf = new Dompdf($options);
-            $dompdf->loadHtml($html);
+            $dompdf->loadHtml($html); 
             $dompdf->setPaper('letter', 'portrait');
             $dompdf->render();
 
@@ -267,5 +272,5 @@ class ReporteController
         } catch (Exception $e) {
             die("Error al generar PDF: " . $e->getMessage());
         }
-    }
+    }*/
 }

@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../../helper/certificado_alumno_regular_helper.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,27 +16,15 @@ body {
     padding: 0;
 }
 
-.page {
-    margin: 28px 45px 0 45px;
-}
+.page { margin: 28px 45px 0 45px; }
 
 /* ── ENCABEZADO 3 LOGOS ── */
-.header {
-    display: table;
-    width: 100%;
-    margin-bottom: 24px;
-}
+.header { display: table; width: 100%; margin-bottom: 24px; }
 .header-left   { display: table-cell; width: 28%; vertical-align: top; }
 .header-center { display: table-cell; width: 30%; vertical-align: top; text-align: center; }
 .header-right  { display: table-cell; width: 28%; vertical-align: top; text-align: right; }
 .header img { height: 68px; width: auto; }
-
-.header-center img {
-    height: 28px;   /* 68px reducido un 30% */
-    width: auto;
-    display: block;
-    margin: -29px auto 0; 
-}
+.header-center img { height: 28px; width: auto; display: block; margin: -29px auto 0; }
 
 /* ── TÍTULO ── */
 .cert-titulo {
@@ -61,112 +50,57 @@ body {
 .quot  { font-weight: bold; }
 
 /* ── PRESENTADO EN ── */
-.presentado {
-    margin: 16px 0 0 30px;
-    font-size: 11.5px;
-    font-weight: bold;
-}
+.presentado { margin: 16px 0 0 30px; font-size: 11.5px; font-weight: bold; }
 
 /* ── FIRMA ── */
-.firma-wrap {
-    text-align: center;
-    margin-top: 60px;
-    margin-bottom: 10px;
-}
-.firma-wrap img {
-    height: 180px;
-    width: auto;
-    display: block;
-    margin-left: auto;
-}
-.firma-nombre {
-    font-weight: bold;
-    font-size: 11.5px;
-    text-transform: uppercase;
-    margin-top: 4px;
-}
-.firma-cargo {
-    font-size: 11px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
+.firma-wrap { text-align: center; margin-top: 60px; margin-bottom: 10px; }
+.firma-wrap img { height: 180px; width: auto; display: block; margin-left: auto; }
+.firma-nombre { font-weight: bold; font-size: 11.5px; text-transform: uppercase; margin-top: 4px; }
+.firma-cargo  { font-size: 11px; font-weight: bold; text-transform: uppercase; }
 
 /* ── FECHA Y VB ── */
-.fecha-vb {
-    margin-top: 420px;
-    font-size: 11px;
-}
+.fecha-vb { margin-top: 420px; font-size: 11px; }
 .fecha-vb p { margin-bottom: 4px; }
-.vb img {
-    height: 32px;
-    width: auto;
-    vertical-align: middle;
-}
+.vb img { height: 32px; width: auto; vertical-align: middle; }
 
 /* ── PIE DE PÁGINA ── */
-.pie-pagina {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-}
-.pie-pagina img {
-    width: 100%;
-    display: block;
-}
+.pie-pagina { position: fixed; bottom: 0; left: 0; width: 100%; }
+.pie-pagina img { width: 100%; display: block; }
 </style>
 </head>
 <body>
 
 <?php
-$base      = 'http://localhost:8080/app/public/img/';
-$logo1     = $base . 'certificado_1.png';
-$logo2     = $base . 'certificado_3.png';   // orden: 1, 3, 2
-$logo3     = $base . 'certificado_2.png';
-$timbre    = $base . 'TIMBRE_JJACH.png';
-$piePag    = $base . 'pie_pagina_certificado.png';
+// ── Recursos e info del alumno (centralizados en el helper) ──
+$img = certImagenes();
+$a   = certDatosAlumno([
+    'nombre' => $nombre ?? '',
+    'apepat' => $apepat ?? '',
+    'apemat' => $apemat ?? '',
+    'run'    => $run ?? '',
+    'codver' => $codver ?? '',
+    'sexo'   => $sexo ?? '',
+]);
 
-$nombreCompleto = strtoupper(trim("$nombre $apepat " . ($apemat ?? '')));
-$runCompleto    = $run . ($codver ? '-' . $codver : '');
-$esF            = ($sexo ?? '') === 'F';
-$donDona        = $esF ? 'Srta.' : 'Sr.';
-$tratamiento    = $esF ? 'Don (ña):' : 'Don (ña):';
-$alumnaO        = $esF ? 'alumna' : 'alumno';
-$laEl           = $esF ? 'la' : 'el';
-$matriculadaO   = $esF ? 'matriculada' : 'matriculado';
+// ── Fecha: manual si viene del index, automática (hoy) si viene vacía ──
+$fechaTexto = certFechaLarga($fecha ?? ($_GET['fecha'] ?? null));
 
-// Fecha en español
-$diasES   = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-$mesesES  = ['enero','febrero','marzo','abril','mayo','junio',
-             'julio','agosto','septiembre','octubre','noviembre','diciembre'];
-$fechaTexto = $diasES[date('w')] . ', ' . date('j') . ' de ' . $mesesES[date('n')-1] . ' de ' . date('Y');
-
-// Fecha de nacimiento
-$nacTexto = '';
-if (!empty($alumno['fechanac'] ?? $fechanac ?? '')) {
-    $fn = new DateTime($fechanac ?? '');
-    $nacTexto = $fn->format('d') . ' ' . $mesesES[(int)$fn->format('n')-1] . ' ' . $fn->format('Y');
-}
+// ── Fecha de nacimiento ──
+$nacTexto = certFechaNacimiento($alumno['fechanac'] ?? $fechanac ?? '');
 ?>
 
 <!-- ══ PIE (fixed, primero en el DOM) ══ -->
 <div class="pie-pagina">
-    <img src="<?= $piePag ?>" alt="Pie de página">
+    <img src="<?= $img['pie'] ?>" alt="Pie de página">
 </div>
 
 <div class="page">
 
     <!-- ══ ENCABEZADO ══ -->
     <div class="header">
-        <div class="header-left">
-            <img src="<?= $logo1 ?>" alt="Educación Pública">
-        </div>
-        <div class="header-center">
-            <img src="<?= $logo2 ?>" alt="">
-        </div>
-        <div class="header-right">
-            <img src="<?= $logo3 ?>" alt="CEIA">
-        </div>
+        <div class="header-left">   <img src="<?= $img['logo1'] ?>" alt="Educación Pública"></div>
+        <div class="header-center"> <img src="<?= $img['logo2'] ?>" alt=""></div>
+        <div class="header-right">  <img src="<?= $img['logo3'] ?>" alt="CEIA"></div>
     </div>
 
     <!-- ══ TÍTULO ══ -->
@@ -176,20 +110,19 @@ if (!empty($alumno['fechanac'] ?? $fechanac ?? '')) {
     <div class="cert-body">
         <p>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            El director ADP que suscribe, certifica que <?= $tratamiento ?>
-            <span class="bold upper"><?= htmlspecialchars($nombreCompleto) ?>.</span>
-            Rut. <span class="bold"><?= htmlspecialchars($runCompleto) ?></span>,
+            El director ADP que suscribe, certifica que <?= $a['tratamiento'] ?>
+            <span class="bold upper"><?= htmlspecialchars($a['nombreCompleto']) ?>.</span>
+            Rut. <span class="bold"><?= htmlspecialchars($a['runCompleto']) ?></span>,
             <?php if (!empty($nacTexto)): ?>
             Nacido (a) el <span class="bold"><?= $nacTexto ?></span>,
             <?php endif ?>
             Es Alumno (a) Regular del
             <span class="quot">"<span class="bold upper"><?= htmlspecialchars($curso) ?></span>"</span>
-            
             matriculado (a),
             para el Año <span class="bold"><?= htmlspecialchars($anio) ?></span>,
             en el Centro de Educación Integrada de Adultos,
             <span class="bold">"Juanita Zúñiga Fuentes"</span>.
-            Establecimiento Dependiente de La Servicio Local de educación pública los Álamos 
+            Establecimiento Dependiente de La Servicio Local de educación pública los Álamos
             &nbsp;<span class="bold">N.º 3290 / 81</span>&nbsp;
             del Ministerio de Educación.
         </p>
@@ -201,7 +134,7 @@ if (!empty($alumno['fechanac'] ?? $fechanac ?? '')) {
 
     <!-- ══ FIRMA ══ -->
     <div class="firma-wrap">
-        <img src="<?= $timbre ?>" alt="Firma Director">
+        <img src="<?= $img['timbre'] ?>" alt="Firma Director">
     </div>
 
     <!-- ══ FECHA ══ -->

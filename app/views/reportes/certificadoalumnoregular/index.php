@@ -97,36 +97,76 @@ include __DIR__ . "/../../layout/navbar.php";
         <!-- Motivo + Botones de descarga -->
         <div class="px-6 py-5 border-t divider-soft flex flex-col gap-4">
 
-            <div>
-                <label for="input-motivo" class="block text-xs text-muted uppercase tracking-wide mb-1.5">
-                    Motivo del certificado <span class="text-faint">(opcional)</span>
-                </label>
-                <input id="input-motivo" type="text" autocomplete="off"
-                    placeholder="Ej: ser presentado ante institución bancaria"
-                    class="input-field w-full rounded-xl px-4 py-3 text-sm transition" />
-                <p class="text-xs text-muted mt-1.5">
-                    Si se deja vacío, se usará "los fines que estime conveniente".
-                </p>
+            <!-- Contenedor en Grid para la proporción 2/3 y 1/3 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                <!-- Motivo (Ocupa 2 de las 3 columnas en pantallas medianas o más grandes) -->
+                <div class="md:col-span-2">
+                    <label for="input-motivo" class="block text-xs text-muted uppercase tracking-wide mb-1.5">
+                        Motivo del certificado <span class="text-faint">(opcional)</span>
+                    </label>
+                    <input id="input-motivo" type="text" autocomplete="off"
+                        placeholder="Ej: ser presentado ante institución bancaria"
+                        class="input-field w-full rounded-xl px-4 py-3 text-sm transition" />
+                    <p class="text-xs text-muted mt-1.5">
+                        Si se deja vacío, se usará "los fines que estime conveniente".
+                    </p>
+                </div>
+
+                <!-- Fecha (Ocupa 1 de las 3 columnas) -->
+                <div class="md:col-span-1">
+                    <label for="input-fecha" class="block text-xs text-muted uppercase tracking-wide mb-1.5">
+                        Indique fecha <span class="text-faint">(opcional)</span>
+                    </label>
+                    <input id="input-fecha" type="date" autocomplete="off"
+                        class="input-field w-full rounded-xl px-4 py-3 text-sm transition" />
+                    <p class="text-xs text-muted mt-1.5">
+                        Si se deja vacío, se usará "La fecha de hoy".
+                    </p>
+                </div>
+
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-3">
-                <a id="btn-normal" href="#" target="_blank" class="report-btn flex-1 inline-flex items-center justify-center gap-2 px-5 py-3
-                           font-semibold rounded-xl shadow transition text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                    </svg>
-                    Certificado Normal
-                </a>
+            <!-- Botones -->
+            <!-- Botones -->
+            <div class="flex flex-col sm:flex-row gap-4">
 
-                <a id="btn-asistencia" href="#" target="_blank" class="btn-success flex-1 inline-flex items-center justify-center gap-2 px-5 py-3
-                           font-semibold rounded-xl shadow transition text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 17v-2m3 2v-4m3 4v-6M9 7h6M3 17V7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                    </svg>
-                    Certificado con Asistencia
-                </a>
+                <!-- Certificado Normal -->
+                <div class="flex-1 flex flex-col gap-2">
+                    <a id="btn-normal-ver" href="#" target="_blank" class="report-btn inline-flex items-center justify-center gap-2 px-5 py-4
+                       font-bold rounded-xl shadow-lg transition text-base">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Ver Certificado Normal
+                    </a>
+                    <a id="btn-normal" href="#" target="_blank"
+                        class="text-center text-xs text-muted hover:text-strong underline transition">
+                        Descargar directo sin previsualizar
+                    </a>
+                </div>
+
+                <!-- Certificado con Asistencia -->
+                <div class="flex-1 flex flex-col gap-2">
+                    <a id="btn-asistencia-ver" href="#" target="_blank" class="btn-success inline-flex items-center justify-center gap-2 px-5 py-4
+                       font-bold rounded-xl shadow-lg transition text-base">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Ver Certificado con Asistencia
+                    </a>
+                    <a id="btn-asistencia" href="#" target="_blank"
+                        class="text-center text-xs text-muted hover:text-strong underline transition">
+                        Descargar directo sin previsualizar
+                    </a>
+                </div>
+
             </div>
 
         </div>
@@ -149,6 +189,11 @@ include __DIR__ . "/../../layout/navbar.php";
         const infoDias = document.getElementById('info-dias');
         const btnNormal = document.getElementById('btn-normal');
         const btnAsist = document.getElementById('btn-asistencia');
+        const inputMotivo = document.getElementById('input-motivo');
+        const inputFecha = document.getElementById('input-fecha');
+        const btnNormalVer = document.getElementById('btn-normal-ver');
+
+        const btnAsistVer = document.getElementById('btn-asistencia-ver');
 
         let timer = null;
 
@@ -175,9 +220,9 @@ include __DIR__ . "/../../layout/navbar.php";
                         const li = document.createElement('li');
                         li.className = 'dropdown-link px-4 py-3 text-sm cursor-pointer flex justify-between items-center transition';
                         li.innerHTML = `
-                    <span><strong class="text-strong">${a.nombre_completo.trim()}</strong> <span class="text-muted ml-2">${a.run}-${a.codver ?? ''}</span></span>
-                    <span class="report-badge text-xs px-2 py-0.5 rounded-full">${a.curso} · ${a.anio}</span>
-                `;
+                <span><strong class="text-strong">${a.nombre_completo.trim()}</strong> <span class="text-muted ml-2">${a.run}-${a.codver ?? ''}</span></span>
+                <span class="report-badge text-xs px-2 py-0.5 rounded-full">${a.curso} · ${a.anio}</span>
+            `;
                         li.addEventListener('click', () => seleccionar(a));
                         lista.appendChild(li);
                     });
@@ -186,15 +231,23 @@ include __DIR__ . "/../../layout/navbar.php";
                 .catch(() => spinner.classList.add('hidden'));
         }
 
+        function actualizarEnlaces(id) {
+            if (!id) return;
+            const m = encodeURIComponent(inputMotivo?.value.trim() || 'los fines que estime conveniente');
+            const f = encodeURIComponent(inputFecha?.value || '');
+            const base = `alumno_id=${id}&motivo=${m}&fecha=${f}`;
+
+            btnNormal.href = `index.php?action=cert_alumno_regular_pdf&${base}`;
+            btnNormalVer.href = `index.php?action=cert_alumno_regular_pdf&${base}&preview=1`;
+
+            btnAsist.href = `index.php?action=cert_alumno_regular_pdf_asistencia&${base}`;
+            btnAsistVer.href = `index.php?action=cert_alumno_regular_pdf_asistencia&${base}&preview=1`;
+        }
+
         function seleccionar(a) {
-            const motivo = () => encodeURIComponent(
-                document.getElementById('input-motivo')?.value.trim()
-                || 'los fines que estime conveniente'
-            );
             lista.classList.add('hidden');
             input.value = a.nombre_completo.trim();
 
-            // Obtener datos completos (asistencia) via AJAX
             fetch(`index.php?action=cert_alumno_regular_datos&alumno_id=${a.id}`)
                 .then(r => r.json())
                 .then(d => {
@@ -206,22 +259,21 @@ include __DIR__ . "/../../layout/navbar.php";
                     infoAnio.textContent = d.anio;
                     infoDias.textContent = `${d.dias_presentes} / ${d.total_dias}`;
 
-                    btnNormal.href = `index.php?action=cert_alumno_regular_pdf&alumno_id=${d.id}&motivo=${motivo()}`;
-                    btnAsist.href = `index.php?action=cert_alumno_regular_pdf_asistencia&alumno_id=${d.id}&motivo=${motivo()}`;
-
+                    actualizarEnlaces(d.id);
                     cardAlumno.classList.remove('hidden');
                 });
         }
 
-        document.getElementById('input-motivo')?.addEventListener('input', function () {
-            if (!btnNormal.href.includes('alumno_id')) return; // si no hay alumno seleccionado, no hacer nada
+        // Eventos de entrada en motivo y fecha
+        const listenerCampos = () => {
+            if (!btnNormal.href.includes('alumno_id')) return;
             const id = new URLSearchParams(btnNormal.href.split('?')[1]).get('alumno_id');
-            const m = encodeURIComponent(this.value.trim() || 'los fines que estime conveniente');
-            btnNormal.href = `index.php?action=cert_alumno_regular_pdf&alumno_id=${id}&motivo=${m}`;
-            btnAsist.href = `index.php?action=cert_alumno_regular_pdf_asistencia&alumno_id=${id}&motivo=${m}`;
-        });
+            actualizarEnlaces(id);
+        };
 
-        // Cierra lista al hacer clic fuera
+        inputMotivo?.addEventListener('input', listenerCampos);
+        inputFecha?.addEventListener('change', listenerCampos);
+
         document.addEventListener('click', e => {
             if (!e.target.closest('#buscador') && !e.target.closest('#resultados')) {
                 lista.classList.add('hidden');

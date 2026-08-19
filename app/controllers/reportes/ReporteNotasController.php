@@ -8,7 +8,7 @@ require_once __DIR__ . '/../../models/Asignaturas.php';
 require_once __DIR__ . '/../../models/CursoAsignatura.php';
 require_once __DIR__ . '/../../models/CursoDocente.php';
 require_once __DIR__ . '/../../models/Asistencia.php';
-require_once __DIR__ . '/../../libs/dompdf/vendor/autoload.php';
+require_once __DIR__ . '/../../helpers/PdfHelper.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -73,6 +73,7 @@ class ReporteNotasController
         $cursoAsignaturaModel = new CursoAsignatura();
         $cursoDocenteModel = new CursoDocente();
         $asistenciaModel = new Asistencia();
+        $inline = ($_GET['preview'] ?? '') === '1';
 
         $matricula = $matriculaModel->getById($matriculaId);
         if (!$matricula)
@@ -141,11 +142,12 @@ class ReporteNotasController
         require __DIR__ . '/../../views/reportes/notas/pdf_alumno.php';
         $html = ob_get_clean();
 
-        $this->_streamPdf(
+        PdfHelper::stream(
             $html,
+            'Informe_' . $alumno['apepat'] . '_' . $alumno['apemat'] . '_' . $anio['anio'] . '.pdf',
+            $inline,
             'letter',
-            'portrait',
-            'Informe_' . $alumno['apepat'] . '_' . $alumno['apemat'] . '_' . $anio['anio'] . '.pdf'
+            'portrait'
         );
     }
 
@@ -158,6 +160,7 @@ class ReporteNotasController
         $anioId = (int) ($_GET['anio_id'] ?? 0);
         $asignaturaId = (int) ($_GET['asignatura_id'] ?? 0);
         $semestre = (int) ($_GET['semestre'] ?? 1);
+        $inline = ($_GET['preview'] ?? '') === '1';
 
         // Por defecto incluye retirados (comportamiento previo).
         // El botón "sin retirados" manda incluir_retirados=0.
@@ -235,7 +238,7 @@ class ReporteNotasController
         $nombreArchivo = 'Notas_' . $asignatura['nombre'] . '_'
             . $curso['nombre'] . '_Sem' . $semestre . '_' . $sufijo . '.pdf';
 
-        $this->_streamPdf($html, 'A4', 'landscape', $nombreArchivo);
+        PdfHelper::stream($html, $nombreArchivo, $inline, 'A4', 'landscape');
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -246,6 +249,7 @@ class ReporteNotasController
         $cursoId = (int) ($_GET['curso_id'] ?? 0);
         $anioId = (int) ($_GET['anio_id'] ?? 0);
         $semestre = (int) ($_GET['semestre'] ?? 1);
+        $inline = ($_GET['preview'] ?? '') === '1';
 
         if (!$cursoId || !$anioId)
             die('Faltan parámetros (curso_id, anio_id).');
@@ -293,7 +297,7 @@ class ReporteNotasController
             . preg_replace('/\s+/', '_', $curso['nombre'])
             . '_Sem' . $semestre . '_' . $anio['anio'] . '.pdf';
 
-        $this->_streamPdf($html, 'letter', 'portrait', $nombreArchivo);
+        PdfHelper::stream($html, $nombreArchivo, $inline, 'letter', 'portrait');
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -458,6 +462,7 @@ class ReporteNotasController
         $semestre = (int) ($_GET['semestre'] ?? 1);
         $tipo = in_array($_GET['tipo'] ?? '', ['alumnos', 'asignaturas'])
             ? $_GET['tipo'] : 'alumnos';
+        $inline = ($_GET['preview'] ?? '') === '1';
 
         if (!$anioId)
             die('Falta anio_id.');
@@ -575,29 +580,9 @@ class ReporteNotasController
         $nombreArchivo = 'Ranking_' . ucfirst($tipo) . '_'
             . ($anio['anio'] ?? '') . '_Sem' . $semestre . '.pdf';
 
-        $this->_streamPdf($html, 'letter', 'portrait', $nombreArchivo);
+        PdfHelper::stream($html, $nombreArchivo, $inline, 'letter', 'portrait');
     }
 
-    /* ══════════════════════════════════════════════════════════
-       HELPER PDF
-    ══════════════════════════════════════════════════════════ */
-    private function _streamPdf(
-        string $html,
-        string $paper,
-        string $orientation,
-        string $filename
-    ): void {
-        $options = new Options();
-        $options->set('isRemoteEnabled', true);
-        $options->set('defaultFont', 'DejaVu Sans');
-
-        $dompdf = new Dompdf($options);
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper($paper, $orientation);
-        $dompdf->render();
-        $dompdf->stream($filename, ['Attachment' => true]);
-        exit;
-    }
     public function pdfRankingCursos()
     {
         require_once __DIR__ . '/../../models/Nota.php';
@@ -605,6 +590,7 @@ class ReporteNotasController
 
         $anioId = (int) ($_GET['anio_id'] ?? 0);
         $semestre = (int) ($_GET['semestre'] ?? 1);
+        $inline = ($_GET['preview'] ?? '') === '1';
 
         if (!$anioId)
             die("Falta anio_id.");
@@ -619,21 +605,6 @@ class ReporteNotasController
         require __DIR__ . '/../../views/reportes/notas/rankingCursos_pdf.php';
         $html = ob_get_clean();
 
-        try {
-            $options = new \Dompdf\Options();
-            $options->set('isRemoteEnabled', true);
-            $options->set('defaultFont', 'DejaVu Sans');
-
-            $dompdf = new \Dompdf\Dompdf($options);
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('letter', 'portrait');
-            $dompdf->render();
-
-            header('Content-Type: application/pdf');
-            $dompdf->stream("RankingCursos_{$anioNombre}_Sem{$semestre}.pdf", ['Attachment' => true]);
-            exit;
-        } catch (Exception $e) {
-            die("Error al generar PDF: " . $e->getMessage());
-        }
+        PdfHelper::stream($html, "RankingCursos_{$anioNombre}_Sem{$semestre}.pdf", $inline, 'letter', 'portrait');
     }
 }

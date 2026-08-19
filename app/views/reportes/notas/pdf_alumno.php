@@ -302,12 +302,7 @@
 
     <?php
     require_once __DIR__ . '/../../../models/Nota.php';
-
-    $base = 'http://localhost:8080/app/public/img/';
-    $logo1 = $base . 'certificado_1.png';
-    $logo2 = $base . 'certificado_3.png';
-    $logo3 = $base . 'certificado_2.png';
-    $piePag = $base . 'pie_pagina_certificado.png';
+    require_once __DIR__ . '/helperPDF.php';
 
     // ── Promedios por asignatura y semestre ──────────────────────────
     // El total esperado de cada asignatura es su cantidad de FECHAS únicas
@@ -382,16 +377,12 @@
     ?>
 
     <!-- PIE FIJO -->
-    <div class="pie-pagina"><img src="<?= $piePag ?>" alt="Pie"></div>
+    <?php pdfNotasPiePagina(); ?>
 
     <div class="page">
 
         <!-- ENCABEZADO -->
-        <div class="header">
-            <div class="h-left"><img src="<?= $logo1 ?>" alt="Educación Pública"></div>
-            <div class="h-center"><img src="<?= $logo2 ?>" alt="Los Álamos"></div>
-            <div class="h-right"><img src="<?= $logo3 ?>" alt="CEIA"></div>
-        </div>
+        <?php pdfNotasHeaderTresLogos(); ?>
 
         <!-- TÍTULO -->
         <div class="doc-header">

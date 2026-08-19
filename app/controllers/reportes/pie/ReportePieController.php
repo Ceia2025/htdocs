@@ -1,10 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../models/reportes/pie/ReportePie.php';
 require_once __DIR__ . '/../../../controllers/AuthController.php';
-require_once __DIR__ . '/../../../libs/dompdf/vendor/autoload.php';
-
-use Dompdf\Dompdf;
-use Dompdf\Options;
+require_once __DIR__ . '/../../../helpers/PdfHelper.php';
 
 class ReportePieController
 {
@@ -50,6 +47,7 @@ class ReportePieController
         $cursoId = isset($_GET['curso_id']) && $_GET['curso_id'] !== ''
             ? (int) $_GET['curso_id']
             : null;
+        $inline = ($_GET['preview'] ?? '') === '1';
 
         if (!$anioId)
             die("Falta anio_id.");
@@ -82,28 +80,7 @@ class ReportePieController
         $html = ob_get_clean();
 
         $slug = $cursoId ? $cursoNombre : 'General';
-        $this->generarPDF($html, "ReportePie_{$slug}_{$anioNombre}.pdf");
-    }
-
-
-    private function generarPDF(string $html, string $filename): void
-    {
-        try {
-            $options = new Options();
-            $options->set('isRemoteEnabled', true);
-            $options->set('defaultFont', 'DejaVu Sans');
-
-            $dompdf = new Dompdf($options);
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('letter', 'portrait');
-            $dompdf->render();
-
-            header('Content-Type: application/pdf');
-            $dompdf->stream($filename, ['Attachment' => true]);
-            exit;
-        } catch (Exception $e) {
-            die("Error al generar PDF: " . $e->getMessage());
-        }
+        PdfHelper::stream($html, "ReportePie_{$slug}_{$anioNombre}.pdf", $inline, 'letter', 'portrait');
     }
 
     public function pdfPieNotas()
@@ -112,6 +89,7 @@ class ReportePieController
         $cursoId = isset($_GET['curso_id']) && $_GET['curso_id'] !== ''
             ? (int) $_GET['curso_id']
             : null;
+        $inline = ($_GET['preview'] ?? '') === '1';
 
         if (!$anioId)
             die("Falta anio_id.");
@@ -142,7 +120,6 @@ class ReportePieController
         $html = ob_get_clean();
 
         $slug = $cursoId ? $cursoNombre : 'General';
-        $this->generarPDF($html, "ReportePieNotas_{$slug}_{$anioNombre}.pdf");
+        PdfHelper::stream($html, "ReportePieNotas_{$slug}_{$anioNombre}.pdf", $inline, 'letter', 'portrait');
     }
-
 }

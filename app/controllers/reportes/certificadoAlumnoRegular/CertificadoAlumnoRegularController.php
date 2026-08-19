@@ -1,10 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../../../models/reportes/certificadoAlumnoRegular/CertificadoAlumnoRegular.php';
-require_once __DIR__ . '/../../../libs/dompdf/vendor/autoload.php';
-
-use Dompdf\Dompdf;
-use Dompdf\Options;
+require_once __DIR__ . '/../../../helpers/PdfHelper.php';
 
 class CertificadoAlumnoRegularController
 {
@@ -52,11 +49,13 @@ class CertificadoAlumnoRegularController
         }
 
         $data['motivo'] = trim($_GET['motivo'] ?? '') ?: 'los fines que estime conveniente';
+        $inline = ($_GET['preview'] ?? '') === '1';
 
         $html = $this->renderTemplate('cert_normal', $data);
-        $this->streamPdf($html, "CertAlumnoRegular_{$data['run']}.pdf");
+        PdfHelper::stream($html, "CertAlumnoRegular_{$data['run']}.pdf", $inline, 'letter', 'portrait');
     }
 
+    // ─── Genera PDF: Certificado con Asistencia ────────────────────────────
     public function pdfConAsistencia(): void
     {
         $alumno_id = (int) ($_GET['alumno_id'] ?? 0);
@@ -72,13 +71,14 @@ class CertificadoAlumnoRegularController
         }
 
         $data['motivo'] = trim($_GET['motivo'] ?? '') ?: 'los fines que estime conveniente';
+        $inline = ($_GET['preview'] ?? '') === '1';
 
         $data['asistencia_mensual'] = $this->model->getAsistenciaMensual(
             (int) $data['matricula_id']
         );
 
         $html = $this->renderTemplate('cert_con_asistencia', $data);
-        $this->streamPdf($html, "CertAsistencia_{$data['run']}.pdf");
+        PdfHelper::stream($html, "CertAsistencia_{$data['run']}.pdf", $inline, 'letter', 'portrait');
     }
 
     // ─── Helpers ───────────────────────────────────────────────────────────
@@ -89,18 +89,5 @@ class CertificadoAlumnoRegularController
         ob_start();
         require __DIR__ . "/../../../views/reportes/certificadoalumnoregular/{$template}.php";
         return ob_get_clean();
-    }
-
-    private function streamPdf(string $html, string $filename): void
-    {
-        $options = new Options();
-        $options->set('isRemoteEnabled', true);
-
-        $dompdf = new Dompdf($options);
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('letter', 'portrait');
-        $dompdf->render();
-        $dompdf->stream($filename, ['Attachment' => true]);
-        exit;
     }
 }

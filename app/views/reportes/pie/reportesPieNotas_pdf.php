@@ -1,6 +1,5 @@
 <?php
-$logoPath   = __DIR__ . '/../../../public/img/LOGO CEIA.jpg';
-$logoExists = file_exists($logoPath);
+require_once __DIR__ . '/helperPDF.php';
 $tituloFiltro = $cursoId ? $cursoNombre : 'Todos los cursos';
 ?>
 <!DOCTYPE html>
@@ -8,63 +7,23 @@ $tituloFiltro = $cursoId ? $cursoNombre : 'Todos los cursos';
 <head>
 <meta charset="UTF-8">
 <style>
-    body { font-family: DejaVu Sans, sans-serif; font-size: 9px; color: #1e293b; margin: 18px 20px; }
-    .header { display: table; width: 100%; border-bottom: 3px solid #004b8d; padding-bottom: 8px; margin-bottom: 10px; }
-    .header-left  { display: table-cell; width: 16%; vertical-align: middle; }
-    .header-right { display: table-cell; width: 84%; vertical-align: middle; padding-left: 12px; }
-    .inst-nombre  { font-size: 12px; font-weight: bold; color: #004b8d; text-transform: uppercase; }
-    .inst-sub     { font-size: 9px; color: #475569; }
-    .ficha-titulo {
-        display: inline-block; margin-top: 5px; padding: 3px 10px;
-        background: #cffafe; color: #0e7490; font-weight: bold;
-        font-size: 10px; text-transform: uppercase; border-radius: 3px;
-    }
-    .info-box {
-        background: #f1f5f9; border: 1px solid #cbd5e1;
-        border-radius: 4px; padding: 6px 10px; margin-bottom: 12px; font-size: 9px;
-    }
-    .curso-titulo {
-        background: #0e7490; color: white; font-weight: bold;
-        font-size: 10px; padding: 4px 8px; margin-top: 10px;
-        border-radius: 3px 3px 0 0;
-    }
-    table.detalle { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
-    table.detalle thead tr { background: #155e75; }
-    table.detalle thead th {
-        color: white; padding: 3px 5px;
-        font-size: 7.5px; text-transform: uppercase;
-    }
-    table.detalle thead th.tc { text-align: center; }
+    <?= pdfPieCssComun() ?>
+
     table.detalle thead th.tr { text-align: right; }
-    table.detalle tbody td { border-bottom: 1px solid #e2e8f0; padding: 3px 5px; font-size: 8px; }
-    table.detalle tbody tr:nth-child(even) td { background: #f8fafc; }
+
     .prom-aprobado { color: #15803d; font-weight: bold; }
     .prom-reprobado { color: #b91c1c; font-weight: bold; }
     .prom-sin { color: #94a3b8; }
-    .tc { text-align: center; }
     .tr { text-align: right; }
-    .footer {
-        margin-top: 14px; border-top: 1px solid #e2e8f0;
-        padding-top: 6px; font-size: 7.5px; color: #94a3b8; text-align: right;
-    }
+
+    /* Overrides sobre el CSS común */
+    .info-box { margin-bottom: 12px; }
+    .curso-titulo { margin-top: 10px; }
 </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="header-left">
-        <?php if ($logoExists): ?>
-            <img src="http://localhost:8080/app/public/img/LOGO%20CEIA.jpg" style="width:80px;">
-        <?php else: ?>
-            <strong style="color:#004b8d;">CEIA Parral</strong>
-        <?php endif ?>
-    </div>
-    <div class="header-right">
-        <div class="inst-nombre">Centro de Educación Integrada de Adultos</div>
-        <div class="inst-sub">"Juanita Zúñiga Fuentes" – Parral</div>
-        <div class="ficha-titulo">Notas Alumnos PIE — <?= htmlspecialchars($anioNombre) ?></div>
-    </div>
-</div>
+<?php pdfPieHeader('Notas Alumnos PIE — ' . $anioNombre); ?>
 
 <div class="info-box">
     <strong>Año académico:</strong> <?= htmlspecialchars($anioNombre) ?> &nbsp;·&nbsp;
@@ -120,9 +79,6 @@ $tituloFiltro = $cursoId ? $cursoNombre : 'Todos los cursos';
     <?php endforeach ?>
 <?php endif ?>
 
-<div class="footer">
-    Reporte generado automáticamente — Sistema SAAT · C.E.I.A. Parral <?= date('Y') ?>
-    <br>Desarrollado por Daniel Scarlazzetta
-</div>
+<?php pdfPieFooter(); ?>
 </body>
 </html>

@@ -1,10 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../models/reportes/matricula/ReporteMatricula.php';
 require_once __DIR__ . '/../../../controllers/AuthController.php';
-require_once __DIR__ . '/../../../libs/dompdf/vendor/autoload.php';
-
-use Dompdf\Dompdf;
-use Dompdf\Options;
+require_once __DIR__ . '/../../../helpers/PdfHelper.php';
 
 class ReporteMatriculaController
 {
@@ -29,12 +26,12 @@ class ReporteMatriculaController
 
         $cursos = $anioId ? $this->model->getCursos($anioId) : [];
 
-        $reporte       = [];
+        $reporte = [];
         $resumenCursos = [];
         $resumenGlobal = ['total_matriculados' => 0, 'total_activos' => 0, 'porcentaje' => 0.0];
 
         if ($anioId) {
-            $reporte       = $this->model->getReporteGeneral($anioId, $cursoId);
+            $reporte = $this->model->getReporteGeneral($anioId, $cursoId);
             $resumenCursos = $this->model->getResumenPorCurso($anioId, $cursoId);
             $resumenGlobal = $this->model->getResumenGlobal($anioId, $cursoId);
         }
@@ -48,23 +45,31 @@ class ReporteMatriculaController
         $cursoId = isset($_GET['curso_id']) && $_GET['curso_id'] !== ''
             ? (int) $_GET['curso_id']
             : null;
+        $inline = ($_GET['preview'] ?? '') === '1';
 
-        if (!$anioId) die("Falta anio_id.");
+        if (!$anioId)
+            die("Falta anio_id.");
 
-        $reporte       = $this->model->getReporteGeneral($anioId, $cursoId);
+        $reporte = $this->model->getReporteGeneral($anioId, $cursoId);
         $resumenCursos = $this->model->getResumenPorCurso($anioId, $cursoId);
         $resumenGlobal = $this->model->getResumenGlobal($anioId, $cursoId);
 
         $anios = $this->model->getAnios();
         $anioNombre = '';
         foreach ($anios as $a) {
-            if ($a['id'] == $anioId) { $anioNombre = $a['anio']; break; }
+            if ($a['id'] == $anioId) {
+                $anioNombre = $a['anio'];
+                break;
+            }
         }
 
         $cursos = $this->model->getCursos($anioId);
         $cursoNombre = 'Todos los cursos';
         foreach ($cursos as $c) {
-            if ($c['id'] == $cursoId) { $cursoNombre = $c['nombre']; break; }
+            if ($c['id'] == $cursoId) {
+                $cursoNombre = $c['nombre'];
+                break;
+            }
         }
 
         ob_start();
@@ -72,26 +77,6 @@ class ReporteMatriculaController
         $html = ob_get_clean();
 
         $slug = $cursoId ? $cursoNombre : 'General';
-        $this->generarPDF($html, "ReporteMatricula_{$slug}_{$anioNombre}.pdf");
-    }
-
-    private function generarPDF(string $html, string $filename): void
-    {
-        try {
-            $options = new Options();
-            $options->set('isRemoteEnabled', true);
-            $options->set('defaultFont', 'DejaVu Sans');
-
-            $dompdf = new Dompdf($options);
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('letter', 'portrait');
-            $dompdf->render();
-
-            header('Content-Type: application/pdf');
-            $dompdf->stream($filename, ['Attachment' => true]);
-            exit;
-        } catch (Exception $e) {
-            die("Error al generar PDF: " . $e->getMessage());
-        }
+        PdfHelper::stream($html, "ReporteMatricula_{$slug}_{$anioNombre}.pdf", $inline, 'letter', 'portrait');
     }
 }

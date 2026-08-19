@@ -1,11 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../models/reportes/etnia/ReporteEtnia.php';
-require_once __DIR__ . '/../../../libs/dompdf/vendor/autoload.php';
-
 require_once __DIR__ . '/../../../config/Connection.php';
-
-use Dompdf\Dompdf;
-use Dompdf\Options;
+require_once __DIR__ . '/../../../helpers/PdfHelper.php';
 
 class ReporteEtniaController
 {
@@ -32,17 +28,18 @@ class ReporteEtniaController
             : null;
 
         $etniaFiltro = $_GET['etnia'] ?? null;
-        if ($etniaFiltro === '') $etniaFiltro = null;
+        if ($etniaFiltro === '')
+            $etniaFiltro = null;
 
-        $cursos  = $anioId ? $this->model->getCursos($anioId) : [];
-        $etnias  = $this->model->getEtnias();
+        $cursos = $anioId ? $this->model->getCursos($anioId) : [];
+        $etnias = $this->model->getEtnias();
 
-        $reporte       = [];
+        $reporte = [];
         $resumenCursos = [];
         $resumenGlobal = [];
 
         if ($anioId) {
-            $reporte       = $this->model->getReporteGeneral($anioId, $cursoId, $etniaFiltro);
+            $reporte = $this->model->getReporteGeneral($anioId, $cursoId, $etniaFiltro);
             $resumenCursos = $this->model->getResumenPorCurso($anioId, $cursoId, $etniaFiltro);
             $resumenGlobal = $this->model->getResumenGlobal($anioId, $cursoId, $etniaFiltro);
         }
@@ -60,24 +57,33 @@ class ReporteEtniaController
             ? (int) $_GET['curso_id']
             : null;
         $etniaFiltro = $_GET['etnia'] ?? null;
-        if ($etniaFiltro === '') $etniaFiltro = null;
+        if ($etniaFiltro === '')
+            $etniaFiltro = null;
+        $inline = ($_GET['preview'] ?? '') === '1';
 
-        if (!$anioId) die("Falta anio_id.");
+        if (!$anioId)
+            die("Falta anio_id.");
 
-        $reporte       = $this->model->getReporteGeneral($anioId, $cursoId, $etniaFiltro);
+        $reporte = $this->model->getReporteGeneral($anioId, $cursoId, $etniaFiltro);
         $resumenCursos = $this->model->getResumenPorCurso($anioId, $cursoId, $etniaFiltro);
         $resumenGlobal = $this->model->getResumenGlobal($anioId, $cursoId, $etniaFiltro);
 
         $anios = $this->model->getAnios();
         $anioNombre = '';
         foreach ($anios as $a) {
-            if ($a['id'] == $anioId) { $anioNombre = $a['anio']; break; }
+            if ($a['id'] == $anioId) {
+                $anioNombre = $a['anio'];
+                break;
+            }
         }
 
         $cursos = $this->model->getCursos($anioId);
         $cursoNombre = 'Todos los cursos';
         foreach ($cursos as $c) {
-            if ($c['id'] == $cursoId) { $cursoNombre = $c['nombre']; break; }
+            if ($c['id'] == $cursoId) {
+                $cursoNombre = $c['nombre'];
+                break;
+            }
         }
 
         $etnias = $this->model->getEtnias();
@@ -87,7 +93,7 @@ class ReporteEtniaController
         $html = ob_get_clean();
 
         $slug = $cursoId ? $cursoNombre : 'General';
-        $this->generarPDF($html, "ReporteEtnia_{$slug}_{$anioNombre}.pdf");
+        PdfHelper::stream($html, "ReporteEtnia_{$slug}_{$anioNombre}.pdf", $inline, 'letter', 'portrait');
     }
 
     /* ==========================================
@@ -100,16 +106,21 @@ class ReporteEtniaController
             ? (int) $_GET['curso_id']
             : null;
         $etniaFiltro = $_GET['etnia'] ?? null;
-        if ($etniaFiltro === '') $etniaFiltro = null;
+        if ($etniaFiltro === '')
+            $etniaFiltro = null;
 
-        if (!$anioId) die("Falta anio_id.");
+        if (!$anioId)
+            die("Falta anio_id.");
 
         $reporte = $this->model->getReporteGeneral($anioId, $cursoId, $etniaFiltro);
 
         $anios = $this->model->getAnios();
         $anioNombre = '';
         foreach ($anios as $a) {
-            if ($a['id'] == $anioId) { $anioNombre = $a['anio']; break; }
+            if ($a['id'] == $anioId) {
+                $anioNombre = $a['anio'];
+                break;
+            }
         }
 
         $filename = "ReporteEtnia_{$anioNombre}.csv";
@@ -137,28 +148,5 @@ class ReporteEtniaController
 
         fclose($out);
         exit;
-    }
-
-    /* ==========================================
-       HELPER: generar y enviar PDF
-    ========================================== */
-    private function generarPDF(string $html, string $filename): void
-    {
-        try {
-            $options = new Options();
-            $options->set('isRemoteEnabled', true);
-            $options->set('defaultFont', 'DejaVu Sans');
-
-            $dompdf = new Dompdf($options);
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('letter', 'portrait');
-            $dompdf->render();
-
-            header('Content-Type: application/pdf');
-            $dompdf->stream($filename, ['Attachment' => true]);
-            exit;
-        } catch (Exception $e) {
-            die("Error al generar PDF: " . $e->getMessage());
-        }
     }
 }
