@@ -35,6 +35,7 @@ require_once __DIR__ . '/../controllers/reportes/retirados/ReporteRetiradosContr
 require_once __DIR__ . '/../controllers/reportes/matricula/ReporteMatriculaController.php';
 require_once __DIR__ . '/../controllers/reportes/pie/ReportePieController.php';
 require_once __DIR__ . '/../controllers/RecuperarController.php';
+require_once __DIR__ . '/../controllers/reportes/procedencia_alum/ReporteProcedenciaAlumnosController.php';
 
 
 
@@ -699,6 +700,14 @@ switch ($action) {
 
     case 'reportes_pie_pdf_notas':
         (new ReportePieController())->pdfPieNotas();
+        break;
+
+    case 'reportes_procedencia':
+        (new ReporteProcedenciaAlumnosController())->index();
+        break;
+
+    case 'reportes_procedencia_pdf':
+        (new ReporteProcedenciaAlumnosController())->pdfProcedencia();
         break;
 
     // AJAX: datos del alumno (para la card previa en el buscador)

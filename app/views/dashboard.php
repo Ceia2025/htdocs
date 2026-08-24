@@ -42,7 +42,7 @@ include __DIR__ . "/layout/navbar.php";
             👋 Bienvenido <?= htmlspecialchars($nombre) ?>
         </h1>
         <h3 class="text-blue-100/90 font-medium mt-1">
-            Rol: <span class="font-semibold"><?= htmlspecialchars($rol) ?></span>
+            Rol: <span class="font-semibold"><?= htmlspecialchars(ucfirst($rol)) ?></span>
         </h3>
     </div>
 </header>
