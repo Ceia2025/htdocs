@@ -10,6 +10,18 @@ $rol = $user['rol'];
 
 include __DIR__ . "/../../layout/header.php";
 include __DIR__ . "/../../layout/navbar.php";
+
+// Lee un ícono de app/public/svg/{key}.svg y lo devuelve listo para inyectar inline,
+// con la clase de tamaño Tailwind ya insertada en el <svg>.
+function saat_icon(string $key, string $classes = 'w-4 h-4'): string
+{
+    $path = __DIR__ . "/../../../public/svg/{$key}.svg";
+    if (!file_exists($path)) {
+        return '';
+    }
+    $svg = file_get_contents($path);
+    return preg_replace('/<svg /', '<svg class="' . htmlspecialchars($classes) . '" ', $svg, 1);
+}
 ?>
 
 <header class="page-header">
@@ -23,9 +35,7 @@ include __DIR__ . "/../../layout/navbar.php";
         </div>
         <a href="index.php?action=reportes"
             class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
+            <?= saat_icon('arrow-left', 'w-4 h-4') ?>
             Volver a reportes
         </a>
     </div>
@@ -37,7 +47,7 @@ include __DIR__ . "/../../layout/navbar.php";
     <div class="panel rounded-2xl overflow-hidden shadow-lg mb-6">
         <div class="px-6 py-4 border-b divider-soft">
             <h2 class="text-strong font-bold text-base flex items-center gap-2 font-display">
-                <span class="text-xl">🔍</span> Buscar Alumno
+                <?= saat_icon('search', 'w-5 h-5') ?> Buscar Alumno
             </h2>
         </div>
         <div class="px-6 py-5">
@@ -62,7 +72,9 @@ include __DIR__ . "/../../layout/navbar.php";
     <!-- CARD ALUMNO SELECCIONADO -->
     <div id="card-alumno" class="hidden panel rounded-2xl overflow-hidden shadow-lg">
         <div class="px-6 py-4 border-b divider-soft flex items-center gap-3">
-            <div class="report-icon-bg w-10 h-10 rounded-xl flex items-center justify-center text-xl">👼</div>
+            <div class="report-icon-bg w-10 h-10 rounded-xl flex items-center justify-center">
+                <?= saat_icon('doc', 'w-5 h-5') ?>
+            </div>
             <div>
                 <h2 id="card-nombre" class="text-strong font-bold text-base"></h2>
                 <p id="card-sub" class="text-xs text-muted mt-0.5"></p>
@@ -135,12 +147,7 @@ include __DIR__ . "/../../layout/navbar.php";
                 <div class="flex-1 flex flex-col gap-2">
                     <a id="btn-normal-ver" href="#" target="_blank" class="report-btn inline-flex items-center justify-center gap-2 px-5 py-4
                        font-bold rounded-xl shadow-lg transition text-base">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
+                        <?= saat_icon('eye', 'w-5 h-5') ?>
                         Ver Certificado Normal
                     </a>
                     <a id="btn-normal" href="#" target="_blank"
@@ -153,12 +160,7 @@ include __DIR__ . "/../../layout/navbar.php";
                 <div class="flex-1 flex flex-col gap-2">
                     <a id="btn-asistencia-ver" href="#" target="_blank" class="btn-success inline-flex items-center justify-center gap-2 px-5 py-4
                        font-bold rounded-xl shadow-lg transition text-base">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
+                        <?= saat_icon('eye', 'w-5 h-5') ?>
                         Ver Certificado con Asistencia
                     </a>
                     <a id="btn-asistencia" href="#" target="_blank"

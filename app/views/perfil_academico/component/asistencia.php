@@ -1,18 +1,4 @@
 <?php
-// Indexar asistencia por fecha para rápido acceso
-/*
-$asistenciaMap = [];
-if (isset($asistenciasAlumno)) {
-    foreach ($asistenciasAlumno as $a) {
-        $asistenciaMap[$a['fecha']] = $a;
-    }
-}*/
-
-// DEBUG TEMPORAL — eliminar después
-/*echo "<pre style='color:lime;background:#111;padding:10px'>";
-var_dump($asistenciaMap ?? 'VARIABLE NO EXISTE');
-echo "</pre>";*/
-
 $meses = [
     3 => "Marzo",
     4 => "Abril",
@@ -34,16 +20,16 @@ $semestres = [
 function getEstadoColor($estado): string
 {
     return match ($estado) {
-        1 => "bg-green-600/40 border border-green-500 text-green-200",
-        0 => "bg-red-600/40 border border-red-500 text-red-200",
-        default => "bg-gray-700/30 text-gray-500"
+        1 => "bg-[var(--success-soft)] border border-[var(--success)] text-success",
+        0 => "bg-[var(--danger-soft)] border border-[var(--danger)] text-danger",
+        default => "bg-[var(--surface-1)] text-faint"
     };
 }
 ?>
 
 <!-- CONTENEDOR PRINCIPAL -->
 <div class="mt-8">
-    <h3 class="text-xl font-semibold text-white mb-6 border-b border-indigo-500 pb-2">
+    <h3 class="text-xl font-semibold text-strong mb-6 border-b divider-soft pb-2">
         Asistencia por Calendario
     </h3>
 
@@ -51,7 +37,7 @@ function getEstadoColor($estado): string
         <?php foreach ($semestres as $nombreSemestre => $mesesSemestre): ?>
 
             <!-- TÍTULO DEL SEMESTRE -->
-            <h4 class="text-lg text-indigo-300 font-bold mt-8 mb-4">
+            <h4 class="text-lg text-accent font-bold mt-8 mb-4">
                 <?= $nombreSemestre ?>
             </h4>
 
@@ -67,28 +53,27 @@ function getEstadoColor($estado): string
                     ?>
 
                     <!-- ACORDEÓN DEL MES -->
-                    <div x-data="{ open: false }" class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden">
+                    <div x-data="{ open: false }" class="accordion-item">
 
                         <!-- HEADER DEL ACORDEÓN -->
                         <button @click="open = !open"
-                            class="w-full flex justify-between items-center px-4 py-3 bg-gray-700/40 hover:bg-gray-700/60 transition">
+                            class="accordion-trigger w-full flex justify-between items-center px-4 py-3">
 
-                            <span class="text-indigo-300 font-semibold text-lg">
+                            <span class="font-semibold text-lg">
                                 <?= $nombreMes ?>
                             </span>
 
-                            <svg x-bind:class="{'rotate-180': open}"
-                                class="w-5 h-5 text-indigo-300 transform transition-transform" fill="none" stroke="currentColor"
-                                stroke-width="2" viewBox="0 0 24 24">
+                            <svg x-bind:class="{'rotate-180': open}" class="w-5 h-5 transform transition-transform" fill="none"
+                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
 
                         <!-- CONTENIDO DEL ACORDEÓN -->
-                        <div x-show="open" x-collapse class="px-4 py-3 bg-gray-800">
+                        <div x-show="open" x-collapse class="accordion-content px-4 py-3">
 
                             <table class="w-full text-center border-collapse text-xs">
-                                <thead class="text-[11px] text-gray-400">
+                                <thead class="text-[11px] text-muted">
                                     <tr>
                                         <th>Lun</th>
                                         <th>Mar</th>

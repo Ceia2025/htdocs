@@ -76,9 +76,9 @@ class AlumnosController
         // ✅ Comprobar si el RUN / documento ya existe antes de insertar
         if (!empty($data['run']) && $alumnoModel->existsByRun($data['run'])) {
             echo "<script>
-                alert('⚠️ El documento \"{$data['run']}\" ya está registrado. Por favor, verifícalo.');
-                window.history.back();
-            </script>";
+            alert('⚠️ El documento \"{$data['run']}\" ya está registrado. Por favor, verifícalo.');
+            window.history.back();
+        </script>";
             exit;
         }
 
@@ -115,11 +115,42 @@ class AlumnosController
         // 👉 Guardar contactos de emergencia
         if (!empty($data['emergencias'])) {
             $emergenciaModel = new AlumEmergencia();
+
+            // Campos que consideramos para decidir si la tarjeta "tiene datos"
+            $camposContacto = [
+                'nombre_contacto',
+                'run_contacto',
+                'telefono',
+                'celular',
+                'email',
+                'direccion',
+                'comuna',
+                'relacion',
+                'observacion',
+            ];
+
             foreach ($data['emergencias'] as $e) {
-                // Ignorar tarjetas completamente vacías
-                if (empty($e['nombre_contacto']) && empty($e['telefono']) && empty($e['celular'])) {
+                $tieneDatos = false;
+                foreach ($camposContacto as $campo) {
+                    if (trim((string) ($e[$campo] ?? '')) !== '') {
+                        $tieneDatos = true;
+                        break;
+                    }
+                }
+
+                // Tarjeta completamente vacía: el usuario no quiso agregar este contacto
+                if (!$tieneDatos) {
                     continue;
                 }
+
+                // Tiene datos parciales: exigimos el mínimo indispensable antes de insertar
+                if (trim((string) ($e['nombre_contacto'] ?? '')) === '' || trim((string) ($e['relacion'] ?? '')) === '') {
+                    $_SESSION['flash_error'] =
+                        "Uno de los contactos quedó incompleto (falta nombre o vínculo). Complétalo o elimínalo antes de guardar.";
+                    header("Location: index.php?action=alumnos_stepper");
+                    exit;
+                }
+
                 $emergenciaModel->createFromArray($alumnoId, $e);
             }
         }
@@ -181,9 +212,6 @@ class AlumnosController
         header("Location: index.php?action=alumno_profile&id=" . urlencode($alumnoId));
         exit;
     }
-
-
-
 
     //Redireccion a la vista
     public function createStepper()

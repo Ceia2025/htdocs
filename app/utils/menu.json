@@ -11,21 +11,6 @@
       "url": "index.php?action=asistencia_cursos"
     },
     {
-      "title": "Reglamentos C.E.I.A.",
-      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
-      "url": "https://reglamentos-ceia-2026.vercel.app/"
-    },
-    {
-      "title": "Años Académicos ",
-      "desc": "En este Apartado se agregan años escolares, junto a el inicio y fin del semestre",
-      "url": "index.php?action=anios"
-    },
-    {
-      "title": "Nueva Ficha",
-      "desc": "Creación de fichas escolares y de antecedentes",
-      "url": "index.php?action=alumnos_stepper"
-    },
-    {
       "title": "Mantenedor de Matrículas",
       "desc": "Gestionar matrículas existentes",
       "url": "index.php?action=matriculas"
@@ -46,29 +31,14 @@
       "url": "index.php?action=atrasos_registro"
     },
     {
+      "title": "Nueva Ficha",
+      "desc": "Creación de fichas escolares y de antecedentes",
+      "url": "index.php?action=alumnos_stepper"
+    },
+    {
       "title": "Reporte de Atrasos por Curso",
       "desc": "Consulta y filtrado por periodo académico",
       "url": "index.php?action=atrasos_lista_curso"
-    },
-    {
-      "title": "Cuerpo Docente",
-      "desc": "Nómina y gestión administrativa de profesores",
-      "url": "index.php?action=profesores"
-    },
-    {
-      "title": "Carga Académica",
-      "desc": "Asignación de docentes por curso y asignatura",
-      "url": "index.php?action=profesor_curso_asignatura"
-    },
-    {
-      "title": "Administración de Cursos",
-      "desc": "Gestión integral de grupos y niveles educativos",
-      "url": "index.php?action=cursos"
-    },
-    {
-      "title": "Plan de Estudios",
-      "desc": "Gestión y configuración de asignaturas vigentes",
-      "url": "index.php?action=asignaturas"
     },
     {
       "title": "Notas",
@@ -91,9 +61,39 @@
       "url": "index.php?action=retiros_reportes"
     },
     {
+      "title": "Cuerpo Docente",
+      "desc": "Nómina y gestión administrativa de profesores",
+      "url": "index.php?action=profesores"
+    },
+    {
+      "title": "Carga Académica",
+      "desc": "Asignación de docentes por curso y asignatura",
+      "url": "index.php?action=profesor_curso_asignatura"
+    },
+    {
+      "title": "Administración de Cursos",
+      "desc": "Gestión integral de grupos y niveles educativos",
+      "url": "index.php?action=cursos"
+    },
+    {
+      "title": "Plan de Estudios",
+      "desc": "Gestión y configuración de asignaturas vigentes",
+      "url": "index.php?action=asignaturas"
+    },
+    {
       "title": "Profesor Jefe por Curso",
       "desc": "Asignación de profesor jefe a cada curso por año lectivo",
       "url": "index.php?action=curso_docente"
+    },
+    {
+      "title": "Años Académicos ",
+      "desc": "En este Apartado se agregan años escolares, junto a el inicio y fin del semestre",
+      "url": "index.php?action=anios"
+    },
+    {
+      "title": "Reglamentos C.E.I.A.",
+      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
+      "url": "https://reglamentos-ceia-2026.vercel.app/"
     }
   ],
   "administrativo": [
@@ -194,29 +194,14 @@
       "url": "index.php?action=reportes"
     },
     {
-      "title": "Reglamentos C.E.I.A.",
-      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
-      "url": "https://reglamentos-ceia-2026.vercel.app/"
-    },
-    {
       "title": "Control de Asistencia",
       "desc": "Gestión de asistencia por nivel y curso",
       "url": "index.php?action=asistencia_cursos"
     },
     {
-      "title": "Registro de Atrasos Estudiantiles",
-      "desc": "Control de acceso y puntualidad por portería",
-      "url": "index.php?action=atrasos_registro"
-    },
-    {
-      "title": "Reporte de Atrasos por Curso",
-      "desc": "Consulta y filtrado por periodo académico",
-      "url": "index.php?action=atrasos_lista_curso"
-    },
-    {
-      "title": "Gestión de Anotaciones",
-      "desc": "Administración y consulta de anotaciones por alumno",
-      "url": "index.php?action=anotaciones"
+      "title": "Mantenedor de Matrículas",
+      "desc": "Gestionar matrículas existentes",
+      "url": "index.php?action=matriculas"
     },
     {
       "title": "Ficha de Alumnos",
@@ -224,9 +209,29 @@
       "url": "index.php?action=alumnos"
     },
     {
-      "title": "Mantenedor de Matrículas",
-      "desc": "Gestionar matrículas existentes",
-      "url": "index.php?action=matriculas"
+      "title": "Gestión de Anotaciones",
+      "desc": "Administración y consulta de anotaciones por alumno",
+      "url": "index.php?action=anotaciones"
+    },
+    {
+      "title": "Registro de Atrasos Estudiantiles",
+      "desc": "Control de acceso y puntualidad por portería",
+      "url": "index.php?action=atrasos_registro"
+    },
+    {
+      "title": "Nueva Ficha",
+      "desc": "Creación de fichas escolares y de antecedentes",
+      "url": "index.php?action=alumnos_stepper"
+    },
+    {
+      "title": "Reporte de Atrasos por Curso",
+      "desc": "Consulta y filtrado por periodo académico",
+      "url": "index.php?action=atrasos_lista_curso"
+    },
+    {
+      "title": "Notas",
+      "desc": "Gestionar notas de alumnos",
+      "url": "index.php?action=notas_panel"
     },
     {
       "title": "Retiros",
@@ -242,6 +247,11 @@
       "title": "Reportes de Retiros",
       "desc": "Generar reportes de retiros",
       "url": "index.php?action=retiros_reportes"
+    },
+    {
+      "title": "Reglamentos C.E.I.A.",
+      "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
+      "url": "https://reglamentos-ceia-2026.vercel.app/"
     }
   ],
   "docente": [
@@ -308,8 +318,8 @@
       "title": "Centro de Reportes",
       "desc": "Exportar asistencia en PDF y CSV por curso o general",
       "url": "index.php?action=reportes"
-    }
-    ,{
+    },
+    {
       "title": "Reglamentos C.E.I.A.",
       "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
       "url": "https://reglamentos-ceia-2026.vercel.app/"

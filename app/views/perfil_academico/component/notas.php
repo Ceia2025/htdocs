@@ -1,19 +1,24 @@
 <!-- SECCIÓN DE NOTAS CON SEMESTRES -->
 <section class="">
     <div class="flex items-center gap-3 mb-6">
-        <div class="bg-indigo-600/20 p-3 rounded-xl">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 6v6l4 2m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+        <div class="card-icon-badge w-12 h-12 rounded-xl flex items-center justify-center">
+            <?= saat_icon('clock', 'w-6 h-6') ?>
         </div>
-        <h2 class="text-2xl font-bold text-gray-100 tracking-tight">Notas del Alumno</h2>
+        <h2 class="text-2xl font-bold text-strong tracking-tight">Notas del Alumno</h2>
     </div>
 
     <?php
     require_once __DIR__ . "/../../../models/Nota.php";
     $notaModel = new Nota();
+
+    // Excluye "ramos" que en realidad son registros administrativos,
+    // no asignaturas académicas — no deben aparecer en la tabla ni
+    // contar en los promedios.
+    $asignaturasExcluidas = ['Inspectoría', 'Convivencia Escolar'];
+    $asignaturas = array_values(array_filter(
+        $asignaturas,
+        fn($a) => !in_array($a['nombre'], $asignaturasExcluidas)
+    ));
 
     // Detectar semestre actual y estado
     $mesActual = intval(date('n'));
@@ -40,15 +45,14 @@
 
     <!-- Selector de semestre -->
     <form method="get" action="index.php"
-        class="flex flex-col md:flex-row md:items-center md:justify-between bg-gray-800 border border-gray-700 rounded-xl p-4 mb-6 shadow">
+        class="panel flex flex-col md:flex-row md:items-start md:justify-between rounded-xl p-4 mb-6 shadow gap-4">
 
         <div class="flex items-center gap-3 flex-wrap">
             <input type="hidden" name="action" value="perfil_academico">
             <input type="hidden" name="id" value="<?= $matricula['id'] ?>">
 
-            <label class="text-gray-300 font-semibold">Seleccionar semestre:</label>
-            <select name="semestre"
-                class="bg-gray-900 text-white border border-gray-700 rounded-lg px-3 py-2 focus:ring focus:ring-indigo-500">
+            <label class="text-soft font-semibold">Seleccionar semestre:</label>
+            <select name="semestre" class="input-field rounded-lg px-3 py-2">
                 <option value="1" <?= $semestreSeleccionado == 1 ? 'selected' : '' ?>>1° Semestre
                     (Marzo-Julio)</option>
                 <option value="2" <?= $semestreSeleccionado == 2 ? 'selected' : '' ?>>2° Semestre
@@ -56,32 +60,34 @@
             </select>
         </div>
 
-        <div class="flex gap-3 mt-4 md:mt-0">
+        <div class="flex flex-col gap-2 w-full md:w-auto">
             <button type="submit"
-                class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-semibold shadow transition">
-                🔍 Ver notas
+                class="btn-primary w-full justify-center whitespace-nowrap px-5 py-2 rounded-lg font-semibold shadow transition inline-flex items-center gap-2">
+                <?= saat_icon('search', 'w-4 h-4') ?>
+                Ver notas
             </button>
 
             <a href="index.php?action=notas_index&matricula_id=<?= $matricula['id'] ?>"
-                class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg font-semibold shadow transition">
-                📘 Ver todas las notas
+                class="btn-soft-info w-full justify-center whitespace-nowrap px-5 py-2 rounded-lg font-semibold shadow transition inline-flex items-center gap-2">
+                <?= saat_icon('book', 'w-4 h-4') ?>
+                Ver todas las notas
             </a>
         </div>
     </form>
 
 
-    <p class="text-sm italic text-indigo-400 mb-4"><?= htmlspecialchars($estadoSemestre) ?></p>
+    <p class="text-sm italic text-accent mb-4"><?= htmlspecialchars($estadoSemestre) ?></p>
 
     <?php if (!empty($asignaturas)): ?>
-        <div class="overflow-hidden bg-gray-800/80 backdrop-blur-sm border border-gray-700 rounded-2xl shadow-2xl">
-            <table class="min-w-full text-sm text-gray-300">
-                <thead class="bg-gray-700/80 text-gray-200">
+        <div class="panel overflow-hidden rounded-2xl shadow-2xl backdrop-blur-sm">
+            <table class="data-table w-full text-sm">
+                <thead>
                     <tr>
-                        <th class="px-6 py-3 text-left font-semibold uppercase tracking-wider">
+                        <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted">
                             Asignatura</th>
-                        <th class="px-6 py-3 text-center font-semibold uppercase tracking-wider">Notas
+                        <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider text-muted">Notas
                         </th>
-                        <th class="px-6 py-3 text-center font-semibold uppercase tracking-wider">
+                        <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider text-muted">
                             Promedio</th>
                     </tr>
                 </thead>
@@ -95,27 +101,28 @@
                         if ($promedio !== null)
                             $promsAsig[] = $promedio;
                         ?>
-                        <tr class="border-b border-gray-700 hover:bg-gray-700/40 transition-colors duration-200">
-                            <td class="px-6 py-3 font-medium text-gray-100">
+                        <tr>
+                            <td class="px-6 py-3 font-medium text-strong">
                                 <?= htmlspecialchars($asig['nombre']) ?>
                             </td>
                             <td class="px-6 py-3 text-center">
                                 <?php if (!empty($notasAsig)): ?>
                                     <?php foreach ($notasAsig as $n): ?>
-                                        <span class="inline-block bg-gray-700 text-indigo-300 px-2 py-1 rounded-lg mx-1 mb-1">
+                                        <span
+                                            class="inline-flex items-center bg-[var(--surface-1)] border border-[var(--border-soft)] text-accent px-2 py-1 rounded-lg mx-1 mb-1">
                                             <?= Nota::fmt((float) $n['nota']) ?>
                                             <!-- Botón editar -->
                                             <a href="index.php?action=notas_edit&id=<?= $n['id'] ?>"
-                                                class="ml-2 text-yellow-400 hover:text-yellow-300" title="Editar nota">
-                                                ✏️
+                                                class="ml-2 text-warn hover:opacity-75 inline-flex items-center" title="Editar nota">
+                                                <?= saat_icon('edit', 'w-3.5 h-3.5') ?>
                                             </a>
                                         </span>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <span class="text-gray-500 italic">Sin notas</span>
+                                    <span class="text-faint italic">Sin notas</span>
                                 <?php endif; ?>
                             </td>
-                            <td class="px-6 py-3 text-center text-indigo-400 font-semibold">
+                            <td class="px-6 py-3 text-center text-accent font-semibold">
                                 <?= Nota::fmt($promedio, '-') ?>
                             </td>
                         </tr>
@@ -125,16 +132,16 @@
         </div>
 
         <!-- Promedio semestral -->
-        <div class="mt-6 text-center text-gray-300">
+        <div class="mt-6 text-center text-soft">
             <p class="text-lg font-semibold">
                 Promedio <?= $semestreSeleccionado ?>° Semestre:
-                <span class="text-indigo-400">
+                <span class="text-accent">
                     <?= Nota::fmt(Nota::promedio($promsAsig), '-') ?>
                 </span>
             </p>
         </div>
 
-        <!-- 📘 Promedio anual -->
+        <!-- Promedio anual -->
         <?php
         $generalSemestre = function ($sem) use ($notaModel, $matricula, $asignaturas) {
             $notasSem = $notaModel->getByMatriculaAndSemestre($matricula['id'], $sem);
@@ -155,20 +162,23 @@
             $promFinal = Nota::promedio([$promSem1, $promSem2]);
 
             ?>
-            <div class="mt-10 bg-gray-800 border border-gray-700 rounded-2xl p-6 text-center shadow-lg">
-                <h3 class="text-xl font-semibold text-gray-100 mb-2">📊 Promedio Final Anual</h3>
-                <p class="text-gray-300">
-                    1° Sem: <span class="text-indigo-400"><?= Nota::fmt($promSem1, 1) ?></span> |
-                    2° Sem: <span class="text-indigo-400"><?= Nota::fmt($promSem2, 1) ?></span>
+            <div class="panel mt-10 rounded-2xl p-6 text-center shadow-lg">
+                <h3 class="text-xl font-semibold text-strong mb-2 flex items-center justify-center gap-2">
+                    <?= saat_icon('chart', 'w-5 h-5') ?>
+                    Promedio Final Anual
+                </h3>
+                <p class="text-soft">
+                    1° Sem: <span class="text-accent"><?= Nota::fmt($promSem1, 1) ?></span> |
+                    2° Sem: <span class="text-accent"><?= Nota::fmt($promSem2, 1) ?></span>
                 </p>
-                <p class="mt-2 text-lg font-bold text-indigo-400">
+                <p class="mt-2 text-lg font-bold text-accent">
                     Promedio Final: <?= Nota::fmt($promFinal, 1) ?>
                 </p>
             </div>
         <?php endif; ?>
 
     <?php else: ?>
-        <p class="text-gray-400 italic mt-4 text-center">No hay asignaturas registradas para este curso.
+        <p class="text-faint italic mt-4 text-center">No hay asignaturas registradas para este curso.
         </p>
     <?php endif; ?>
 </section>

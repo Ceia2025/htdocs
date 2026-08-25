@@ -8,6 +8,18 @@ $rol = $user['rol'];
 include __DIR__ . "/../../layout/header.php";
 include __DIR__ . "/../../layout/navbar.php";
 
+// Lee un ícono de app/public/svg/{key}.svg y lo devuelve listo para inyectar inline,
+// con la clase de tamaño Tailwind ya insertada en el <svg>.
+function saat_icon(string $key, string $classes = 'w-4 h-4'): string
+{
+    $path = __DIR__ . "/../../../public/svg/{$key}.svg";
+    if (!file_exists($path)) {
+        return '';
+    }
+    $svg = file_get_contents($path);
+    return preg_replace('/<svg /', '<svg class="' . htmlspecialchars($classes) . '" ', $svg, 1);
+}
+
 $anioId = $_GET['anio_id'] ?? ($anios[0]['id'] ?? '');
 $cursoId = $_GET['curso_id'] ?? '';
 $mesKey = $_GET['mes'] ?? '';
@@ -24,9 +36,7 @@ $esGeneral = !$cursoId;
         </div>
         <a href="index.php?action=reportes"
             class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
+            <?= saat_icon('arrow-left', 'w-4 h-4') ?>
             Volver a reportes
         </a>
     </div>
@@ -88,8 +98,10 @@ $esGeneral = !$cursoId;
         </div>
 
         <div class="flex items-center gap-3">
-            <button type="submit" class="btn-primary text-sm font-semibold px-4 py-2 rounded-lg transition">
-                🔍 Generar reporte
+            <button type="submit"
+                class="btn-primary inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-lg transition">
+                <?= saat_icon('search', 'w-4 h-4') ?>
+                Generar reporte
             </button>
             <a href="index.php?action=reportes"
                 class="text-xs text-faint hover:text-strong underline transition">Limpiar</a>
@@ -112,22 +124,14 @@ $esGeneral = !$cursoId;
                 <!-- Exportar CSV por curso -->
                 <a href="index.php?action=reporte_csv_curso&<?= $queryBase ?>"
                     class="btn-success inline-flex items-center gap-2 px-5 py-2.5 font-semibold text-sm rounded-xl shadow transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
+                    <?= saat_icon('download', 'w-4 h-4') ?>
                     Descargar CSV (este curso)
                 </a>
 
                 <!-- Ver PDF por curso -->
                 <a href="index.php?action=reporte_pdf_curso&<?= $queryBase ?>&preview=1" target="_blank"
                     class="btn-secondary inline-flex items-center gap-2 px-5 py-2.5 font-semibold text-sm rounded-xl shadow transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
+                    <?= saat_icon('eye', 'w-4 h-4') ?>
                     Ver PDF (este curso)
                 </a>
             <?php endif ?>
@@ -135,10 +139,7 @@ $esGeneral = !$cursoId;
             <!-- Exportar CSV general -->
             <a href="index.php?action=reporte_csv_general&<?= http_build_query(array_filter(['anio_id' => $anioId, 'mes' => $mesKey ?: null])) ?>"
                 class="btn-success inline-flex items-center gap-2 px-5 py-2.5 font-semibold text-sm rounded-xl shadow transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
+                <?= saat_icon('download', 'w-4 h-4') ?>
                 Descargar CSV (todos los cursos)
             </a>
 
@@ -146,6 +147,7 @@ $esGeneral = !$cursoId;
             <a href="index.php?action=reporte_pdf_general&<?= http_build_query(array_filter(['anio_id' => $anioId, 'mes' => $mesKey ?: null])) ?>&preview=1"
                 target="_blank"
                 class="btn-secondary inline-flex items-center gap-2 px-5 py-2.5 font-semibold text-sm rounded-xl shadow transition">
+                <?= saat_icon('eye', 'w-4 h-4') ?>
                 Ver PDF (todos los cursos)
             </a>
         </div>
@@ -285,7 +287,7 @@ $esGeneral = !$cursoId;
         </div>
     <?php elseif (!$cursoId && empty($resumenCursos)): ?>
         <div class="panel rounded-xl px-6 py-16 text-center">
-            <span class="text-5xl block mb-4">📊</span>
+            <span class="text-muted block mb-4"><?= saat_icon('chart', 'w-12 h-12 mx-auto') ?></span>
             <p class="text-muted font-medium">Selecciona un año académico para ver los reportes disponibles</p>
         </div>
     <?php endif ?>

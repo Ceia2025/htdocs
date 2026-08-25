@@ -7,6 +7,18 @@ $nombre = $user['nombre'];
 $rol = $user['rol'];
 include __DIR__ . "/../../layout/header.php";
 include __DIR__ . "/../../layout/navbar.php";
+
+// Lee un ícono de app/public/svg/{key}.svg y lo devuelve listo para inyectar inline,
+// con la clase de tamaño Tailwind ya insertada en el <svg>.
+function saat_icon(string $key, string $classes = 'w-4 h-4'): string
+{
+    $path = __DIR__ . "/../../../public/svg/{$key}.svg";
+    if (!file_exists($path)) {
+        return '';
+    }
+    $svg = file_get_contents($path);
+    return preg_replace('/<svg /', '<svg class="' . htmlspecialchars($classes) . '" ', $svg, 1);
+}
 ?>
 
 <header class="page-header">
@@ -22,9 +34,7 @@ include __DIR__ . "/../../layout/navbar.php";
         </div>
         <a href="index.php?action=reportes"
             class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
+            <?= saat_icon('arrow-left', 'w-4 h-4') ?>
             Volver a reportes
         </a>
     </div>
@@ -75,8 +85,8 @@ include __DIR__ . "/../../layout/navbar.php";
         <!-- CARD 1: Informe individual del alumno -->
         <div class="report-card report-blue rounded-xl overflow-hidden flex flex-col">
             <div class="px-5 py-4 border-b divider-soft flex items-start gap-4">
-                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
-                    👤
+                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <?= saat_icon('user', 'w-5 h-5') ?>
                 </div>
                 <div>
                     <h3 class="text-strong font-bold text-sm font-display">Informe Individual del Alumno</h3>
@@ -94,11 +104,11 @@ include __DIR__ . "/../../layout/navbar.php";
                     </select>
                 </div>
                 <div class="flex gap-2">
-                    <button id="btn-ver-alumno" onclick="descargarPdfAlumno(true)" disabled
-                        class="btn-secondary flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                    <button id="btn-ver-alumno" onclick="descargarPdfAlumno(true)" disabled class="btn-secondary flex-1 flex items-center justify-center gap-2 px-4 py-2.5
                                font-semibold rounded-xl transition text-sm
                                disabled:opacity-40 disabled:cursor-not-allowed">
-                        👁️ Ver
+                        <?= saat_icon('eye', 'w-4 h-4') ?>
+                        Ver
                     </button>
                     <button id="btn-pdf-alumno" onclick="descargarPdfAlumno(false)" disabled class="report-btn flex-1 flex items-center justify-center gap-2 px-4 py-2.5
                                font-semibold rounded-xl transition text-sm
@@ -117,8 +127,8 @@ include __DIR__ . "/../../layout/navbar.php";
         <!-- CARD 2: Notas por asignatura -->
         <div class="report-card report-indigo rounded-xl overflow-hidden flex flex-col">
             <div class="px-5 py-4 border-b divider-soft flex items-start gap-4">
-                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
-                    📚
+                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <?= saat_icon('book', 'w-5 h-5') ?>
                 </div>
                 <div>
                     <h3 class="text-strong font-bold text-sm font-display">Notas por Asignatura</h3>
@@ -136,11 +146,11 @@ include __DIR__ . "/../../layout/navbar.php";
                     </select>
                 </div>
                 <div class="flex gap-2">
-                    <button id="btn-ver-asignatura" onclick="descargarPdfAsignatura(true)" disabled
-                        class="btn-secondary flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                    <button id="btn-ver-asignatura" onclick="descargarPdfAsignatura(true)" disabled class="btn-secondary flex-1 flex items-center justify-center gap-2 px-4 py-2.5
                                font-semibold rounded-xl transition text-sm
                                disabled:opacity-40 disabled:cursor-not-allowed">
-                        👁️ Ver
+                        <?= saat_icon('eye', 'w-4 h-4') ?>
+                        Ver
                     </button>
                     <button id="btn-pdf-asignatura" onclick="descargarPdfAsignatura(false)" disabled class="report-btn flex-1 flex items-center justify-center gap-2 px-4 py-2.5
                                font-semibold rounded-xl transition text-sm
@@ -159,8 +169,8 @@ include __DIR__ . "/../../layout/navbar.php";
         <!-- CARD 3: Consolidado de notas -->
         <div class="report-card report-teal rounded-xl overflow-hidden flex flex-col">
             <div class="px-5 py-4 border-b divider-soft flex items-start gap-4">
-                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
-                    📊
+                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <?= saat_icon('chart', 'w-5 h-5') ?>
                 </div>
                 <div>
                     <h3 class="text-strong font-bold text-sm font-display">Consolidado de Notas</h3>
@@ -175,11 +185,11 @@ include __DIR__ . "/../../layout/navbar.php";
                     Usa el curso, año y semestre seleccionados arriba.
                 </p>
                 <div class="flex gap-2">
-                    <button id="btn-ver-consolidado" onclick="descargarPdfConsolidado(true)" disabled
-                        class="btn-secondary flex-1 flex items-center justify-center gap-2 px-4 py-2.5
+                    <button id="btn-ver-consolidado" onclick="descargarPdfConsolidado(true)" disabled class="btn-secondary flex-1 flex items-center justify-center gap-2 px-4 py-2.5
                                font-semibold rounded-xl transition text-sm
                                disabled:opacity-40 disabled:cursor-not-allowed">
-                        👁️ Ver
+                        <?= saat_icon('eye', 'w-4 h-4') ?>
+                        Ver
                     </button>
                     <button id="btn-pdf-consolidado" onclick="descargarPdfConsolidado(false)" disabled class="report-btn flex-1 flex items-center justify-center gap-2 px-4 py-2.5
                                font-semibold rounded-xl transition text-sm
@@ -198,8 +208,8 @@ include __DIR__ . "/../../layout/navbar.php";
         <!-- CARD 4: Ranking de Notas -->
         <div class="report-card report-amber rounded-xl overflow-hidden flex flex-col">
             <div class="px-5 py-4 border-b divider-soft flex items-start gap-4">
-                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
-                    🏆
+                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <?= saat_icon('trophy', 'w-5 h-5') ?>
                 </div>
                 <div>
                     <h3 class="text-strong font-bold text-sm font-display">Ranking de Notas</h3>
@@ -217,12 +227,14 @@ include __DIR__ . "/../../layout/navbar.php";
                     <button onclick="abrirModalRanking('alumnos')" id="btn-ranking-alumnos" disabled class="report-btn flex-1 flex items-center justify-center gap-2 px-4 py-2.5
                                font-semibold rounded-xl transition text-sm
                                disabled:opacity-40 disabled:cursor-not-allowed">
-                        👤 Alumnos
+                        <?= saat_icon('user', 'w-4 h-4') ?>
+                        Alumnos
                     </button>
                     <button onclick="abrirModalRanking('asignaturas')" id="btn-ranking-asignaturas" disabled class="report-btn flex-1 flex items-center justify-center gap-2 px-4 py-2.5
                                font-semibold rounded-xl transition text-sm
                                disabled:opacity-40 disabled:cursor-not-allowed">
-                        📚 Asignaturas
+                        <?= saat_icon('book', 'w-4 h-4') ?>
+                        Asignaturas
                     </button>
                 </div>
             </div>
@@ -231,8 +243,8 @@ include __DIR__ . "/../../layout/navbar.php";
         <!-- CARD 5: Ranking de Cursos -->
         <div class="report-card report-amber rounded-xl overflow-hidden flex flex-col">
             <div class="px-5 py-4 border-b divider-soft flex items-start gap-4">
-                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
-                    📉
+                <div class="report-icon-bg w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <?= saat_icon('trend-down', 'w-5 h-5') ?>
                 </div>
                 <div>
                     <h3 class="text-strong font-bold text-sm font-display">Cursos por Promedio</h3>
@@ -249,7 +261,8 @@ include __DIR__ . "/../../layout/navbar.php";
                 <div class="flex gap-2">
                     <button onclick="descargarPdfRankingCursos(true)" class="btn-secondary flex-1 flex items-center justify-center gap-2 px-4 py-2.5
                        font-semibold rounded-xl transition text-sm">
-                        👁️ Ver
+                        <?= saat_icon('eye', 'w-4 h-4') ?>
+                        Ver
                     </button>
                     <button onclick="descargarPdfRankingCursos(false)" class="report-btn flex-1 flex items-center justify-center gap-2 px-4 py-2.5
                        font-semibold rounded-xl transition text-sm">
@@ -295,12 +308,14 @@ include __DIR__ . "/../../layout/navbar.php";
         <!-- Pestañas + filtro curso -->
         <div class="flex items-center border-b divider-soft px-6">
             <button id="tab-alumnos" onclick="cambiarTab('alumnos')"
-                class="tab-btn is-active px-4 py-3 text-sm font-semibold">
-                👤 Por Alumno
+                class="tab-btn is-active px-4 py-3 text-sm font-semibold inline-flex items-center gap-1.5">
+                <?= saat_icon('user', 'w-4 h-4') ?>
+                Por Alumno
             </button>
             <button id="tab-asignaturas" onclick="cambiarTab('asignaturas')"
-                class="tab-btn px-4 py-3 text-sm font-semibold">
-                📚 Por Asignatura
+                class="tab-btn px-4 py-3 text-sm font-semibold inline-flex items-center gap-1.5">
+                <?= saat_icon('book', 'w-4 h-4') ?>
+                Por Asignatura
             </button>
             <div id="filtro-curso-wrap" class="ml-auto flex items-center gap-2 py-2">
                 <label class="text-xs text-muted whitespace-nowrap">Filtrar curso:</label>
@@ -330,7 +345,8 @@ include __DIR__ . "/../../layout/navbar.php";
             <div class="flex gap-2">
                 <button onclick="descargarPdfRanking(true)" class="btn-secondary flex items-center gap-2 px-5 py-2.5
                            font-semibold rounded-xl transition text-sm">
-                    👁️ Ver PDF
+                    <?= saat_icon('eye', 'w-4 h-4') ?>
+                    Ver PDF
                 </button>
                 <button onclick="descargarPdfRanking(false)" class="report-btn flex items-center gap-2 px-5 py-2.5
                            font-semibold rounded-xl transition text-sm">
@@ -347,7 +363,15 @@ include __DIR__ . "/../../layout/navbar.php";
     </div>
 </div>
 
+
 <script>
+    // ── Íconos servidos desde PHP (misma fuente que el resto de la app) ──
+    const SAAT_ICONS = {
+        trophy: <?= json_encode(saat_icon('trophy', 'w-4 h-4 inline-block align-text-bottom')) ?>,
+        chart: <?= json_encode(saat_icon('chart', 'w-4 h-4 inline-block align-text-bottom')) ?>,
+        warning: <?= json_encode(saat_icon('warning', 'w-3 h-3 inline-block align-text-bottom')) ?>
+    };
+
     // ── Estado global ─────────────────────────────────────────────
     let rankingTab = 'alumnos';
     let rankingData = null;
@@ -506,8 +530,12 @@ include __DIR__ . "/../../layout/navbar.php";
         ['alumnos', 'asignaturas'].forEach(t => {
             document.getElementById('tab-' + t).classList.toggle('is-active', t === tab);
         });
-        document.getElementById('modal-ranking-titulo').textContent =
-            tab === 'alumnos' ? '🏆 Ranking de Alumnos por Promedio' : '📊 Ranking de Asignaturas por Promedio';
+        document.getElementById('modal-ranking-titulo').innerHTML =
+            '<span class="inline-flex items-center gap-1.5">' +
+            (tab === 'alumnos'
+                ? SAAT_ICONS.trophy + ' Ranking de Alumnos por Promedio'
+                : SAAT_ICONS.chart + ' Ranking de Asignaturas por Promedio') +
+            '</span>';
         document.getElementById('filtro-curso-wrap').style.display =
             tab === 'alumnos' ? 'flex' : 'none';
     }
@@ -585,7 +613,7 @@ include __DIR__ . "/../../layout/navbar.php";
                     // Verifica pendiente usando matricula_id
                     const tienePendiente = data.pendientes_alumnos?.[cursoNombre]?.includes(a.matricula_id);
                     const badgePendiente = tienePendiente
-                        ? `<span class="chip-warn ml-2 text-[10px] font-normal px-1.5 py-0.5 rounded-full">⚠ Faltan notas</span>`
+                        ? `<span class="chip-warn ml-2 inline-flex items-center gap-1 text-[10px] font-normal px-1.5 py-0.5 rounded-full">${SAAT_ICONS.warning} Faltan notas</span>`
                         : '';
 
                     html += `
@@ -634,7 +662,7 @@ include __DIR__ . "/../../layout/navbar.php";
                     p => p.asignatura === a.asignatura && p.curso === a.curso
                 );
                 const badgeAsig = faltanAlumnos
-                    ? `<span class="chip-warn ml-2 text-[10px] font-normal px-1.5 py-0.5 rounded-full">⚠ Faltan alumnos con nota</span>`
+                    ? `<span class="chip-warn ml-2 inline-flex items-center gap-1 text-[10px] font-normal px-1.5 py-0.5 rounded-full">${SAAT_ICONS.warning} Faltan alumnos con nota</span>`
                     : '';
 
                 html += `

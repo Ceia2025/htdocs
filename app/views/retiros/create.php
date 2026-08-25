@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set('America/Santiago');
+
 require_once __DIR__ . "/../../controllers/AuthController.php";
 $auth = new AuthController();
 $auth->checkAuth();
@@ -67,7 +69,7 @@ include __DIR__ . "/../layout/navbar.php";
                     </div>
                     <div>
                         <label class="block text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">Hora de retiro *</label>
-                        <input type="time" name="hora_retiro" required
+                        <input type="time" name="hora_retiro" id="campo-hora" required
                             value="<?= htmlspecialchars($_POST['hora_retiro'] ?? date('H:i')) ?>"
                             class="input-field w-full text-sm rounded-lg px-3 py-2 cursor-pointer">
                     </div>
@@ -356,6 +358,18 @@ include __DIR__ . "/../layout/navbar.php";
         if (!e.target.closest('#buscar-alumno') && !e.target.closest('#sugerencias'))
             document.getElementById('sugerencias').classList.add('hidden');
     });
+
+    (() => {
+        const campoHora = document.getElementById('campo-hora');
+        const huboPost = <?= !empty($_POST) ? 'true' : 'false' ?>;
+
+        if (campoHora && !huboPost) {
+            const now = new Date();
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mm = String(now.getMinutes()).padStart(2, '0');
+            campoHora.value = hh + ':' + mm;
+        }
+    })();
 </script>
 
 <?php include __DIR__ . "/../layout/footer.php"; ?>

@@ -29,8 +29,8 @@ class AlumEmergencia
         $todos = $this->findByAlumno($alumno_id);
         $grupos = [
             'padre_madre_tutor' => [],
-            'apoderado'         => [],
-            'emergencia'        => [],
+            'apoderado' => [],
+            'emergencia' => [],
         ];
         foreach ($todos as $c) {
             $grupos[$c['tipo']][] = $c;
@@ -47,31 +47,44 @@ class AlumEmergencia
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Crear un contacto nuevo
-    public function create($alumno_id, $nombre, $telefono, $direccion, $relacion,
-                           $tipo = 'emergencia', $run_contacto = null,
-                           $email = null, $celular = null,
-                           $comuna = null, $observacion = null)
+    private function nullIfEmpty($value)
     {
+        $value = is_string($value) ? trim($value) : $value;
+        return ($value === null || $value === '') ? null : $value;
+    }
+
+    public function create(
+        $alumno_id,
+        $nombre,
+        $telefono,
+        $direccion,
+        $relacion,
+        $tipo = 'emergencia',
+        $run_contacto = null,
+        $email = null,
+        $celular = null,
+        $comuna = null,
+        $observacion = null
+    ) {
         $sql = "INSERT INTO {$this->table}
-                    (alumno_id, tipo, nombre_contacto, run_contacto, telefono,
-                     email, celular, direccion, comuna, relacion, observacion)
-                VALUES
-                    (:alumno_id, :tipo, :nombre_contacto, :run_contacto, :telefono,
-                     :email, :celular, :direccion, :comuna, :relacion, :observacion)";
+                (alumno_id, tipo, nombre_contacto, run_contacto, telefono,
+                 email, celular, direccion, comuna, relacion, observacion)
+            VALUES
+                (:alumno_id, :tipo, :nombre_contacto, :run_contacto, :telefono,
+                 :email, :celular, :direccion, :comuna, :relacion, :observacion)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
-            ':alumno_id'      => $alumno_id,
-            ':tipo'           => $tipo,
-            ':nombre_contacto'=> $nombre,
-            ':run_contacto'   => $run_contacto,
-            ':telefono'       => $telefono,
-            ':email'          => $email,
-            ':celular'        => $celular,
-            ':direccion'      => $direccion,
-            ':comuna'         => $comuna,
-            ':relacion'       => $relacion,
-            ':observacion'    => $observacion,
+            ':alumno_id' => $alumno_id,
+            ':tipo' => $tipo,
+            ':nombre_contacto' => $nombre,
+            ':run_contacto' => $this->nullIfEmpty($run_contacto),
+            ':telefono' => $telefono,
+            ':email' => $this->nullIfEmpty($email),
+            ':celular' => $this->nullIfEmpty($celular),
+            ':direccion' => $direccion,
+            ':comuna' => $this->nullIfEmpty($comuna),
+            ':relacion' => $this->nullIfEmpty($relacion),
+            ':observacion' => $this->nullIfEmpty($observacion),
         ]);
     }
 
@@ -81,15 +94,15 @@ class AlumEmergencia
         return $this->create(
             $alumno_id,
             $data['nombre_contacto'] ?? null,
-            $data['telefono']        ?? null,
-            $data['direccion']       ?? null,
-            $data['relacion']        ?? null,
-            $data['tipo']            ?? 'emergencia',
-            $data['run_contacto']    ?? null,
-            $data['email']           ?? null,
-            $data['celular']         ?? null,
-            $data['comuna']          ?? null,
-            $data['observacion']     ?? null,
+            $data['telefono'] ?? null,
+            $data['direccion'] ?? null,
+            $data['relacion'] ?? null,
+            $data['tipo'] ?? 'emergencia',
+            $data['run_contacto'] ?? null,
+            $data['email'] ?? null,
+            $data['celular'] ?? null,
+            $data['comuna'] ?? null,
+            $data['observacion'] ?? null,
         );
     }
 
@@ -110,17 +123,17 @@ class AlumEmergencia
                 WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
-            ':id'             => $id,
-            ':tipo'           => $data['tipo']            ?? 'emergencia',
-            ':nombre_contacto'=> $data['nombre_contacto'] ?? null,
-            ':run_contacto'   => $data['run_contacto']    ?? null,
-            ':telefono'       => $data['telefono']        ?? null,
-            ':email'          => $data['email']           ?? null,
-            ':celular'        => $data['celular']         ?? null,
-            ':direccion'      => $data['direccion']       ?? null,
-            ':comuna'         => $data['comuna']          ?? null,
-            ':relacion'       => $data['relacion']        ?? null,
-            ':observacion'    => $data['observacion']     ?? null,
+            ':id' => $id,
+            ':tipo' => $data['tipo'] ?? 'emergencia',
+            ':nombre_contacto' => $data['nombre_contacto'] ?? null,
+            ':run_contacto' => $data['run_contacto'] ?? null,
+            ':telefono' => $data['telefono'] ?? null,
+            ':email' => $data['email'] ?? null,
+            ':celular' => $data['celular'] ?? null,
+            ':direccion' => $data['direccion'] ?? null,
+            ':comuna' => $data['comuna'] ?? null,
+            ':relacion' => $data['relacion'] ?? null,
+            ':observacion' => $data['observacion'] ?? null,
         ]);
     }
 
@@ -144,12 +157,27 @@ class AlumEmergencia
     public static function relacionesDisponibles(): array
     {
         return [
-            'Madre', 'Padre', 'Hermano', 'Hermana',
-            'Abuelo', 'Abuela', 'Tío', 'Tía',
-            'Amigo', 'Amiga', 'Esposo', 'Esposa',
-            'Apoderado', 'Apoderado Suplente',
-            'Tutor', 'Tutor Legal', 'Representante','Por poder Simple', 'Psicóloga',
-            'Hijo','Hija'
+            'Madre',
+            'Padre',
+            'Hermano',
+            'Hermana',
+            'Abuelo',
+            'Abuela',
+            'Tío',
+            'Tía',
+            'Amigo',
+            'Amiga',
+            'Esposo',
+            'Esposa',
+            'Apoderado',
+            'Apoderado Suplente',
+            'Tutor',
+            'Tutor Legal',
+            'Representante',
+            'Por poder Simple',
+            'Psicóloga',
+            'Hijo',
+            'Hija'
         ];
     }
 }

@@ -8,6 +8,18 @@ $rol = $user['rol'];
 include __DIR__ . "/../../layout/header.php";
 include __DIR__ . "/../../layout/navbar.php";
 
+// Lee un ícono de app/public/svg/{key}.svg y lo devuelve listo para inyectar inline,
+// con la clase de tamaño Tailwind ya insertada en el <svg>.
+function saat_icon(string $key, string $classes = 'w-4 h-4'): string
+{
+    $path = __DIR__ . "/../../../public/svg/{$key}.svg";
+    if (!file_exists($path)) {
+        return '';
+    }
+    $svg = file_get_contents($path);
+    return preg_replace('/<svg /', '<svg class="' . htmlspecialchars($classes) . '" ', $svg, 1);
+}
+
 $anioId = $_GET['anio_id'] ?? ($anios[0]['id'] ?? '');
 $cursoId = $_GET['curso_id'] ?? '';
 $etniaFiltro = $_GET['etnia'] ?? '';
@@ -22,9 +34,7 @@ $etniaFiltro = $_GET['etnia'] ?? '';
         </div>
         <a href="index.php?action=reportes"
             class="btn-secondary flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
+            <?= saat_icon('arrow-left', 'w-4 h-4') ?>
             Volver a reportes
         </a>
     </div>
@@ -86,8 +96,10 @@ $etniaFiltro = $_GET['etnia'] ?? '';
         </div>
 
         <div class="flex items-center gap-3">
-            <button type="submit" class="btn-primary text-sm font-semibold px-4 py-2 rounded-lg transition">
-                🔍 Generar reporte
+            <button type="submit"
+                class="btn-primary inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-lg transition">
+                <?= saat_icon('search', 'w-4 h-4') ?>
+                Generar reporte
             </button>
             <a href="index.php?action=reporte_etnia"
                 class="text-xs text-faint hover:text-strong underline transition">Limpiar</a>
@@ -106,28 +118,17 @@ $etniaFiltro = $_GET['etnia'] ?? '';
         <div class="flex flex-wrap gap-3 mb-6">
             <a href="index.php?action=reporte_etnia_pdf&<?= $queryBase ?>&preview=1" target="_blank"
                 class="btn-secondary inline-flex items-center gap-2 px-5 py-2.5 font-semibold text-sm rounded-xl shadow transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
+                <?= saat_icon('eye', 'w-4 h-4') ?>
                 Ver PDF
             </a>
             <a href="index.php?action=reporte_etnia_pdf&<?= $queryBase ?>"
                 class="btn-danger inline-flex items-center gap-2 px-5 py-2.5 font-semibold text-sm rounded-xl shadow transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
+                <?= saat_icon('download', 'w-4 h-4') ?>
                 Descargar PDF
             </a>
             <a href="index.php?action=reporte_etnia_csv&<?= $queryBase ?>"
                 class="btn-success inline-flex items-center gap-2 px-5 py-2.5 font-semibold text-sm rounded-xl shadow transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
+                <?= saat_icon('download', 'w-4 h-4') ?>
                 Descargar CSV (Excel)
             </a>
         </div>
@@ -194,8 +195,9 @@ $etniaFiltro = $_GET['etnia'] ?? '';
         <?php foreach ($reporte as $cursoNombreLoop => $alumnos): ?>
             <div class="panel rounded-xl overflow-hidden mb-5">
                 <div class="px-5 py-3.5 border-b divider-soft flex items-center justify-between">
-                    <h2 class="text-sm font-semibold uppercase tracking-wider text-muted">
-                        🎓 <?= htmlspecialchars($cursoNombreLoop) ?>
+                    <h2 class="text-sm font-semibold uppercase tracking-wider text-muted flex items-center gap-2">
+                        <?= saat_icon('cap', 'w-4 h-4') ?>
+                        <?= htmlspecialchars($cursoNombreLoop) ?>
                         <span class="ml-2 text-xs font-normal text-faint">
                             (<?= count($alumnos) ?> alumno<?= count($alumnos) !== 1 ? 's' : '' ?>)
                         </span>
@@ -265,12 +267,12 @@ $etniaFiltro = $_GET['etnia'] ?? '';
 
     <?php elseif ($anioId): ?>
         <div class="panel rounded-xl px-6 py-16 text-center">
-            <span class="text-5xl block mb-4">🔎</span>
+            <span class="text-muted block mb-4"><?= saat_icon('search', 'w-12 h-12 mx-auto') ?></span>
             <p class="text-muted font-medium">No se encontraron alumnos con los filtros seleccionados</p>
         </div>
     <?php else: ?>
         <div class="panel rounded-xl px-6 py-16 text-center">
-            <span class="text-5xl block mb-4">📊</span>
+            <span class="text-muted block mb-4"><?= saat_icon('chart', 'w-12 h-12 mx-auto') ?></span>
             <p class="text-muted font-medium">Selecciona un año académico para ver el reporte</p>
         </div>
     <?php endif ?>

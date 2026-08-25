@@ -8,12 +8,20 @@ $rol = $user['rol'];
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 
+// Lee un ícono desde app/public/svg/ y lo devuelve como string para inyectarlo inline
+// (inline permite que el color se herede vía currentColor, igual que con CSS normal)
+function saat_render_icon(string $iconKey): string
+{
+    $path = __DIR__ . "/../../public/svg/{$iconKey}.svg";
+    return file_exists($path) ? file_get_contents($path) : '';
+}
+
 // Definir los módulos de reporte disponibles
 $modulos = [
     [
         'titulo' => 'Reporte de Asistencia',
         'descripcion' => 'Exporta asistencia mensual y acumulada por curso o general. Disponible en PDF y CSV.',
-        'icono' => '📋',
+        'icono' => 'clock',
         'color' => 'emerald',
         'url' => 'index.php?action=reportes_asistencia',
         'disponible' => true,
@@ -22,7 +30,7 @@ $modulos = [
     [
         'titulo' => 'Reporte de Atrasos',
         'descripcion' => 'Exporta el historial de atrasos por curso, alumno y semestre.',
-        'icono' => '⏰',
+        'icono' => 'alarm',
         'color' => 'amber',
         'url' => '#',
         'disponible' => false,
@@ -31,16 +39,16 @@ $modulos = [
     [
         'titulo' => 'Reporte de Notas',
         'descripcion' => 'Exporta informes de notas por alumno o por asignatura en PDF.',
-        'icono' => '📝',
+        'icono' => 'star',
         'color' => 'blue',
-        'url' => 'index.php?action=reportes_notas',  // ← URL correcta
-        'disponible' => true,                                // ← activado
+        'url' => 'index.php?action=reportes_notas',
+        'disponible' => true,
         'tags' => ['PDF', 'Por alumno', 'Por asignatura'],
     ],
     [
         'titulo' => 'Reporte de Matrícula',
         'descripcion' => 'Exporta nómina de alumnos con matrícula activa por curso y año.',
-        'icono' => '🎓',
+        'icono' => 'user',
         'color' => 'purple',
         'url' => 'index.php?action=reportes_matricula',
         'disponible' => true,
@@ -49,16 +57,16 @@ $modulos = [
     [
         'titulo' => 'Reporte Alumnos Etnia',
         'descripcion' => 'Exporta filtro de Alumnos con distintas Etnias, Separadas por curso y año.',
-        'icono' => '🧑🏽',
+        'icono' => 'group',
         'color' => 'yellow',
         'url' => 'index.php?action=reportes_etnia',
-        'disponible' => true,          // ← activar
+        'disponible' => true,
         'tags' => ['PDF', 'CSV', 'Por curso', 'Por etnia'],
     ],
     [
         'titulo' => 'Reporte Alumnos Pie',
         'descripcion' => 'Exporta el listado de alumnos PIE por curso y categoría, con porcentajes.',
-        'icono' => '👦',
+        'icono' => 'shield',
         'color' => 'cyan',
         'url' => 'index.php?action=reportes_pie',
         'disponible' => true,
@@ -67,16 +75,16 @@ $modulos = [
     [
         'titulo' => 'Alumno Regular',
         'descripcion' => 'Descarga en formato PDF el Certificado de Alumno Regular, con o sin detalle de asistencia',
-        'icono' => '👼',
+        'icono' => 'doc',
         'color' => 'indigo',
         'url' => 'index.php?action=reportes_cert_alumno_regular',
-        'disponible' => true,          // ← activar
-        'tags' => ['PDF', 'Normal', 'Con Asistencia',],
+        'disponible' => true,
+        'tags' => ['PDF', 'Normal', 'Con Asistencia'],
     ],
     [
         'titulo' => 'Alumnos Retirados',
         'descripcion' => 'Exporta el listado de alumnos retirados por curso, con fecha de retiro y porcentaje.',
-        'icono' => '🚪',
+        'icono' => 'exit',
         'color' => 'rose',
         'url' => 'index.php?action=reportes_retirados',
         'disponible' => true,
@@ -85,7 +93,7 @@ $modulos = [
     [
         'titulo' => 'Reporte de Procedencia',
         'descripcion' => 'Exporta la procedencia (colegio y comuna de origen) de alumnos matriculados y retirados, por curso y año.',
-        'icono' => '🏫',
+        'icono' => 'building',
         'color' => 'teal',
         'url' => 'index.php?action=reportes_procedencia',
         'disponible' => true,
@@ -133,8 +141,8 @@ $modulos = [
                 <!-- Cabecera -->
                 <div class="px-6 py-5 border-b divider-soft flex items-start gap-4">
                     <div class="report-icon-bg flex-shrink-0 w-12 h-12 rounded-xl
-                        flex items-center justify-center text-2xl">
-                        <?= $modulo['icono'] ?>
+                        flex items-center justify-center [&_svg]:w-6 [&_svg]:h-6">
+                        <?= saat_render_icon($modulo['icono']) ?>
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 mb-1">
