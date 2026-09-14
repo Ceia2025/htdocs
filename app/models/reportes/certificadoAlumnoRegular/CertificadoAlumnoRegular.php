@@ -91,10 +91,15 @@ class CertificadoAlumnoRegular
                 a.apemat,
                 a.fechanac,
                 a.sexo,
-                c.nombre  AS curso,
-                an.anio   AS anio,
-                m.id      AS matricula_id,
-                an.id     AS anio_id
+                a.direccion,
+                a.ciudad,
+                c.nombre        AS curso,
+                c.especialidad  AS especialidad,
+                an.anio         AS anio,
+                m.id            AS matricula_id,
+                m.numero_matricula,
+                m.fecha_matricula,
+                an.id           AS anio_id
             FROM alumnos2 a
             INNER JOIN matriculas2 m  ON m.alumno_id = a.id
             INNER JOIN cursos2 c      ON c.id = m.curso_id

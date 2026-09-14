@@ -42,8 +42,6 @@ switch ($ruta) {
         <a href="imagenes/index.php">Imagenes</a>
         <a href="descarga/index.html">Descargas</a>
         <a href="https://forms.gle/tCKj96eGYjHmVxGG8">Asi Aprendo Mejor</a>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdhYXBEBO15ZOeaZcv7pVo37nJ0kNKR2mqbdvldt9W4YSrAdA/viewform">Encuesta Profe Fran 1</a>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdu1rWYbwJI67v8Y8znQXJD8ogbiuJ5p0IU-OyhYoI-AkiF6Q/viewform">Encuesta Profe Fran 2</a>
     </div>
 
     <!--

@@ -65,11 +65,31 @@ class AsistenciaController
         if (!$cursoId || !$anioId)
             die("Faltan parámetros para el resumen.");
 
-        $inicio = date("Y-03-01");
-        $fin = date("Y-m-d");
-
-        $porcentaje = $this->model->porcentajeCurso($cursoId, $anioId, $inicio, $fin);
         $detalle = $this->model->getResumenAsistenciaCurso($cursoId, $anioId);
+        $fechasAnio = $this->model->getFechasAnio($anioId);
+
+        if (empty($fechasAnio['sem1_inicio']) || empty($fechasAnio['sem2_fin'])) {
+            die("El año seleccionado no tiene fechas de semestres configuradas.
+             <a href='index.php?action=anio_edit&id=$anioId'>Configurar ahora</a>");
+        }
+
+        $fechasConAsistencia = $this->model->getFechasConAsistencia($cursoId, $anioId);
+        $totalDiasClase = count($fechasConAsistencia);
+
+        $totalClasesSuma = 0;
+        $totalPresentesSuma = 0;
+
+        foreach ($detalle as &$row) {
+            $totalClasesSuma += (int) $row['total_clases'];
+            $totalPresentesSuma += (int) $row['presentes'];
+
+            $row['proyeccion'] = $this->model->calcularProyeccion($row, $fechasAnio, 85.0);
+        }
+        unset($row);
+
+        $porcentaje = $totalClasesSuma > 0
+            ? round(($totalPresentesSuma / $totalClasesSuma) * 100, 1)
+            : 0;
 
         require "../views/asistencia/resumen_curso.php";
     }
@@ -339,5 +359,5 @@ class AsistenciaController
 
 
 
-    
+
 }

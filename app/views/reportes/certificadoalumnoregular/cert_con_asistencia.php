@@ -6,7 +6,11 @@
     <meta charset="UTF-8">
     <title>Certificado Alumno Regular – Con Asistencia</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: Arial, sans-serif;
@@ -17,15 +21,48 @@
             padding: 0;
         }
 
-        .page { margin: 28px 45px 0 45px; }
+        .page {
+            margin: 28px 45px 0 45px;
+        }
 
         /* ── ENCABEZADO 3 LOGOS ── */
-        .header { display: table; width: 100%; margin-bottom: 24px; }
-        .header-left   { display: table-cell; width: 28%; vertical-align: top; }
-        .header-center { display: table-cell; width: 30%; vertical-align: top; text-align: center; }
-        .header-right  { display: table-cell; width: 28%; vertical-align: top; text-align: right; }
-        .header img { height: 68px; width: auto; }
-        .header-center img { height: 28px; width: auto; display: block; margin: -29px auto 0; }
+        .header {
+            display: table;
+            width: 100%;
+            margin-bottom: 24px;
+        }
+
+        .header-left {
+            display: table-cell;
+            width: 28%;
+            vertical-align: top;
+        }
+
+        .header-center {
+            display: table-cell;
+            width: 30%;
+            vertical-align: top;
+            text-align: center;
+        }
+
+        .header-right {
+            display: table-cell;
+            width: 28%;
+            vertical-align: top;
+            text-align: right;
+        }
+
+        .header img {
+            height: 68px;
+            width: auto;
+        }
+
+        .header-center img {
+            height: 28px;
+            width: auto;
+            display: block;
+            margin: -29px auto 0;
+        }
 
         /* ── TÍTULO ── */
         .cert-titulo {
@@ -44,15 +81,32 @@
             font-size: 11.5px;
             margin-bottom: 12px;
         }
-        .cert-body p { margin-bottom: 8px; }
 
-        .bold   { font-weight: bold; }
-        .quot   { font-weight: bold; }
-        .upper  { text-transform: uppercase; }
-        .italic { font-style: italic; }
+        .cert-body p {
+            margin-bottom: 8px;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .quot {
+            font-weight: bold;
+        }
+
+        .upper {
+            text-transform: uppercase;
+        }
+
+        .italic {
+            font-style: italic;
+        }
 
         /* ── BULLETS ── */
-        .bullets { margin: 8px 0 10px 30px; }
+        .bullets {
+            margin: 8px 0 10px 30px;
+        }
+
         .bullets li {
             list-style: disc;
             font-style: italic;
@@ -60,16 +114,23 @@
             line-height: 1.7;
             margin-bottom: 3px;
         }
-        .bullets li strong { font-style: normal; }
+
+        .bullets li strong {
+            font-style: normal;
+        }
 
         /* ── TABLA ASISTENCIA ── */
-        .tabla-wrap { margin: 10px 60px 12px 60px; }
+        .tabla-wrap {
+            margin: 10px 60px 12px 60px;
+        }
+
         .tabla-asistencia {
             width: 100%;
             border-collapse: collapse;
             font-size: 11px;
             font-style: italic;
         }
+
         .tabla-asistencia th {
             border-bottom: 1px solid #000;
             font-weight: bold;
@@ -78,25 +139,80 @@
             text-align: left;
             font-size: 10.5px;
         }
-        .tabla-asistencia td { padding: 3px 8px; font-style: italic; }
-        .tabla-asistencia tr:nth-child(even) td { background: #f5f5f5; }
-        .tabla-asistencia tfoot td { border-top: 1px solid #000; font-weight: bold; }
-        .tabla-asistencia .num { text-align: right; }
+
+        .tabla-asistencia td {
+            padding: 3px 8px;
+            font-style: italic;
+        }
+
+        .tabla-asistencia tr:nth-child(even) td {
+            background: #f5f5f5;
+        }
+
+        .tabla-asistencia tfoot td {
+            border-top: 1px solid #000;
+            font-weight: bold;
+        }
+
+        .tabla-asistencia .num {
+            text-align: right;
+        }
 
         /* ── FIRMA ── */
-        .firma-wrap { text-align: center; margin-top: 50px; margin-bottom: 8px; }
-        .firma-wrap img { height: 160px; width: auto; display: block; margin: 0 auto; }
-        .firma-nombre { font-weight: bold; font-size: 11.5px; text-transform: uppercase; margin-top: 4px; }
-        .firma-cargo  { font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .firma-wrap {
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 8px;
+        }
+
+        .firma-wrap img {
+            height: 160px;
+            width: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .firma-nombre {
+            font-weight: bold;
+            font-size: 11.5px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .firma-cargo {
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
 
         /* ── FECHA Y VB ── */
-        .fecha-vb { margin-top: 28px; font-size: 11px; }
-        .fecha-vb p { margin-bottom: 4px; }
-        .vb img { height: 28px; width: auto; vertical-align: middle; }
+        .fecha-vb {
+            margin-top: 28px;
+            font-size: 11px;
+        }
+
+        .fecha-vb p {
+            margin-bottom: 4px;
+        }
+
+        .vb img {
+            height: 28px;
+            width: auto;
+            vertical-align: middle;
+        }
 
         /* ── PIE DE PÁGINA ── */
-        .pie-pagina { position: fixed; bottom: 0; left: 0; width: 100%; }
-        .pie-pagina img { width: 100%; display: block; }
+        .pie-pagina {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .pie-pagina img {
+            width: 100%;
+            display: block;
+        }
     </style>
 </head>
 
@@ -105,13 +221,13 @@
     <?php
     // ── Recursos e info del alumno (centralizados en el helper) ──
     $img = certImagenes();
-    $a   = certDatosAlumno([
+    $a = certDatosAlumno([
         'nombre' => $nombre ?? '',
         'apepat' => $apepat ?? '',
         'apemat' => $apemat ?? '',
-        'run'    => $run ?? '',
+        'run' => $run ?? '',
         'codver' => $codver ?? '',
-        'sexo'   => $sexo ?? '',
+        'sexo' => $sexo ?? '',
     ]);
 
     // ── Fecha larga: manual si viene del index, hoy si viene vacía ──
@@ -132,10 +248,25 @@
 
     // Nombres de mes por número (para la tabla)
     $nombresMes = [
-        1 => 'ENERO', 2 => 'FEBRERO', 3 => 'MARZO', 4 => 'ABRIL',
-        5 => 'MAYO', 6 => 'JUNIO', 7 => 'JULIO', 8 => 'AGOSTO',
-        9 => 'SEPTIEMBRE', 10 => 'OCTUBRE', 11 => 'NOVIEMBRE', 12 => 'DICIEMBRE',
+        1 => 'ENERO',
+        2 => 'FEBRERO',
+        3 => 'MARZO',
+        4 => 'ABRIL',
+        5 => 'MAYO',
+        6 => 'JUNIO',
+        7 => 'JULIO',
+        8 => 'AGOSTO',
+        9 => 'SEPTIEMBRE',
+        10 => 'OCTUBRE',
+        11 => 'NOVIEMBRE',
+        12 => 'DICIEMBRE',
     ];
+
+    // ── Periodo escolar con formato "2.026" (punto de miles sobre el año) ──
+    $anioTexto = number_format((int) ($anio ?? 0), 0, '', '.');
+
+    // ── Apellidos del alumno para la viñeta de matrícula ──
+    $apellidosAlumno = trim(($apepat ?? '') . ' ' . ($apemat ?? ''));
     ?>
 
     <!-- ══ PIE (fixed) ══ -->
@@ -147,9 +278,9 @@
 
         <!-- ══ ENCABEZADO ══ -->
         <div class="header">
-            <div class="header-left">   <img src="<?= $img['logo1'] ?>" alt="Educación Pública"></div>
+            <div class="header-left"> <img src="<?= $img['logo1'] ?>" alt="Educación Pública"></div>
             <div class="header-center"> <img src="<?= $img['logo2'] ?>" alt="Los Álamos"></div>
-            <div class="header-right">  <img src="<?= $img['logo3'] ?>" alt="CEIA"></div>
+            <div class="header-right"> <img src="<?= $img['logo3'] ?>" alt="CEIA"></div>
         </div>
 
         <!-- ══ TÍTULO ══ -->
@@ -162,17 +293,25 @@
                 El director ADP que suscribe, certifica que <?= $a['tratamiento'] ?>
                 <span class="bold upper"><?= htmlspecialchars($a['nombreCompleto']) ?>.</span>
                 Rut. <span class="bold"><?= htmlspecialchars($a['runCompleto']) ?></span>,
-                <?php if (!empty($nacTexto)): ?>
-                    Nacido (a) el <span class="bold"><?= $nacTexto ?></span>,
+                <?php if (!empty($direccion)): ?>
+                    Domiciliado (a) en <span class="bold"><?= htmlspecialchars($direccion) ?></span>,
+                    <?php if (!empty($ciudad)): ?>
+                        de la Ciudad de <span class="bold"><?= htmlspecialchars($ciudad) ?></span>,
+                    <?php endif ?>
                 <?php endif ?>
-                Es Alumno (a) Regular del
-                <span class="quot">"<span class="bold upper"><?= htmlspecialchars($curso) ?></span>"</span>
-                Año de Enseñanza, matriculado (a),
-                para el Año <span class="bold"><?= htmlspecialchars($anio) ?></span>,
+                es alumno (a) regular del
+                <span class="bold upper"><?= htmlspecialchars($curso) ?></span>
+                <?php if (!empty($especialidad)): ?>
+                    , en la especialidad de
+                    <span class="quot">"<span class="bold"><?= htmlspecialchars($especialidad) ?></span>"</span>
+                <?php endif ?>
+                del establecimiento a mi cargo, bajo el registro de matrícula
+                <span class="bold">N.º <?= htmlspecialchars($numero_matricula ?? '') ?></span>,
+                periodo escolar <span class="bold"><?= $anioTexto ?>.</span>
                 en el Centro de Educación Integrada de Adultos,
                 <span class="bold">"Juanita Zúñiga Fuentes"</span>,
-                Establecimiento Dependiente de La Servicio Local de educación pública los Álamos
-                &nbsp;<span class="bold">N.º 3290 / 81</span>&nbsp;
+                Establecimiento Dependiente del Servicio Local de Educación Pública Los Álamos y
+                Decreto Cooperador <span class="bold">N.º 3290 / 81</span>
                 del Ministerio de Educación.
             </p>
         </div>
@@ -180,7 +319,11 @@
         <!-- ══ BULLETS ══ -->
         <ul class="bullets">
             <li>
-                El alumno (a) durante l ranscurso del presente año, mantiene la siguiente asistencia:
+                La asistencia es parcial al día <strong><?= $hoyTexto ?></strong>
+            </li>
+            <li>
+                La Alumna (o) <strong><?= htmlspecialchars($apellidosAlumno) ?></strong>,
+                fue matriculada con fecha <strong><?= $fechaMatTexto ?: '—' ?></strong>
             </li>
         </ul>
 

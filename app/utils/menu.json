@@ -11,7 +11,7 @@
       "url": "index.php?action=asistencia_cursos"
     },
     {
-      "title": "Mantenedor de Matrículas",
+      "title": "Historial académico",
       "desc": "Gestionar matrículas existentes",
       "url": "index.php?action=matriculas"
     },
@@ -113,7 +113,7 @@
       "url": "index.php?action=alumnos_stepper"
     },
     {
-      "title": "Mantenedor de Matrículas",
+      "title": "Historial académico",
       "desc": "Gestionar matrículas existentes",
       "url": "index.php?action=matriculas"
     },
@@ -199,7 +199,7 @@
       "url": "index.php?action=asistencia_cursos"
     },
     {
-      "title": "Mantenedor de Matrículas",
+      "title": "Historial académico",
       "desc": "Gestionar matrículas existentes",
       "url": "index.php?action=matriculas"
     },
@@ -276,7 +276,7 @@
       "url": "index.php?action=anotaciones"
     },
     {
-      "title": "Mantenedor de Matrículas",
+      "title": "Historial académico",
       "desc": "Gestionar matrículas existentes",
       "url": "index.php?action=matriculas"
     },

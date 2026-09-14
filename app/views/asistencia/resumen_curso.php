@@ -2,21 +2,30 @@
 require_once __DIR__ . "/../../controllers/AuthController.php";
 
 $auth = new AuthController();
-$auth->checkAuth(); // obliga a tener sesión iniciada
+$auth->checkAuth();
 
-$user = $_SESSION['user']; // usuario logueado
+$user = $_SESSION['user'];
 $nombre = $user['nombre'];
 $rol = $user['rol'];
 
-// Incluir layout
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 
-
-//Incluir el nombre del curso, MODIFICAR EN EL FUTOR, YA QUE ACÁ NO DEBERIA ESTR, SOLO SE PUSO POR ERROR EN EL CONTROLADOR XD
 $asistenciaModel = new Asistencia();
 $cursoInfo = $asistenciaModel->getCurso($_GET['curso_id'] ?? 0);
 $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
+
+$cursoId = $_GET['curso_id'] ?? 0;
+$anioId = $_GET['anio_id'] ?? 0;
+
+// Etiquetas y estilos por estado de proyección
+$estadoInfo = [
+    'aprobado' => ['label' => 'Aprobado', 'chip' => 'chip-success'],
+    'repite' => ['label' => 'Repite', 'chip' => 'chip-danger'],
+    'asegurado' => ['label' => 'Asistencia asegurada', 'chip' => 'chip-success'],
+    'critico' => ['label' => 'No alcanza el mínimo', 'chip' => 'chip-danger'],
+    'en_riesgo' => ['label' => 'En riesgo', 'chip' => 'chip-warning'],
+];
 ?>
 
 <!-- MAIN -->
@@ -27,7 +36,6 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
                 <span class="text-accent">
                     <?= htmlspecialchars($cursoInfo['nombre'] ?? 'Sin Nombre') ?>
                 </span>
-
             </h1>
         </div>
     </header>
@@ -41,13 +49,15 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
 
             <!-- Indicador General -->
             <div class="mb-6 p-4 rounded-lg
-    <?= $porcentaje >= 85 ? 'banner-success' :
+    <?= $porcentaje >= 80 ? 'banner-success' :
         ($porcentaje >= 70 ? 'banner-warning' : 'banner-danger') ?>">
 
                 <h3 class="text-xl font-semibold">
-                    Asistencia General:
-                    <?= $porcentaje ?>%
+                    Asistencia General: <?= $porcentaje ?>%
                 </h3>
+                <p class="text-sm opacity-80 mt-1">
+                    <?= $totalDiasClase ?> día<?= $totalDiasClase == 1 ? '' : 's' ?> de clase registrados hasta la fecha
+                </p>
             </div>
 
             <!-- Barra de orden -->
@@ -72,8 +82,23 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
                     % Asistencia <span class="sort-arrow"></span>
                 </button>
 
+                <button type="button"
+                    class="sort-btn btn-secondary flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm"
+                    data-sort-key="restantes" data-sort-dir="asc">
+                    Días restantes <span class="sort-arrow"></span>
+                </button>
+
                 <span class="chip-danger px-2 py-0.5 rounded-full text-xs ml-auto">Retirado</span>
                 <span class="text-xs text-faint">alumno con matrícula retirada durante el año</span>
+            </div>
+
+            <!-- Leyenda de estados de proyección -->
+            <div class="mb-4 flex flex-wrap items-center gap-3 text-xs">
+                <span class="text-faint uppercase tracking-wide">Proyección:</span>
+                <span class="chip-success px-2 py-0.5 rounded-full">Asegurado / Aprobado</span>
+                <span class="chip-warning px-2 py-0.5 rounded-full">En riesgo</span>
+                <span class="chip-danger px-2 py-0.5 rounded-full">No alcanza el mínimo / Repite</span>
+                <span class="text-faint">(mínimo exigido: 80%)</span>
             </div>
 
             <!-- Tabla Detallada -->
@@ -85,42 +110,49 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
                             <th class="px-4 py-3">Alumno</th>
                             <th class="px-4 py-3 text-center">Clases</th>
                             <th class="px-4 py-3 text-center">Presentes</th>
-                            <th class="px-4 py-3 text-center">Porcentaje hasta la fecha</th>
+                            <th class="px-4 py-3 text-center">% hasta la fecha</th>
+                            <th class="px-4 py-3 text-center">Días restantes</th>
+                            <th class="px-4 py-3 text-center">Proyección (mín–máx)</th>
+                            <th class="px-4 py-3 text-center">Estado</th>
                         </tr>
                     </thead>
                     <tbody id="tbodyResumen">
                         <?php foreach ($detalle as $row): ?>
 
                             <?php
-                            // 1. Obtener valores (usamos el operador null coalescing para evitar errores si no existen)
                             $total = $row['total_clases'] ?? 0;
                             $asistencias = $row['presentes'] ?? 0;
 
-                            // 2. Calcular porcentaje (evitando división por cero)
-                            $porcentaje = ($total > 0) ? round(($asistencias / $total) * 100, 1) : 0;
+                            $porcentajeAlumno = ($total > 0) ? round(($asistencias / $total) * 100, 1) : 0;
 
-                            // 3. Determinar el color según el rendimiento
-                            if ($porcentaje >= 75) {
+                            if ($porcentajeAlumno >= 75) {
                                 $color = 'text-success';
-                            } elseif ($porcentaje >= 50) {
+                            } elseif ($porcentajeAlumno >= 50) {
                                 $color = 'text-warn';
                             } else {
                                 $color = 'text-danger';
                             }
 
-                            // 4. Alumno retirado
                             $fechaRetiro = $row['fecha_retiro'] ?? null;
                             $estaRetirado = !empty($fechaRetiro);
 
-                            // 5. Valor numérico para ordenar por número de lista
-                            //    (los sin número de lista quedan siempre al final)
                             $numeroListaOrden = is_numeric($row['numero_lista'] ?? null)
                                 ? (int) $row['numero_lista']
                                 : PHP_INT_MAX;
+
+                            $proy = $row['proyeccion'] ?? [
+                                'dias_habiles_restantes' => 0,
+                                'pct_min_garantizado' => 0,
+                                'pct_max_posible' => 0,
+                                'max_faltas_permitidas' => 0,
+                                'estado' => 'critico',
+                            ];
+                            $estado = $estadoInfo[$proy['estado']] ?? $estadoInfo['critico'];
                             ?>
 
                             <tr class="<?= $estaRetirado ? 'row-retired' : '' ?>" data-lista="<?= $numeroListaOrden ?>"
-                                data-retirado="<?= $estaRetirado ? 1 : 0 ?>" data-porcentaje="<?= $porcentaje ?>">
+                                data-retirado="<?= $estaRetirado ? 1 : 0 ?>" data-porcentaje="<?= $porcentajeAlumno ?>"
+                                data-restantes="<?= $proy['dias_habiles_restantes'] ?>">
                                 <td class="px-4 py-2 text-center text-xs font-bold text-indigo-400">
                                     <?= $row['numero_lista'] ?? '—' ?>
                                 </td>
@@ -137,7 +169,24 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
                                     <?= $row['presentes'] ?? 0 ?>
                                 </td>
                                 <td class="px-4 py-2 text-center font-bold <?= $color ?>">
-                                    <?= $porcentaje ?>%
+                                    <?= $porcentajeAlumno ?>%
+                                </td>
+                                <td class="px-4 py-2 text-center">
+                                    <?= $proy['dias_habiles_restantes'] ?>
+                                </td>
+                                <td class="px-4 py-2 text-center text-xs">
+                                    <?= $proy['pct_min_garantizado'] ?>% – <?= $proy['pct_max_posible'] ?>%
+                                </td>
+                                <td class="px-4 py-2 text-center">
+                                    <span class="<?= $estado['chip'] ?> text-xs px-2 py-0.5 rounded-full">
+                                        <?= $estado['label'] ?>
+                                    </span>
+                                    <?php if ($proy['estado'] === 'en_riesgo'): ?>
+                                        <div class="text-xs text-faint mt-1">
+                                            puede faltar <?= $proy['max_faltas_permitidas'] ?>
+                                            día<?= $proy['max_faltas_permitidas'] == 1 ? '' : 's' ?> más
+                                        </div>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
 
@@ -147,8 +196,7 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
             </div>
 
             <div class="flex items-center justify-start gap-4" style="margin-top: 8px">
-                <!-- Botón volver -->
-                <a href="index.php?action=asistencia_cursos&anio_id=<?= $_GET['anio_id'] ?>" class="btn-secondary flex items-center gap-2
+                <a href="index.php?action=asistencia_cursos&anio_id=<?= $anioId ?>" class="btn-secondary flex items-center gap-2
                    font-semibold px-6 py-3 rounded-xl transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -166,7 +214,6 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
                 </button>
 
                 <div id="container-toast"></div>
-
             </div>
         </div>
 
@@ -178,7 +225,6 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
         const btn = this;
         const span = btn.querySelector('span');
 
-        // Estado de carga
         btn.disabled = true;
         const originalText = span.innerText;
         span.innerText = 'Generando...';
@@ -189,7 +235,6 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
                 return response.blob();
             })
             .then(blob => {
-                // 1. Crear descarga del archivo
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
@@ -198,7 +243,6 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
                 a.click();
                 window.URL.revokeObjectURL(url);
 
-                // 2. Mostrar tu Toast personalizado
                 mostrarToastDescarga();
             })
             .catch(err => alert("Error: " + err.message))
@@ -211,7 +255,6 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
     function mostrarToastDescarga() {
         const container = document.getElementById('container-toast');
 
-        // Tu HTML de Toast modificado para descarga
         const toastHtml = `
         <div id="toast-pdf" class="fixed top-10 right-10 z-50 flex items-center gap-3 bg-gray-900 border border-blue-600
                    text-blue-300 rounded-2xl px-8 py-6 shadow-2xl shadow-blue-900/40
@@ -226,13 +269,11 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
 
         const t = document.getElementById('toast-pdf');
 
-        // Animación de entrada
         setTimeout(() => {
             t.style.opacity = '1';
             t.style.transform = 'translateY(0)';
         }, 100);
 
-        // Auto-cierre
         setTimeout(() => cerrarToastPdf(), 4000);
     }
 
@@ -244,11 +285,6 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
         setTimeout(() => t.remove(), 500);
     }
 
-    // ===========================================================
-    // ORDENAMIENTO DE LA TABLA (Nº lista / retirados / % asistencia)
-    // Ordena los <tr> en el DOM usando los data-* de cada fila,
-    // sin recargar la página ni volver a consultar el servidor.
-    // ===========================================================
     (function () {
         const tbody = document.getElementById('tbodyResumen');
         const botones = document.querySelectorAll('.sort-btn');
@@ -283,7 +319,6 @@ $nombreCurso = $cursoInfo['nombre'] ?? 'Curso no encontrado';
 
         botones.forEach(btn => {
             btn.addEventListener('click', function () {
-                // Si ya estaba activo, invierte la dirección; si no, usa la dirección por defecto del botón
                 const yaActivo = btn.classList.contains('btn-primary');
                 let dir = btn.getAttribute('data-sort-dir');
                 if (yaActivo) {

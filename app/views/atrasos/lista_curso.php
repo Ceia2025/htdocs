@@ -408,7 +408,7 @@ $maxS = max($sem1, $sem2, 1);
                                                 <span class="chip-danger text-xs font-bold px-2 py-0.5 rounded-full">IJ</span>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="px-3 py-3 text-xs text-muted max-w-[140px] truncate">
+                                        <td class="px-3 py-3 text-xs text-muted max-w-[140px] ">
                                             <?= $a['observacion'] ? htmlspecialchars($a['observacion']) : '—' ?>
                                         </td>
                                         <td class="px-3 py-2 text-right">
