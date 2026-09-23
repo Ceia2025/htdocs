@@ -1,36 +1,19 @@
 <?php
-require __DIR__ . '/../vendor/autoload.php'; 
+// app/email/test_mail.php
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+require_once __DIR__ . '/services/Mailer.php';
 
+$mailer = new Mailer();
 
-$mail = new PHPMailer(true);
+$destinatario = 'scarlazzetta.sepu2026@gmail.com'; // 
 
-try {
-    // Configuración SMTP Outlook
-    $mail->isSMTP();
-    $mail->Host       = 'smtp.gmail.com';
-    $mail->SMTPAuth   = true;
-    $mail->Username   = 'scarlazzetta.sepu@gmail.com';   // la cuenta nueva que creaste
-    $mail->Password   = 'kake whxb evtg vesg';
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port       = 587;
-    $mail->CharSet    = 'UTF-8';
+$asunto = 'Prueba de correo SAAT (vía Brevo)';
+$cuerpo = '<h2>¡Funciona!</h2><p>El sistema de alertas está configurado correctamente usando la API de Brevo.</p>';
 
-    // Remitente y destinatario
-    $mail->setFrom('scarlazzetta.sepu@gmail.com', 'Sistema SAAT');
-    $mail->addAddress('scarlazzetta.sepu2026@gmail.com'); // donde quieres recibir la prueba
+$enviado = $mailer->enviar($destinatario, $asunto, $cuerpo);
 
-    // Contenido
-    $mail->isHTML(true);
-    $mail->Subject = 'Prueba de correo SAAT';
-    $mail->Body    = '<h2>¡Funciona!</h2><p>El sistema de alertas está configurado correctamente.</p>';
-
-    $mail->send();
+if ($enviado) {
     echo '✅ Correo enviado correctamente';
-
-} catch (Exception $e) {
-    echo '❌ Error: ' . $mail->ErrorInfo;
+} else {
+    echo '❌ Error al enviar. Revisa el log de errores de PHP para más detalle.';
 }

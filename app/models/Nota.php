@@ -485,4 +485,18 @@ class Nota
         }
         return $out;
     }
+
+    public function getUltimaFechaNotaPorCurso(int $anioId): array
+    {
+        $sql = "SELECT m.curso_id, MAX(n.fecha) AS ultima_fecha
+                FROM {$this->table} n
+                JOIN matriculas2 m ON m.id = n.matricula_id
+                WHERE m.anio_id = :anio_id
+                GROUP BY m.curso_id";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':anio_id' => $anioId]);
+
+        return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+    }
 }

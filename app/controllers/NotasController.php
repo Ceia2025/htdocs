@@ -254,6 +254,8 @@ class NotasController
             $esTodos = false;
         }
 
+        $ultimasFechas = $this->model->getUltimaFechaNotaPorCurso($anioId);
+
         require __DIR__ . '/../views/notas/panel_cursos.php';
     }
 

@@ -67,6 +67,17 @@ include __DIR__ . "/../layout/navbar.php";
                         <p class="text-xs text-warn italic">Sin profesor jefe asignado</p>
                     <?php endif; ?>
 
+                    <?php if (isset($ultimasFechas[$c['curso_id']])): ?>
+                        <p class="text-xs text-muted">
+                            Última modificación:
+                            <span class="text-strong font-medium">
+                                <?= date('d/m/Y', strtotime($ultimasFechas[$c['curso_id']])) ?>
+                            </span>
+                        </p>
+                    <?php else: ?>
+                        <p class="text-xs text-faint">Sin notas registradas</p>
+                    <?php endif; ?>
+
                 </a>
             <?php endforeach; ?>
         </div>

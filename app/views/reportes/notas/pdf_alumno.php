@@ -376,6 +376,39 @@
     $esPrimerNivel = in_array((int) ($curso['id'] ?? 0), $cursosPrimerNivel);
     ?>
 
+    <?php
+    $nombreCursoCorte = mb_strtolower(trim($curso['nombre']), 'UTF-8');
+    $esCuartoMedio = (bool) preg_match('/(^|\s)(4|iv|cuarto)\s*[°º]?\s*(año\s+)?medio/u', $nombreCursoCorte);
+    $fechaCorte = sprintf('%04d-%s', (int) $anio['anio'], $esCuartoMedio ? '11-06' : '11-24');
+    $s2Calculable = date('Y-m-d') >= $fechaCorte;
+
+    $promsS2 = [];
+    $finales = [];
+    foreach ($filas as &$f) {
+        if ($s2Calculable) {
+            $notasS2 = array_filter($f['cols2'], fn($n) => $n !== null);
+            $f['p2'] = Nota::promedio($notasS2);
+        } else {
+            $f['p2'] = null;
+        }
+
+        $f['pFinal'] = ($f['p1'] !== null && $f['p2'] !== null)
+            ? Nota::promedio([$f['p1'], $f['p2']])
+            : null;
+
+        if ($f['p2'] !== null)
+            $promsS2[] = $f['p2'];
+        if ($f['pFinal'] !== null)
+            $finales[] = $f['pFinal'];
+    }
+    unset($f);
+
+    $promGenSem2 = Nota::promedio($promsS2);
+    $promFinalGeneral = Nota::promedio($finales);
+    ?>
+
+
+
     <!-- PIE FIJO -->
     <?php pdfNotasPiePagina(); ?>
 
@@ -499,11 +532,8 @@
                 <?php endforeach; ?>
             </tbody>
             <tfoot>
-                <?php
-                $promFinalGeneral = ($promGenSem1 !== null && $promGenSem2 !== null)
-                    ? Nota::promedio([$promGenSem1, $promGenSem2])
-                    : null;
-                ?>
+
+
                 <tr>
                     <td class="td-a">Promedio General</td>
                     <?php for ($i = 0; $i < $maxCols[1]; $i++): ?>
