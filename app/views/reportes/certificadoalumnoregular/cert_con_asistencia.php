@@ -237,7 +237,8 @@
     $nacTexto = certFechaNacimiento($alumno['fechanac'] ?? $fechanac ?? '');
 
     // ── Fechas cortas de la vista (inasistencia = hoy; matrícula si viene) ──
-    $hoyTexto = date('d/m/Y');
+    //$hoyTexto = date('d/m/Y');
+    $hoyTexto = date('d/m/Y', strtotime(!empty($fecha) ? $fecha : 'today'));
     $fechaMatTexto = '';
     if (!empty($fecha_matricula ?? '')) {
         $fm = new DateTime($fecha_matricula);

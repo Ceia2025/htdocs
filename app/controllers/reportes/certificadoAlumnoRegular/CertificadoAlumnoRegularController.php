@@ -49,6 +49,7 @@ class CertificadoAlumnoRegularController
         }
 
         $data['motivo'] = trim($_GET['motivo'] ?? '') ?: 'los fines que estime conveniente';
+        $data['fecha'] = preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['fecha'] ?? '') ? $_GET['fecha'] : '';
         $inline = ($_GET['preview'] ?? '') === '1';
 
         $html = $this->renderTemplate('cert_normal', $data);
@@ -71,6 +72,7 @@ class CertificadoAlumnoRegularController
         }
 
         $data['motivo'] = trim($_GET['motivo'] ?? '') ?: 'los fines que estime conveniente';
+        $data['fecha'] = preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['fecha'] ?? '') ? $_GET['fecha'] : '';
         $inline = ($_GET['preview'] ?? '') === '1';
 
         $data['asistencia_mensual'] = $this->model->getAsistenciaMensual(
