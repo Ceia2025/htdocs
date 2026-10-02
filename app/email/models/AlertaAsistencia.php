@@ -10,7 +10,8 @@ class AlertaAsistencia
     //private array $rolesDestinatarios = [0]; // ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL
     //private array $rolesDestinatarios = [1, 5]; // ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL
     
-    private array $rolesDestinatarios = [1, 5]; // ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL
+    //private array $rolesDestinatarios = [1, 5]; // ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL
+    private array $rolesDestinatarios = [1]; // ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL
 
     private int $umbralAusencias = 3;
 

@@ -158,10 +158,18 @@ $estado = $_GET['estado'] ?? '';
                                 Retirados</th>
                             <th class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">%
                                 Matriculados</th>
+                            <th class="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">%
+                                Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($resumenProcedencias as $rp): ?>
+                        <?php
+                        $totalGlobal = (int) ($resumenGlobal['total'] ?? 0);
+                        foreach ($resumenProcedencias as $rp):
+                            $porcentajeDelTotal = $totalGlobal > 0
+                                ? round(($rp['total'] / $totalGlobal) * 100, 1)
+                                : 0;
+                            ?>
                             <tr>
                                 <td class="px-4 py-2.5 text-strong font-semibold">
                                     <?= htmlspecialchars($rp['procedencia_colegio']) ?>
@@ -178,6 +186,11 @@ $estado = $_GET['estado'] ?? '';
                                         <?= $rp['porcentaje'] ?>%
                                     </span>
                                 </td>
+                                <td class="px-4 py-2.5 text-center">
+                                    <span class="font-bold text-strong">
+                                        <?= $porcentajeDelTotal ?>%
+                                    </span>
+                                </td>
                             </tr>
                         <?php endforeach ?>
                     </tbody>
@@ -191,7 +204,7 @@ $estado = $_GET['estado'] ?? '';
             <div class="panel rounded-xl overflow-hidden mb-5">
                 <div class="px-5 py-3.5 border-b divider-soft">
                     <h2 class="text-sm font-semibold uppercase tracking-wider text-muted">
-                        🏫 <?= htmlspecialchars($procedenciaNombre) ?>
+                        <?= htmlspecialchars($procedenciaNombre) ?>
                         <span class="ml-2 text-xs font-normal text-faint">
                             (<?= count($alumnos) ?> alumno<?= count($alumnos) !== 1 ? 's' : '' ?>)
                         </span>
@@ -236,8 +249,7 @@ $estado = $_GET['estado'] ?? '';
                                             <span
                                                 class="badge-available text-xs font-semibold px-2 py-0.5 rounded-full">Matriculado</span>
                                         <?php else: ?>
-                                            <span
-                                                class="chip-danger text-xs font-semibold px-2 py-0.5 rounded-full">Retirado</span>
+                                            <span class="chip-danger text-xs font-semibold px-2 py-0.5 rounded-full">Retirado</span>
                                         <?php endif ?>
                                     </td>
                                     <td class="px-3 py-2.5 text-center text-muted text-xs">
