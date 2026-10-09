@@ -66,6 +66,7 @@ class NotasController
     {
         // 🧩 1️⃣ Detectar semestre actual o recibido
         $semestre = intval($data['semestre'] ?? (($mes = date('n')) >= 3 && $mes <= 7 ? 1 : 2));
+        $usuarioId = isset($_SESSION['user']['id']) ? (int) $_SESSION['user']['id'] : null;
 
         // 🧩 2️⃣ Registrar depuración (NO DETIENE)
         // Esto crea un archivo log en /app/storage/debug_notas.log
@@ -91,7 +92,8 @@ class NotasController
                 $data['asignatura_id'],
                 $data['fecha'],
                 $data['notas'],
-                $semestre
+                $semestre,
+                $usuarioId
             );
         } catch (Exception $e) {
             // Guardamos errores si algo falla al guardar
@@ -184,7 +186,8 @@ class NotasController
         }
 
         $data['semestre'] = intval($data['semestre'] ?? 1);
-        $this->model->update($id, $data);
+        $usuarioId = isset($_SESSION['user']['id']) ? (int) $_SESSION['user']['id'] : null;
+        $this->model->update($id, $data, $usuarioId);
 
         // Redirigir al panel de notas si vienen los parámetros
         $cursoId = $data['curso_id'] ?? null;
@@ -296,6 +299,8 @@ class NotasController
         $curso = $cursoModel->getById($cursoId);
         $anio = $anioModel->getById($anioId);
 
+        $ultimasMod = $this->model->getUltimaModificacionPorAsignatura($cursoId, $anioId, $semestre);
+
         $puedeEditar = in_array($rolId, $rolesAdmin);
 
         require __DIR__ . '/../views/notas/panel_asignaturas.php';
@@ -372,7 +377,8 @@ class NotasController
             exit;
         }
 
-        $id = $this->model->insertarNota($matriculaId, $asignaturaId, $semestre, $nota, $fecha);
+        $usuarioId = isset($_SESSION['user']['id']) ? (int) $_SESSION['user']['id'] : null;
+        $id = $this->model->insertarNota($matriculaId, $asignaturaId, $semestre, $nota, $fecha, $usuarioId);
 
         echo json_encode(['ok' => true, 'id' => $id]);
         exit;
@@ -396,11 +402,12 @@ class NotasController
             exit;
         }
 
+        $usuarioId = isset($_SESSION['user']['id']) ? (int) $_SESSION['user']['id'] : null;
         $ok = $this->model->update($id, [
             'nota' => $nota,
             'fecha' => $fecha,
             'semestre' => $semestre,
-        ]);
+        ], $usuarioId);
 
         echo json_encode(['ok' => (bool) $ok]);
         exit;
@@ -424,7 +431,8 @@ class NotasController
             exit;
         }
 
-        $ok = $this->model->actualizarFechaNotas($ids, $fecha);
+        $usuarioId = isset($_SESSION['user']['id']) ? (int) $_SESSION['user']['id'] : null;
+        $ok = $this->model->actualizarFechaNotas($ids, $fecha, $usuarioId);
         echo json_encode(['ok' => (bool) $ok]);
         exit;
     }

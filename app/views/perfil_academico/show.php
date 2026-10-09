@@ -50,11 +50,16 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
             <a href="index.php?action=alumno_profile&id=<?= $alumno['id'] ?>"
                 class="btn-secondary px-4 py-2 rounded-lg shadow inline-flex items-center gap-2 transition">
                 <?= saat_icon('user', 'w-4 h-4') ?>
-                Perfil Alumno
+                Ficha del Alumno
+            </a>
+            <a href=""
+                class="btn-secondary px-4 py-2 rounded-lg shadow inline-flex items-center gap-2 transition">
+                <?= saat_icon('eye', 'w-4 h-4') ?>
+                Ver resumen en PDF
             </a>
             <a href="index.php?action=matriculas"
                 class="btn-secondary px-4 py-2 rounded-lg shadow inline-flex items-center gap-2 transition">
-                <?= saat_icon('arrow-left', 'w-4 h-4') ?>
+                
                 Volver
             </a>
         </div>

@@ -114,10 +114,10 @@ class Nota
     }
 
     // Crear múltiples notas (hasta 10 por alumno/asignatura/semestre)
-    public function createMultiple($curso_id, $anio_id, $asignatura_id, $fecha, $notas, $semestre)
+    public function createMultiple($curso_id, $anio_id, $asignatura_id, $fecha, $notas, $semestre, ?int $usuarioId = null)
     {
-        $sql = "INSERT INTO {$this->table} (matricula_id, asignatura_id, semestre, nota, fecha)
-        VALUES (:matricula_id, :asignatura_id, :semestre, :nota, :fecha)";
+        $sql = "INSERT INTO {$this->table} (matricula_id, asignatura_id, semestre, nota, fecha, usuario_id)
+        VALUES (:matricula_id, :asignatura_id, :semestre, :nota, :fecha, :usuario_id)";
         $stmt = $this->conn->prepare($sql);
 
         foreach ($notas as $n) {
@@ -137,7 +137,8 @@ class Nota
                 ':asignatura_id' => $asignatura_id,
                 ':semestre' => $semestre,
                 ':nota' => $notaValor,
-                ':fecha' => $fecha
+                ':fecha' => $fecha,
+                ':usuario_id' => $usuarioId
             ]);
 
             if (!$ok) {
@@ -148,21 +149,22 @@ class Nota
 
 
     // Actualizar
-    public function update($id, $data)
+    public function update($id, $data, ?int $usuarioId = null)
     {
         $sql = "UPDATE {$this->table}
-                SET nota = :nota, fecha = :fecha, semestre = :semestre
+                SET nota = :nota, fecha = :fecha, semestre = :semestre, usuario_id = :usuario_id
                 WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ':nota' => $data['nota'],
             ':fecha' => $data['fecha'],
             ':semestre' => $data['semestre'],
+            ':usuario_id' => $usuarioId,
             ':id' => $id
         ]);
     }
 
-    // 🟣 Eliminar
+    // Eliminar
     public function delete($id)
     {
         $stmt = $this->conn->prepare("DELETE FROM {$this->table} WHERE id = :id");
@@ -211,12 +213,13 @@ class Nota
         int $asignaturaId,
         int $semestre,
         float $nota,
-        string $fecha
+        string $fecha,
+        ?int $usuarioId = null
     ): int {
         $sql = "INSERT INTO {$this->table}
-                (matricula_id, asignatura_id, semestre, nota, fecha)
+                (matricula_id, asignatura_id, semestre, nota, fecha, usuario_id)
             VALUES
-                (:matricula_id, :asignatura_id, :semestre, :nota, :fecha)";
+                (:matricula_id, :asignatura_id, :semestre, :nota, :fecha, :usuario_id)";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -225,6 +228,7 @@ class Nota
             ':semestre' => $semestre,
             ':nota' => $nota,
             ':fecha' => $fecha,
+            ':usuario_id' => $usuarioId,
         ]);
 
         return (int) $this->conn->lastInsertId();
@@ -238,7 +242,7 @@ class Nota
      * Actualiza la fecha de un conjunto de notas identificadas por ID.
      * Se usa al cambiar la fecha de una columna completa en el libro de notas.
      */
-    public function actualizarFechaNotas(array $ids, string $fecha): bool
+    public function actualizarFechaNotas(array $ids, string $fecha, ?int $usuarioId = null): bool
     {
         $ids = array_values(array_filter(array_map('intval', $ids)));
         if (empty($ids)) {
@@ -246,10 +250,10 @@ class Nota
         }
 
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
-        $sql = "UPDATE {$this->table} SET fecha = ? WHERE id IN ($placeholders)";
+        $sql = "UPDATE {$this->table} SET fecha = ?, usuario_id = ? WHERE id IN ($placeholders)";
 
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute(array_merge([$fecha], $ids));
+        return $stmt->execute(array_merge([$fecha, $usuarioId], $ids));
     }
 
     /**
@@ -498,5 +502,49 @@ class Nota
         $stmt->execute([':anio_id' => $anioId]);
 
         return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+    }
+
+    public function getUltimaModificacionPorAsignatura(
+        int $cursoId,
+        int $anioId,
+        int $semestre
+    ): array {
+        $sql = "SELECT n.asignatura_id,
+                       n.updated_at,
+                       TRIM(CONCAT(COALESCE(u.nombre, ''), ' ', COALESCE(u.ape_paterno, ''))) AS usuario
+                FROM {$this->table} n
+                JOIN matriculas2 m ON m.id = n.matricula_id
+                LEFT JOIN usuarios2 u ON u.id = n.usuario_id
+                WHERE m.curso_id = :curso_id
+                  AND m.anio_id  = :anio_id
+                  AND n.semestre = :semestre
+                  AND n.updated_at = (
+                      SELECT MAX(n2.updated_at)
+                      FROM {$this->table} n2
+                      JOIN matriculas2 m2 ON m2.id = n2.matricula_id
+                      WHERE m2.curso_id      = m.curso_id
+                        AND m2.anio_id       = m.anio_id
+                        AND n2.semestre      = n.semestre
+                        AND n2.asignatura_id = n.asignatura_id
+                  )
+                ORDER BY n.asignatura_id ASC,
+                         (n.usuario_id IS NOT NULL) ASC,
+                         n.id ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':curso_id' => $cursoId,
+            ':anio_id' => $anioId,
+            ':semestre' => $semestre,
+        ]);
+
+        $out = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $r) {
+            $out[(int) $r['asignatura_id']] = [
+                'updated_at' => $r['updated_at'],
+                'usuario' => $r['usuario'],
+            ];
+        }
+        return $out;
     }
 }

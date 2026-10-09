@@ -75,6 +75,7 @@ class AsistenciaController
 
         $fechasConAsistencia = $this->model->getFechasConAsistencia($cursoId, $anioId);
         $totalDiasClase = count($fechasConAsistencia);
+        $ultimaFechaRegistrada = !empty($fechasConAsistencia) ? end($fechasConAsistencia) : null;
 
         $totalClasesSuma = 0;
         $totalPresentesSuma = 0;
@@ -83,7 +84,7 @@ class AsistenciaController
             $totalClasesSuma += (int) $row['total_clases'];
             $totalPresentesSuma += (int) $row['presentes'];
 
-            $row['proyeccion'] = $this->model->calcularProyeccion($row, $fechasAnio, 85.0);
+            $row['proyeccion'] = $this->model->calcularProyeccion($row, $fechasAnio, 85.0, $ultimaFechaRegistrada);
         }
         unset($row);
 

@@ -41,13 +41,8 @@ switch ($ruta) {
         <a href="CombertirVariosPDFEnUno/index.php">Unir PDFs</a>
         <a href="imagenes/index.php">Imagenes</a>
         <a href="descarga/index.html">Descargas</a>
-        <a href="https://forms.gle/tCKj96eGYjHmVxGG8">Asi Aprendo Mejor</a>
+        <a href="https://claude.ai/artifact/UZnAEz2xSuLT6yCdtyxXnc">Aprende electricidad haciendo</a>
     </div>
-
-    <!--
-    <a href="app/public/index.php?action=login">Ingresar al Sistema</a>
-        
-    -->
 
 
 </div>

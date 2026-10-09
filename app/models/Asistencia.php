@@ -410,58 +410,76 @@ class Asistencia
      * bajar su % con los días hábiles que quedan, y si ya está matemáticamente
      * decidido (asegurado o imposible de recuperar).
      *
-     * @param array $alumno     Fila de getResumenAsistenciaCurso()
-     *                          (requiere: total_clases, presentes, fecha_matricula, fecha_retiro)
-     * @param array $fechasAnio Resultado de getFechasAnio()
-     *                          (sem1_inicio, sem1_fin, sem2_inicio, sem2_fin)
-     * @param float $umbral     % mínimo exigido (85 por defecto)
+     * El denominador es (clases registradas del alumno + días hábiles restantes),
+     * de modo que el % proyectado es coherente con el % "hasta la fecha".
+     *
+     * @param array       $alumno                Fila de getResumenAsistenciaCurso()
+     *                                           (requiere: total_clases, presentes, fecha_matricula, fecha_retiro)
+     * @param array       $fechasAnio            Resultado de getFechasAnio()
+     * @param float       $umbral                % mínimo exigido
+     * @param string|null $ultimaFechaRegistrada Última fecha con asistencia tomada en el curso (Y-m-d).
+     *                                           Si es null se usa la fecha de hoy.
      */
-    public function calcularProyeccion(array $alumno, array $fechasAnio, float $umbral = 85.0): array
-    {
-        $hoy = date('Y-m-d');
+    public function calcularProyeccion(
+        array $alumno,
+        array $fechasAnio,
+        float $umbral = 85.0,
+        ?string $ultimaFechaRegistrada = null
+    ): array {
+        $ultimaFecha = $ultimaFechaRegistrada ?: date('Y-m-d');
 
         $inicioAlumno = !empty($alumno['fecha_matricula']) && $alumno['fecha_matricula'] > $fechasAnio['sem1_inicio']
             ? $alumno['fecha_matricula']
             : $fechasAnio['sem1_inicio'];
 
-        $finAlumno = !empty($alumno['fecha_retiro']) && $alumno['fecha_retiro'] < $fechasAnio['sem2_fin']
-            ? $alumno['fecha_retiro']
-            : $fechasAnio['sem2_fin'];
+        // Último día en que el alumno pudo tener asistencia registrada
+        $finAlumno = $fechasAnio['sem2_fin'];
+        if (!empty($alumno['fecha_retiro'])) {
+            $ultimoDiaActivo = date('Y-m-d', strtotime($alumno['fecha_retiro'] . ' -1 day'));
+            if ($ultimoDiaActivo < $finAlumno) {
+                $finAlumno = $ultimoDiaActivo;
+            }
+        }
 
-        $diasHabilesTotal = $this->diasHabilesEnSemestres($inicioAlumno, $finAlumno, $fechasAnio);
+        // Días hábiles que aún faltan: desde el día siguiente a la última asistencia registrada
+        $desde = date('Y-m-d', strtotime($ultimaFecha . ' +1 day'));
+        if ($desde < $inicioAlumno) {
+            $desde = $inicioAlumno;
+        }
+        $diasHabilesRestantes = $this->diasHabilesEnSemestres($desde, $finAlumno, $fechasAnio);
 
-        $finTranscurrido = min($finAlumno, $hoy);
-        $diasHabilesTranscurridos = $this->diasHabilesEnSemestres($inicioAlumno, $finTranscurrido, $fechasAnio);
-        $diasHabilesRestantes = max(0, $diasHabilesTotal - $diasHabilesTranscurridos);
-
+        $clasesRegistradas = (int) ($alumno['total_clases'] ?? 0);
         $presentes = (int) ($alumno['presentes'] ?? 0);
+        $totalProyectado = $clasesRegistradas + $diasHabilesRestantes;
 
-        $pctMax = $diasHabilesTotal > 0
-            ? round((($presentes + $diasHabilesRestantes) / $diasHabilesTotal) * 100, 1)
+        $pctMinRaw = $totalProyectado > 0
+            ? ($presentes / $totalProyectado) * 100
             : 0;
 
-        $pctMin = $diasHabilesTotal > 0
-            ? round(($presentes / $diasHabilesTotal) * 100, 1)
+        $pctMaxRaw = $totalProyectado > 0
+            ? (($presentes + $diasHabilesRestantes) / $totalProyectado) * 100
             : 0;
 
         // Cuántas faltas más puede tener sin caer bajo el umbral
-        $maxFaltasPermitidas = (int) floor($presentes + $diasHabilesRestantes - ($umbral / 100) * $diasHabilesTotal);
+        $maxFaltasPermitidas = (int) floor(
+            round($presentes + $diasHabilesRestantes - ($umbral / 100) * $totalProyectado, 6)
+        );
 
         if ($diasHabilesRestantes === 0) {
-            $estado = $pctMin >= $umbral ? 'aprobado' : 'repite';
-        } elseif ($pctMin >= $umbral) {
+            $estado = $pctMinRaw >= $umbral ? 'aprobado' : 'repite';
+        } elseif ($pctMinRaw >= $umbral) {
             $estado = 'asegurado';   // ya no importa lo que pase de aquí a fin de año
-        } elseif ($pctMax < $umbral) {
+        } elseif ($pctMaxRaw < $umbral) {
             $estado = 'critico';     // aunque asista a todo lo que queda, no llega al mínimo
         } else {
             $estado = 'en_riesgo';   // depende de la asistencia futura
         }
 
         return [
-            'dias_habiles_totales' => $diasHabilesTotal,
+            'dias_habiles_totales' => $totalProyectado,
             'dias_habiles_restantes' => $diasHabilesRestantes,
-            'pct_max_posible' => $pctMax,
-            'pct_min_garantizado' => $pctMin,
+            'pct_max_posible' => round($pctMaxRaw, 1),
+            'pct_min_garantizado' => round($pctMinRaw, 1),
             'max_faltas_permitidas' => max(0, $maxFaltasPermitidas),
             'estado' => $estado,
         ];
