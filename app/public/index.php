@@ -249,6 +249,11 @@ switch ($action) {
         $perfilController->show($_GET['id']);
         break;
 
+    case 'perfil_academico_pdf':
+        $perfilController = new PerfilAcademicoController();
+        $perfilController->pdf((int) ($_GET['matricula_id'] ?? 0), $_GET['secciones'] ?? []);
+        break;
+
     // ── MATRÍCULAS ───────────────────────────────────────────
     case 'matriculas':
         $matriculaController->index();

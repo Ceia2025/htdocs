@@ -8,13 +8,12 @@ $meses = [
     8 => "Agosto",
     9 => "Septiembre",
     10 => "Octubre",
-    11 => "Noviembre",
-    12 => "Diciembre"
+    11 => "Noviembre"
 ];
 
 $semestres = [
     "Primer Semestre" => [3, 4, 5, 6],
-    "Segundo Semestre" => [7, 8, 9, 10, 11, 12],
+    "Segundo Semestre" => [7, 8, 9, 10, 11],
 ];
 
 function getEstadoColor($estado): string
