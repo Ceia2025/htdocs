@@ -88,6 +88,18 @@ include __DIR__ . "/../layout/navbar.php";
                                            px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition">
                                 </div>
                             </div>
+
+                            <div class="mt-4">
+                                <label class="block text-xs text-gray-400 mb-1">
+                                    Fecha de Término 4° Medio
+                                    <span class="text-gray-500 font-normal ml-1">(opcional)</span>
+                                </label>
+                                <input type="date" name="sem2_fin_4medio" class="w-full rounded-xl bg-gray-900/60 border border-gray-700 text-gray-100 
+                                       px-4 py-3 focus:ring-2 focus:ring-indigo-500 transition">
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Si se deja vacío, 4° medio termina junto con el 2° semestre.
+                                </p>
+                            </div>
                         </div>
                     </div>
 
@@ -106,6 +118,23 @@ include __DIR__ . "/../layout/navbar.php";
             </div>
         </main>
     </div>
+
+    <script>
+        (function () {
+            const sem2Inicio = document.querySelector('[name="sem2_inicio"]');
+            const sem2Fin = document.querySelector('[name="sem2_fin"]');
+            const sem2Fin4 = document.querySelector('[name="sem2_fin_4medio"]');
+
+            function sincronizar() {
+                sem2Fin4.min = sem2Inicio.value || '';
+                sem2Fin4.max = sem2Fin.value || '';
+            }
+
+            sem2Inicio.addEventListener('change', sincronizar);
+            sem2Fin.addEventListener('change', sincronizar);
+            sincronizar();
+        })();
+    </script>
 </body>
 
 <?php include __DIR__ . "/../layout/footer.php"; ?>

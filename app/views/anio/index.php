@@ -46,6 +46,8 @@ include __DIR__ . "/../layout/navbar.php";
                         <th class="px-6 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                             2° Semestre</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
+                            Término 4° Medio</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-soft uppercase tracking-wider">
                             Acciones</th>
                     </tr>
                 </thead>
@@ -75,6 +77,13 @@ include __DIR__ . "/../layout/navbar.php";
                                         <span class="text-warn text-xs">⚠️ Sin fechas</span>
                                     <?php endif ?>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-soft">
+                                    <?php if (!empty($anio['sem2_fin_4medio'])): ?>
+                                        <?= (new DateTime($anio['sem2_fin_4medio']))->format('d/m/Y') ?>
+                                    <?php else: ?>
+                                        <span class="text-xs">Igual al 2° semestre</span>
+                                    <?php endif ?>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
                                     <a href="index.php?action=anio_edit&id=<?= $anio['id'] ?>"
                                         class="link-action">✏️ Editar</a>
@@ -86,7 +95,7 @@ include __DIR__ . "/../layout/navbar.php";
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-sm text-soft">No hay años
+                            <td colspan="6" class="px-6 py-4 text-center text-sm text-soft">No hay años
                                 registrados.</td>
                         </tr>
                     <?php endif; ?>

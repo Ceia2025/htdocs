@@ -25,7 +25,8 @@ class AnioController
                 $data['sem1_inicio'] ?? null,
                 $data['sem1_fin'] ?? null,
                 $data['sem2_inicio'] ?? null,
-                $data['sem2_fin'] ?? null
+                $data['sem2_fin'] ?? null,
+                $data['sem2_fin_4medio'] ?? null
             );
         }
         header("Location: index.php?action=anios");
@@ -48,7 +49,8 @@ class AnioController
                 $data['sem1_inicio'] ?? null,
                 $data['sem1_fin'] ?? null,
                 $data['sem2_inicio'] ?? null,
-                $data['sem2_fin'] ?? null
+                $data['sem2_fin'] ?? null,
+                $data['sem2_fin_4medio'] ?? null
             );
         }
         header("Location: index.php?action=anios");
