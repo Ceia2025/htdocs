@@ -126,11 +126,6 @@
       "title": "Control de Asistencia",
       "desc": "Gestión de asistencia por nivel y curso",
       "url": "index.php?action=asistencia_cursos"
-    },
-    {
-      "title": "Centro de Reportes",
-      "desc": "Exportar asistencia en PDF y CSV por curso o general",
-      "url": "index.php?action=reportes"
     }
   ],
   "soporte": [

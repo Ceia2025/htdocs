@@ -12,14 +12,27 @@ class Asistencia
         $this->conn = $db->open();
     }
 
-    public function getFechasAnio($anioId)
+    public function getFechasAnio($anioId, $cursoId = null)
     {
-        $sql = "SELECT anio, sem1_inicio, sem1_fin, sem2_inicio, sem2_fin
-            FROM anios2
-            WHERE id = :id
+        $sql = "SELECT
+                a.anio,
+                a.sem1_inicio,
+                a.sem1_fin,
+                a.sem2_inicio,
+                CASE
+                    WHEN c.termina_antes = 1 AND a.sem2_fin_4medio IS NOT NULL
+                        THEN a.sem2_fin_4medio
+                    ELSE a.sem2_fin
+                END AS sem2_fin
+            FROM anios2 a
+            LEFT JOIN cursos2 c ON c.id = :curso_id
+            WHERE a.id = :id
             LIMIT 1";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([':id' => $anioId]);
+        $stmt->execute([
+            ':id' => $anioId,
+            ':curso_id' => $cursoId,
+        ]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 

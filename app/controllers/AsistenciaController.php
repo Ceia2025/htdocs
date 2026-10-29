@@ -32,7 +32,7 @@ class AsistenciaController
 
         $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
         $curso = $this->model->getCurso($cursoId);
-        $fechasAnio = $this->model->getFechasAnio($anioId);
+        $fechasAnio = $this->model->getFechasAnio($anioId, $cursoId);
         $fechasConAsistencia = $this->model->getFechasConAsistencia($cursoId, $anioId);
         $asistenciaExistente = $this->model->getAsistenciaPorFecha($cursoId, $anioId, $fecha);
         $esEdicion = !empty($asistenciaExistente);
@@ -66,7 +66,7 @@ class AsistenciaController
             die("Faltan parámetros para el resumen.");
 
         $detalle = $this->model->getResumenAsistenciaCurso($cursoId, $anioId);
-        $fechasAnio = $this->model->getFechasAnio($anioId);
+        $fechasAnio = $this->model->getFechasAnio($anioId, $cursoId);
 
         if (empty($fechasAnio['sem1_inicio']) || empty($fechasAnio['sem2_fin'])) {
             die("El año seleccionado no tiene fechas de semestres configuradas.
@@ -206,8 +206,8 @@ class AsistenciaController
         $curso = $this->model->getCurso($cursoId);
         $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
         $asistencia = $this->model->getAsistenciaLibro($cursoId, $anioId);
-        $fechasAnio = $this->model->getFechasAnio($anioId);
-        $auditoria = $this->model->getAuditoriaAsistencia((int) $cursoId, (int) $anioId); // ← nuevo
+        $fechasAnio = $this->model->getFechasAnio($anioId, $cursoId);
+        $auditoria = $this->model->getAuditoriaAsistencia((int) $cursoId, (int) $anioId);
 
         if (empty($fechasAnio['sem1_inicio'])) {
             die("El año seleccionado no tiene fechas de semestres configuradas.
@@ -244,7 +244,7 @@ class AsistenciaController
         $asistenciaModel = new Asistencia();
 
         $curso = $asistenciaModel->getCurso($curso_id);
-        $anio = $asistenciaModel->getFechasAnio($anio_id);
+        $anio = $asistenciaModel->getFechasAnio($anio_id, $curso_id);
         $alumnos = $asistenciaModel->getAlumnosPorCurso($curso_id, $anio_id);
         $asistencia = $asistenciaModel->getAsistenciaLibro($curso_id, $anio_id);
 
@@ -252,7 +252,14 @@ class AsistenciaController
         $inicio = new DateTime("$anioMes-$numMes-01");
         $finMes = new DateTime($inicio->format('Y-m-t'));
         $hoy = new DateTime('today');
-        $finReal = $finMes < $hoy ? $finMes : $hoy;
+        $finReal = clone ($finMes < $hoy ? $finMes : $hoy);
+
+        if (!empty($anio['sem2_fin'])) {
+            $tope = new DateTime($anio['sem2_fin']);
+            if ($finReal > $tope) {
+                $finReal = $tope;
+            }
+        }
 
         $periodo = new DatePeriod(
             $inicio,
@@ -357,8 +364,4 @@ class AsistenciaController
         header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId");
         exit;
     }
-
-
-
-
 }
