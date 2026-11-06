@@ -15,6 +15,10 @@ include __DIR__ . "/../layout/navbar.php";
 $flashSuccess = $_SESSION['flash_success'] ?? null;
 $flashError   = $_SESSION['flash_error']   ?? null;
 unset($_SESSION['flash_success'], $_SESSION['flash_error']);
+
+$esFeriado     = $esFeriado     ?? false;
+$motivoFeriado = $motivoFeriado ?? null;
+$feriados      = $feriados      ?? [];
 ?>
 
 <!-- Flash messages -->
@@ -74,7 +78,17 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
             <!-- Card fecha + acciones -->
             <div class="panel rounded-xl overflow-hidden mb-5">
 
-                <?php if ($esEdicion): ?>
+                <?php if ($esFeriado): ?>
+                    <div class="flex items-center gap-2 px-5 py-2.5 border-b"
+                         style="background: var(--warn-soft); color: var(--warn); border-color: var(--warn);">
+                        <span class="text-sm">🏖️</span>
+                        <p class="text-xs font-medium">
+                            Este día está marcado como <strong>feriado</strong>:
+                            <?= htmlspecialchars($motivoFeriado ?? 'Feriado') ?>.
+                            No se puede registrar asistencia.
+                        </p>
+                    </div>
+                <?php elseif ($esEdicion): ?>
                     <div class="flex items-center gap-2 px-5 py-2.5 border-b"
                          style="background: var(--warn-soft); color: var(--warn); border-color: var(--warn);">
                         <span class="text-sm">✏️</span>
@@ -130,9 +144,12 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
                                 <?php endforeach ?>
                             </div>
                             <div id="grid-dias" class="grid grid-cols-7 gap-0.5"></div>
-                            <div class="mt-3 pt-3 border-t divider-soft flex items-center gap-4 text-xs text-muted">
+                            <div class="mt-3 pt-3 border-t divider-soft flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted">
                                 <div class="flex items-center gap-1.5">
                                     <div class="w-3 h-3 rounded-full legend-dot-accent"></div>Con asistencia
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <div class="w-3 h-3 rounded-full" style="background: var(--warn);"></div>Feriado
                                 </div>
                                 <div class="flex items-center gap-1.5">
                                     <div class="w-3 h-3 rounded-full bg-azul-vivo"></div>Seleccionado
@@ -141,36 +158,48 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
                         </div>
                     </div>
 
-                    <div class="hidden sm:block w-px h-5" style="background: var(--border-soft);"></div>
+                    <?php if (!$esFeriado): ?>
+                        <div class="hidden sm:block w-px h-5" style="background: var(--border-soft);"></div>
 
-                    <!-- Botones selección masiva -->
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs text-muted font-medium">Selección:</span>
-                        <button type="button" onclick="marcarTodos(true)"
-                            class="btn-soft-success flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                            </svg>
-                            Todos presentes
-                        </button>
-                        <button type="button" onclick="marcarTodos(false)"
-                            class="btn-soft-danger flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                            Todos ausentes
-                        </button>
-                    </div>
+                        <!-- Botones selección masiva -->
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-muted font-medium">Selección:</span>
+                            <button type="button" onclick="marcarTodos(true)"
+                                class="btn-soft-success flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                                </svg>
+                                Todos presentes
+                            </button>
+                            <button type="button" onclick="marcarTodos(false)"
+                                class="btn-soft-danger flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                Todos ausentes
+                            </button>
+                        </div>
 
-                    <!-- Contador -->
-                    <div class="ml-auto">
-                        <span id="contador" class="chip-counter text-xs font-semibold px-3 py-1.5 rounded-full">
-                            0 / 0 presentes
-                        </span>
-                    </div>
+                        <!-- Contador -->
+                        <div class="ml-auto">
+                            <span id="contador" class="chip-counter text-xs font-semibold px-3 py-1.5 rounded-full">
+                                0 / 0 presentes
+                            </span>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
-                <?php if (empty($alumnos)): ?>
+                <?php if ($esFeriado): ?>
+                    <div class="px-5 py-10 text-center">
+                        <p class="text-strong font-semibold">Día feriado</p>
+                        <p class="text-sm text-muted mt-1">
+                            <?= htmlspecialchars($motivoFeriado ?? 'Feriado') ?>
+                        </p>
+                        <p class="text-xs text-faint mt-3">
+                            Este día no cuenta como día de clases en ningún curso.
+                        </p>
+                    </div>
+                <?php elseif (empty($alumnos)): ?>
                     <div class="px-5 py-8 text-center">
                         <p class="text-muted font-medium">No hay alumnos matriculados en este curso.</p>
                     </div>
@@ -238,19 +267,38 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
             </div>
 
             <!-- Botones -->
-            <?php if (!empty($alumnos)): ?>
-                <div class="flex items-center justify-between gap-4">
+            <div class="flex flex-wrap items-center justify-between gap-4">
 
-                    <!-- Volver -->
-                    <a href="index.php?action=asistencia_cursos&anio_id=<?= $_GET['anio_id'] ?>"
-                       class="btn-secondary flex items-center gap-2 font-semibold px-6 py-3 rounded-xl transition">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                        Volver a cursos
-                    </a>
+                <!-- Volver -->
+                <a href="index.php?action=asistencia_cursos&anio_id=<?= $_GET['anio_id'] ?>"
+                   class="btn-secondary flex items-center gap-2 font-semibold px-6 py-3 rounded-xl transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Volver a cursos
+                </a>
 
-                    <div class="flex items-center gap-3">
+                <div class="flex flex-wrap items-center gap-3">
+
+                    <?php if ($esFeriado): ?>
+
+                        <!-- ── BOTÓN QUITAR FERIADO ── -->
+                        <button type="button" onclick="abrirModalQuitarFeriado()"
+                                class="btn-soft-warn flex items-center gap-2 font-semibold px-5 py-3 rounded-xl transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Quitar feriado
+                        </button>
+
+                    <?php else: ?>
+
+                        <!-- ── BOTÓN DÍA FERIADO ── -->
+                        <button type="button" id="btn-feriado" onclick="abrirModalFeriado()"
+                                class="btn-soft-warn flex items-center gap-2 font-semibold px-5 py-3 rounded-xl transition">
+                            <span>🏖️</span>
+                            Día feriado
+                        </button>
 
                         <!-- ── BOTÓN ELIMINAR ── -->
                         <?php if ($esEdicion): ?>
@@ -265,17 +313,20 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
                         <?php endif; ?>
 
                         <!-- Guardar -->
-                        <button type="submit"
-                                class="btn-soft-success flex items-center gap-2 font-bold px-8 py-3 rounded-xl transition shadow-lg">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                            </svg>
-                            Guardar Asistencia
-                        </button>
+                        <?php if (!empty($alumnos)): ?>
+                            <button type="submit" id="btn-guardar"
+                                    class="btn-soft-success flex items-center gap-2 font-bold px-8 py-3 rounded-xl transition shadow-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                                </svg>
+                                Guardar Asistencia
+                            </button>
+                        <?php endif; ?>
 
-                    </div>
+                    <?php endif; ?>
+
                 </div>
-            <?php endif ?>
+            </div>
 
         </form>
 
@@ -288,7 +339,7 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
             <input type="hidden" name="fecha"    id="fecha-eliminar" value="">
         </form>
 
-        <!-- Modal de confirmación -->
+        <!-- Modal de confirmación: eliminar asistencia -->
         <div id="modal-eliminar"
              class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
             <div class="modal-danger rounded-2xl p-6 shadow-2xl max-w-sm w-full mx-4">
@@ -325,6 +376,95 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
             </div>
         </div>
 
+        <?php if (!$esFeriado): ?>
+            <!-- Modal: marcar día feriado -->
+            <div id="modal-feriado"
+                 class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                <form method="POST" action="index.php?action=marcar_feriado"
+                      class="panel rounded-2xl p-6 shadow-2xl max-w-sm w-full mx-4">
+                    <input type="hidden" name="curso_id" value="<?= $_GET['curso_id'] ?>">
+                    <input type="hidden" name="anio_id"  value="<?= $_GET['anio_id'] ?>">
+                    <input type="hidden" name="fecha"    id="fecha-feriado" value="">
+
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"
+                             style="background: var(--warn-soft); color: var(--warn);">
+                            🏖️
+                        </div>
+                        <div>
+                            <h3 class="text-strong font-bold text-base">Marcar día feriado</h3>
+                            <p class="text-xs text-muted mt-0.5">
+                                <span id="modal-feriado-fecha"></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-soft mb-4">
+                        El feriado se aplica a <strong class="text-strong">todos los cursos</strong>
+                        del año. Si ya existe asistencia registrada ese día, se
+                        <strong class="text-danger">eliminará en todos los cursos</strong>.
+                    </p>
+
+                    <label for="motivo-feriado" class="block text-xs font-semibold text-muted mb-1.5">
+                        Motivo (opcional)
+                    </label>
+                    <input type="text" id="motivo-feriado" name="motivo" maxlength="150"
+                           placeholder="Ej: Día de las Glorias Navales"
+                           class="w-full rounded-lg px-3 py-2 text-sm mb-5 bg-gray-900 border border-gray-700 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500">
+
+                    <div class="flex gap-3">
+                        <button type="button" onclick="cerrarModalFeriado()"
+                                class="btn-secondary flex-1 px-4 py-2.5 font-semibold rounded-xl transition text-sm">
+                            Cancelar
+                        </button>
+                        <button type="submit"
+                                class="btn-soft-warn flex-1 px-4 py-2.5 font-bold rounded-xl transition text-sm">
+                            Marcar feriado
+                        </button>
+                    </div>
+                </form>
+            </div>
+        <?php else: ?>
+            <!-- Modal: quitar feriado -->
+            <div id="modal-quitar-feriado"
+                 class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                <form method="POST" action="index.php?action=quitar_feriado"
+                      class="panel rounded-2xl p-6 shadow-2xl max-w-sm w-full mx-4">
+                    <input type="hidden" name="curso_id" value="<?= $_GET['curso_id'] ?>">
+                    <input type="hidden" name="anio_id"  value="<?= $_GET['anio_id'] ?>">
+                    <input type="hidden" name="fecha"    value="<?= $fecha ?>">
+
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"
+                             style="background: var(--warn-soft); color: var(--warn);">
+                            🏖️
+                        </div>
+                        <div>
+                            <h3 class="text-strong font-bold text-base">¿Quitar feriado?</h3>
+                            <p class="text-xs text-muted mt-0.5"><?= date('d/m/Y', strtotime($fecha)) ?></p>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-soft mb-5">
+                        El día volverá a ser un día de clases para
+                        <strong class="text-strong">todos los cursos</strong> y podrás registrar asistencia.
+                        La asistencia eliminada al marcar el feriado no se recupera.
+                    </p>
+
+                    <div class="flex gap-3">
+                        <button type="button" onclick="cerrarModalQuitarFeriado()"
+                                class="btn-secondary flex-1 px-4 py-2.5 font-semibold rounded-xl transition text-sm">
+                            Cancelar
+                        </button>
+                        <button type="submit"
+                                class="btn-soft-warn flex-1 px-4 py-2.5 font-bold rounded-xl transition text-sm">
+                            Sí, quitar feriado
+                        </button>
+                    </div>
+                </form>
+            </div>
+        <?php endif; ?>
+
     </div>
 </main>
 
@@ -336,6 +476,8 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
     const SEM2_FIN     = '<?= $fechasAnio['sem2_fin']    ?? '' ?>';
     const HOY          = '<?= date('Y-m-d') ?>';
     const FECHAS_CON_ASISTENCIA = new Set(<?= json_encode($fechasConAsistencia ?? []) ?>);
+    const FERIADOS     = <?= json_encode((object) $feriados) ?>;
+    const ES_FERIADO   = <?= $esFeriado ? 'true' : 'false' ?>;
     const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
                    'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
@@ -390,7 +532,8 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
             const tieneAsist = FECHAS_CON_ASISTENCIA.has(fecha);
             const esSeleccion = fecha === fechaSel;
             const esHoy = fecha === HOY;
-            grid.appendChild(crearCelda(d, fecha, { esFinSemana, esFuturo, enSemestre, tieneAsist, esSeleccion, esHoy }));
+            const esFeriadoDia = Object.prototype.hasOwnProperty.call(FERIADOS, fecha);
+            grid.appendChild(crearCelda(d, fecha, { esFinSemana, esFuturo, enSemestre, tieneAsist, esSeleccion, esHoy, esFeriadoDia }));
         }
     }
 
@@ -398,9 +541,16 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
         const el = document.createElement('div');
         el.className = 'cal-day';
         if (!dia) return el;
-        const { esFinSemana, esFuturo, enSemestre, tieneAsist, esSeleccion, esHoy } = opts;
+        const { esFinSemana, esFuturo, enSemestre, tieneAsist, esSeleccion, esHoy, esFeriadoDia } = opts;
         const bloqueado = esFinSemana || esFuturo || !enSemestre;
         if (esSeleccion) el.classList.add('cal-day--selected');
+        else if (esFeriadoDia && !bloqueado) {
+            el.classList.add('cal-day--default');
+            el.style.background = 'var(--warn-soft)';
+            el.style.color = 'var(--warn)';
+            el.style.fontWeight = '700';
+            el.title = FERIADOS[fecha] || 'Feriado';
+        }
         else if (tieneAsist && !bloqueado) el.classList.add('cal-day--has-attendance');
         else if (bloqueado) el.classList.add('cal-day--blocked');
         else {
@@ -408,7 +558,7 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
             if (esHoy) el.classList.add('cal-day--today');
         }
         el.textContent = dia;
-        if (tieneAsist && !esSeleccion) {
+        if (tieneAsist && !esSeleccion && !esFeriadoDia) {
             const punto = document.createElement('div');
             punto.className = 'cal-day-dot';
             el.appendChild(punto);
@@ -443,11 +593,19 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
         return enSem1 || enSem2;
     }
 
+    function setBotonDeshabilitado(btn, deshabilitado) {
+        if (!btn) return;
+        btn.disabled = deshabilitado;
+        btn.classList.toggle('opacity-40', deshabilitado);
+        btn.classList.toggle('cursor-not-allowed', deshabilitado);
+    }
+
     function validarFecha() {
         const fecha = document.getElementById('campo-fecha').value;
         const aviso = document.getElementById('aviso-semestre');
         const texto = document.getElementById('aviso-semestre-texto');
-        const btnGuardar = document.querySelector('button[type="submit"]');
+        const btnGuardar = document.getElementById('btn-guardar');
+        const btnFeriado = document.getElementById('btn-feriado');
         const f = new Date(fecha + 'T00:00:00');
         const esFinSemana = f.getDay() === 0 || f.getDay() === 6;
         const esFuturo = fecha > HOY;
@@ -458,18 +616,17 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
             if (esFinSemana) msg = 'Los fines de semana no son días hábiles.';
             texto.textContent = msg;
             aviso.classList.remove('hidden');
-            btnGuardar.disabled = true;
-            btnGuardar.classList.add('opacity-40', 'cursor-not-allowed');
         } else {
             aviso.classList.add('hidden');
-            btnGuardar.disabled = false;
-            btnGuardar.classList.remove('opacity-40', 'cursor-not-allowed');
         }
+        setBotonDeshabilitado(btnGuardar, !valida);
+        setBotonDeshabilitado(btnFeriado, !valida);
     }
 
     function actualizarContador() {
-        const presentes = document.querySelectorAll('.presente:checked').length;
         const el = document.getElementById('contador');
+        if (!el) return;
+        const presentes = document.querySelectorAll('.presente:checked').length;
         el.textContent = `${presentes} / ${totalAlumnos} presentes`;
         el.className = 'chip-counter text-xs font-semibold px-3 py-1.5 rounded-full';
         if (totalAlumnos > 0 && presentes === totalAlumnos) el.classList.add('chip-counter--all');
@@ -499,14 +656,42 @@ unset($_SESSION['flash_success'], $_SESSION['flash_error']);
         document.getElementById('form-eliminar').submit();
     }
 
-    // Cerrar modal con Escape
+    // ── FERIADO ─────────────────────────────────────────────────
+    function abrirModalFeriado() {
+        const fecha = document.getElementById('campo-fecha').value;
+        const [y, m, d] = fecha.split('-');
+        document.getElementById('fecha-feriado').value = fecha;
+        document.getElementById('modal-feriado-fecha').textContent = `${d}/${m}/${y}`;
+        document.getElementById('modal-feriado').classList.remove('hidden');
+        document.getElementById('motivo-feriado').focus();
+    }
+
+    function cerrarModalFeriado() {
+        const modal = document.getElementById('modal-feriado');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    function abrirModalQuitarFeriado() {
+        document.getElementById('modal-quitar-feriado').classList.remove('hidden');
+    }
+
+    function cerrarModalQuitarFeriado() {
+        const modal = document.getElementById('modal-quitar-feriado');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    // Cerrar modales con Escape
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') cerrarModal();
+        if (e.key === 'Escape') {
+            cerrarModal();
+            cerrarModalFeriado();
+            cerrarModalQuitarFeriado();
+        }
     });
 
     document.addEventListener('DOMContentLoaded', () => {
         actualizarContador();
-        validarFecha();
+        if (!ES_FERIADO) validarFecha();
     });
 
     function getToastStack() {

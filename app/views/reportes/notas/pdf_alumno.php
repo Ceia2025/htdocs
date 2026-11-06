@@ -110,70 +110,109 @@
         table.nt {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11px;
-            table-layout: fixed;
+            font-size: 8px;
         }
 
-        table.nt thead tr.sem-row th {
-            background: #1e3a5f;
+        table.nt thead th {
+            background: #0f3d7a;
             color: #fff;
-            padding: 3px 1px;
-            border: 1px solid #1e40af;
-            font-size: 7px;
+            border: 1px solid #ffffff;
+            padding: 4px 2px;
             text-align: center;
+            font-size: 7px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         table.nt thead tr.nota-row th {
-            background: #004b8d;
-            color: #fff;
-            padding: 2.5px 1px;
-            border: 1px solid #1e40af;
+            background: #1d5aa8;
             font-size: 6.5px;
-            text-align: center;
+            padding: 3px 1px;
         }
 
         table.nt thead th.th-asig {
             text-align: left;
-            padding-left: 5px;
-            width: 120px;
+            padding-left: 6px;
+            width: 105px;
+            font-size: 8px;
+        }
+
+        table.nt thead th.th-prom {
+            width: 40px;
+            font-size: 6.5px;
+            background: #1d5aa8;
+        }
+
+        table.nt thead th.th-fin {
+            width: 48px;
+            font-size: 6px;
+        }
+
+        table.nt thead th.gap,
+        table.nt tbody td.gap,
+        table.nt tfoot td.gap {
+            width: 5px;
+            padding: 0;
+            border-top: none;
+            border-bottom: none;
+        }
+
+        table.nt thead th.gap {
+            background: #ffffff;
+            border: none;
+        }
+
+        table.nt tbody td.gap {
+            background: #dbeafe;
+            border-left: none;
+            border-right: none;
         }
 
         table.nt tbody td {
-            border: 1px solid #e2e8f0;
-            padding: 2.5px 1.5px;
+            border: 1px solid #dbe4f0;
+            padding: 6px 2px;
             text-align: center;
             vertical-align: middle;
+            background: #ffffff;
+            font-size: 8.5px;
         }
 
         table.nt tbody tr:nth-child(even) td {
-            background: #f8fafc;
+            background: #f1f6fc;
+        }
+
+        table.nt tbody tr:nth-child(even) td.gap {
+            background: #dbeafe;
         }
 
         table.nt tbody td.td-a {
             text-align: left;
-            padding-left: 5px;
+            padding-left: 6px;
             font-weight: bold;
-            font-size: 7px;
-            width: 120px;
+            font-size: 7.5px;
+            color: #1e3a5f;
         }
 
         table.nt tfoot td {
-            border: 1px solid #cbd5e1;
-            padding: 3px 1.5px;
+            border: 1px solid #c7d7ee;
+            padding: 6px 2px;
             text-align: center;
-            background: #dbeafe;
+            background: #e3edf9;
             font-weight: bold;
-            font-size: 9.5px;
-            color: #1e3a5f;
+            font-size: 9px;
+            color: #0f3d7a;
         }
 
         table.nt tfoot td.td-a {
             text-align: left;
-            padding-left: 5px;
+            padding-left: 6px;
+            font-size: 8px;
         }
 
-        .sep {
-            border-left: 2px solid #3b82f6 !important;
+        table.nt tfoot td.gap {
+            background: #dbeafe;
+            border-left: none;
+            border-right: none;
         }
 
         .ok {
@@ -188,12 +227,13 @@
 
         .pen {
             color: #f59e0b;
-            font-size: 6px;
+            font-size: 6.5px;
             font-style: italic;
+            font-weight: bold;
         }
 
         .nd {
-            color: #cbd5e1;
+            color: #94a3b8;
         }
 
         /* ── ASISTENCIA ── */
@@ -458,19 +498,23 @@
             <thead>
                 <tr class="sem-row">
                     <th class="th-asig" rowspan="2">Asignatura</th>
-                    <th colspan="<?= $maxCols[1] ?>">1° Semestre</th>
-                    <th colspan="<?= $maxCols[2] ?>" class="sep">2° Semestre</th>
-                    <th rowspan="2" style="min-width:28px;">Prom.<br>S1</th>
-                    <th rowspan="2" style="min-width:28px;" class="sep">Prom.<br>S2</th>
-                    <th rowspan="2" style="min-width:28px;">Prom.<br>Final</th>
+                    <th colspan="<?= $maxCols[1] ?>">1.er Semestre</th>
+                    <th class="th-prom" rowspan="2">Promedio<br>1.er Semestre</th>
+                    <th class="gap" rowspan="2"></th>
+                    <th colspan="<?= $maxCols[2] ?>">2.º Semestre</th>
+                    <th class="th-prom" rowspan="2">Promedio<br>2.º Semestre</th>
+                    <th class="gap" rowspan="2"></th>
+                    <th colspan="2">Promedios Finales</th>
                 </tr>
                 <tr class="nota-row">
                     <?php for ($i = 1; $i <= $maxCols[1]; $i++): ?>
                         <th>N<?= $i ?></th>
                     <?php endfor; ?>
                     <?php for ($i = 1; $i <= $maxCols[2]; $i++): ?>
-                        <th class="<?= $i === 1 ? 'sep' : '' ?>">N<?= $i ?></th>
+                        <th>N<?= $i ?></th>
                     <?php endfor; ?>
+                    <th class="th-fin">Promedio final<br>por asignatura</th>
+                    <th class="th-fin">Promedio<br>general final</th>
                 </tr>
             </thead>
             <tbody>
@@ -483,24 +527,20 @@
                     ?>
                     <tr>
                         <td class="td-a"><?= htmlspecialchars($fila['nombre']) ?></td>
+
                         <?php for ($i = 0; $i < $maxCols[1]; $i++):
                             $n = $cols1[$i] ?? null;
                             $v = $n !== null ? Nota::redondear((float) $n['nota']) : null;
                             ?>
-                            <td><?php if ($v !== null): ?>
+                            <td>
+                                <?php if ($v !== null): ?>
                                     <span class="<?= Nota::aprobada($v) ? 'ok' : 'mal' ?>"><?= Nota::fmt($v) ?></span>
-                                <?php else: ?><span class="nd">—</span><?php endif; ?>
+                                <?php else: ?>
+                                    <span class="nd">—</span>
+                                <?php endif; ?>
                             </td>
                         <?php endfor; ?>
-                        <?php for ($i = 0; $i < $maxCols[2]; $i++):
-                            $n = $cols2[$i] ?? null;
-                            $v = $n !== null ? Nota::redondear((float) $n['nota']) : null;
-                            ?>
-                            <td class="<?= $i === 0 ? 'sep' : '' ?>"><?php if ($v !== null): ?>
-                                    <span class="<?= Nota::aprobada($v) ? 'ok' : 'mal' ?>"><?= Nota::fmt($v) ?></span>
-                                <?php else: ?><span class="nd">—</span><?php endif; ?>
-                            </td>
-                        <?php endfor; ?>
+
                         <td style="color:<?= Nota::color($p1) ?>;font-weight:bold;">
                             <?php if ($p1 !== null): ?>
                                 <?= Nota::fmt($p1) ?>
@@ -510,7 +550,23 @@
                                 <span class="nd">—</span>
                             <?php endif; ?>
                         </td>
-                        <td style="color:<?= Nota::color($p2) ?>;font-weight:bold;" class="sep">
+
+                        <td class="gap"></td>
+
+                        <?php for ($i = 0; $i < $maxCols[2]; $i++):
+                            $n = $cols2[$i] ?? null;
+                            $v = $n !== null ? Nota::redondear((float) $n['nota']) : null;
+                            ?>
+                            <td>
+                                <?php if ($v !== null): ?>
+                                    <span class="<?= Nota::aprobada($v) ? 'ok' : 'mal' ?>"><?= Nota::fmt($v) ?></span>
+                                <?php else: ?>
+                                    <span class="nd">—</span>
+                                <?php endif; ?>
+                            </td>
+                        <?php endfor; ?>
+
+                        <td style="color:<?= Nota::color($p2) ?>;font-weight:bold;">
                             <?php if ($p2 !== null): ?>
                                 <?= Nota::fmt($p2) ?>
                             <?php elseif ($fila['tiene2']): ?>
@@ -519,6 +575,9 @@
                                 <span class="nd">—</span>
                             <?php endif; ?>
                         </td>
+
+                        <td class="gap"></td>
+
                         <td style="color:<?= Nota::color($pFinal) ?>;font-weight:bold;">
                             <?php if ($pFinal !== null): ?>
                                 <?= Nota::fmt($pFinal) ?>
@@ -528,22 +587,38 @@
                                 <span class="nd">—</span>
                             <?php endif; ?>
                         </td>
+                        <td><span class="nd">—</span></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
             <tfoot>
-
-
                 <tr>
-                    <td class="td-a">Promedio General</td>
-                    <?php for ($i = 0; $i < $maxCols[1]; $i++): ?>
-                        <td></td><?php endfor; ?>
-                    <?php for ($i = 0; $i < $maxCols[2]; $i++): ?>
-                        <td class="<?= $i === 0 ? 'sep' : '' ?>"></td>
-                    <?php endfor; ?>
-                    <td style="color:<?= Nota::color($promGenSem1) ?>"><?= Nota::fmt($promGenSem1) ?></td>
-                    <td style="color:<?= Nota::color($promGenSem2) ?>" class="sep"><?= Nota::fmt($promGenSem2) ?></td>
-                    <td style="color:<?= Nota::color($promFinalGeneral) ?>;font-weight:bold;">
+                    <td class="td-a" colspan="<?= 1 + $maxCols[1] ?>">Promedio General</td>
+
+                    <td style="color:<?= Nota::color($promGenSem1) ?>">
+                        <?php if ($promGenSem1 !== null): ?>
+                            <?= Nota::fmt($promGenSem1) ?>
+                        <?php else: ?>
+                            <span class="pen">Pend.</span>
+                        <?php endif; ?>
+                    </td>
+
+                    <td class="gap"></td>
+
+                    <td colspan="<?= $maxCols[2] ?>"></td>
+
+                    <td style="color:<?= Nota::color($promGenSem2) ?>">
+                        <?php if ($promGenSem2 !== null): ?>
+                            <?= Nota::fmt($promGenSem2) ?>
+                        <?php else: ?>
+                            <span class="pen">Pend.</span>
+                        <?php endif; ?>
+                    </td>
+
+                    <td class="gap"></td>
+
+                    <td></td>
+                    <td style="color:<?= Nota::color($promFinalGeneral) ?>;">
                         <?php if ($promFinalGeneral !== null): ?>
                             <?= Nota::fmt($promFinalGeneral) ?>
                         <?php elseif ($promGenSem1 !== null || $promGenSem2 !== null): ?>

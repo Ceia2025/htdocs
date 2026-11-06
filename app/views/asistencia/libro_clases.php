@@ -11,6 +11,8 @@ $rol = $user['rol'];
 include __DIR__ . "/../layout/header.php";
 include __DIR__ . "/../layout/navbar.php";
 
+$feriados = $feriados ?? [];
+
 // =============================================
 // CONFIGURACIÓN DE SEMESTRES Y MESES
 // =============================================
@@ -82,9 +84,18 @@ $mesActual = date("Y-m");
 
         <!-- Info del curso -->
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-strong font-display">
-                Curso: <?= htmlspecialchars($curso['nombre']) ?>
-            </h2>
+            <div>
+                <h2 class="text-xl font-bold text-strong font-display">
+                    Curso: <?= htmlspecialchars($curso['nombre']) ?>
+                </h2>
+                <?php if (!empty($feriados)): ?>
+                    <p class="text-xs text-muted mt-1 flex items-center gap-1.5">
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded text-xs font-bold text-warn"
+                              style="background: var(--warn-soft);">F</span>
+                        Día feriado (no cuenta como día de clases)
+                    </p>
+                <?php endif; ?>
+            </div>
             <a href="index.php?action=form_asistencia_masiva&curso_id=<?= $_GET['curso_id'] ?>&anio_id=<?= $_GET['anio_id'] ?>"
                 class="btn-primary text-sm font-medium px-4 py-2 rounded-lg transition">
                 + Tomar asistencia
@@ -140,6 +151,8 @@ $mesActual = date("Y-m");
                                     if ($fechaMatricula && $fecha < $fechaMatricula)
                                         continue;
                                     $f = $fecha->format("Y-m-d");
+                                    if (isset($feriados[$f]))
+                                        continue;
                                     $v = $asistencia[$alumno['matricula_id']][$f] ?? null;
                                     if ($v !== null) {
                                         $diasTotal++;
@@ -164,6 +177,14 @@ $mesActual = date("Y-m");
                             $nombreMes = $nombresMeses[$mes] . " " . $anio;
                             $esMesActual = ($mesKey === $mesActual);
 
+                            // Días feriados y hábiles reales del mes
+                            $diasFeriadoMes = 0;
+                            foreach ($fechas as $fechaTmp) {
+                                if (isset($feriados[$fechaTmp->format("Y-m-d")]))
+                                    $diasFeriadoMes++;
+                            }
+                            $diasHabilesMes = count($fechas) - $diasFeriadoMes;
+
                             // Calcular presentes/ausentes del mes para el resumen
                             $totalCeldas = 0;
                             $totalPresentes = 0;
@@ -177,6 +198,8 @@ $mesActual = date("Y-m");
                                         continue;
 
                                     $f = $fecha->format("Y-m-d");
+                                    if (isset($feriados[$f]))
+                                        continue;
                                     $v = $asistencia[$alumno['matricula_id']][$f] ?? null;
                                     if ($v !== null) {
                                         $totalCeldas++;
@@ -203,7 +226,12 @@ $mesActual = date("Y-m");
                                     </div>
                                     <div class="flex items-center gap-4">
                                         <span class="text-sm font-normal text-muted">
-                                            <?= count($fechas) ?> días hábiles
+                                            <?= $diasHabilesMes ?> días hábiles
+                                            <?php if ($diasFeriadoMes > 0): ?>
+                                                <span class="text-warn">
+                                                    · <?= $diasFeriadoMes ?> feriado<?= $diasFeriadoMes > 1 ? 's' : '' ?>
+                                                </span>
+                                            <?php endif; ?>
                                         </span>
                                         <?php if ($totalPresentes > 0): ?>
                                             <span class="text-sm font-normal text-success">
@@ -228,15 +256,20 @@ $mesActual = date("Y-m");
                                                 <th class="sticky-col left-10 p-2 text-left min-w-[26px] text-strong">
                                                     Alumno</th>
                                                 <?php foreach ($fechas as $fecha):
+                                                    $fHead = $fecha->format("Y-m-d");
                                                     $esViernes = $fecha->format("N") == 5;
+                                                    $esFeriadoHead = isset($feriados[$fHead]);
                                                     ?>
-                                                    <th
-                                                        class="p-1 text-center min-w-[26px] border-b divider-soft <?= $esViernes ? 'border-r-2 divider-week' : '' ?>">
-                                                        <span class="block text-xs <?= $esViernes ? 'text-warn' : '' ?>">
+                                                    <th class="p-1 text-center min-w-[26px] border-b divider-soft <?= $esViernes ? 'border-r-2 divider-week' : '' ?>"
+                                                        <?php if ($esFeriadoHead): ?>
+                                                            style="background: var(--warn-soft);"
+                                                            title="Feriado: <?= htmlspecialchars($feriados[$fHead]) ?>"
+                                                        <?php endif; ?>>
+                                                        <span class="block text-xs <?= ($esViernes || $esFeriadoHead) ? 'text-warn' : '' ?>">
                                                             <?= $fecha->format("d") ?>
                                                         </span>
                                                         <span
-                                                            class="block text-xs font-normal <?= $esViernes ? 'text-warn' : 'text-muted' ?>">
+                                                            class="block text-xs font-normal <?= ($esViernes || $esFeriadoHead) ? 'text-warn' : 'text-muted' ?>">
                                                             <?= $diasCortos[$fecha->format("N") - 1] ?>
                                                         </span>
                                                     </th>
@@ -254,6 +287,10 @@ $mesActual = date("Y-m");
                                             $presentesPorFecha = [];
                                             foreach ($fechas as $fecha) {
                                                 $f = $fecha->format("Y-m-d");
+                                                if (isset($feriados[$f])) {
+                                                    $presentesPorFecha[$f] = 0;
+                                                    continue;
+                                                }
                                                 $cuenta = 0;
                                                 foreach ($alumnos as $al) {
                                                     $fmAl = !empty($al['fecha_matricula'])
@@ -295,6 +332,8 @@ $mesActual = date("Y-m");
                                                         continue;
 
                                                     $f = $fecha->format("Y-m-d");
+                                                    if (isset($feriados[$f]))
+                                                        continue;
                                                     $v = $asistencia[$alumno['matricula_id']][$f] ?? null;
                                                     if ($v !== null) {
                                                         $totalAlumno++;
@@ -343,14 +382,22 @@ $mesActual = date("Y-m");
                                                         $despuesDeRetiro = $fechaRetiro && $fecha > $fechaRetiro;
                                                         $esFuturo = $fecha > new DateTime('today');
                                                         $esViernes = $fecha->format("N") == 5;
+                                                        $esFeriadoDia = isset($feriados[$f]);
                                                         ?>
                                                         <td class="text-center p-1
         <?= ($antesDeMatricula || $despuesDeRetiro) ? 'cell-muted' : '' ?>
-        <?= $esViernes ? 'border-r-2 divider-week' : '' ?>">
+        <?= $esViernes ? 'border-r-2 divider-week' : '' ?>"
+                                                            <?php if ($esFeriadoDia && !$antesDeMatricula && !$despuesDeRetiro): ?>
+                                                                style="background: var(--warn-soft);"
+                                                            <?php endif; ?>>
 
                                                             <?php if ($antesDeMatricula || $despuesDeRetiro): ?>
                                                                 <span class="text-faint"
                                                                     title="<?= $despuesDeRetiro ? 'Alumno retirado' : 'Antes de la matrícula' ?>">·</span>
+
+                                                            <?php elseif ($esFeriadoDia): ?>
+                                                                <span class="text-warn text-xs font-bold"
+                                                                    title="Feriado: <?= htmlspecialchars($feriados[$f]) ?>">F</span>
 
                                                             <?php elseif ($esFuturo): ?>
                                                                 <span class="text-faint text-xs" title="Fecha futura">·</span>
@@ -415,11 +462,15 @@ $mesActual = date("Y-m");
                                                     $f = $fecha->format("Y-m-d");
                                                     $esFuturo = $fecha > new DateTime('today');
                                                     $esViernes = $fecha->format("N") == 5;
+                                                    $esFeriadoDia = isset($feriados[$f]);
                                                     $total = $presentesPorFecha[$f] ?? 0;
                                                     ?>
-                                                    <td class="text-center p-1 text-xs font-bold text-accent
-        <?= $esViernes ? 'border-r-2 divider-week' : '' ?>">
-                                                        <?= $esFuturo ? '·' : $total ?>
+                                                    <td class="text-center p-1 text-xs font-bold <?= $esFeriadoDia ? 'text-warn' : 'text-accent' ?>
+        <?= $esViernes ? 'border-r-2 divider-week' : '' ?>"
+                                                        <?php if ($esFeriadoDia): ?>
+                                                            style="background: var(--warn-soft);"
+                                                        <?php endif; ?>>
+                                                        <?= $esFeriadoDia ? 'F' : ($esFuturo ? '·' : $total) ?>
                                                     </td>
                                                 <?php endforeach; ?>
 

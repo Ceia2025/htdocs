@@ -37,7 +37,10 @@ class AsistenciaController
         $asistenciaExistente = $this->model->getAsistenciaPorFecha($cursoId, $anioId, $fecha);
         $esEdicion = !empty($asistenciaExistente);
 
-        // Contar solo alumnos activos en la fecha seleccionada
+        $feriados = $this->model->getFeriados((int) $anioId);
+        $esFeriado = isset($feriados[$fecha]);
+        $motivoFeriado = $feriados[$fecha] ?? null;
+
         $totalActivos = 0;
         foreach ($alumnos as $al) {
             $retiradoEl = !empty($al['fecha_retiro']) ? $al['fecha_retiro'] : null;
@@ -122,8 +125,13 @@ class AsistenciaController
         $fecha = $_POST['fecha'];
         $presentes = $_POST['presentes'] ?? [];
 
-        // ID del usuario logueado
         $usuarioId = $_SESSION['user']['id'] ?? null;
+
+        if ($this->model->esFeriado((int) $anioId, $fecha)) {
+            $_SESSION['flash_error'] = "El $fecha está marcado como feriado. Quita el feriado para registrar asistencia.";
+            header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId&fecha=$fecha");
+            exit;
+        }
 
         $alumnos = $this->model->getAlumnosPorCurso($cursoId, $anioId);
 
@@ -138,7 +146,6 @@ class AsistenciaController
 
             $presente = in_array($alumno['matricula_id'], $presentes) ? 1 : 0;
 
-            // ← pasar $usuarioId
             $this->model->guardarAsistencia($alumno['matricula_id'], $fecha, $presente, $usuarioId);
         }
 
@@ -152,7 +159,6 @@ class AsistenciaController
         header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId&guardado=1&alerta=$resultadoAlerta");
         exit;
     }
-
     /* ==========================================
        PDF ASISTENCIA
     ========================================== */
@@ -208,10 +214,11 @@ class AsistenciaController
         $asistencia = $this->model->getAsistenciaLibro($cursoId, $anioId);
         $fechasAnio = $this->model->getFechasAnio($anioId, $cursoId);
         $auditoria = $this->model->getAuditoriaAsistencia((int) $cursoId, (int) $anioId);
+        $feriados = $this->model->getFeriados((int) $anioId);
 
         if (empty($fechasAnio['sem1_inicio'])) {
             die("El año seleccionado no tiene fechas de semestres configuradas.
-             <a href='index.php?action=anio_edit&id=$anioId'>Configurar ahora</a>");
+         <a href='index.php?action=anio_edit&id=$anioId'>Configurar ahora</a>");
         }
 
         require "../views/asistencia/libro_clases.php";
@@ -364,4 +371,48 @@ class AsistenciaController
         header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId");
         exit;
     }
+
+    public function marcarFeriado(): void
+    {
+        $cursoId = (int) ($_POST['curso_id'] ?? 0);
+        $anioId = (int) ($_POST['anio_id'] ?? 0);
+        $fecha = $_POST['fecha'] ?? '';
+        $motivo = trim($_POST['motivo'] ?? '') ?: 'Feriado';
+        $usuarioId = $_SESSION['user']['id'] ?? null;
+
+        if (!$anioId || !$fecha || !DateTime::createFromFormat('Y-m-d', $fecha)) {
+            $_SESSION['flash_error'] = 'Faltan parámetros para marcar el feriado.';
+            header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId");
+            exit;
+        }
+
+        $eliminadas = $this->model->marcarFeriado($anioId, $fecha, $motivo, $usuarioId);
+
+        $_SESSION['flash_success'] = $eliminadas > 0
+            ? "El $fecha fue marcado como feriado. Se eliminaron $eliminadas registros de asistencia de ese día."
+            : "El $fecha fue marcado como feriado.";
+
+        header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId&fecha=$fecha");
+        exit;
+    }
+
+    public function quitarFeriado(): void
+    {
+        $cursoId = (int) ($_POST['curso_id'] ?? 0);
+        $anioId = (int) ($_POST['anio_id'] ?? 0);
+        $fecha = $_POST['fecha'] ?? '';
+
+        if (!$anioId || !$fecha) {
+            $_SESSION['flash_error'] = 'Faltan parámetros para quitar el feriado.';
+            header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId");
+            exit;
+        }
+
+        $this->model->quitarFeriado($anioId, $fecha);
+
+        $_SESSION['flash_success'] = "Se quitó el feriado del $fecha.";
+        header("Location: index.php?action=form_asistencia_masiva&curso_id=$cursoId&anio_id=$anioId&fecha=$fecha");
+        exit;
+    }
+
 }

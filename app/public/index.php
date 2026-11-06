@@ -515,6 +515,17 @@ switch ($action) {
         }
         break;
 
+    case 'marcar_feriado':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $asistenciaController->marcarFeriado();
+        }
+        break;
+    case 'quitar_feriado':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $asistenciaController->quitarFeriado();
+        }
+        break;
+
     // ── NOTAS ────────────────────────────────────────────────
     case 'notas':
         $notasController->index();

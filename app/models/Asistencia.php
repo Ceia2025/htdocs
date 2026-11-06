@@ -5,6 +5,7 @@ class Asistencia
 {
     private $conn;
     private $table = "alum_asistencia2";
+    private $feriadosCache = [];
 
     public function __construct()
     {
@@ -15,19 +16,20 @@ class Asistencia
     public function getFechasAnio($anioId, $cursoId = null)
     {
         $sql = "SELECT
-                a.anio,
-                a.sem1_inicio,
-                a.sem1_fin,
-                a.sem2_inicio,
-                CASE
-                    WHEN c.termina_antes = 1 AND a.sem2_fin_4medio IS NOT NULL
-                        THEN a.sem2_fin_4medio
-                    ELSE a.sem2_fin
-                END AS sem2_fin
-            FROM anios2 a
-            LEFT JOIN cursos2 c ON c.id = :curso_id
-            WHERE a.id = :id
-            LIMIT 1";
+            a.id AS anio_id,
+            a.anio,
+            a.sem1_inicio,
+            a.sem1_fin,
+            a.sem2_inicio,
+            CASE
+                WHEN c.termina_antes = 1 AND a.sem2_fin_4medio IS NOT NULL
+                    THEN a.sem2_fin_4medio
+                ELSE a.sem2_fin
+            END AS sem2_fin
+        FROM anios2 a
+        LEFT JOIN cursos2 c ON c.id = :curso_id
+        WHERE a.id = :id
+        LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
             ':id' => $anioId,
@@ -508,13 +510,16 @@ class Asistencia
         if ($inicio > $fin)
             return 0;
 
-        $total = $this->diasHabilesEntre(max($inicio, $fechasAnio['sem1_inicio']), min($fin, $fechasAnio['sem1_fin']));
-        $total += $this->diasHabilesEntre(max($inicio, $fechasAnio['sem2_inicio']), min($fin, $fechasAnio['sem2_fin']));
+        $feriados = isset($fechasAnio['anio_id'])
+            ? $this->getFeriados((int) $fechasAnio['anio_id'])
+            : [];
+
+        $total = $this->diasHabilesEntre(max($inicio, $fechasAnio['sem1_inicio']), min($fin, $fechasAnio['sem1_fin']), $feriados);
+        $total += $this->diasHabilesEntre(max($inicio, $fechasAnio['sem2_inicio']), min($fin, $fechasAnio['sem2_fin']), $feriados);
 
         return $total;
     }
-
-    private function diasHabilesEntre(string $inicio, string $fin): int
+    private function diasHabilesEntre(string $inicio, string $fin, array $feriados = []): int
     {
         if ($inicio > $fin)
             return 0;
@@ -525,12 +530,102 @@ class Asistencia
         $dias = 0;
         $periodo = new DatePeriod($desde, new DateInterval('P1D'), (clone $hasta)->modify('+1 day'));
         foreach ($periodo as $fecha) {
-            if ((int) $fecha->format('N') <= 5) {
+            if ((int) $fecha->format('N') <= 5 && !isset($feriados[$fecha->format('Y-m-d')])) {
                 $dias++;
             }
         }
 
         return $dias;
     }
+
+    /* ==========================================
+   FERIADOS
+========================================== */
+
+    // Mapa: fecha (Y-m-d) => motivo
+    public function getFeriados(int $anioId): array
+    {
+        if (isset($this->feriadosCache[$anioId])) {
+            return $this->feriadosCache[$anioId];
+        }
+
+        $sql = "SELECT fecha, motivo
+            FROM feriados2
+            WHERE anio_id = :anio_id
+            ORDER BY fecha ASC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':anio_id' => $anioId]);
+
+        $resultado = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $resultado[$row['fecha']] = $row['motivo'];
+        }
+
+        $this->feriadosCache[$anioId] = $resultado;
+        return $resultado;
+    }
+
+    public function esFeriado(int $anioId, string $fecha): bool
+    {
+        return isset($this->getFeriados($anioId)[$fecha]);
+    }
+
+    // Marca el día como feriado y elimina la asistencia ya registrada ese día.
+// Retorna la cantidad de registros de asistencia eliminados.
+    public function marcarFeriado(int $anioId, string $fecha, string $motivo = 'Feriado', ?int $usuarioId = null): int
+    {
+        $this->conn->beginTransaction();
+
+        try {
+            $sql = "INSERT INTO feriados2 (anio_id, fecha, motivo, usuario_id)
+                VALUES (:anio_id, :fecha, :motivo, :usuario_id)
+                ON DUPLICATE KEY UPDATE
+                    motivo = :motivo,
+                    usuario_id = :usuario_id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':anio_id' => $anioId,
+                ':fecha' => $fecha,
+                ':motivo' => $motivo,
+                ':usuario_id' => $usuarioId,
+            ]);
+
+            $sql = "DELETE a
+                FROM alum_asistencia2 a
+                JOIN matriculas2 m ON m.id = a.matricula_id
+                WHERE m.anio_id = :anio_id
+                  AND a.fecha = :fecha";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':anio_id' => $anioId,
+                ':fecha' => $fecha,
+            ]);
+            $eliminadas = $stmt->rowCount();
+
+            $this->conn->commit();
+        } catch (Exception $e) {
+            $this->conn->rollBack();
+            throw $e;
+        }
+
+        unset($this->feriadosCache[$anioId]);
+        return $eliminadas;
+    }
+
+    public function quitarFeriado(int $anioId, string $fecha): int
+    {
+        $sql = "DELETE FROM feriados2
+            WHERE anio_id = :anio_id
+              AND fecha = :fecha";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':anio_id' => $anioId,
+            ':fecha' => $fecha,
+        ]);
+
+        unset($this->feriadosCache[$anioId]);
+        return $stmt->rowCount();
+    }
+
 
 }
