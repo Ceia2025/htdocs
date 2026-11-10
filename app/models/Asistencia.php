@@ -493,8 +493,8 @@ class Asistencia
         return [
             'dias_habiles_totales' => $totalProyectado,
             'dias_habiles_restantes' => $diasHabilesRestantes,
-            'pct_max_posible' => round($pctMaxRaw, 1),
-            'pct_min_garantizado' => round($pctMinRaw, 1),
+            'pct_max_posible' => round($pctMaxRaw),
+            'pct_min_garantizado' => round($pctMinRaw),
             'max_faltas_permitidas' => max(0, $maxFaltasPermitidas),
             'estado' => $estado,
         ];

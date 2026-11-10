@@ -960,7 +960,9 @@ switch ($action) {
     case 'reportes_notas_pdf_consolidado':
         $reporteNotasController->pdfConsolidado();
         break;
-
+    case 'reportes_notas_pdf_consolidado_anual':
+        $reporteNotasController->pdfConsolidadoAnual();
+        break;
     // ── REPORTES DE NOTAS ────────────────────────────────────
     case 'reportes_notas':
         (new ReporteNotasController())->index();

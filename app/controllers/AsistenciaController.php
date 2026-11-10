@@ -92,7 +92,7 @@ class AsistenciaController
         unset($row);
 
         $porcentaje = $totalClasesSuma > 0
-            ? round(($totalPresentesSuma / $totalClasesSuma) * 100, 1)
+            ? ($totalPresentesSuma / $totalClasesSuma) * 100
             : 0;
 
         require "../views/asistencia/resumen_curso.php";

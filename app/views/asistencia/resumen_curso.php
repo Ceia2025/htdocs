@@ -49,11 +49,11 @@ $estadoInfo = [
 
             <!-- Indicador General -->
             <div class="mb-6 p-4 rounded-lg
-    <?= $porcentaje >= 80 ? 'banner-success' :
-        ($porcentaje >= 70 ? 'banner-warning' : 'banner-danger') ?>">
+                <?= $porcentaje >= 80 ? 'banner-success' :
+                    ($porcentaje >= 70 ? 'banner-warning' : 'banner-danger') ?>">
 
                 <h3 class="text-xl font-semibold">
-                    Asistencia General: <?= $porcentaje ?>%
+                    Asistencia General: <?= round($porcentaje) ?>%
                 </h3>
                 <p class="text-sm opacity-80 mt-1">
                     <?= $totalDiasClase ?> día<?= $totalDiasClase == 1 ? '' : 's' ?> de clase registrados hasta la fecha
@@ -123,11 +123,12 @@ $estadoInfo = [
                             $total = $row['total_clases'] ?? 0;
                             $asistencias = $row['presentes'] ?? 0;
 
-                            $porcentajeAlumno = ($total > 0) ? round(($asistencias / $total) * 100, 1) : 0;
+                            $porcentajeRaw = ($total > 0) ? ($asistencias / $total) * 100 : 0;
+                            $porcentajeAlumno = round($porcentajeRaw);
 
-                            if ($porcentajeAlumno >= 75) {
+                            if ($porcentajeRaw >= 75) {
                                 $color = 'text-success';
-                            } elseif ($porcentajeAlumno >= 50) {
+                            } elseif ($porcentajeRaw >= 50) {
                                 $color = 'text-warn';
                             } else {
                                 $color = 'text-danger';
@@ -158,37 +159,39 @@ $estadoInfo = [
                                 </td>
                                 <td class="px-4 py-2">
                                     <?= htmlspecialchars($row['apepat'] . ' ' . $row['apemat'] . ', ' . $row['nombre']) ?>
-                                    <?php if ($estaRetirado): ?>
-                                        <span class="chip-danger text-xs px-2 py-0.5 rounded-full ml-2">Retirado</span>
+                                        <?php if ($estaRetirado): ?>
+
+                                                                                <span cl
+                                        ass="chip-danger text-xs px-2 py-0.5 rounded-full ml-2">Retirado</span>
                                     <?php endif; ?>
                                 </td>
                                 <td class="px-4 py-2 text-center">
                                     <?= $row['total_clases'] ?? 0 ?>
                                 </td>
-                                <td class="px-4 py-2 text-center">
-                                    <?= $row['presentes'] ?? 0 ?>
-                                </td>
-                                <td class="px-4 py-2 text-center font-bold <?= $color ?>">
-                                    <?= $porcentajeAlumno ?>%
-                                </td>
-                                <td class="px-4 py-2 text-center">
-                                    <?= $proy['dias_habiles_restantes'] ?>
-                                </td>
-                                <td class="px-4 py-2 text-center text-xs">
-                                    <?= $proy['pct_min_garantizado'] ?>% – <?= $proy['pct_max_posible'] ?>%
-                                </td>
-                                <td class="px-4 py-2 text-center">
-                                    <span class="<?= $estado['chip'] ?> text-xs px-2 py-0.5 rounded-full">
-                                        <?= $estado['label'] ?>
-                                    </span>
-                                    <?php if ($proy['estado'] === 'en_riesgo'): ?>
-                                        <div class="text-xs text-faint mt-1">
-                                            puede faltar <?= $proy['max_faltas_permitidas'] ?>
-                                            día<?= $proy['max_faltas_permitidas'] == 1 ? '' : 's' ?> más
-                                        </div>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
+                                    <td class="px-4 py-2 text-center">
+                                        <?= $row['presentes'] ?? 0 ?>
+                                    </td>
+                                    <td class="px-4 py-2 text-center font-bold <?= $color ?>">
+                                        <?= $porcentajeAlumno ?>%
+                                    </td>
+                                    <td class="px-4 py-2 text-center">
+                                        <?= $proy['dias_habiles_restantes'] ?>
+                                    </td>
+                                    <td class="px-4 py-2 text-center text-xs">
+                                         <?= round($proy['pct_min_garantizado']) ?>% – <?= round($proy['pct_max_posible']) ?>%
+                                    </td>
+                                    <td class="px-4 py-2 text-center">
+                                        <span class="<?= $estado['chip'] ?> text-xs px-2 py-0.5 rounded-full">
+                                            <?= $estado['label'] ?>
+                                        </span>
+                                        <?php if ($proy['estado'] === 'en_riesgo'): ?>
+                                                <div class="text-xs text-faint mt-1">
+                                                    puede faltar <?= $proy['max_faltas_permitidas'] ?>
+                                                    día<?= $proy['max_faltas_permitidas'] == 1 ? '' : 's' ?> más
+                                                </div>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
 
                         <?php endforeach; ?>
                     </tbody>

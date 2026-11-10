@@ -71,9 +71,11 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
             </div>
             <div>
                 <label class="block text-xs text-muted mb-1.5">Semestre</label>
+                <!-- CORRECCIÓN 1: Se agrega la opción 'final' -->
                 <select id="sel-semestre" class="input-field text-sm rounded-lg px-3 py-2">
                     <option value="1">1° Semestre</option>
                     <option value="2">2° Semestre</option>
+                    <option value="final">Final (anual)</option>
                 </select>
             </div>
         </div>
@@ -176,13 +178,15 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
                     <h3 class="text-strong font-bold text-sm font-display">Consolidado de Notas</h3>
                     <p class="text-xs text-muted mt-1 leading-relaxed">
                         Genera una tabla con todos los alumnos del curso y el promedio
-                        de cada asignatura en el semestre seleccionado.
+                        de cada asignatura en el semestre seleccionado, o el anual con
+                        1°S, 2°S y nota final.
                     </p>
                 </div>
             </div>
             <div class="px-5 py-4 space-y-3 flex-1 flex flex-col justify-between">
                 <p class="text-xs text-muted">
                     Usa el curso, año y semestre seleccionados arriba.
+                    Elige <strong>Final (anual)</strong> para el resumen de ambos semestres.
                 </p>
                 <div class="flex gap-2">
                     <button id="btn-ver-consolidado" onclick="descargarPdfConsolidado(true)" disabled class="btn-secondary flex-1 flex items-center justify-center gap-2 px-4 py-2.5
@@ -365,23 +369,33 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
 
 
 <script>
-    // ── Íconos servidos desde PHP (misma fuente que el resto de la app) ──
+    // ── Íconos servidos desde PHP ──
     const SAAT_ICONS = {
         trophy: <?= json_encode(saat_icon('trophy', 'w-4 h-4 inline-block align-text-bottom')) ?>,
         chart: <?= json_encode(saat_icon('chart', 'w-4 h-4 inline-block align-text-bottom')) ?>,
         warning: <?= json_encode(saat_icon('warning', 'w-3 h-3 inline-block align-text-bottom')) ?>
     };
 
-    // ── Estado global ─────────────────────────────────────────────
+    // ── Estado global ──
     let rankingTab = 'alumnos';
     let rankingData = null;
 
-    // ── Año → recarga página ──────────────────────────────────────
+    // Devuelve el semestre elegido. "final" solo es válido para el Consolidado.
+    function getSemestre(permiteFinal = false) {
+        const sem = document.getElementById('sel-semestre').value;
+        if (sem === 'final' && !permiteFinal) {
+            alert('Este reporte requiere elegir 1° o 2° Semestre. «Final (anual)» solo aplica al Consolidado de Notas.');
+            return null;
+        }
+        return sem;
+    }
+
+    // ── Año → recarga página ──
     document.getElementById('sel-anio').addEventListener('change', function () {
         window.location.href = 'index.php?action=reportes_notas&anio_id=' + this.value;
     });
 
-    // ── Curso → carga alumnos y asignaturas ───────────────────────
+    // ── Curso → carga alumnos y asignaturas ──
     document.getElementById('sel-curso').addEventListener('change', function () {
         const cursoId = this.value;
         const anioVal = document.getElementById('sel-anio').value;
@@ -433,7 +447,7 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
             .catch(() => { selAsig.innerHTML = '<option value="">Error al cargar asignaturas</option>'; });
     });
 
-    // ── Habilitar botones al seleccionar ─────────────────────────
+    // ── Habilitar botones al seleccionar ──
     document.getElementById('sel-alumno').addEventListener('change', function () {
         document.getElementById('btn-pdf-alumno').disabled = !this.value;
         document.getElementById('btn-ver-alumno').disabled = !this.value;
@@ -443,7 +457,7 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
         document.getElementById('btn-ver-asignatura').disabled = !this.value;
     });
 
-    // ── Ranking: habilitar al cargar (año siempre presente) ───────
+    // ── Ranking: habilitar al cargar ──
     (function () {
         const sel = document.getElementById('sel-anio');
         document.getElementById('ranking-anio-label').textContent =
@@ -452,7 +466,7 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
         document.getElementById('btn-ranking-asignaturas').disabled = false;
     })();
 
-    // ── Descargas / Vista previa ────────────────────────────────────
+    // ── Descargas / Vista previa ──
     function descargarPdfAlumno(preview = false) {
         const id = document.getElementById('sel-alumno').value;
         if (!id) return;
@@ -460,29 +474,57 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
         if (preview) url += '&preview=1';
         window.open(url, '_blank');
     }
+
     function descargarPdfAsignatura(preview = false) {
         const cursoId = document.getElementById('sel-curso').value;
         const anioVal = document.getElementById('sel-anio').value;
         const asignaturaId = document.getElementById('sel-asignatura').value;
-        const semestre = document.getElementById('sel-semestre').value;
-        if (!cursoId || !asignaturaId) return;
+        const semestre = getSemestre();
+        if (!cursoId || !asignaturaId || !semestre) return;
         let url = `index.php?action=reportes_notas_pdf_asignatura&curso_id=${cursoId}&anio_id=${anioVal}&asignatura_id=${asignaturaId}&semestre=${semestre}`;
         if (preview) url += '&preview=1';
         window.open(url, '_blank');
     }
+
+    // CORRECCIÓN 2: Validación más robusta y manejo de URL
     function descargarPdfConsolidado(preview = false) {
         const cursoId = document.getElementById('sel-curso').value;
         const anioVal = document.getElementById('sel-anio').value;
-        const semestre = document.getElementById('sel-semestre').value;
-        if (!cursoId) return;
-        let url = `index.php?action=reportes_notas_pdf_consolidado&curso_id=${cursoId}&anio_id=${anioVal}&semestre=${semestre}`;
+        const semestre = getSemestre(true); // permiteFinal = true
+
+        // Si no hay curso o el semestre fue bloqueado por alguna razón, salimos
+        if (!cursoId || !semestre) return;
+
+        let url;
+        // NOTA: Asegúrate de que tu Controlador PHP tenga un 'case' para esta acción.
+        // Si no lo tiene, usa la URL alternativa comentada abajo.
+        if (semestre === 'final') {
+            url = `index.php?action=reportes_notas_pdf_consolidado_anual&curso_id=${cursoId}&anio_id=${anioVal}`;
+
+            // ALTERNATIVA: Si tu backend NO tiene una acción separada y espera 'semestre=final' en la misma ruta:
+            // url = `index.php?action=reportes_notas_pdf_consolidado&curso_id=${cursoId}&anio_id=${anioVal}&semestre=final`;
+        } else {
+            url = `index.php?action=reportes_notas_pdf_consolidado&curso_id=${cursoId}&anio_id=${anioVal}&semestre=${semestre}`;
+        }
+
         if (preview) url += '&preview=1';
         window.open(url, '_blank');
     }
+
     function descargarPdfRanking(preview = false) {
         const anioVal = document.getElementById('sel-anio').value;
-        const semestre = document.getElementById('sel-semestre').value;
+        const semestre = getSemestre();
+        if (!semestre) return;
         let url = `index.php?action=reportes_notas_pdf_ranking&anio_id=${anioVal}&semestre=${semestre}&tipo=${rankingTab}`;
+        if (preview) url += '&preview=1';
+        window.open(url, '_blank');
+    }
+
+    function descargarPdfRankingCursos(preview = false) {
+        const anioVal = document.getElementById('sel-anio').value;
+        const semestre = getSemestre();
+        if (!semestre) return;
+        let url = `index.php?action=reportes_notas_pdf_ranking_cursos&anio_id=${anioVal}&semestre=${semestre}`;
         if (preview) url += '&preview=1';
         window.open(url, '_blank');
     }
@@ -491,13 +533,15 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
     // MODAL RANKING
     // ════════════════════════════════════════════════════════════
     function abrirModalRanking(tab) {
+        const semestre = getSemestre();
+        if (!semestre) return;
+
         rankingTab = tab;
         rankingData = null;
         document.getElementById('modal-ranking').classList.remove('hidden');
         document.body.style.overflow = 'hidden';
 
         const anioVal = document.getElementById('sel-anio').value;
-        const semestre = document.getElementById('sel-semestre').value;
         const anioTxt = document.getElementById('sel-anio').options[
             document.getElementById('sel-anio').selectedIndex].text;
 
@@ -574,7 +618,6 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
                 return;
             }
 
-            // Poblar selector de cursos
             const selCurso = document.getElementById('sel-ranking-curso');
             const cursoActual = selCurso.value;
             selCurso.innerHTML = '<option value="">— Todos —</option>';
@@ -610,7 +653,6 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
                     const prom = a.promedio;
                     const color = prom === null ? 'text-faint' : (prom >= 4.0 ? 'text-success' : 'text-danger');
                     const promTxt = prom !== null ? parseFloat(prom).toFixed(1) : 'S/N';
-                    // Verifica pendiente usando matricula_id
                     const tienePendiente = data.pendientes_alumnos?.[cursoNombre]?.includes(a.matricula_id);
                     const badgePendiente = tienePendiente
                         ? `<span class="chip-warn ml-2 inline-flex items-center gap-1 text-[10px] font-normal px-1.5 py-0.5 rounded-full">${SAAT_ICONS.warning} Faltan notas</span>`
@@ -683,14 +725,6 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
         document.querySelectorAll('#modal-ranking-contenido [data-curso]').forEach(el => {
             el.style.display = (!cursoNombre || el.dataset.curso === cursoNombre) ? '' : 'none';
         });
-    }
-
-    function descargarPdfRankingCursos(preview = false) {
-        const anioVal = document.getElementById('sel-anio').value;
-        const semestre = document.getElementById('sel-semestre').value;
-        let url = `index.php?action=reportes_notas_pdf_ranking_cursos&anio_id=${anioVal}&semestre=${semestre}`;
-        if (preview) url += '&preview=1';
-        window.open(url, '_blank');
     }
 </script>
 

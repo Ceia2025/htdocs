@@ -301,6 +301,65 @@ class ReporteNotasController
     }
 
     /* ══════════════════════════════════════════════════════════
+   PDF CONSOLIDADO ANUAL (AMBOS SEMESTRES)
+══════════════════════════════════════════════════════════ */
+    public function pdfConsolidadoAnual(): void
+    {
+        $cursoId = (int) ($_GET['curso_id'] ?? 0);
+        $anioId = (int) ($_GET['anio_id'] ?? 0);
+        $inline = ($_GET['preview'] ?? '') === '1';
+
+        if (!$cursoId || !$anioId)
+            die('Faltan parámetros (curso_id, anio_id).');
+
+        $cursoModel = new Cursos();
+        $anioModel = new Anio();
+        $cursoAsignaturaModel = new CursoAsignatura();
+
+        $curso = $cursoModel->getById($cursoId);
+        $anio = $anioModel->getById($anioId);
+
+        if (!$curso || !$anio)
+            die('Curso o año no encontrado.');
+
+        $asignaturasExcluidas = ['Inspectoría', 'Convivencia Escolar'];
+        $asignaturas = array_values(array_filter(
+            $cursoAsignaturaModel->getAsignaturasPorCurso($cursoId),
+            fn($a) => !in_array($a['nombre'], $asignaturasExcluidas)
+        ));
+
+        $alumnos = $this->notaModel->getByCursoYAnio($cursoId, $anioId);
+
+        // $notas[semestre][asignatura_id][matricula_id][] = fila de nota
+        $notas = [1 => [], 2 => []];
+        foreach ([1, 2] as $sem) {
+            foreach ($asignaturas as $asig) {
+                $asigId = $asig['id'];
+                $rawNotas = $this->notaModel->getNotasPorCursoAsignaturaSemestre(
+                    $cursoId,
+                    $anioId,
+                    $asigId,
+                    $sem
+                );
+                $notas[$sem][$asigId] = [];
+                foreach ($rawNotas as $n) {
+                    $notas[$sem][$asigId][$n['matricula_id']][] = $n;
+                }
+            }
+        }
+
+        ob_start();
+        require __DIR__ . '/../../views/reportes/notas/pdfConsolidadoAnual.php';
+        $html = ob_get_clean();
+
+        $nombreArchivo = 'ConsolidadoAnual_'
+            . preg_replace('/\s+/', '_', $curso['nombre'])
+            . '_' . $anio['anio'] . '.pdf';
+
+        PdfHelper::stream($html, $nombreArchivo, $inline, 'legal', 'landscape');
+    }
+
+    /* ══════════════════════════════════════════════════════════
        API JSON RANKING
     ══════════════════════════════════════════════════════════ */
     public function apiRanking(): void
