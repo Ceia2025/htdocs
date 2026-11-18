@@ -36,6 +36,7 @@ require_once __DIR__ . '/../controllers/reportes/matricula/ReporteMatriculaContr
 require_once __DIR__ . '/../controllers/reportes/pie/ReportePieController.php';
 require_once __DIR__ . '/../controllers/RecuperarController.php';
 require_once __DIR__ . '/../controllers/reportes/procedencia_alum/ReporteProcedenciaAlumnosController.php';
+require_once __DIR__ . '/../controllers/PlanificacionController.php';
 
 
 
@@ -71,6 +72,7 @@ $reporteEtnia = new ReporteEtniaController();
 $reporteNotasController = new ReporteNotasController();
 $reporteRetirosController = new ReporteRetiradosController();
 $recuperarController = new RecuperarController();
+$planificacionController = new PlanificacionController();
 
 
 // ── PERMISOS GLOBAL ──────────────────────────────────────────
@@ -1019,6 +1021,27 @@ switch ($action) {
     case 'notas_ajax_update_fecha':
         $notasController->ajaxUpdateFecha();
         break;
+
+    // ── PLANIFICACIONES ──────────────────────────────────────
+    case 'planificaciones':
+        $planificacionController->index();
+        break;
+    case 'crear_planificacion':
+        $planificacionController->crear();
+        break;
+    case 'duplicar_planificacion':
+        $planificacionController->duplicar();
+        break;
+    case 'eliminar_planificacion':
+        $planificacionController->eliminar();
+        break;
+    case 'editar_planificacion':
+    $planificacionController->editar();
+    break;
+
+case 'planificacion_guardar':
+    $planificacionController->guardar();
+    break;
 
     // ── DEFAULT ──────────────────────────────────────────────
     default:

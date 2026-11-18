@@ -103,7 +103,6 @@ class ReporteNotasController
             }
         }
 
-
         $fechasRef = [1 => [], 2 => []];
         foreach ([1, 2] as $sem) {
             $fechasRef[$sem] = $this->notaModel->getFechasPorAsignaturaCurso(
@@ -112,7 +111,6 @@ class ReporteNotasController
                 $sem
             );
         }
-
 
         $maxCols = [1 => 1, 2 => 1];
         foreach ([1, 2] as $sem) {
@@ -142,13 +140,21 @@ class ReporteNotasController
         require __DIR__ . '/../../views/reportes/notas/pdf_alumno.php';
         $html = ob_get_clean();
 
-        PdfHelper::stream(
-            $html,
+        $options = new \Dompdf\Options();
+        $options->set('isRemoteEnabled', true);
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('chroot', realpath(__DIR__ . '/../../'));
+        $options->set('dpi', 115);
+
+        $dompdf = new \Dompdf\Dompdf($options);
+        $dompdf->loadHtml($html, 'UTF-8');
+        $dompdf->setPaper('letter', 'portrait');
+        $dompdf->render();
+        $dompdf->stream(
             'Informe_' . $alumno['apepat'] . '_' . $alumno['apemat'] . '_' . $anio['anio'] . '.pdf',
-            $inline,
-            'letter',
-            'portrait'
+            ['Attachment' => !$inline]
         );
+        exit;
     }
 
     /* ══════════════════════════════════════════════════════════

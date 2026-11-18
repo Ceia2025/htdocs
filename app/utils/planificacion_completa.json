@@ -1,0 +1,2096 @@
+{
+  "planificacion_anio": 2026,
+  "asignaturas": [
+    {
+      "id": "1NM_CIENCIAS NATURALES",
+      "nivel": "1° Nivel Medio",
+      "categoria": "General",
+      "asignatura": "CIENCIAS NATURALES",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Formular preguntas y/o problemas, a partir de la observación y el conocimiento científico que puedan ser resueltos mediante una investigación científica.",
+          "habilidad": "Observar y plantear preguntas",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Diseñar y desarrollar investigaciones experimentales, no experimentales y/o documentales, para dar respuesta a una pregunta o problema sobre la base de diversas fuentes de información científica trabajando con honestidad, autonomía y proactividad, considerando:\n\tLa relación entre las variables del estudio.\n\tEl uso adecuado de instrumentos y materiales para obtener datos confiables.\n\tLa medición y el registro de evidencias usando herramientas tecnológicas y/o digitales.",
+          "habilidad": "Planificar y conducir una investigación",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Organizar y presentar datos cuantitativos y/o cualitativos, fundamentando su confiabilidad en tablas, gráficos, modelos u otras representaciones, con ayuda de las TIC actuando responsablemente con las posibilidades que ofrece la tecnología.",
+          "habilidad": "Procesar y analizar la evidencia",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Analizar los resultados de una investigación científica planteando conclusiones e identificando conexiones entre variables y usando vocabulario disciplinar pertinente pensando con flexibilidad para reelaborar las propias ideas, puntos de vista y creencias.",
+          "habilidad": "Procesar y analizar la evidencia",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Evaluar el proceso de investigación científica asumiendo posturas razonadas y de respeto por uno mismo y por los demás con el fin de perfeccionarla, considerando:\n\tLa validez y confiabilidad de los resultados.\n\tLa replicabilidad de los procedimientos.\n\tLas posibles aplicaciones tecnológicas.",
+          "habilidad": "Evaluar y comunicar",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA6",
+          "texto": "Evaluar procesos, resultados y conclusiones con apoyo de herramientas digitales y otros soportes pertinentes.",
+          "habilidad": "Evaluar y comunicar",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Evolución, teorías asociadas y sus evidencias y su impacto en el desarrollo de la vida. Relación entre organismo, población, comunidad y ecosistema.",
+        "Principios básicos de herencia genética en plantas y animales propuestos por Mendel. Estructura y función del ADN.",
+        "Sistemas del cuerpo humano: características y estructuras básicas del sistema nervioso y endocrino; nervios y cerebro, páncreas y hormonas sexuales y pancreáticas. Efectos del consumo de drogas, medidas de protección y autocuidado.",
+        "Leyes de conservación de la materia. Reacciones químicas y formación de compuestos útiles para los seres vivos.",
+        "Química orgánica y los grupos funcionales (haluros, éteres, alcoholes, entre otros). Propiedades y características del carbono y su relación en la formación de moléculas orgánicas. Fotosíntesis y la respiración celular y ciclo del carbono.",
+        "Características y propiedades del sonido y la luz, y su impacto en la vida cotidiana.",
+        "Movimiento, ley de conservación de la energía mecánica y los conceptos de trabajo y potencia mecánica.",
+        "La creación y evolución del universo según teorías científicas y cosmovisiones de los pueblos originarios."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Biología: Organización del cuerpo humano",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Uso de microscopio, elaboración de modelos celulares",
+              "indicadores_evaluacion": "Identifica y describe niveles de organización biológica",
+              "instrumento_evaluacion": "Informe de laboratorio",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Experimentos de identificación de biomoléculas",
+              "indicadores_evaluacion": "Explica funciones de biomoléculas en el organismo",
+              "instrumento_evaluacion": "Prueba escrita",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA3": {
+              "estrategias_actividad": "Disección virtual, maquetas de sistemas",
+              "indicadores_evaluacion": "Relaciona estructura con función en sistemas corporales",
+              "instrumento_evaluacion": "Proyecto grupal",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 2 - Química: La materia y sus transformaciones",
+          "horas_totales": 35,
+          "objetivos_aprendizaje": {
+            "OA4": {
+              "estrategias_actividad": "Experimentos de separación de mezclas",
+              "indicadores_evaluacion": "Diferencia sustancias puras de mezclas",
+              "instrumento_evaluacion": "Guía de laboratorio",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA5": {
+              "estrategias_actividad": "Experimentos de calentamiento y enfriamiento",
+              "indicadores_evaluacion": "Explica cambios de estado con el modelo corpuscular",
+              "instrumento_evaluacion": "Informe experimental",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "1NM_HISTORIA Y GEOGRAFIA",
+      "nivel": "1° Nivel Medio",
+      "categoria": "General",
+      "asignatura": "HISTORIA Y GEOGRAFÍA",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Analizar elementos de continuidad y cambio entre periodos y procesos, valorando las TIC como una oportunidad para informarse e investigar.",
+          "habilidad": "Pensamiento temporal y espacial",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Analizar datos e información geográfica, por medio del uso de herramientas geográficas y digitales, para reconocer variables y patrones, actuando de acuerdo con los principios de la ética en el uso de la información y la tecnología.",
+          "habilidad": "Pensamiento temporal y espacial",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Analizar distintas fuentes sobre un tema, trabajando con empatía y respeto.",
+          "habilidad": "Análisis y trabajo con fuentes",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Evaluar los fenómenos estudiados considerando la multicausalidad, pensando con apertura a distintas perspectivas y contextos.",
+          "habilidad": "Pensamiento crítico",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Elaborar y comunicar explicaciones, aplicando la multicausalidad y la multidimensionalidad, para comprender los fenómenos estudiados, con honestidad y responsabilidad por las propias acciones y decisiones.",
+          "habilidad": "Comunicación",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Revoluciones del siglo XVIII e inicios del siglo XIX en Europa y América, incluyendo la Independencia de Chile.",
+        "Procesos políticos y económicos globales y locales durante el siglo XIX (por ejemplo: imperialismo, industrialización, consolidación del Estado-nación).",
+        "Conflictos globales y regionales del siglo XX y sus consecuencias (por ejemplo: revoluciones, guerras, totalitarismos y populismos).",
+        "Visión general sobre el desarrollo político, económico, social y medioambiental en Chile durante el siglo XIX y primera mitad del siglo XX, incluyendo la perspectiva de los pueblos indígenas y las mujeres.",
+        "Conflictos internos en Chile en la segunda mitad del siglo XX, incluyendo el quiebre de la democracia y la dictadura militar, la transición política y los derechos humanos.",
+        "Multiculturalismo, identidades y patrimonio material e inmaterial en Chile"
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - La herencia de la cultura clásica",
+          "horas_totales": 35,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Análisis de fuentes primarias, debates",
+              "indicadores_evaluacion": "Explica la influencia clásica en la actualidad",
+              "instrumento_evaluacion": "Ensayo histórico",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Análisis de fuentes desde múltiples perspectivas",
+              "indicadores_evaluacion": "Analiza el proceso desde distintos puntos de vista",
+              "instrumento_evaluacion": "Rúbrica de análisis",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "1NM_INGLES",
+      "nivel": "1° Nivel Medio",
+      "categoria": "General",
+      "asignatura": "INGLÉS",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Relacionar información explícita e implícita para profundizar la comprensión de textos orales, exposiciones, diálogos.",
+          "habilidad": "Comprensión auditiva",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Relacionar información implícita para profundizar la comprensión del tema o idea general, vocabulario y palabras y frases clave en textos literarios y no literarios.",
+          "habilidad": "Comprensión lectora",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Escribir textos con distintos propósitos, utilizando vocabulario y la gramática que corresponde, con autonomía y proactividad.",
+          "habilidad": "Expresión escrita",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Expresarse oralmente para presentar información, acerca de temas conocidos o de su interés, demostrando coherencia en la organización de ideas y una actitud honesta.",
+          "habilidad": "Expresión oral",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Estrategias de comprensión de textos, como hacer predicciones de acuerdo a conocimientos previos, usar claves contextuales, destacar palabras y frases, preguntar para clarificar información.",
+        "Estructura de textos, como descripciones, e-mail para diversos propósitos, estructura de textos narrativos.",
+        "Construcción y uso de oraciones afirmativas, interrogativas y negativas en pasado simple, pasado continuo y en futuro (will, going to).",
+        "Estructuras para justificar opinión de forma oral y escrita, como in my opinion, from my point of view, I consider, I believe, etcétera.",
+        "Estructuras para comparar, describir y expresar gustos:better than; a big, brown building; I love singing.",
+        "Verbos modales: used to, should, must, have to, ought to, musn’t.",
+        "Conectores, como while, until, if, unless, in order to, although, etcétera.",
+        "Sinónimos y antónimos"
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1",
+          "horas_totales": 30,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Audios con preguntas guiadas, videos con subtítulos",
+              "indicadores_evaluacion": "Identifica información explícita en textos orales",
+              "instrumento_evaluacion": "Prueba de comprensión",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Lectura de artículos breves, preguntas de comprensión",
+              "indicadores_evaluacion": "Responde preguntas sobre textos leídos",
+              "instrumento_evaluacion": "Guía de trabajo",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA3": {
+              "estrategias_actividad": "Role plays, presentaciones breves",
+              "indicadores_evaluacion": "Se comunica con claridad en situaciones cotidianas",
+              "instrumento_evaluacion": "Rúbrica oral",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA4": {
+              "estrategias_actividad": "Redacción de correos, descripciones, relatos breves",
+              "indicadores_evaluacion": "Produce textos coherentes con vocabulario adecuado",
+              "instrumento_evaluacion": "Rúbrica de escritura",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "1NM_LENGUAJE Y COMUNICACIÓN",
+      "nivel": "1° Nivel Medio",
+      "categoria": "General",
+      "asignatura": "LENGUAJE Y COMUNICACIÓN",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Evaluar textos no literarios analizando la veracidad y consistencia de la información, los propósitos explícitos e implícitos, los recursos lingüísticos y no lingüísticos y estrategias de persuasión.",
+          "habilidad": "Lectura",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Formular una interpretación de los textos literarios leídos, a partir del análisis de la obra.",
+          "habilidad": "Lectura",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Producir textos (orales, escritos o audiovisuales) aplicando procesos de planificación y redacción para crear textos coherentes y cohesionados para una variedad de propósitos y audiencias.",
+          "habilidad": "Escritura",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Evaluar textos orales y audiovisuales: diferentes puntos de vista, considerando la relación que se establece entre imagen, sonido y texto, formulando una postura frente a lo escuchado.",
+          "habilidad": "Comunicación oral",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Realizar investigaciones para responder interrogantes propias de la asignatura en páginas web y otras fuentes, evaluando la validez y confiabilidad de estas.",
+          "habilidad": "Investigación",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Estrategias de persuasión.",
+        "Veracidad y consistencia de la información.",
+        "Recursos no lingüísticos en los textos: diseño, imágenes, disposición gráfica y efectos de audio.",
+        "Contexto de producción y recepción de un texto literario.",
+        "Intertextualidad a través de personajes, temas y símbolos de textos clásicos.",
+        "Normas de citación.",
+        "Recursos de coherencia y cohesión del texto.",
+        "Estrategias de comprensión lectora y de comprensión oral."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Lectura libre guiada, círculos de lectura",
+              "indicadores_evaluacion": "Selecciona textos según sus intereses y fundamenta su elección",
+              "instrumento_evaluacion": "Rúbrica",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Análisis de obras, debates reflexivos",
+              "indicadores_evaluacion": "Expresa opiniones fundamentadas sobre obras leídas",
+              "instrumento_evaluacion": "Ensayo breve",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA3": {
+              "estrategias_actividad": "Simulacros de conversación, debates dirigidos",
+              "indicadores_evaluacion": "Participa respetando turnos y adecuando el registro",
+              "instrumento_evaluacion": "Lista de cotejo",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA4": {
+              "estrategias_actividad": "Investigación guiada, redacción de informes",
+              "indicadores_evaluacion": "Redacta textos con información fundamentada",
+              "instrumento_evaluacion": "Rúbrica de escritura",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "1NM_MATEMATICA",
+      "nivel": "1° Nivel Medio",
+      "categoria": "General",
+      "asignatura": "MATEMÁTICA",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Expresar ideas matemáticas mediante diferentes representaciones, aprovechando las herramientas disponibles.",
+          "habilidad": "Representar",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Representar un mismo contenido matemático transitando entre los distintos niveles de representación, valorando las TIC como una oportunidad.",
+          "habilidad": "Representar",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Seleccionar y ajustar modelos matemáticos según el fenómeno, perseverando en torno a metas.",
+          "habilidad": "Modelar",
+          "ambitos": [
+            "Maneras de trabajar",
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Evaluar modelos, comparándolos entre sí y con la realidad, determinando sus limitaciones, asumiendo posturas razonadas.",
+          "habilidad": "Modelar",
+          "ambitos": [
+            "Maneras de trabajar",
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Fundamentar conjeturas usando conocimientos matemáticos, trabajando colaborativamente.",
+          "habilidad": "Argumentar y comunicar",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA6",
+          "texto": "Realizar demostraciones simples de resultados e identificar en una demostración si hay saltos o errores, trabajando con empatía y respeto.",
+          "habilidad": "Argumentar y comunicar",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Operaciones con números racionales, potencias, raíces y sus propiedades.",
+        "Productos notables.",
+        "Sistemas de ecuaciones lineales (2x2).",
+        "Función y ecuación cuadrática.",
+        "Homotecias y teorema de Thales.",
+        "Probabilidades, regla multiplicativa y regla aditiva."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Números",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Resolución de problemas contextualizados",
+              "indicadores_evaluacion": "Resuelve operaciones correctamente en contextos diversos",
+              "instrumento_evaluacion": "Prueba escrita",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Ejercicios progresivos, problemas aplicados",
+              "indicadores_evaluacion": "Calcula raíces y resuelve ecuaciones simples",
+              "instrumento_evaluacion": "Guía de ejercicios",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA3": {
+              "estrategias_actividad": "Simulación de compras, análisis de boletas",
+              "indicadores_evaluacion": "Calcula precios finales considerando descuentos e impuestos",
+              "instrumento_evaluacion": "Proyecto aplicado",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 2 - Álgebra y Funciones",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA4": {
+              "estrategias_actividad": "Traducción de situaciones a lenguaje algebraico",
+              "indicadores_evaluacion": "Traduce enunciados a expresiones algebraicas",
+              "instrumento_evaluacion": "Prueba escrita",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA5": {
+              "estrategias_actividad": "Construcción de gráficos, análisis de situaciones",
+              "indicadores_evaluacion": "Grafica funciones lineales y las interpreta",
+              "instrumento_evaluacion": "Rúbrica",
+              "tipo_evaluacion": "FORMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "2NM_CIENCIAS NATURALES",
+      "nivel": "2° Nivel Medio",
+      "categoria": "General",
+      "asignatura": "CIENCIAS NATURALES",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Formular preguntas y problemas sobre tópicos científicos de interés, a partir de la observación de fenómenos y/o la exploración de diversas fuentes.",
+          "habilidad": "Observar y plantear preguntas",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Diseñar y desarrollar investigaciones científicas que permitan recoger evidencias y contrastar hipótesis pensando con perseverancia y proactividad para encontrar soluciones innovadoras, considerando:\n\tLas relaciones entre datos, información y variables.\n\tEl uso adecuado de instrumentos y materiales para obtener datos confiables.\n\tLa medición y el registro de evidencias usando herramientas tecnológicas o matemáticas.",
+          "habilidad": "Planificar y conducir una investigación",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Diseñar proyectos de investigación para encontrar soluciones a problemas científicos de manera creativa y pertinente, trabajando con honestidad, responsabilidad y liderazgo en tareas colaborativas.",
+          "habilidad": "Planificar y conducir una investigación",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Crear, seleccionar, ajustar modelos simples basados en análisis de evidencia, para predecir y explicar mecanismos y fenómenos naturales aprovechando las herramientas disponibles para aprender y resolver problemas.",
+          "habilidad": "Procesar y analizar la evidencia",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Analizar los resultados de una investigación científica planteando conclusiones e identificando conexiones entre variables y usando vocabulario disciplinar pertinente.",
+          "habilidad": "Procesar y analizar la evidencia",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA6",
+          "texto": "Evaluar el proceso de investigación científica con el fin de perfeccionarla, considerando:\n\tLa validez y confiabilidad de los resultados.\n\tLa replicabilidad de los procedimientos.\n\tLas posibles aplicaciones tecnológicas.",
+          "habilidad": "Evaluar y comunicar",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA7",
+          "texto": "Analizar críticamente las implicancias sociales, éticas y ambientales de problemáticas que involucren a la ciencia (aborto, vacunas, contaminación, etc.) con honestidad, responsabilizándose por las implicancias que tiene sobre uno mismo y los otros.",
+          "habilidad": "Evaluar y comunicar",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA8",
+          "texto": "Evaluar procesos, resultados y conclusiones con apoyo de herramientas digitales y otros soportes pertinentes.",
+          "habilidad": "Evaluar y comunicar",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Relación entre salud y enfermedad. Sistema inmune, alergias y enfermedades autoinmunes. Medidas de prevención, como el uso de vacunas.",
+        "Enlace químico y reactividad en sustancias químicas. Plaguicidas, insecticidas y sustancias químicas de uso común.",
+        "Eficiencia energética y medidas para el buen uso de la electricidad.",
+        "Radiación y su efecto en el ser humano y el entorno.",
+        "Sostenibilidad de recursos naturales y consumo responsable.",
+        "Cambio climático, efecto invernadero y sus implicancias.",
+        "Proyectos tecnológicos que permitan resolver problemas relacionados con las ciencias en diversos ámbitos de la vida.",
+        "Desarrollo astronómico en Chile y en el mundo."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Biología: Evolución y diversidad",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Análisis de fósiles, árboles filogenéticos",
+              "indicadores_evaluacion": "Explica la evolución con base en evidencias diversas",
+              "instrumento_evaluacion": "Informe científico",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Simulaciones, análisis de casos",
+              "indicadores_evaluacion": "Aplica el modelo de selección natural a casos concretos",
+              "instrumento_evaluacion": "Prueba escrita",
+              "tipo_evaluacion": "FORMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 2 - Química: Estructura atómica y tabla periódica",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA3": {
+              "estrategias_actividad": "Construcción de modelos, análisis de la tabla periódica",
+              "indicadores_evaluacion": "Relaciona estructura atómica con la tabla periódica",
+              "instrumento_evaluacion": "Prueba escrita",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA4": {
+              "estrategias_actividad": "Experimentos, modelos moleculares",
+              "indicadores_evaluacion": "Explica la formación de enlaces según propiedades elementales",
+              "instrumento_evaluacion": "Informe de laboratorio",
+              "tipo_evaluacion": "FORMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 3 - Física: Fuerza y movimiento",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA5": {
+              "estrategias_actividad": "Diseño experimental, mediciones con dinamómetros",
+              "indicadores_evaluacion": "Diseña y ejecuta experimentos sobre las leyes de Newton",
+              "instrumento_evaluacion": "Informe experimental",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA6": {
+              "estrategias_actividad": "Resolución de problemas, gráficos de movimiento",
+              "indicadores_evaluacion": "Resuelve problemas de movimiento aplicando ecuaciones",
+              "instrumento_evaluacion": "Prueba escrita",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "2NM_EDUCACION CIUDADANA",
+      "nivel": "2° Nivel Medio",
+      "categoria": "General",
+      "asignatura": "EDUCACIÓN CIUDADANA",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Analizar elementos de continuidad y cambio en procesos, considerando diferentes actores sociales y valorando las TIC como una oportunidad para informarse e investigar.",
+          "habilidad": "Pensamiento temporal y espacial",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Evaluar datos e información geográfica, por medio del uso de herramientas geográficas y digitales, para elaborar inferencias y argumentos, actuando de acuerdo con los principios de la ética.",
+          "habilidad": "Pensamiento temporal y espacial",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Evaluar la veracidad y la fiabilidad de las evidencias presentes en distintas fuentes, trabajando con empatía y respeto.",
+          "habilidad": "Análisis y trabajo con fuentes",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Elaborar argumentos e interpretaciones sobre los fenómenos estudiados, pensando con apertura a distintas perspectivas y contextos.",
+          "habilidad": "Pensamiento crítico",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Fundamentar y comunicar puntos de vista propios sobre los temas estudiados, apoyándose en razones y evidencia, con honestidad y responsabilidad por las propias acciones y decisiones.",
+          "habilidad": "Comunicación",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Democracia y ciudanía en Chile (valores, atributos y dimensiones); libertades fundamentales, deberes del Estado, derechos y responsabilidades ciudadanas.",
+        "Derechos humanos y su reconocimiento, defensa y exigibilidad en Chile.",
+        "Mecanismos de acceso a la justicia y principales características del sistema judicial chileno.",
+        "Conceptos económicos y economía global actual (por ejemplo: mercado financiero, comercio mundial, cambios en la producción y en el mercado del trabajo, nuevas formas de consumo).",
+        "Procesos geográficos, sociales y culturales recientes en Chile y América Latina (por ejemplo: migraciones, presente de los pueblos indígenas, cambios demográficos, desafíos en torno a la planificación urbana y rural).",
+        "Desafíos de la ciudadanía local y global (por ejemplo: resolución de conflictos y bien común, responsabilidad personal, social y medioambiental)."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Democracia y ciudadanía",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Análisis de casos, debates sobre democracia",
+              "indicadores_evaluacion": "Explica la relación entre democracia y derechos humanos",
+              "instrumento_evaluacion": "Ensayo argumentativo",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Análisis de situaciones cotidianas, proyectos ciudadanos",
+              "indicadores_evaluacion": "Analiza críticamente el ejercicio de la ciudadanía",
+              "instrumento_evaluacion": "Rúbrica de análisis",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA3": {
+              "estrategias_actividad": "Proyectos de participación, análisis de organizaciones",
+              "indicadores_evaluacion": "Propone acciones concretas de participación ciudadana",
+              "instrumento_evaluacion": "Proyecto grupal",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA4": {
+              "estrategias_actividad": "Investigación guiada, análisis de fuentes",
+              "indicadores_evaluacion": "Recoge y evalúa información de fuentes diversas",
+              "instrumento_evaluacion": "Informe de investigación",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA5": {
+              "estrategias_actividad": "Debates estructurados, presentaciones fundamentadas",
+              "indicadores_evaluacion": "Fundamenta sus puntos de vista con evidencia y responsabilidad",
+              "instrumento_evaluacion": "Rúbrica de argumentación",
+              "tipo_evaluacion": "FORMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "2NM_INGLES",
+      "nivel": "2° Nivel Medio",
+      "categoria": "General",
+      "asignatura": "INGLÉS",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Interpretar el significado del texto, comprendiendo expresiones idiomáticas y vocabulario de uso frecuente en textos orales y en diversos formatos.",
+          "habilidad": "Comprensión auditiva",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Interpretar el significado de las ideas principales, información específica y detalles, vocabulario y combinaciones de palabras, en diversos tipos de textos literarios y no literarios.",
+          "habilidad": "Comprensión lectora",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Escribir textos con distintos propósitos, utilizando vocabulario y la gramática que corresponde, utilizando las herramientas digitales.",
+          "habilidad": "Expresión escrita",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Presentar información sobre un tema investigado previamente, aportando descripciones y detalles demostrando coherencia en la organización de ideas, con honestidad.",
+          "habilidad": "Expresión oral",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Estrategias de comprensión de textos, como hacer predicciones de acuerdo a conocimientos previos, usar claves contextuales, hacer inferencias, preguntar para clarificar información, confirmar predicciones.",
+        "Estructura de textos informativos para diversos propósitos; estructura de textos narrativos.",
+        "Estructuras para argumentar de forma oral y escrita, como in my opinion, according to, against, etcétera.",
+        "Primer y segundo condicional.",
+        "Adjetivos comparativos y superlativos; pronombres relativos.",
+        "Construcción y uso de oraciones afirmativas, interrogativas y negativas en presente perfecto.",
+        "Adverbios, como already, yet, just, etcétera.",
+        "Conectores, como however, furthermore, besides, otherwise, therefore, indeed, etcétera."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1",
+          "horas_totales": 30,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Podcasts, entrevistas, videos auténticos",
+              "indicadores_evaluacion": "Identifica información específica y detalles en textos orales",
+              "instrumento_evaluacion": "Prueba de comprensión auditiva",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Lectura de artículos, noticias y relatos",
+              "indicadores_evaluacion": "Infiere información no explícita en los textos",
+              "instrumento_evaluacion": "Guía de comprensión",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA3": {
+              "estrategias_actividad": "Debates, role plays complejos, presentaciones",
+              "indicadores_evaluacion": "Participa en interacciones expresando opiniones con fundamento",
+              "instrumento_evaluacion": "Rúbrica de interacción oral",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA4": {
+              "estrategias_actividad": "Redacción de ensayos breves, reseñas, narraciones",
+              "indicadores_evaluacion": "Produce textos organizados con vocabulario adecuado",
+              "instrumento_evaluacion": "Rúbrica de escritura",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "2NM_LENGUAJE Y COMUNICACIÓN",
+      "nivel": "2° Nivel Medio",
+      "categoria": "General",
+      "asignatura": "LENGUAJE Y COMUNICACIÓN",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Evaluar textos no literarios orales, escritos y audiovisuales, analizando la influencia de los contextos socioculturales de enunciador y audiencia.",
+          "habilidad": "Comprensión oral y escrita",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Formular una interpretación de los textos literarios leídos, estableciendo relaciones intertextuales con otros referentes de la cultura y del arte.",
+          "habilidad": "Comprensión oral y escrita",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Producir textos (orales, escritos o audiovisuales) coherentes y cohesionados para comunicar sus ideas, adecuando el texto a las convenciones del género y a las características de la audiencia.",
+          "habilidad": "Comunicación escrita",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Dialogar argumentativamente, para construir y ampliar ideas, usando evidencia disponible para fundamentar posturas.",
+          "habilidad": "Comunicación oral",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Realizar investigaciones para responder interrogantes propias de la asignatura procesando la información mediante herramientas digitales y comunicando sus hallazgos por medio de distintos géneros haciendo uso ético de la información.",
+          "habilidad": "Investigación",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Temas, tópicos y motivos literarios universales.",
+        "Recursos literarios.",
+        "Efecto estético.",
+        "Posicionamiento de un emisor, su propósito, ideas implícitas, ambigüedades y sesgos.",
+        "Argumentación: razonamientos, premisas, relaciones entre ideas y selección léxica.",
+        "Identidad discursiva.",
+        "Recursos de coherencia y cohesión del texto.",
+        "Estrategias de comprensión lectora y de comprensión oral."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Tertulias literarias, análisis comparativo de obras",
+              "indicadores_evaluacion": "Fundamenta preferencias lectoras con argumentos textuales",
+              "instrumento_evaluacion": "Portafolio de lectura",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Análisis de cuentos y novelas, mapas narrativos",
+              "indicadores_evaluacion": "Identifica conflictos y evolución de personajes",
+              "instrumento_evaluacion": "Ensayo analítico",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA3": {
+              "estrategias_actividad": "Lectura expresiva, análisis de poemas",
+              "indicadores_evaluacion": "Reconoce recursos poéticos y su efecto",
+              "instrumento_evaluacion": "Análisis escrito",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA4": {
+              "estrategias_actividad": "Exposiciones temáticas, debates formales",
+              "indicadores_evaluacion": "Se expresa con claridad y coherencia frente a audiencia",
+              "instrumento_evaluacion": "Rúbrica de presentación oral",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA5": {
+              "estrategias_actividad": "Redacción de cartas al director, columnas de opinión",
+              "indicadores_evaluacion": "Fundamenta su postura con evidencia pertinente",
+              "instrumento_evaluacion": "Rúbrica de escritura argumentativa",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "2NM_MATEMATICA",
+      "nivel": "2° Nivel Medio",
+      "categoria": "General",
+      "asignatura": "MATEMÁTICA",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Expresar ideas matemáticas mediante diferentes representaciones, valorando el uso de las TIC.",
+          "habilidad": "Representar",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Representar un mismo contenido matemático transitando entre los distintos niveles de representación y aprovechando las herramientas disponibles.",
+          "habilidad": "Representar",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Seleccionar y ajustar modelos matemáticos según el fenómeno, perseverando en torno a metas.",
+          "habilidad": "Modelar",
+          "ambitos": [
+            "Maneras de trabajar",
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Evaluar modelos, comparándolos entre sí y con la realidad, determinando sus limitaciones y tomando decisiones razonadas que contribuyan al bien común.",
+          "habilidad": "Modelar",
+          "ambitos": [
+            "Maneras de trabajar",
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Fundamentar conjeturas usando conocimientos matemáticos, trabajando colaborativamente.",
+          "habilidad": "Argumentar y comunicar",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA6",
+          "texto": "Realizar demostraciones simples de resultados e identificar en una demostración si hay saltos o errores, trabajando con empatía y respeto.",
+          "habilidad": "Argumentar y comunicar",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA7",
+          "texto": "Variar parámetros o condiciones, comparando los cambios en los resultados obtenidos, pensando con perseverancia y proactividad.",
+          "habilidad": "Resolver problemas",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA8",
+          "texto": "Evaluar el proceso y comprobar resultados y soluciones dadas de un problema matemático, pensando con flexibilidad para reelaborar.",
+          "habilidad": "Resolver problemas",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Porcentajes, cambio porcentual constante, índices económicos, planilla de cálculo.",
+        "Función exponencial, planilla de cálculo.",
+        "Elementos de la geometría básica para el dibujo técnico.",
+        "Cuartiles y quintiles, planilla de cálculo"
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Números",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Resolución de problemas con racionales",
+              "indicadores_evaluacion": "Opera correctamente con números racionales",
+              "instrumento_evaluacion": "Prueba escrita",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Ejercicios progresivos, aplicaciones reales",
+              "indicadores_evaluacion": "Calcula logaritmos y aplica sus propiedades",
+              "instrumento_evaluacion": "Guía de ejercicios",
+              "tipo_evaluacion": "FORMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 2 - Álgebra y Funciones",
+          "horas_totales": 45,
+          "objetivos_aprendizaje": {
+            "OA3": {
+              "estrategias_actividad": "Construcción de gráficos, análisis de situaciones",
+              "indicadores_evaluacion": "Grafica funciones cuadráticas e identifica sus elementos",
+              "instrumento_evaluacion": "Rúbrica",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA4": {
+              "estrategias_actividad": "Resolución de problemas contextualizados",
+              "indicadores_evaluacion": "Resuelve sistemas de ecuaciones por diversos métodos",
+              "instrumento_evaluacion": "Prueba escrita",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 3 - Geometría",
+          "horas_totales": 35,
+          "objetivos_aprendizaje": {
+            "OA5": {
+              "estrategias_actividad": "Construcciones con regla y compás, software geométrico",
+              "indicadores_evaluacion": "Construye figuras homotéticas y analiza sus propiedades",
+              "instrumento_evaluacion": "Informe de construcción",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA6": {
+              "estrategias_actividad": "Demostraciones, problemas aplicados",
+              "indicadores_evaluacion": "Aplica el Teorema de Pitágoras en problemas diversos",
+              "instrumento_evaluacion": "Prueba escrita",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 4 - Datos y Azar",
+          "horas_totales": 30,
+          "objetivos_aprendizaje": {
+            "OA7": {
+              "estrategias_actividad": "Experimentos aleatorios, simulaciones",
+              "indicadores_evaluacion": "Calcula probabilidades aplicando la regla de Laplace",
+              "instrumento_evaluacion": "Guía de trabajo",
+              "tipo_evaluacion": "FORMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "3NB_CIENCIAS NATURALES",
+      "nivel": "3° Nivel Básico",
+      "categoria": "General",
+      "asignatura": "CIENCIAS NATURALES",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Formular predicciones sobre objetos, procesos y fenómenos a partir de la observación.",
+          "habilidad": "Observar y plantear preguntas",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Formular preguntas y/o problemas que puedan ser resueltos mediante una investigación científica a partir de la observación, pensando con flexibilidad para reelaborar las propias ideas, puntos de vista y creencias.",
+          "habilidad": "Observar y plantear preguntas",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Planificar y desarrollar investigaciones científicas experimentales, no experimentales y/o documentales de forma individual y/o colaborativa\ntrabajando con honestidad e integrando diferentes ideas y puntos de vista para dar respuesta a una pregunta o problema, considerando:\n\tLa variable que será manipulada en el estudio.\n\tLa selección de instrumentos de medición y materiales a usar de acuerdo a las variables en estudio.\n\tLa medición y el registro de evidencias usando herramientas tecnológicas y/o digitales.",
+          "habilidad": "Planificar y conducir una investigación",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Organizar y presentar datos cuantitativos y/o cualitativos en tablas, gráficos u otras representaciones con la ayuda de las TIC actuando responsablemente con las posibilidades que ofrece la tecnología.",
+          "habilidad": "Procesar y analizar la evidencia",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Analizar los resultados de una investigación científica determinando las relaciones entre las variables en estudio.",
+          "habilidad": "Procesar y analizar la evidencia",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA6",
+          "texto": "Evaluar el proceso de investigación científica con el fin de perfeccionarla con honestidad, responsabilizándose por las\nimplicancias que estas tienen sobre uno mismo y los otros, considerando:\n\tLa validez y confiabilidad de los resultados.\n\tLa replicabilidad de los procedimientos.",
+          "habilidad": "Evaluar y comunicar",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA7",
+          "texto": "Evaluar el procedimiento científico y resultados, utilizando modelos, presentaciones, TIC e informes, entre otros.",
+          "habilidad": "Evaluar y comunicar",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Aspectos biológicos, afectivos y sociales en la sexualidad. Paternidad y maternidad responsable. Control de natalidad. ITS, mecanismos de transmisión y medidas de prevención.",
+        "Teoría celular. Estructura celular básica (procariontes y eucariontes), reproducción (sexual y asexual), transporte a nivel celular y mecanismos de interacción entre la célula y el entorno (difusión y osmosis).",
+        "Características de microorganismos y virus, sus efectos en el ambiente y la salud, considerando medidas de autocuidado.",
+        "Interacción entre los sistemas del cuerpo humano: digestivo, circulatorio, respiratorio, excretor. Nutrición, nutrientes y salud.",
+        "El átomo, estructura e historia de los modelos atómicos. Sustancias puras, elementos y compuestos químicos.",
+        "Sistema periódico de clasificación de los elementos y elementos constituyentes de la Tierra y los seres vivos (carbono, hidrógeno, oxígeno y nitrógeno).",
+        "Circuito eléctrico, fuerzas y tipos de fuerzas, fuerza eléctrica y energía eléctrica. Medidas de seguridad y buen uso energético.",
+        "Modelo de la tectónica de placas y su impacto en la naturaleza y sociedad.",
+        "Sistema solar y estructuras cósmicas.",
+        "Biodiversidad en Chile y su preservación."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Biología: Seres vivos y salud",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Investigación guiada, afiches informativos",
+              "indicadores_evaluacion": "Identifica y comunica hábitos de vida saludable",
+              "instrumento_evaluacion": "Afiche grupal",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Experimentos sensoriales, registro de observaciones",
+              "indicadores_evaluacion": "Describe funciones de los sentidos y sus cuidados",
+              "instrumento_evaluacion": "Informe de observación",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA3": {
+              "estrategias_actividad": "Salidas al entorno, análisis de imágenes",
+              "indicadores_evaluacion": "Compara adaptaciones de distintos seres vivos",
+              "instrumento_evaluacion": "Cuaderno científico",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA4": {
+              "estrategias_actividad": "Germinación de semillas, observación de insectos",
+              "indicadores_evaluacion": "Describe etapas del ciclo de vida de plantas y animales",
+              "instrumento_evaluacion": "Informe de observación",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 2 - Física y Química: Materia y energía",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA5": {
+              "estrategias_actividad": "Experimentos de calentamiento y enfriamiento",
+              "indicadores_evaluacion": "Identifica estados de la materia y sus cambios",
+              "instrumento_evaluacion": "Informe de laboratorio",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA6": {
+              "estrategias_actividad": "Experimentos con linternas, prismas, espejos",
+              "indicadores_evaluacion": "Explica efectos de la luz sobre los objetos",
+              "instrumento_evaluacion": "Informe experimental",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA7": {
+              "estrategias_actividad": "Modelos del ciclo del agua, experimentos",
+              "indicadores_evaluacion": "Describe las etapas del ciclo del agua",
+              "instrumento_evaluacion": "Maqueta del ciclo del agua",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "3NB_HISTORIA Y GEOGRAFIA",
+      "nivel": "3° Nivel Básico",
+      "categoria": "General",
+      "asignatura": "HISTORIA Y GEOGRAFÍA",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Relacionar distintos periodos históricos reconociendo cambios y continuidades, utilizando las herramientas disponibles para aprender y resolver problemas.",
+          "habilidad": "Pensamiento temporal y espacial",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Relacionar información sobre el espacio geográfico, por medio del uso de representaciones gráficas, fotográficas y computacionales, interesándose por las posibilidades que ofrece la tecnología.",
+          "habilidad": "Pensamiento temporal y espacial",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Distinguir, por medio de líneas de tiempo, la duración, la sucesión y la simultaneidad de acontecimientos y procesos vistos en el nivel, utilizando las herramientas disponibles para aprender y resolver problemas.",
+          "habilidad": "Pensamiento temporal y espacial",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Comparar y clasificar información obtenida en fuentes, trabajando con autonomía y proactividad.",
+          "habilidad": "Análisis y trabajo con fuentes",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Evaluar conceptos e ideas considerando la evidencia que entregan las fuentes, pensando con perseverancia y proactividad.",
+          "habilidad": "Pensamiento crítico",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA6",
+          "texto": "Comunicar ideas de forma oral, escrita u otros, de manera clara y precisa, utilizando conceptos propios de la disciplina, asumiendo posturas razonadas.",
+          "habilidad": "Comunicación",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Complejización de las primeras sociedades, su dispersión por el planeta y la interacción del ser humano con el medio.",
+        "Surgimiento de las primeras civilizaciones, incluyendo un ejemplo de América (procesos característicos, por ejemplo: centralización político-administrativa, urbanización, unidad religiosa, estratificación social, etcétera.).",
+        "Formas de organización política en la Antigüedad clásica y sus proyecciones en la cultura occidental y",
+        "latinoamericana, considerando ejemplos del pasado y del presente de Chile.",
+        "Formación y consolidación de la cultura occidental durante la Edad Media (por ejemplo: confluencia del mundo clásico, judeocristiano y germano; fragmentación territorial y ruralización; cristianismo y conformación del poder político).",
+        "Transformaciones durante la Época Moderna (por ejemplo, encuentro de dos mundos, surgimiento del Estado moderno, difusión del conocimiento, fin de la unidad religiosa)."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Civilizaciones antiguas",
+          "horas_totales": 45,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Lectura de fuentes, análisis de imágenes",
+              "indicadores_evaluacion": "Describe aspectos de la vida en la Grecia antigua",
+              "instrumento_evaluacion": "Prueba escrita",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Investigación guiada, líneas de tiempo",
+              "indicadores_evaluacion": "Investiga y comunica aspectos de la civilización romana",
+              "instrumento_evaluacion": "Informe de investigación",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA3": {
+              "estrategias_actividad": "Análisis comparativo, presentaciones",
+              "indicadores_evaluacion": "Identifica legados de las civilizaciones antiguas en la actualidad",
+              "instrumento_evaluacion": "Presentación grupal",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 2 - Geografía de Chile",
+          "horas_totales": 45,
+          "objetivos_aprendizaje": {
+            "OA4": {
+              "estrategias_actividad": "Análisis de mapas, imágenes, videos",
+              "indicadores_evaluacion": "Caracteriza los principales paisajes de Chile",
+              "instrumento_evaluacion": "Maqueta o mural",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA5": {
+              "estrategias_actividad": "Análisis de casos, mapas productivos",
+              "indicadores_evaluacion": "Relaciona geografía con actividades económicas",
+              "instrumento_evaluacion": "Rúbrica de análisis",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA6": {
+              "estrategias_actividad": "Uso de globo terráqueo y mapas mundiales",
+              "indicadores_evaluacion": "Ubica Chile en el mapa mundial correctamente",
+              "instrumento_evaluacion": "Prueba con mapa",
+              "tipo_evaluacion": "FORMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 3 - Habilidades de pensamiento histórico y ciudadano",
+          "horas_totales": 30,
+          "objetivos_aprendizaje": {}
+        }
+      ]
+    },
+    {
+      "id": "3NB_LENGUAJE Y COMUNICACIÓN",
+      "nivel": "3° Nivel Básico",
+      "categoria": "General",
+      "asignatura": "LENGUAJE Y COMUNICACIÓN",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Analizar textos no literarios, identificando la función de los recursos lingüísticos y no lingüísticos e infiriendo sus propósitos.",
+          "habilidad": "Lectura",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Analizar textos literarios, considerando el conflicto, los personajes, el narrador, la visión de mundo y los efectos producidos por recursos literarios.",
+          "habilidad": "Lectura",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Planificar, escribir, revisar, reescribir y editar textos literarios y no literarios en función de la situación comunicativa, el destinatario y el propósito: informar, narrar, explicar, persuadir.",
+          "habilidad": "Escritura",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Dialogar constructivamente para debatir o explorar ideas, considerando al interlocutor para la toma de turnos, la reformulación de lo dicho y la búsqueda de acuerdos.",
+          "habilidad": "Comunicación oral",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Sintetizar, registrar y ordenar las ideas de textos escuchados o leídos para satisfacer propósitos.",
+          "habilidad": "Investigación",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Textos literarios: narrativa, poesía, obras dramáticas.",
+        "Contexto de producción y recepción de las obras literarias.",
+        "Estereotipos y prejuicios en los medios de comunicación.",
+        "Gramática: sustantivos, adjetivos, adverbios y pronombres; preposiciones y conjunciones, y conjugaciones verbales.",
+        "Ortografía literal, acentual y puntual",
+        "Coherencia y cohesión del texto.",
+        "Vocabulario: sinónimos, hipónimos, hiperónimos locuciones y comparaciones.",
+        "Imágenes, gráficos, tablas, mapas o diagramas.",
+        "Estrategias de comprensión lectora y de comprensión oral."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Lectura y comprensión",
+          "horas_totales": 50,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Lectura compartida, preguntas de comprensión",
+              "indicadores_evaluacion": "Identifica información relevante y diferencia hechos de opiniones",
+              "instrumento_evaluacion": "Guía de comprensión",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Lectura de artículos, fichas informativas",
+              "indicadores_evaluacion": "Comprende textos informativos y extrae información clave",
+              "instrumento_evaluacion": "Rúbrica de lectura",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA3": {
+              "estrategias_actividad": "Lectura de obras literarias, tertulias",
+              "indicadores_evaluacion": "Reconoce características de distintos géneros literarios",
+              "instrumento_evaluacion": "Portafolio de lectura",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA4": {
+              "estrategias_actividad": "Lectura expresiva de poemas, identificación de figuras",
+              "indicadores_evaluacion": "Reconoce lenguaje figurado en poemas simples",
+              "instrumento_evaluacion": "Análisis escrito",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 2 - Escritura y comunicación oral",
+          "horas_totales": 50,
+          "objetivos_aprendizaje": {
+            "OA5": {
+              "estrategias_actividad": "Audición de relatos, preguntas de comprensión",
+              "indicadores_evaluacion": "Comprende y responde sobre textos orales escuchados",
+              "instrumento_evaluacion": "Lista de cotejo",
+              "tipo_evaluacion": "FORMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "3NB_MATEMATICA",
+      "nivel": "3° Nivel Básico",
+      "categoria": "General",
+      "asignatura": "MATEMÁTICA",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Expresar matemáticamente información del entorno y de problemas utilizando diversas representaciones interesándose por las posibilidades que ofrece la tecnología.",
+          "habilidad": "Representar",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Contrastar información entre distintos niveles de representación para un mismo contenido matemático, valorando las TIC como una oportunidad.",
+          "habilidad": "Representar",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "OA 3. Usar modelos matemáticos dados para comprender fenómenos, asumiendo posturas razonadas.",
+          "habilidad": "Modelar",
+          "ambitos": [
+            "Maneras de trabajar",
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Expresar acciones y situaciones cotidianas en lenguaje matemático, asumiendo posturas razonadas.",
+          "habilidad": "Modelar",
+          "ambitos": [
+            "Maneras de trabajar",
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Explicar soluciones propias, procedimientos utilizados, definiciones y reglas, trabajando con empatía y respeto.",
+          "habilidad": "Argumentar y comunicar",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA6",
+          "texto": "Seleccionar estrategias, y transferir a nuevas situaciones pensando con perseverancia y proactividad para encontrar soluciones.",
+          "habilidad": "Argumentar y comunicar",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Adiciones, sustracciones, multiplicaciones y divisiones de números enteros.",
+        "Razones y porcentajes.",
+        "Proporciones directas e indirectas.",
+        "Expresiones algebraicas, ecuaciones e inecuaciones lineales.",
+        "Funciones lineales y afines.",
+        "Área y volumen de prismas rectos con diferentes bases y cilindros.",
+        "Teorema de Pitágoras.",
+        "Experimentos aleatorios, frecuencia absoluta, relativa y la probabilidad."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Números y operaciones",
+          "horas_totales": 60,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Juegos de conteo, rectas numéricas",
+              "indicadores_evaluacion": "Cuenta y completa series numéricas correctamente",
+              "instrumento_evaluacion": "Guía de ejercicios",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Uso de material concreto, tablas de valor posicional",
+              "indicadores_evaluacion": "Lee, escribe e identifica el valor posicional de números",
+              "instrumento_evaluacion": "Prueba escrita",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA3": {
+              "estrategias_actividad": "Ejercicios progresivos, problemas aplicados",
+              "indicadores_evaluacion": "Resuelve adiciones y sustracciones correctamente",
+              "instrumento_evaluacion": "Prueba escrita",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA4": {
+              "estrategias_actividad": "Arreglos rectangulares, material concreto, tablas",
+              "indicadores_evaluacion": "Resuelve multiplicaciones usando diversas estrategias",
+              "instrumento_evaluacion": "Guía de ejercicios",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA5": {
+              "estrategias_actividad": "Resolución de problemas contextualizados",
+              "indicadores_evaluacion": "Resuelve problemas aplicando operaciones adecuadas",
+              "instrumento_evaluacion": "Prueba escrita",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 2 - Geometría y medición",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA6": {
+              "estrategias_actividad": "Construcción con material concreto, identificación en el entorno",
+              "indicadores_evaluacion": "Identifica y describe figuras 2D y 3D",
+              "instrumento_evaluacion": "Guía de trabajo",
+              "tipo_evaluacion": "FORMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 3 - Datos y patrones",
+          "horas_totales": 30,
+          "objetivos_aprendizaje": {}
+        }
+      ]
+    },
+    {
+      "id": "NM_DIF_ARTES VISUALES",
+      "nivel": "Nivel Medio",
+      "categoria": "Diferenciado",
+      "asignatura": "ARTES VISUALES",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Crear obras y proyectos visuales y audiovisuales, con autonomía y proactividad para expresar sensaciones, emociones e ideas, a partir de la apreciación de referentes artísticos y culturales diversos.",
+          "habilidad": "Expresar y crear",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Analizar e interpretar propósitos expresivos de obras visuales y audiovisuales, a partir de criterios estéticos, planteando posturas razonadas y mostrando flexibilidad para reelaborar sus ideas, puntos de vista y creencias.",
+          "habilidad": "Apreciar y responder",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Diseñar y gestionar colaborativamente proyectos de difusión de obras visuales y audiovisuales propios, empleando diversidad de medios o TIC de acuerdo con los principios de la ética.",
+          "habilidad": "Comunicar y difundir",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Procedimientos análogos y digitales para la creación y expresión visual y audiovisual: gráfica, pintura, escultura, fotografía, video y cine.",
+        "Lenguaje visual: elementos y conceptos como línea, forma, color, textura y volumen.",
+        "Lenguaje audiovisual: elementos visuales y sonoros; elementos sintácticos, como escena, secuencia, movimientos de cámara, planos y ángulos de filmación, composición e iluminación; elementos semánticos, como elipsis o metáfora.",
+        "Conceptos: propósitos expresivos, elementos simbólicos, elementos sintácticos, elementos semánticos.",
+        "Difusión de trabajos y proyectos de artes visuales y audiovisuales: planificación y organización de muestras, selección de obras, diseño y elaboración de recursos para la difusión, presentaciones en diferentes formatos y medios, diseño y elaboración de material de difusión."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Expresión y creación visual",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Observación directa, bocetos, creación libre",
+              "indicadores_evaluacion": "Crea trabajos originales a partir de la observación",
+              "instrumento_evaluacion": "Portafolio de creación",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Ejercicios prácticos con diversos materiales",
+              "indicadores_evaluacion": "Aplica elementos del lenguaje visual en sus creaciones",
+              "instrumento_evaluacion": "Rúbrica de creación",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA3": {
+              "estrategias_actividad": "Talleres de técnicas, exploración de materiales",
+              "indicadores_evaluacion": "Domina diversas técnicas en sus trabajos",
+              "instrumento_evaluacion": "Exposición de obras",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NM_DIF_EDUCACIÓN FISICA Y SALUD",
+      "nivel": "Nivel Medio",
+      "categoria": "Diferenciado",
+      "asignatura": "EDUCACIÓN FÍSICA Y SALUD",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Aplicar individual y colectivamente las habilidades motrices especializadas con flexibilidad y responsabilidad, en una variedad de actividades físicas que sean de su interés y en diferentes entornos",
+          "habilidad": "Habilidades motrices especializadas",
+          "ambitos": [
+            "Habilidades motrices especializadas"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Aplicar y evaluar un plan de entrenamiento para mejorar su rendimiento físico, considerando sus características personales",
+          "habilidad": "Vida activa saludable",
+          "ambitos": [
+            "Habilidades motrices especializadas"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Promover el bienestar, el autocuidado, la vida activa y la alimentación saludable en su vida y en la comunidad, valorando la diversidad de las personas a través de la aplicación de programas y proyectos deportivos, recreativos y socioculturales",
+          "habilidad": "Vida activa saludable",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Analizar, por medio de la práctica regular de actividad física, cómo los factores sociales, culturales, económicos y tecnológicos favorecen el desarrollo de oportunidades para la adquisición de un estilo de vida activo y saludable a nivel local, regional y global.",
+          "habilidad": "Vida activa saludable",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Reconocer las habilidades motrices desde las básicas a la especializadas en diferentes contextos.",
+        "Describir las funciones generales y específicas del organismo humano, asumiendo límites y posibilidades.",
+        "Diseñar planes de entrenamiento con sus diversidades según contextos y condiciones funcionales.",
+        "Gestionar actividades motrices, desde sus fundamentos y proyecciones."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Condición física y salud",
+          "horas_totales": 50,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Circuitos de entrenamiento, pruebas físicas",
+              "indicadores_evaluacion": "Ejecuta actividades y demuestra mejora física",
+              "instrumento_evaluacion": "Registro de pruebas físicas",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Diseño de programas personalizados",
+              "indicadores_evaluacion": "Diseña programas de entrenamiento coherentes",
+              "instrumento_evaluacion": "Proyecto de programa",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NM_DIF_FILOSOFÍA",
+      "nivel": "Nivel Medio",
+      "categoria": "Diferenciado",
+      "asignatura": "FILOSOFÍA",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Analizar problemas presentes en textos filosóficos, considerando conceptos, métodos de razonamiento e implicancias para la vida cotidiana pensando con flexibilidad para reelaborar las propias ideas y puntos de vista.",
+          "habilidad": "Pensamiento analítico",
+          "ambitos": [
+            "Pensamiento analítico"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Elaborar preguntas a partir del análisis de conceptos y teorías filosóficas para pensar con autorreflexión y autonomía.",
+          "habilidad": "Pensamiento analítico",
+          "ambitos": [
+            "Pensamiento analítico"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Participar en diálogos sobre problemas filosóficos pertinentes para sus contextos, aplicando principios y herramientas de argumentación con empatía hacia otros.",
+          "habilidad": "Pensamiento crítico",
+          "ambitos": [
+            "Pensamiento crítico"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Elaborar visiones personales a partir de las perspectivas de diversos filósofos pensando con apertura a distintos contextos, asumiendo riesgos y responsabilidades.",
+          "habilidad": "Pensamiento crítico",
+          "ambitos": [
+            "Pensamiento crítico"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "El saber filosófico. Origen, métodos, problemas de estudio y finalidad.",
+        "El problema filosófico del ser: perspectivas filosóficas sobre la realidad y la verdad.",
+        "El problema filosófico del ser humano: esencia y sentido de la vida humana.",
+        "El problema filosófico ético moral: perspectivas ético- morales y cómo abordan problemáticas actuales.",
+        "El problema filosófico del conocimiento humano: perspectivas sobre sus límites y posibilidades."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Introducción al pensamiento filosófico",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Lectura de textos filosóficos, diálogos socráticos",
+              "indicadores_evaluacion": "Analiza críticamente supuestos filosóficos",
+              "instrumento_evaluacion": "Ensayo filosófico",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Seminarios socráticos, debates filosóficos",
+              "indicadores_evaluacion": "Examina preguntas fundamentales con profundidad",
+              "instrumento_evaluacion": "Participación en seminarios",
+              "tipo_evaluacion": "FORMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NM_INST_EDUCACIÓN FINANCIERA",
+      "nivel": "Nivel Medio",
+      "categoria": "Instrumental",
+      "asignatura": "EDUCACIÓN FINANCIERA",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Planificar y desarrollar un presupuesto, considerando las distintas etapas de la vida y la selección y el uso de recursos y herramientas, tomando decisiones razonadas.",
+          "habilidad": "Planificación",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Fundamentar, a partir de un análisis crítico, decisiones financieras, con autorreflexión y autonomía.",
+          "habilidad": "Tomar decisiones",
+          "ambitos": [
+            "Maneras de pensar",
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Identificar patrones y tendencias en los sistemas y variables financieras globales y locales.",
+          "habilidad": "Tomar decisiones",
+          "ambitos": [
+            "Maneras de pensar",
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Tomar decisiones estratégicas de inversión y ahorro, considerando deberes y derechos que asumen los distintos agentes económicos, y actuando con honestidad",
+          "habilidad": "Tomar decisiones",
+          "ambitos": [
+            "Maneras de pensar",
+            "Maneras de vivir en el mundo"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Distintas formas y propósitos del dinero, valor del dinero, tarjetas de pago, cheques, cuentas bancarias y monedas.",
+        "Ingreso y consumo responsable. Implicancias del género en las finanzas. Transacciones monetarias simples, como pagos diarios y gastos.",
+        "Ahorro e inversión: activos financieros, créditos y seguros. Impacto del ahorro en la vida de las personas y de los países.",
+        "El problema económico, endeudamiento y riesgos asociados; escasez y costo alternativo; morosidad.",
+        "Indicadores económicos.",
+        "Herramientas de protección al consumidor.",
+        "Fundamentos de la protección social, derechos laborales y leyes de seguridad en la empresa.",
+        "Proceso de elección y desarrollo de un proyecto de vida profesional y/o laboral sin sesgos de género, y otros factores de discriminación, que debe incluir propósito, fortalezas personales, intereses y oportunidades."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Fundamentos de finanzas personales",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Elaboración de presupuestos, simulaciones",
+              "indicadores_evaluacion": "Elabora presupuestos personales fundamentados",
+              "instrumento_evaluacion": "Proyecto de presupuesto",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Investigación guiada, análisis de productos financieros",
+              "indicadores_evaluacion": "Identifica y compara productos financieros",
+              "instrumento_evaluacion": "Informe de investigación",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA3": {
+              "estrategias_actividad": "Análisis de indicadores económicos, casos reales",
+              "indicadores_evaluacion": "Identifica patrones y tendencias financieras",
+              "instrumento_evaluacion": "Análisis de caso",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NM_INST_EMPRENDIMIENTO Y EMPLEO",
+      "nivel": "Nivel Medio",
+      "categoria": "Instrumental",
+      "asignatura": "EMPRENDIMIENTO Y EMPLEO",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Investigar e identificar necesidades y potenciales usuarios de un determinado emprendimiento u oportunidad de innovación, con pensamiento crítico, empatía y proactividad.",
+          "habilidad": "Investigación y diseño de ideas",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Proponer soluciones innovadoras que enriquezcan otras existentes, con una visión crítica que incorpore criterios y restricciones sociales, éticas y de sustentabilidad, y apertura a distintas perspectivas y contextos, evaluando los riesgos y asumiendo responsabilidades.",
+          "habilidad": "Investigación y diseño de ideas",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Planificar el diseño de emprendimientos o soluciones, considerando las distintas etapas y la selección y el uso de recursos y herramientas, considerando las necesidades, eficiencia e impacto, y las posibilidades que ofrece la tecnología.",
+          "habilidad": "Planificación",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Desarrollar estrategias para poner a prueba, evaluar y hacer ajustes a prototipos de emprendimiento, soluciones o proyectos de empleabilidad, trabajando con honestidad, responsabilidad y liderazgo en la realizacion de tareas colaborativas.",
+          "habilidad": "Evaluación y ejecución",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Perseverar en torno a las metas propuestas, considerando la construcción de proyectos de vida personal y laboral, y el aporte a la sociedad, con autonomía y conciencia de que los aprendizajes enriquecen la experiencia.",
+          "habilidad": "Evaluación y ejecución",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Proceso de decisión y generación de un emprendimiento o innovación (etapas, características, fortalezas y riesgos).",
+        "Herramientas digitales y estrategias para crear, diseñar y construir soluciones o proyectos innovadores.",
+        "Gestión de proyectos y técnicas de evaluación financiera y social.",
+        "Cultura organizacional, que incluye liderazgo y competencia laboral, trabajo en equipo y comunicación, manejo del tiempo y visión crítica sobre la brecha de género (brecha salarial, índices de participación de las mujeres, políticas discriminatorias, entre otros).",
+        "Género y diversidad en la gestión de innovación y proyectos enfocados en solución de problemas sociales y laborales.",
+        "Normativa laboral y regulaciones para la iniciación de actividades, creación y operación de empresas en Chile.",
+        "Fundamentos de la protección social, derechos laborales y leyes de seguridad en la empresa.",
+        "Proceso de elección y desarrollo de un proyecto de vida profesional y/o laboral sin sesgos de género, y otros factores de discriminación, que debe incluir propósito, fortalezas personales, intereses y oportunidades."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Cultura emprendedora",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Investigación de mercado, lluvia de ideas",
+              "indicadores_evaluacion": "Identifica oportunidades de negocio viables",
+              "instrumento_evaluacion": "Informe de oportunidad",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Talleres de diseño de modelos de negocio",
+              "indicadores_evaluacion": "Desarrolla modelos de negocio coherentes",
+              "instrumento_evaluacion": "Presentación del modelo Canvas",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NM_INST_PENSAMIENTO COMPUTACIONAL",
+      "nivel": "Nivel Medio",
+      "categoria": "Instrumental",
+      "asignatura": "PENSAMIENTO COMPUTACIONAL",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Formular problemas a partir de un contexto o situación específica, con apertura a distintas perspectivas, identificando las partes que lo componen.",
+          "habilidad": "Descomponer",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Organizar datos de una situación problemática estableciendo secuencias e identificando fallos y defectos, trabajando con honestidad y considerando criterios de usabilidad, funcionamiento y función.",
+          "habilidad": "Evaluar",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Modelar datos de una situación problemática mediante representaciones, simulaciones simples, bloques de programación y diagramas, aprovechando las herramientas disponibles.",
+          "habilidad": "Modelar",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Establecer conexiones y semejanzas entre las partes del problema para caracterizar patrones en una situación problemática dada.",
+          "habilidad": "Generalizar y transferir",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Aplicar flexiblemente las soluciones elaboradas e implementadas a otras situaciones problemáticas, integrando con honestidad diferentes ideas y puntos de vista.",
+          "habilidad": "Generalizar y transferir",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        },
+        {
+          "id": "OA6",
+          "texto": "Elaborar e implementar soluciones a una situación problemática mediante la formulación de algoritmos,actuando de acuerdo con los principios de la ética.",
+          "habilidad": "Pensar de forma algorítmica",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Procesos y funcionamiento de las cosas para resolver problemas cotidianos.",
+        "Modelos entidad relación y simulación de sistemas.",
+        "Sistemas computacionales: dispositivos, hardware, software y resolución de problemas.",
+        "Redes e internet: sitios web, aplicaciones móviles, seguridad cibernética y objetos controlados digitalmente.",
+        "Algoritmos y programación: lenguajes, métodos y entornos de programación. Representación y análisis de datos.",
+        "Impacto social de la computación: interacciones, cultura, seguridad y ética."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Fundamentos de la computación y algoritmos",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Resolución de problemas sin computador, diagramación",
+              "indicadores_evaluacion": "Diseña algoritmos simples para resolver problemas",
+              "instrumento_evaluacion": "Guía de ejercicios",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Creación de proyectos en Scratch o similares",
+              "indicadores_evaluacion": "Crea programas funcionales usando bloques",
+              "instrumento_evaluacion": "Evaluación de proyecto digital",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 2 - Datos, redes y ciudadanía digital",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA3": {
+              "estrategias_actividad": "Encuestas digitales, creación de gráficos",
+              "indicadores_evaluacion": "Organiza y visualiza datos usando herramientas digitales",
+              "instrumento_evaluacion": "Informe de datos",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA4": {
+              "estrategias_actividad": "Análisis de casos de ciberacoso, creación de decálogos",
+              "indicadores_evaluacion": "Aplica normas de seguridad y ética en entornos digitales",
+              "instrumento_evaluacion": "Rúbrica de análisis",
+              "tipo_evaluacion": "SUMATIVA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NM_INST_RESPONSABILIDAD PERSONAL Y SOCIAL",
+      "nivel": "Nivel Medio",
+      "categoria": "Instrumental",
+      "asignatura": "RESPONSABILIDAD PERSONAL Y SOCIAL",
+      "oas": [
+        {
+          "id": "OA1",
+          "texto": "Reconocer recursos personales y del contexto que favorecen la consolidación de su identidad y autoestima, considerando su trayectoria de vida personal, intereses, capacidades y habilidades personales",
+          "habilidad": "Reflexión y comunicación",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA2",
+          "texto": "Solucionar los conflictos mediante un diálogo constructivo, con una comunicación efectiva, escuchando con respeto a os demás y promoviendo la colaboración en la búsqueda de alternativas de solución al problema",
+          "habilidad": "Reflexión y comunicación",
+          "ambitos": [
+            "Maneras de pensar"
+          ]
+        },
+        {
+          "id": "OA3",
+          "texto": "Promover acciones que contribuyan al desarrollo de planes de vida y proyectos personales, sociales y laborales, demostrando compromiso y responsabilidad, y una acción sustentada en valores y orientada al logro del bien común",
+          "habilidad": "Autonomía y proactividad",
+          "ambitos": [
+            "Maneras de trabajar"
+          ]
+        },
+        {
+          "id": "OA4",
+          "texto": "Establecer propósitos y metas significativas y congruentes que propicien el desarrollo personal, social y laboral, reconociendo fortalezas y debilidades, identificando las acciones a seguir, con disposición a evaluar el logro y adecuar sus planes",
+          "habilidad": "Planificación y evaluación",
+          "ambitos": [
+            "Herramientas para trabajar"
+          ]
+        },
+        {
+          "id": "OA5",
+          "texto": "Gestionar en forma autónoma y colaborativa su propio proceso de aprendizaje con actitud perseverante, reconociendo cuando necesita apoyo y gestionando las ayudas necesarias.",
+          "habilidad": "Planificación y evaluación",
+          "ambitos": [
+            "Maneras de vivir en el mundo"
+          ]
+        }
+      ],
+      "conocimientos": [
+        "Conocimiento de sí mismo y gestión de una sana autoestima.",
+        "Relaciones interpersonales, habilidades sociales y estrategias de comunicación.",
+        "Estrategias para el fortalecimiento de redes y participación en organizaciones de base (familia, barrio, junta de vecinos, etcétera).",
+        "Estrategias de inserción social positiva.",
+        "Gestión colaborativa y estrategias de resolución de conflictos.",
+        "Concepto de recursos personales y de contexto. Recursos de afrontamiento.",
+        "Enfoque de género, equidad entre hombres y mujeres en la gestión de proyectos, la participación y la concreción de metas personales."
+      ],
+      "profesor": "Por definir",
+      "unidades": [
+        {
+          "nombre_unidad": "Unidad 1 - Desarrollo personal y autocuidado",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA1": {
+              "estrategias_actividad": "Talleres de autoconocimiento, diarios reflexivos",
+              "indicadores_evaluacion": "Identifica y aplica estrategias de autocuidado",
+              "instrumento_evaluacion": "Portafolio reflexivo",
+              "tipo_evaluacion": "FORMATIVA"
+            },
+            "OA2": {
+              "estrategias_actividad": "Role playing, análisis de casos de conflicto",
+              "indicadores_evaluacion": "Aplica estrategias de resolución pacífica de conflictos",
+              "instrumento_evaluacion": "Rúbrica de observación",
+              "tipo_evaluacion": "FORMATIVA"
+            }
+          }
+        },
+        {
+          "nombre_unidad": "Unidad 2 - Convivencia y responsabilidad social",
+          "horas_totales": 40,
+          "objetivos_aprendizaje": {
+            "OA3": {
+              "estrategias_actividad": "Debates, proyectos de impacto comunitario",
+              "indicadores_evaluacion": "Evalúa el impacto de sus acciones en la comunidad",
+              "instrumento_evaluacion": "Informe de proyecto",
+              "tipo_evaluacion": "SUMATIVA"
+            },
+            "OA4": {
+              "estrategias_actividad": "Asambleas de curso, campañas escolares",
+              "indicadores_evaluacion": "Participa activamente en iniciativas de mejora escolar",
+              "instrumento_evaluacion": "Lista de cotejo",
+              "tipo_evaluacion": "FORMATIVA"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "instrumentos": [
+    "Cuestionarios",
+    "Portafolios de trabajo",
+    "Presentaciones orales",
+    "Pruebas escritas",
+    "Resolución problemas",
+    "Revisión Cuaderno",
+    "Rúbricas de evaluación",
+    "Trabajos escritos"
+  ],
+  "tipos": [
+    "DIAGNÓSTICA",
+    "FORMATIVA",
+    "SUMATIVA"
+  ]
+}

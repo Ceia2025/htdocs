@@ -94,6 +94,11 @@
       "title": "Reglamentos C.E.I.A.",
       "desc": "Los reglamentos  y protocolos del presente año lectivo, app externa Desarrollada por Juan Pablo Ramirez",
       "url": "https://reglamentos-ceia-2026.vercel.app/"
+    },
+    {
+      "title": "Planificaciones",
+      "desc": "Revisa las planificaciones de todos los docentes por curso y asignatura",
+      "url": "index.php?action=planificaciones"
     }
   ],
   "administrativo": [
@@ -284,6 +289,11 @@
       "title": "Notas",
       "desc": "Gestionar notas de alumnos",
       "url": "index.php?action=notas_panel"
+    },
+    {
+      "title": "Planificaciones",
+      "desc": "Revisa las planificaciones de todos los docentes por curso y asignatura",
+      "url": "index.php?action=planificaciones"
     }
   ],
   "asistente social": [

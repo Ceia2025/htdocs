@@ -154,7 +154,7 @@ return [
     'inventario_update' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ATRASOS],
     'inventario_delete' => [ROL_ADMINISTRADOR, ROL_INSPECTOR_GENERAL, ROL_ATRASOS],
     'inventario_exportExcel' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_INSPECTOR_GENERAL, ROL_ATRASOS],
-    'inventario_showLugarGrupo' => [ROL_ADMINISTRADOR, ROL_SOPORTE,ROL_INSPECTOR_GENERAL, ROL_ATRASOS],
+    'inventario_showLugarGrupo' => [ROL_ADMINISTRADOR, ROL_SOPORTE, ROL_INSPECTOR_GENERAL, ROL_ATRASOS],
     'procedencias' => [ROL_ADMINISTRADOR, ROL_ATRASOS],
     'procedencia_create' => [ROL_ADMINISTRADOR, ROL_ATRASOS],
     'procedencia_store' => [ROL_ADMINISTRADOR, ROL_ATRASOS],
@@ -275,4 +275,12 @@ return [
     'notas_edit' => [ROL_ADMINISTRADOR, ROL_DOCENTE],
     'notas_update' => [ROL_ADMINISTRADOR, ROL_DOCENTE],
     'notas_delete' => [ROL_ADMINISTRADOR],*/
+
+    // ── PLANIFICACIONES ──
+    'planificaciones' => [ROL_ADMINISTRADOR, ROL_DOCENTE, ROL_INSPECTOR_GENERAL],
+    'crear_planificacion' => [ROL_ADMINISTRADOR, ROL_DOCENTE, ROL_INSPECTOR_GENERAL],
+    'duplicar_planificacion' => [ROL_ADMINISTRADOR, ROL_DOCENTE, ROL_INSPECTOR_GENERAL],
+    'eliminar_planificacion' => [ROL_ADMINISTRADOR, ROL_DOCENTE, ROL_INSPECTOR_GENERAL],
+    'editar_planificacion' => [ROL_ADMINISTRADOR, ROL_DOCENTE, ROL_INSPECTOR_GENERAL],
+    'planificacion_guardar' => [ROL_ADMINISTRADOR, ROL_DOCENTE, ROL_INSPECTOR_GENERAL],
 ];
