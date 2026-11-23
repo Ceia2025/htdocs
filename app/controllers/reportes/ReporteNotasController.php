@@ -135,6 +135,7 @@ class ReporteNotasController
 
         $logoPath = __DIR__ . '/../../public/img/LOGO CEIA.jpg';
         $observaciones = null;
+        $forzarCalculo = ($_GET['calcular'] ?? '') === '1';
 
         ob_start();
         require __DIR__ . '/../../views/reportes/notas/pdf_alumno.php';

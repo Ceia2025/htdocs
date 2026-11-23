@@ -415,16 +415,29 @@
     $cursosPrimerNivel = [2, 5, 8];
     $esPrimerNivel = in_array((int) ($curso['id'] ?? 0), $cursosPrimerNivel);
     ?>
-
     <?php
+    $forzarCalculo = $forzarCalculo ?? false;
+
     $nombreCursoCorte = mb_strtolower(trim($curso['nombre']), 'UTF-8');
     $esCuartoMedio = (bool) preg_match('/(^|\s)(4|iv|cuarto)\s*[°º]?\s*(año\s+)?medio/u', $nombreCursoCorte);
-    $fechaCorte = sprintf('%04d-%s', (int) $anio['anio'], $esCuartoMedio ? '11-06' : '11-24');
-    $s2Calculable = date('Y-m-d') >= $fechaCorte;
+        $fechaCorteFija = sprintf('%04d-%s', (int) $anio['anio'], $esCuartoMedio ? '11-06' : '11-24');
+    $fechaCorteDb = $esCuartoMedio
+        ? ($anio['sem2_fin_4medio'] ?? null) ?: ($anio['sem2_fin'] ?? null)
+        : ($anio['sem2_fin'] ?? null);
+    $fechaCorte = $fechaCorteDb ? substr($fechaCorteDb, 0, 10) : $fechaCorteFija;
+    $s2Calculable = $forzarCalculo || date('Y-m-d') >= $fechaCorte;
 
+    $promsS1 = [];
     $promsS2 = [];
     $finales = [];
+    $hayPendientes = false;
+
     foreach ($filas as &$f) {
+        if ($forzarCalculo) {
+            $notasS1 = array_filter($f['cols1'], fn($n) => $n !== null);
+            $f['p1'] = Nota::promedio($notasS1);
+        }
+
         if ($s2Calculable) {
             $notasS2 = array_filter($f['cols2'], fn($n) => $n !== null);
             $f['p2'] = Nota::promedio($notasS2);
@@ -436,18 +449,27 @@
             ? Nota::promedio([$f['p1'], $f['p2']])
             : null;
 
+        if ($f['p1'] !== null)
+            $promsS1[] = $f['p1'];
         if ($f['p2'] !== null)
             $promsS2[] = $f['p2'];
         if ($f['pFinal'] !== null)
             $finales[] = $f['pFinal'];
+
+        if (
+            ($f['tiene1'] && $f['p1'] === null) ||
+            ($f['tiene2'] && $f['p2'] === null) ||
+            (($f['tiene1'] || $f['tiene2']) && $f['pFinal'] === null)
+        ) {
+            $hayPendientes = true;
+        }
     }
     unset($f);
 
+    $promGenSem1 = Nota::promedio($promsS1);
     $promGenSem2 = Nota::promedio($promsS2);
     $promFinalGeneral = Nota::promedio($finales);
     ?>
-
-
 
     <!-- PIE FIJO -->
     <?php pdfNotasPiePagina(); ?>
@@ -504,7 +526,7 @@
                     <th colspan="<?= $maxCols[2] ?>">2.º Semestre</th>
                     <th class="th-prom" rowspan="2">Promedio<br>2.º Semestre</th>
                     <th class="gap" rowspan="2"></th>
-                    <th colspan="2">Promedios Finales</th>
+                    <th class="th-fin" rowspan="2">Promedio<br>final por<br>asignatura</th>
                 </tr>
                 <tr class="nota-row">
                     <?php for ($i = 1; $i <= $maxCols[1]; $i++): ?>
@@ -513,8 +535,6 @@
                     <?php for ($i = 1; $i <= $maxCols[2]; $i++): ?>
                         <th>N<?= $i ?></th>
                     <?php endfor; ?>
-                    <th class="th-fin">Promedio final<br>por asignatura</th>
-                    <th class="th-fin">Promedio<br>general final</th>
                 </tr>
             </thead>
             <tbody>
@@ -587,7 +607,6 @@
                                 <span class="nd">—</span>
                             <?php endif; ?>
                         </td>
-                        <td><span class="nd">—</span></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -617,7 +636,6 @@
 
                     <td class="gap"></td>
 
-                    <td></td>
                     <td style="color:<?= Nota::color($promFinalGeneral) ?>;">
                         <?php if ($promFinalGeneral !== null): ?>
                             <?= Nota::fmt($promFinalGeneral) ?>
@@ -630,7 +648,6 @@
                 </tr>
             </tfoot>
         </table>
-
         <!-- ASISTENCIA -->
         <div class="asis">
             <div class="ac">
@@ -655,9 +672,11 @@
         <div class="obs">
             <div class="obs-t">Observaciones:</div>
             <?= htmlspecialchars($observaciones ?? 'DOCUMENTO CEIA') ?><br><br>
-            <strong>Pend.:</strong> Falta una o más notas — no se puede calcular promedio de la asignatura ni el
-            promedio final.<br>
-            <strong>Situación:</strong> Parcial a la fecha<br>
+            <?php if ($hayPendientes): ?>
+                <strong>Pend.:</strong> Falta una o más notas — no se puede calcular promedio de la asignatura ni el
+                promedio final.<br>
+            <?php endif; ?>
+            <strong>Situación:</strong> <?= $forzarCalculo ? 'Final' : 'Parcial a la fecha' ?><br>
             Asistencia registrada hasta el día <?= date('d/m/Y') ?>
         </div>
 

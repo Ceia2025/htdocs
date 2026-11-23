@@ -105,6 +105,13 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
                         <option value="">— Primero selecciona un curso —</option>
                     </select>
                 </div>
+                <label for="chk-calcular-alumno" class="flex items-start gap-2 cursor-pointer select-none">
+                    <input type="checkbox" id="chk-calcular-alumno" class="mt-0.5 w-4 h-4 rounded">
+                    <span class="text-xs text-muted leading-snug">
+                        <strong class="text-strong">Calcular promedios finales</strong><br>
+                        Usa solo las notas registradas, aunque falten evaluaciones.
+                    </span>
+                </label>
                 <div class="flex gap-2">
                     <button id="btn-ver-alumno" onclick="descargarPdfAlumno(true)" disabled class="btn-secondary flex-1 flex items-center justify-center gap-2 px-4 py-2.5
                                font-semibold rounded-xl transition text-sm
@@ -125,7 +132,6 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
                 </div>
             </div>
         </div>
-
         <!-- CARD 2: Notas por asignatura -->
         <div class="report-card report-indigo rounded-xl overflow-hidden flex flex-col">
             <div class="px-5 py-4 border-b divider-soft flex items-start gap-4">
@@ -471,6 +477,7 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
         const id = document.getElementById('sel-alumno').value;
         if (!id) return;
         let url = 'index.php?action=reportes_notas_pdf_alumno&matricula_id=' + id;
+        if (document.getElementById('chk-calcular-alumno').checked) url += '&calcular=1';
         if (preview) url += '&preview=1';
         window.open(url, '_blank');
     }
