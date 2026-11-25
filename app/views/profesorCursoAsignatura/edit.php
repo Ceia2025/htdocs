@@ -44,6 +44,21 @@ include __DIR__ . "/../layout/navbar.php";
                     </select>
                 </div>
 
+                <!-- AÑO -->
+                <div>
+                    <label class="text-sm text-gray-300">Año Escolar</label>
+                    <select name="anio_id" id="anio_id"
+                            class="w-full bg-gray-900 text-white border border-gray-700 rounded-lg px-3 py-2 mt-2"
+                            required>
+                        <?php foreach ($anios as $a): ?>
+                            <option value="<?= $a['id'] ?>"
+                                <?= $a['id'] == $asignacion['anio_id'] ? 'selected':'' ?>>
+                                <?= $a['anio'] ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
                 <!-- CURSO -->
                 <div>
                     <label class="text-sm text-gray-300">Curso</label>
@@ -54,21 +69,6 @@ include __DIR__ . "/../layout/navbar.php";
                             <option value="<?= $c['id'] ?>"
                                 <?= $c['id'] == $asignacion['curso_id'] ? 'selected':'' ?>>
                                 <?= htmlspecialchars($c['nombre']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <!-- AÑO -->
-                <div>
-                    <label class="text-sm text-gray-300">Año Escolar</label>
-                    <select name="anio_id"
-                            class="w-full bg-gray-900 text-white border border-gray-700 rounded-lg px-3 py-2 mt-2"
-                            required>
-                        <?php foreach ($anios as $a): ?>
-                            <option value="<?= $a['id'] ?>"
-                                <?= $a['id'] == $asignacion['anio_id'] ? 'selected':'' ?>>
-                                <?= $a['anio'] ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -169,46 +169,88 @@ include __DIR__ . "/../layout/navbar.php";
    SELECCIONAR TODAS / QUITAR TODAS
 ============================================ */
 document.getElementById("checkAll").onclick = () => {
-    document.querySelectorAll("input[name='asignaturas[]']").forEach(cb => cb.checked = true);
+    document.querySelectorAll("input[name='asignaturas[]']").forEach(cb => { cb.checked = true; seleccion.add(cb.value); });
 };
 
 document.getElementById("uncheckAll").onclick = () => {
-    document.querySelectorAll("input[name='asignaturas[]']").forEach(cb => cb.checked = false);
+    document.querySelectorAll("input[name='asignaturas[]']").forEach(cb => { cb.checked = false; seleccion.delete(cb.value); });
 };
 
 /* ============================================
    CARGAR ASIGNATURAS DINÁMICAS (AJAX)
+   Malla del curso en el año elegido. Al recargar se
+   conservan marcadas las asignaturas que ya estaban.
 ============================================ */
-document.getElementById('curso_id').addEventListener('change', function () {
+const selCurso = document.getElementById('curso_id');
+const selAnio  = document.getElementById('anio_id');
+const cont     = document.getElementById('asig_container');
 
-    const curso = this.value;
+// Selección guardada aparte: no se pierde si se recarga la lista mientras otra carga está en curso
+const seleccion = new Set(
+    Array.from(document.querySelectorAll("input[name='asignaturas[]']:checked")).map(cb => cb.value)
+);
+cont.addEventListener('change', e => {
+    if (e.target.name !== 'asignaturas[]') return;
+    e.target.checked ? seleccion.add(e.target.value) : seleccion.delete(e.target.value);
+});
 
-    fetch(`index.php?action=pca_asignaturas_por_curso&curso_id=${curso}`)
+let peticion = 0; // solo se pinta la respuesta de la última petición
+
+function mensaje(texto, clase = 'text-gray-400') {
+    cont.innerHTML = '';
+    const p = document.createElement('p');
+    p.className = clase;
+    p.textContent = texto;
+    cont.appendChild(p);
+}
+
+function cargarAsignaturas() {
+    const curso = selCurso.value;
+    const anio  = selAnio.value;
+    if (!curso || !anio) return;
+
+    const miPeticion = ++peticion;
+    mensaje('Cargando...');
+
+    fetch(`index.php?action=pca_asignaturas_por_curso&curso_id=${encodeURIComponent(curso)}&anio_id=${encodeURIComponent(anio)}`)
         .then(r => r.json())
         .then(list => {
+            if (miPeticion !== peticion) return;
 
-            const cont = document.getElementById('asig_container');
-            cont.innerHTML = '';
-
-            if (list.length === 0) {
-                cont.innerHTML = '<p class="text-gray-400">Este curso no tiene asignaturas.</p>';
+            if (!Array.isArray(list) || list.length === 0) {
+                const anioTxt = selAnio.options[selAnio.selectedIndex].text.trim();
+                mensaje(`Este curso no tiene asignaturas en la malla ${anioTxt}. Revísala en Malla Curricular.`);
                 return;
             }
 
+            cont.innerHTML = '';
             list.forEach(a => {
                 const lbl = document.createElement('label');
-                lbl.className = "flex items-center gap-2 mb-2";
+                lbl.className = 'flex items-center gap-2 mb-2';
 
-                lbl.innerHTML = `
-                    <input type="checkbox" name="asignaturas[]" value="${a.id}"
-                        class="h-4 w-4 text-indigo-500">
-                    <span>${a.nombre}</span>
-                `;
+                const chk = document.createElement('input');
+                chk.type = 'checkbox';
+                chk.name = 'asignaturas[]';
+                chk.value = a.id;
+                chk.className = 'h-4 w-4 text-indigo-500';
+                chk.checked = seleccion.has(String(a.id));
 
+                const span = document.createElement('span');
+                span.textContent = a.nombre;
+
+                lbl.append(chk, span);
                 cont.appendChild(lbl);
             });
+        })
+        .catch(err => {
+            if (miPeticion !== peticion) return;
+            mensaje('Error al cargar asignaturas.', 'text-red-400');
+            console.error(err);
         });
-});
+}
+
+selCurso.addEventListener('change', cargarAsignaturas);
+selAnio.addEventListener('change', cargarAsignaturas);
 </script>
 
 </body>

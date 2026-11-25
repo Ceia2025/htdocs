@@ -43,6 +43,18 @@ include __DIR__ . "/../layout/navbar.php";
                             </select>
                         </div>
 
+                        <!-- AÑO -->
+                        <div>
+                            <label class="block text-sm text-gray-300 mb-1">Año Escolar</label>
+                            <select name="anio_id" id="anio_id" required
+                                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2">
+                                <option value="">Seleccione…</option>
+                                <?php foreach ($anios as $a): ?>
+                                    <option value="<?= $a['id'] ?>"><?= $a['anio'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
                         <!-- CURSO -->
                         <div>
                             <label class="block text-sm text-gray-300 mb-1">Curso</label>
@@ -57,25 +69,13 @@ include __DIR__ . "/../layout/navbar.php";
                             </select>
                         </div>
 
-                        <!-- AÑO -->
-                        <div>
-                            <label class="block text-sm text-gray-300 mb-1">Año Escolar</label>
-                            <select name="anio_id" required
-                                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2">
-                                <option value="">Seleccione…</option>
-                                <?php foreach ($anios as $a): ?>
-                                    <option value="<?= $a['id'] ?>"><?= $a['anio'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
                         <!-- ASIGNATURAS DINÁMICAS -->
                         <div>
                             <label class="block text-sm text-gray-300 mb-1">Asignaturas del Curso</label>
 
                             <div id="asignaturas_container"
                                 class="bg-gray-900 border border-gray-700 rounded-lg p-4 mt-2 max-h-64 overflow-y-auto text-gray-300">
-                                <p class="text-gray-400">Seleccione un curso primero.</p>
+                                <p class="text-gray-400">Seleccione el año y el curso.</p>
                             </div>
                         </div>
 
@@ -103,43 +103,69 @@ include __DIR__ . "/../layout/navbar.php";
 </body>
 
 <script>
-    document.getElementById('curso_id').addEventListener('change', function () {
+    /* Asignaturas de la malla del curso en el año elegido */
+    const selCurso   = document.getElementById('curso_id');
+    const selAnio    = document.getElementById('anio_id');
+    const contenedor = document.getElementById('asignaturas_container');
+    let peticion = 0; // solo se pinta la respuesta de la última petición
 
-        const cursoId = this.value;
-        const contenedor = document.getElementById('asignaturas_container');
+    function mensaje(texto, clase = 'text-gray-400') {
+        contenedor.innerHTML = '';
+        const p = document.createElement('p');
+        p.className = clase;
+        p.textContent = texto;
+        contenedor.appendChild(p);
+    }
 
-        contenedor.innerHTML = "<p class='text-gray-400'>Cargando...</p>";
+    function cargarAsignaturas() {
+        const cursoId = selCurso.value;
+        const anioId  = selAnio.value;
 
-        fetch(`index.php?action=pca_asignaturas_por_curso&curso_id=${cursoId}`)
+        if (!cursoId || !anioId) {
+            mensaje('Seleccione el año y el curso.');
+            return;
+        }
+
+        const miPeticion = ++peticion;
+        mensaje('Cargando...');
+
+        fetch(`index.php?action=pca_asignaturas_por_curso&curso_id=${encodeURIComponent(cursoId)}&anio_id=${encodeURIComponent(anioId)}`)
             .then(res => res.json())
             .then(data => {
-
-                contenedor.innerHTML = '';
-
-                if (data.length === 0) {
-                    contenedor.innerHTML = "<p class='text-gray-400'>Este curso no tiene asignaturas asignadas.</p>";
+                if (miPeticion !== peticion) return;
+                if (!Array.isArray(data) || data.length === 0) {
+                    const anioTxt = selAnio.options[selAnio.selectedIndex].text.trim();
+                    mensaje(`Este curso no tiene asignaturas en la malla ${anioTxt}. Revísala en Malla Curricular.`);
                     return;
                 }
 
+                contenedor.innerHTML = '';
                 data.forEach(asig => {
                     const item = document.createElement('label');
-                    item.classList = "flex items-center gap-2 mb-2";
+                    item.className = 'flex items-center gap-2 mb-2';
 
-                    item.innerHTML = `
-                    <input type="checkbox" name="asignaturas[]" value="${asig.id}"
-                           class="h-4 w-4 text-indigo-500">
-                    <span>${asig.nombre}</span>
-                `;
+                    const chk = document.createElement('input');
+                    chk.type = 'checkbox';
+                    chk.name = 'asignaturas[]';
+                    chk.value = asig.id;
+                    chk.className = 'h-4 w-4 text-indigo-500';
 
+                    const span = document.createElement('span');
+                    span.textContent = asig.nombre;
+
+                    item.append(chk, span);
                     contenedor.appendChild(item);
                 });
-
             })
             .catch(err => {
-                contenedor.innerHTML = "<p class='text-red-400'>Error al cargar asignaturas.</p>";
+                if (miPeticion !== peticion) return;
+                mensaje('Error al cargar asignaturas.', 'text-red-400');
                 console.error(err);
             });
-    });
+    }
+
+    selCurso.addEventListener('change', cargarAsignaturas);
+    selAnio.addEventListener('change', cargarAsignaturas);
 </script>
 
 <?php include __DIR__ . "/../layout/footer.php"; ?>

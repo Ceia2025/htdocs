@@ -5,9 +5,25 @@
 
     <h2 class="text-2xl font-bold text-strong font-display mb-1">Matrícula del Alumno</h2>
     <p class="text-muted text-sm mb-6">
-        Estás matriculando al alumno que estás creando en este formulario.<br>
-        Al guardar, se registrará el alumno y su matrícula (curso y año académico).
+        Elige en qué curso y año quedará matriculado el alumno.<br>
+        Al guardar, se registrará el alumno y su matrícula.
     </p>
+
+    <!-- Resumen del alumno (se llena por JS al entrar a este paso) -->
+    <div id="resumen-matricula" class="mb-6 rounded-2xl p-5"
+        style="background: var(--surface-1); border: 1px solid var(--border-soft);">
+        <p class="text-xs font-semibold uppercase tracking-wider text-accent mb-3">Vas a matricular a</p>
+        <p id="resumen-nombre" class="text-lg font-bold text-strong capitalize">—</p>
+        <p id="resumen-detalle" class="text-sm text-muted mt-0.5">—</p>
+        <p id="resumen-pendientes" class="hidden text-sm mt-3 font-medium" style="color: #f59e0b;"></p>
+    </div>
+
+    <!-- Sugerencia desde la ficha Excel (solo si se importó) -->
+    <div id="curso-sugerido-box" class="hidden mb-6 banner-success text-sm px-4 py-3 rounded-xl">
+        Según la ficha (<span id="curso-sugerido-nivel" class="font-semibold"></span>),
+        el curso sugerido es <span id="curso-sugerido-nombre" class="font-bold"></span>.
+        Puedes cambiarlo abajo si corresponde otro.
+    </div>
 
     <div class="space-y-5">
 

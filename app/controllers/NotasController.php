@@ -26,7 +26,7 @@ class NotasController
 
         require_once __DIR__ . '/../models/CursoAsignatura.php';
         $cursoAsignaturaModel = new CursoAsignatura();
-        $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($curso_id);
+        $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($curso_id, $anio_id);
 
         $mesActual = intval(date('n'));
         $semestreActual = ($mesActual >= 3 && $mesActual <= 7) ? 1 : 2;
@@ -160,7 +160,7 @@ class NotasController
         $alumno = $alumnoModel->getById($matricula['alumno_id']);
         $curso = $cursoModel->getById($matricula['curso_id']);
         $anio = $anioModel->getById($matricula['anio_id']);
-        $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($curso['id']);
+        $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($curso['id'], $matricula['anio_id']);
 
         // 🔹 Determinar semestre actual y seleccionado
         $mesActual = intval(date('n'));
@@ -295,7 +295,7 @@ class NotasController
         $cursoModel = new Cursos();
         $anioModel = new Anio();
 
-        $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($cursoId);
+        $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($cursoId, $anioId);
         $curso = $cursoModel->getById($cursoId);
         $anio = $anioModel->getById($anioId);
 

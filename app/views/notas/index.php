@@ -20,7 +20,7 @@ $cursoAsignaturaModel = new CursoAsignatura();
 
 $matriculaModel = new Matricula();
 $matricula = $matriculaModel->getById($matricula_id);
-$asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($matricula['curso_id']);
+$asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($matricula['curso_id'], $matricula['anio_id']);
 
 $mesActual = intval(date('n'));
 $semestreActual = ($mesActual >= 3 && $mesActual <= 7) ? 1 : 2;

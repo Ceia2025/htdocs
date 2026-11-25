@@ -439,7 +439,7 @@ function saat_icon(string $key, string $classes = 'w-4 h-4'): string
             })
             .catch(() => { selAlumno.innerHTML = '<option value="">Error al cargar alumnos</option>'; });
 
-        fetch(`index.php?action=api_asignaturas_curso&curso_id=${cursoId}`)
+        fetch(`index.php?action=api_asignaturas_curso&curso_id=${cursoId}&anio_id=${anioVal}`)
             .then(r => r.json())
             .then(data => {
                 selAsig.innerHTML = '<option value="">— Seleccionar asignatura —</option>';

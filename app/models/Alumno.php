@@ -61,6 +61,8 @@ class Alumno
     }
 
     // Crear un alumno
+    // Crear un alumno
+    // Crear un alumno
     public function create($data)
     {
         $data['fechanac'] = !empty($data['fechanac']) ? $data['fechanac'] : null;
@@ -73,10 +75,14 @@ class Alumno
         // tiene_run: 1 = tiene RUN chileno, 0 = extranjero con documento libre
         $tieneRun = isset($data['tiene_run']) ? (int) $data['tiene_run'] : 1;
 
+        // celular: solo dígitos, máximo 8 (columna varchar(8), sin +569)
+        $celular = preg_replace('/\D/', '', (string) ($data['celular'] ?? ''));
+        $celular = $celular !== '' ? substr($celular, -8) : null;
+
         $sql = "INSERT INTO {$this->table} 
-            (run, codver, tiene_run, nombre, apepat, apemat, fechanac, mayoredad, numerohijos, telefono, email, sexo, nacionalidades, region, ciudad, direccion, cod_etnia, deleted_at) 
+            (run, codver, tiene_run, nombre, apepat, apemat, fechanac, mayoredad, numerohijos, telefono, celular, email, sexo, nacionalidades, region, ciudad, direccion, cod_etnia, deleted_at) 
         VALUES 
-            (:run, :codver, :tiene_run, :nombre, :apepat, :apemat, :fechanac, :mayoredad, :numerohijos, :telefono, :email, :sexo, :nacionalidades, :region, :ciudad, :direccion, :cod_etnia, :deleted_at)";
+            (:run, :codver, :tiene_run, :nombre, :apepat, :apemat, :fechanac, :mayoredad, :numerohijos, :telefono, :celular, :email, :sexo, :nacionalidades, :region, :ciudad, :direccion, :cod_etnia, :deleted_at)";
 
         $stmt = $this->conn->prepare($sql);
         $success = $stmt->execute([
@@ -90,6 +96,7 @@ class Alumno
             ":mayoredad" => $data['mayoredad'] ?? "No",
             ":numerohijos" => $numerohijos,
             ":telefono" => $data['telefono'] ?? null,
+            ":celular" => $celular,
             ":email" => $data['email'] ?? null,
             ":sexo" => $this->normalizarSexo($data['sexo'] ?? null),
             ":nacionalidades" => $data['nacionalidades'] ?? null,

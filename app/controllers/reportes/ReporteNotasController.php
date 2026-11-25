@@ -82,7 +82,7 @@ class ReporteNotasController
         $alumno = $alumnoModel->getById($matricula['alumno_id']);
         $curso = $cursoModel->getById($matricula['curso_id']);
         $anio = $anioModel->getById($matricula['anio_id']);
-        $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($curso['id']);
+        $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($curso['id'], $matricula['anio_id']);
 
         $asignaturasExcluidas = ['Inspectoría', 'Convivencia Escolar'];
         $asignaturas = array_values(array_filter(
@@ -273,7 +273,7 @@ class ReporteNotasController
 
         $asignaturasExcluidas = ['Inspectoría', 'Convivencia Escolar'];
         $asignaturas = array_values(array_filter(
-            $cursoAsignaturaModel->getAsignaturasPorCurso($cursoId),
+            $cursoAsignaturaModel->getAsignaturasPorCurso($cursoId, $anioId),
             fn($a) => !in_array($a['nombre'], $asignaturasExcluidas)
         ));
 
@@ -331,7 +331,7 @@ class ReporteNotasController
 
         $asignaturasExcluidas = ['Inspectoría', 'Convivencia Escolar'];
         $asignaturas = array_values(array_filter(
-            $cursoAsignaturaModel->getAsignaturasPorCurso($cursoId),
+            $cursoAsignaturaModel->getAsignaturasPorCurso($cursoId, $anioId),
             fn($a) => !in_array($a['nombre'], $asignaturasExcluidas)
         ));
 
@@ -398,7 +398,7 @@ class ReporteNotasController
 
             $alumnos = $this->notaModel->getByCursoYAnio($cursoId, $anioId);
             $asignaturas = array_values(array_filter(
-                $cursoAsignaturaModel->getAsignaturasPorCurso($cursoId),
+                $cursoAsignaturaModel->getAsignaturasPorCurso($cursoId, $anioId),
                 fn($a) => !in_array($a['nombre'], $asignaturasExcluidas)
             ));
             $totalAsigs = count($asignaturas);
@@ -551,7 +551,7 @@ class ReporteNotasController
 
             $alumnos = $this->notaModel->getByCursoYAnio($cursoId, $anioId);
             $asignaturas = array_values(array_filter(
-                $cursoAsignaturaModel->getAsignaturasPorCurso($cursoId),
+                $cursoAsignaturaModel->getAsignaturasPorCurso($cursoId, $anioId),
                 fn($a) => !in_array($a['nombre'], $asignaturasExcluidas)
             ));
             $totalAsigs = count($asignaturas);  // ← nuevo

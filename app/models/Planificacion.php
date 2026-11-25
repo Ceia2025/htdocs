@@ -111,7 +111,7 @@ class Planificacion
         return $st->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function cursoAsignaturas(int $anioId, int $usuarioId): array
+        public function cursoAsignaturas(int $anioId, int $usuarioId): array
     {
         $st = $this->db->prepare(
             "SELECT ca.id, c.nombre AS curso, a.nombre AS asignatura,
@@ -123,9 +123,14 @@ class Planificacion
                     ON p.curso_asignatura_id = ca.id
                    AND p.anio_id = :anio_plan
                    AND p.usuario_id = :usuario
+             WHERE ca.anio_id = :anio_malla
              ORDER BY c.nombre, a.nombre"
         );
-        $st->execute([':anio_plan' => $anioId, ':usuario' => $usuarioId]);
+        $st->execute([
+            ':anio_plan'  => $anioId,
+            ':usuario'    => $usuarioId,
+            ':anio_malla' => $anioId,
+        ]);
         return $st->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -145,12 +150,13 @@ class Planificacion
         return $fila ?: null;
     }
 
-    private function cursoAsignaturaLibre(int $caId, int $anioId, int $usuarioId): bool
+        private function cursoAsignaturaLibre(int $caId, int $anioId, int $usuarioId): bool
     {
         $st = $this->db->prepare(
             "SELECT 1
              FROM curso_asignaturas2 ca
              WHERE ca.id = :ca
+               AND ca.anio_id = :anio_malla
                AND NOT EXISTS (
                    SELECT 1 FROM planificaciones2 p
                    WHERE p.curso_asignatura_id = ca.id
@@ -159,9 +165,10 @@ class Planificacion
                )"
         );
         $st->execute([
-            ':ca'        => $caId,
-            ':anio_plan' => $anioId,
-            ':usuario'   => $usuarioId,
+            ':ca'         => $caId,
+            ':anio_malla' => $anioId,
+            ':anio_plan'  => $anioId,
+            ':usuario'    => $usuarioId,
         ]);
         return (bool) $st->fetchColumn();
     }

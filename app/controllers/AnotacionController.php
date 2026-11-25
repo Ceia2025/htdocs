@@ -51,7 +51,7 @@ class AnotacionController
         $alumno_id = $_GET['alumno_id'] ?? null;
         $matricula_id = $_GET['matricula_id'] ?? null;
 
-        $asignaturas = $curso_id ? $this->model->getAsignaturasByCurso($curso_id) : [];
+        $asignaturas = $curso_id ? $this->model->getAsignaturasByCurso($curso_id, $anio_id) : [];
 
         // Si viene alumno preseleccionado, traer sus datos para mostrarlos
         $alumnoPreseleccionado = null;
@@ -119,16 +119,17 @@ class AnotacionController
         exit;
     }
 
-    // AJAX: obtener asignaturas de un curso
+    // AJAX: obtener asignaturas de un curso en un año (sin año: año académico en curso)
     public function getAsignaturasAjax()
     {
         header('Content-Type: application/json; charset=utf-8');
         $curso_id = $_GET['curso_id'] ?? null;
+        $anio_id  = !empty($_GET['anio_id']) ? (int) $_GET['anio_id'] : null;
         if (!$curso_id) {
             echo json_encode([]);
             exit;
         }
-        echo json_encode($this->model->getAsignaturasByCurso($curso_id));
+        echo json_encode($this->model->getAsignaturasByCurso($curso_id, $anio_id));
         exit;
     }
 

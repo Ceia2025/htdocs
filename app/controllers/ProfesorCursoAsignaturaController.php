@@ -62,10 +62,13 @@ class ProfesorCursoAsignaturaController
         exit;
     }
 
-    //AJAX POR CURSO
+    //AJAX POR CURSO (y año: la malla cambia de un año a otro)
     public function getAsignaturasPorCurso()
     {
         $curso_id = $_GET['curso_id'] ?? null;
+        $anio_id  = !empty($_GET['anio_id']) ? (int) $_GET['anio_id'] : null; // sin año: año académico en curso
+
+        header('Content-Type: application/json');
 
         if (!$curso_id) {
             echo json_encode([]);
@@ -73,9 +76,8 @@ class ProfesorCursoAsignaturaController
         }
 
         $caModel = new CursoAsignatura();
-        $asignaturas = $caModel->getAsignaturasPorCurso($curso_id);
+        $asignaturas = $caModel->getAsignaturasPorCurso($curso_id, $anio_id);
 
-        header('Content-Type: application/json');
         echo json_encode($asignaturas);
         exit;
     }
@@ -99,7 +101,7 @@ class ProfesorCursoAsignaturaController
         $profesores          = $profesorModel->getActivos();
         $cursos              = $cursoModel->getAll();
         $anios               = $anioModel->getAll();
-        $asignaturas         = $caModel->getAsignaturasPorCurso($curso_id);
+        $asignaturas         = $caModel->getAsignaturasPorCurso($curso_id, $anio_id);
         $asignaturasActuales = $this->model->getAsignacionesActuales($profesor_id, $curso_id, $anio_id);
 
         require __DIR__ . '/../views/profesorCursoAsignatura/edit.php';

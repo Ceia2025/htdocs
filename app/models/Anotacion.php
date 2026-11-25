@@ -35,16 +35,23 @@ class Anotacion
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Obtener asignaturas de un curso
-    public function getAsignaturasByCurso($curso_id)
+        // Obtener asignaturas de un curso (si se indica el año, solo las de la malla de ese año)
+    public function getAsignaturasByCurso($curso_id, $anio_id = null)
     {
         $sql = "SELECT a.id, a.nombre, a.abreviatura
                 FROM asignaturas2 a
                 INNER JOIN curso_asignaturas2 ca ON ca.asignatura_id = a.id
-                WHERE ca.curso_id = :curso_id
-                ORDER BY a.nombre ASC";
+                WHERE ca.curso_id = :curso_id";
+        $params = [':curso_id' => $curso_id];
+
+        if (!empty($anio_id)) {
+            $sql .= " AND ca.anio_id = :anio_id";
+            $params[':anio_id'] = $anio_id;
+        }
+
+        $sql .= " ORDER BY a.nombre ASC";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([':curso_id' => $curso_id]);
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

@@ -267,13 +267,24 @@ include __DIR__ . "/../layout/navbar.php";
 
     <?php endif ?>
 
+    // Asignaturas de la malla del curso en el año de la anotación
     async function cargarAsignaturas(curso_id) {
         const sel = document.getElementById('sel_asignatura');
-        const res = await fetch(`index.php?action=anotacion_asignaturas&curso_id=${curso_id}`);
+        const anio = ANIO_ID ? `&anio_id=${encodeURIComponent(ANIO_ID)}` : '';
+        const res = await fetch(`index.php?action=anotacion_asignaturas&curso_id=${encodeURIComponent(curso_id)}${anio}`);
         const data = await res.json();
-        sel.innerHTML = '<option value="">Seleccionar asignatura...</option>';
+
+        sel.innerHTML = '';
+        const vacia = document.createElement('option');
+        vacia.value = '';
+        vacia.textContent = 'Seleccionar asignatura...';
+        sel.appendChild(vacia);
+
         data.forEach(a => {
-            sel.innerHTML += `<option value="${a.id}">${a.nombre}</option>`;
+            const opt = document.createElement('option');
+            opt.value = a.id;
+            opt.textContent = a.nombre;
+            sel.appendChild(opt);
         });
     }
 

@@ -34,8 +34,8 @@ class PerfilAcademicoController
         $curso = $cursoModel->getById($matricula['curso_id']);
         $anio = $anioModel->getById($matricula['anio_id']);
 
-        // Obtener asignaturas del curso
-        $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($curso['id']);
+        // Obtener asignaturas del curso (malla del año de la matrícula)
+        $asignaturas = $cursoAsignaturaModel->getAsignaturasPorCurso($curso['id'], $matricula['anio_id']);
 
         // Determinar semestre actual automáticamente
         $mesActual = intval(date('n')); // mes actual en número (1–12)

@@ -181,11 +181,18 @@ class AlumnosController
                 'pie',
                 'chile_solidario_cual',
                 'isapre',
+                'eva_psico',
             ];
             foreach ($enumsNullable as $campo) {
                 if (!isset($escolar[$campo]) || $escolar[$campo] === '') {
                     $escolar[$campo] = null;
                 }
+            }
+
+            // Sin embarazo no hay semanas
+            if (empty($escolar['embarazo'])) {
+                $escolar['embarazo'] = 0;
+                $escolar['semanas'] = null;
             }
 
             // grupo_fonasa es NOT NULL: nunca debe viajar vacío
@@ -217,6 +224,124 @@ class AlumnosController
     public function createStepper()
     {
         require_once __DIR__ . '/../views/alumnos/form_stepper.php';
+    }
+
+    // Importar ficha de matrícula (Excel) → devuelve JSON para rellenar el stepper
+    public function importarFicha()
+    {
+        // Todo lo que PHP imprima por su cuenta (warnings, notices) queda en el buffer y se descarta
+        ini_set('display_errors', '0');
+        ob_start();
+
+        // Si ocurre un error fatal, igual se responde JSON con el detalle
+        register_shutdown_function(function () {
+            $err = error_get_last();
+            if ($err && in_array($err['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
+                while (ob_get_level() > 0) ob_end_clean();
+                if (!headers_sent()) {
+                    http_response_code(500);
+                    header('Content-Type: application/json; charset=utf-8');
+                }
+                echo json_encode([
+                    'ok'    => false,
+                    'error' => 'Error fatal de PHP: ' . $err['message'] . ' (' . basename($err['file']) . ':' . $err['line'] . ')',
+                ], JSON_UNESCAPED_UNICODE);
+            }
+        });
+
+        $responder = function (array $payload, int $status = 200) {
+            $basura = ob_get_clean();
+            if ($basura !== '' && $basura !== false) {
+                error_log('importarFicha - salida inesperada descartada: ' . substr($basura, 0, 500));
+            }
+            http_response_code($status);
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($payload, JSON_UNESCAPED_UNICODE);
+            exit;
+        };
+
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new RuntimeException('Método no permitido.');
+            }
+
+            $archivo = $_FILES['ficha'] ?? null;
+            if (!$archivo || $archivo['error'] !== UPLOAD_ERR_OK) {
+                $errores = [
+                    UPLOAD_ERR_INI_SIZE   => 'El archivo supera el tamaño permitido por el servidor (upload_max_filesize).',
+                    UPLOAD_ERR_FORM_SIZE  => 'El archivo supera el tamaño permitido.',
+                    UPLOAD_ERR_PARTIAL    => 'El archivo se subió incompleto.',
+                    UPLOAD_ERR_NO_FILE    => 'No se seleccionó ningún archivo.',
+                    UPLOAD_ERR_NO_TMP_DIR => 'El servidor no tiene carpeta temporal para subir archivos.',
+                    UPLOAD_ERR_CANT_WRITE => 'El servidor no pudo escribir el archivo subido.',
+                ];
+                throw new RuntimeException($errores[$archivo['error'] ?? UPLOAD_ERR_NO_FILE] ?? 'No se pudo subir el archivo.');
+            }
+
+            if ($archivo['size'] > 5 * 1024 * 1024) {
+                throw new RuntimeException('El archivo no puede pesar más de 5 MB.');
+            }
+
+            $ext = strtolower(pathinfo($archivo['name'], PATHINFO_EXTENSION));
+            if (!in_array($ext, ['xls', 'xlsx'], true)) {
+                throw new RuntimeException('Solo se aceptan archivos .xls o .xlsx.');
+            }
+
+            // Verificar rutas antes de cargar (un require fallido no se puede capturar)
+            $rutaLib = __DIR__ . '/../libs/phpspreadsheet/vendor/autoload.php';
+            $rutaImp = __DIR__ . '/../services/FichaMatriculaImporter.php';
+            if (!is_file($rutaLib)) {
+                throw new RuntimeException('No se encontró PhpSpreadsheet en: ' . realpath(__DIR__ . '/..') . '/libs/phpspreadsheet/vendor/autoload.php');
+            }
+            if (!is_file($rutaImp)) {
+                throw new RuntimeException('No se encontró el importador en: ' . realpath(__DIR__ . '/..') . '/services/FichaMatriculaImporter.php');
+            }
+            require_once $rutaImp;
+
+            // Datos de apoyo para traducir la ficha a valores del sistema
+            $db   = new Connection();
+            $conn = $db->open();
+            $cursos = $conn->query("SELECT id, nombre FROM cursos2 ORDER BY nombre ASC")->fetchAll(PDO::FETCH_ASSOC);
+            $anios  = $conn->query("SELECT id, anio FROM anios2 ORDER BY anio DESC")->fetchAll(PDO::FETCH_ASSOC);
+
+            $regiones = [];
+            foreach ([__DIR__ . '/../utils/comunas-regiones.json', __DIR__ . '/../public/utils/comunas-regiones.json'] as $ruta) {
+                if (is_file($ruta)) {
+                    $json = json_decode(file_get_contents($ruta), true);
+                    $regiones = $json['regiones'] ?? [];
+                    break;
+                }
+            }
+
+            $importador = new FichaMatriculaImporter(
+                $cursos,
+                $anios,
+                AlumEmergencia::relacionesDisponibles(),
+                $regiones
+            );
+            $resultado = $importador->importar($archivo['tmp_name']);
+            $resultado['archivo'] = $archivo['name'];
+
+            // ¿El alumno ya existe?
+            $resultado['duplicado'] = false;
+            if (!empty($resultado['campos']['run']) && (new Alumno())->runExists($resultado['campos']['run'])) {
+                $resultado['duplicado'] = true;
+                $resultado['avisos'][] = [
+                    'campo'   => 'run',
+                    'mensaje' => 'Este alumno ya está registrado en el sistema (RUN ' . $resultado['resumen']['run'] . ').',
+                ];
+            }
+
+            $responder($resultado);
+        } catch (RuntimeException $e) {
+            $responder(['ok' => false, 'error' => $e->getMessage()], 422);
+        } catch (Throwable $e) {
+            error_log('importarFicha: ' . $e->getMessage() . ' en ' . $e->getFile() . ':' . $e->getLine());
+            $responder([
+                'ok'    => false,
+                'error' => 'No se pudo leer el archivo: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
 

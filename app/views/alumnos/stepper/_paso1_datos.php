@@ -1,7 +1,7 @@
 <!-- ============================
      PASO 1: DATOS DEL ALUMNO
 ============================= -->
-<div class="step transition-all duration-300 ease-out transform" data-step="1">
+<div class="step transition-all duration-300 ease-out transform hidden" data-step="1">
 
     <h2 class="text-2xl font-bold text-strong font-display mb-6">Datos del Alumno</h2>
 
@@ -53,7 +53,7 @@
                 <input type="text" name="run" id="run" required placeholder="Ej: 12.345.678"
                     class="input-field w-full rounded-lg px-3 py-2.5">
                 <p id="run-error" class="text-danger text-sm mt-1 hidden">
-                    RUN inválido (debe estar entre 1.000.000 y 100.000.000).
+                    RUN inválido (debe estar entre 1.000.000 y 109.000.000).
                 </p>
                 <p id="run-exists-msg" class="text-danger text-sm mt-1 hidden"></p>
                 <p id="run-hint-extranjero" class="text-accent text-xs mt-1 hidden">
@@ -94,13 +94,23 @@
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-soft mb-2">Teléfono</label>
-            <input type="text" name="telefono" class="input-field w-full rounded-lg px-3 py-2.5">
+            <label class="block text-sm font-medium text-soft mb-2">Email</label>
+            <input type="email" name="email" class="input-field w-full rounded-lg px-3 py-2.5">
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-soft mb-2">Email</label>
-            <input type="email" name="email" class="input-field w-full rounded-lg px-3 py-2.5">
+            <label class="block text-sm font-medium text-soft mb-2">Teléfono</label>
+            <input type="text" name="telefono" maxlength="12" class="input-field w-full rounded-lg px-3 py-2.5">
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-soft mb-2">Celular (sin +569)</label>
+            <div class="flex rounded-lg overflow-hidden">
+                <span class="px-3 py-2.5 text-sm flex-shrink-0 text-muted"
+                    style="background: var(--surface-1); border: 1px solid var(--border-soft); border-right: 0;">+569</span>
+                <input type="text" name="celular" id="celular_alumno" maxlength="8" inputmode="numeric" placeholder="12345678"
+                    class="input-field flex-1 min-w-0 rounded-none rounded-r-lg px-3 py-2.5">
+            </div>
         </div>
 
         <div>
@@ -175,7 +185,11 @@
 
     </div>
 
-    <div class="flex justify-end pt-8">
+    <div class="flex justify-between pt-8">
+        <button type="button"
+            class="prev-step btn-secondary px-6 py-2.5 font-semibold rounded-xl shadow transition">
+            ← Anterior
+        </button>
         <button type="button"
             class="next-step btn-primary inline-flex items-center gap-2 px-6 py-3 font-semibold rounded-xl shadow transition">
             Siguiente →

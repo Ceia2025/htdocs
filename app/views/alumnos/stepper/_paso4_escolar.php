@@ -53,11 +53,21 @@
             <span class="avatar-badge w-5 h-5 rounded-full text-[10px] flex items-center justify-center">2</span>
             Situación académica
         </p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
                 <label class="block text-sm font-medium text-soft mb-2">Cursos Repetidos</label>
                 <input type="number" name="antecedente_escolar[cursos_repetidos]" min="0" value="0"
                     class="input-field w-full rounded-lg px-3 py-2.5">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-soft mb-2">Evaluación Psicológica / Psicopedagógica</label>
+                <select name="antecedente_escolar[eva_psico]"
+                    class="input-field w-full rounded-lg px-3 py-2.5 cursor-pointer">
+                    <option value="">Sin registrar</option>
+                    <?php foreach (['Psicológica','Psicopedagógica','Sin Evaluación','No Aplica'] as $e): ?>
+                        <option value="<?= $e ?>"><?= $e ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
             <div>
                 <label class="block text-sm font-medium text-soft mb-2">Problemas de Aprendizaje</label>
@@ -182,6 +192,20 @@
                     class="input-field w-full rounded-lg px-3 py-2.5">
             </div>
 
+            <div>
+                <label class="block text-sm font-medium text-soft mb-2">Embarazo</label>
+                <div class="flex gap-3">
+                    <select name="antecedente_escolar[embarazo]" id="embarazo_select"
+                        class="input-field w-full rounded-lg px-3 py-2.5 cursor-pointer">
+                        <option value="0">No</option>
+                        <option value="1">Sí</option>
+                    </select>
+                    <input type="number" name="antecedente_escolar[semanas]" id="semanas_input" min="1" max="42"
+                        placeholder="Semanas"
+                        class="input-field w-32 rounded-lg px-3 py-2.5 hidden">
+                </div>
+            </div>
+
             <div class="md:col-span-2">
                 <label class="block text-sm font-medium text-soft mb-2">Información de Salud</label>
                 <textarea name="antecedente_escolar[info_salud]" rows="3" maxlength="200"
@@ -212,6 +236,8 @@
             const grupoError   = document.getElementById('grupo_fonasa_error');
             const chileSol     = document.getElementById('chile_solidario_select');
             const chileCualWrap= document.getElementById('chile_solidario_cual_wrap');
+            const embarazo     = document.getElementById('embarazo_select');
+            const semanas      = document.getElementById('semanas_input');
 
             if (!prevision) return;
 
@@ -237,11 +263,20 @@
                 chileCualWrap.classList.toggle('hidden', chileSol.value !== '1');
             }
 
+            function aplicarEmbarazo() {
+                if (!embarazo || !semanas) return;
+                const si = embarazo.value === '1';
+                semanas.classList.toggle('hidden', !si);
+                if (!si) semanas.value = '';
+            }
+
             prevision.addEventListener('change', aplicarPrevision);
             if (chileSol) chileSol.addEventListener('change', aplicarChileSolidario);
+            if (embarazo) embarazo.addEventListener('change', aplicarEmbarazo);
 
             aplicarPrevision();
             aplicarChileSolidario();
+            aplicarEmbarazo();
         }
 
         if (document.readyState === 'loading') {

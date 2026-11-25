@@ -1,5 +1,4 @@
 <?php
-// ── REQUIRES ────────────────────────────────────────────────
 require_once __DIR__ . '/../controllers/AuthController.php';
 require_once __DIR__ . '/../controllers/UserController.php';
 require_once __DIR__ . '/../controllers/RolesController.php';
@@ -39,11 +38,6 @@ require_once __DIR__ . '/../controllers/reportes/procedencia_alum/ReporteProcede
 require_once __DIR__ . '/../controllers/PlanificacionController.php';
 
 
-
-
-
-
-// ── INSTANCIAS ───────────────────────────────────────────────
 $action = $_GET['action'] ?? 'login';
 $auth = new AuthController();
 $userController = new UserController();
@@ -81,7 +75,6 @@ $auth->checkPermiso($action);
 // ── ROUTER ───────────────────────────────────────────────────
 switch ($action) {
 
-    // ── AUTH ─────────────────────────────────────────────────
     case 'login':
         $auth->login();
         break;
@@ -245,6 +238,11 @@ switch ($action) {
         $alumnosController->listadoPorAnio();
         break;
 
+
+
+    case 'alumno_import_ficha':
+        $alumnosController->importarFicha();
+        break;
     // ── PERFIL ACADÉMICO ─────────────────────────────────────
     case 'perfil_academico':
         $perfilController = new PerfilAcademicoController();
@@ -344,6 +342,11 @@ switch ($action) {
         if (!isset($_GET['id']))
             die("Falta el ID para eliminar");
         $cursoAsignaruta->destroy($_GET['id']);
+        break;
+    case 'curso_asignaturas_copiar':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $cursoAsignaruta->copiar($_POST);
+        }
         break;
 
     // ── CONTACTOS DE EMERGENCIA ──────────────────────────────
@@ -1005,7 +1008,8 @@ switch ($action) {
         header('Content-Type: application/json');
         echo json_encode(
             (new CursoAsignatura())->getAsignaturasPorCurso(
-                (int) ($_GET['curso_id'] ?? 0)
+                (int) ($_GET['curso_id'] ?? 0),
+                !empty($_GET['anio_id']) ? (int) $_GET['anio_id'] : null
             )
         );
         exit;
@@ -1036,12 +1040,12 @@ switch ($action) {
         $planificacionController->eliminar();
         break;
     case 'editar_planificacion':
-    $planificacionController->editar();
-    break;
+        $planificacionController->editar();
+        break;
 
-case 'planificacion_guardar':
-    $planificacionController->guardar();
-    break;
+    case 'planificacion_guardar':
+        $planificacionController->guardar();
+        break;
 
     // ── DEFAULT ──────────────────────────────────────────────
     default:
